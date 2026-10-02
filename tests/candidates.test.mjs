@@ -67,6 +67,11 @@ test('ordinary factor unit is the skill ID and never a factor master ID',()=>{
  assert.ok(result.factorCandidates.length>10);
  assert.ok(result.factorCandidates.every(s=>data.skills[s.id]&&!('factor_id' in s)));
 });
+test('special-event rarity-one buffs and innate traits are not ordinary factor suggestions',()=>{
+ const result=buildCandidates(data,{outfitId:'114101'});
+ assert.ok(!result.factorCandidates.some(s=>['1300051','1300041','1300071','1000011'].includes(s.id)));
+ assert.ok(result.factorCandidates.every(s=>data.internal_acceleration_comparison_cost[s.id]>0));
+});
 test('a native two-star outfit uses the upgraded unique from three-star bloom onward',()=>{
  const low=buildCandidates(data,{outfitId:'100701',bloom:2});
  const high=buildCandidates(data,{outfitId:'100701',bloom:5});

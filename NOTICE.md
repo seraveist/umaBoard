@@ -10,3 +10,6 @@ Generated records contain factual skill identifiers, effects, conditions, course
 
 No upstream application code, original complete JSON/MDB archives, character/card images, audio, or story assets are committed. Raw inputs are kept in ignored local/Actions caches.
 The normalized contract retains raw field values needed to interpret game semantics; it is not a claim of validated game mechanics or full current-game coverage.
+
+The independently authored comparison engine also consulted mathematical relationships and effect semantics in pinned alpha RaceSolver/HpPolicy and umasim race sources.
+Exact reference commits, the comparison assumptions, and the unsupported mechanics are documented in docs/ENGINE_VALIDATION.md. No upstream solver/parser application implementation is vendored.

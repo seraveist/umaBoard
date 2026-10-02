@@ -38,6 +38,14 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_current_speed_and_target_speed_are_not_mixed(self):
+        raw,rules=fixtures()
+        raw['skills'][0]['condition_groups'][0]['effects']=[
+            {'type':21,'value':-1500},{'type':22,'value':1500},{'type':27,'value':1500}]
+        data=normalize(raw,rules)
+        effects=data['skills']['110011']['invocations'][0]['effects']
+        self.assertEqual([e['kind'] for e in effects],['current_speed','speed_with_decel','target_speed'])
+
     def test_jp_not_filtered_by_english_or_korean_release(self):
         raw,rules=fixtures();data=normalize(raw,rules)
         self.assertTrue(data['skills']['110011']['jp_available'])

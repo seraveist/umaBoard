@@ -12,3 +12,10 @@
 #uma-plan .empty-list{padding:20px 0;font-size:13px;color:var(--sub)}
 #uma-plan .error-message{color:var(--pink);white-space:normal}
 #uma-plan .page-title{flex-wrap:wrap}
+#uma-plan .skill-state{font-size:11px;color:var(--sub);margin-top:4px}
+#uma-plan .skill-state.unsupported{color:var(--red)}
+#uma-plan .data-row .skill-value{min-width:60px;max-width:90px;flex-shrink:0}
+#uma-plan .combination>div:not(.combo-label):not(.combo-stats){font-size:13px;overflow-wrap:anywhere}
+#uma-plan [aria-busy=true] .tab-content{opacity:.65}
+#uma-plan .table-scroll{max-width:100%}
+#uma-plan .finish-status{margin-top:0;margin-bottom:10px}

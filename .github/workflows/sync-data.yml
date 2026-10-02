@@ -34,6 +34,9 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .cache/raw
@@ -53,6 +56,8 @@ jobs:
           fi
       - name: Validate activated bundle
         run: python scripts/validate_data.py
+      - name: Check candidate and engine compatibility with new data
+        run: node --test tests/*.test.mjs
       - name: Commit changed data
         run: |
           git add data/manifest.json data/bundles

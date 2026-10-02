@@ -79,9 +79,14 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
       if(!reachable.has(rel.to_id)){reachable.add(rel.to_id);changed=true;}
     }
   }}
-  const inheritance=Object.values(data.skills).filter(s=>s.inherited&&s.parent_ids.length&&s.jp_available&&possibleInContext(s,context))
+  const nativeUniqueIds=new Set([...routeBy.keys()].filter(id=>['unique','unique_low_star','unique_upgraded'].includes(data.skills[id]?.rarity)));
+  const inheritance=Object.values(data.skills).filter(s=>s.inherited&&s.parent_ids.length&&!s.parent_ids.some(id=>nativeUniqueIds.has(id))&&s.jp_available&&possibleInContext(s,context))
     .map(s=>({...s,routes:[{kind:'inheritance',owner_type:'outfit',owner_id:null}],choice_groups:[]}));
+  // A normal purchasable white skill has a positive base cost. Rarity 1 alone also
+  // includes LoH Hero buffs, Carnival bonuses and innate traits, which are not factors.
+  // Cost is an admission check here, never a user SP budget or discount calculation.
   const factorCandidates=Object.values(data.skills).filter(s=>s.rarity==='white'&&!s.inherited&&s.jp_available&&!reachable.has(s.id)
+    &&data.internal_acceleration_comparison_cost?.[s.id]>0
     &&s.categories.some(t=>['speed','acceleration','heal','passive'].includes(t))
     &&s.invocations.some(i=>i.effects.some(e=>typeof e.value_raw==='number'&&e.value_raw>0))&&possibleInContext(s,context));
   return {learned,inheritance,factorCandidates,recommendationStatus:'not_calculated',factorTop10:null};

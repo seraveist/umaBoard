@@ -8,7 +8,7 @@ from .common import DataError, canonical_bytes, identifier, number, rows
 # Classification only. Values and source timing/scaling remain explicit raw fields.
 EFFECT_KINDS = {1:'passive_speed', 2:'passive_stamina', 3:'passive_power', 4:'passive_guts',
                 5:'passive_wisdom', 6:'oonige', 8:'vision', 9:'heal', 10:'start_multiplier',
-                13:'temptation_duration', 14:'start_offset', 21:'target_speed',
+                13:'temptation_duration', 14:'start_offset', 21:'current_speed',
                 22:'speed_with_decel', 27:'target_speed', 28:'lane_change_speed',
                 29:'temptation_rate', 31:'acceleration', 32:'passive_all',
                 35:'lane_position', 37:'invoke_rare', 38:'full_spurt_acceleration',

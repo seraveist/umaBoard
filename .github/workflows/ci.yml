@@ -23,13 +23,12 @@ jobs:
           node-version: '24'
       - name: Test source normalization and atomic activation
         run: python -m unittest discover -s tests -v
-      - name: Test skill candidates with real JP data
+      - name: Test real JP candidates and solo comparison engine
         run: node --test tests/*.test.mjs
       - name: Validate active dataset
         run: python scripts/validate_data.py
       - name: Check browser scripts
         run: |
-          node --check assets/app.mjs
-          node --check assets/candidates.mjs
+          for script in assets/*.mjs; do node --check "$script"; done
           node --check prototype/model.js
           node --check prototype/app.js

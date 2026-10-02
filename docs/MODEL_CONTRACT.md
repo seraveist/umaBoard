@@ -1,5 +1,9 @@
 # 실제 엔진 연결 계약
 
+완성 엔진의 목표 계약입니다. 현재 `PreparationEngine`은 `solo-comparison-v1`의 제한된 비교 구현으로,
+아래 메서드 이름과 출력 전체를 그대로 완성했다고 선언하지 않습니다.
+현재 적용된 수식·지원 상태·표본·탐색 범위와 HP 피드백 제한은 [검증 명세](ENGINE_VALIDATION.md)를 따릅니다.
+
 ## 입력
 
 `RaceContext`: 서버(JP), 데이터/게임 버전, 코스 ID, 거리, 노면, 마장 상태,
@@ -45,7 +49,7 @@ FactorMaster·FactorSkillLink나 인자 ID 매핑은 필수 의존성이 아닙�
 
 ## 엔진 인터페이스
 
-현재 `FixtureEngine`의 다음 메서드를 실제 엔진에서 구현합니다.
+예시 화면 `FixtureEngine`의 다음 기능을 실제 엔진에서 구현하는 것이 목표입니다.
 
 ```js
 available()                    // 현재 편성의 경로가 있는 후보 + 계승 추천 후보
