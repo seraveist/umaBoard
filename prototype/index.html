@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>UMA PLAN · 일본 서버 육성 준비</title>
+<style>:root { color-scheme: light dark; }
+body { margin: 0; background: light-dark(#f2f5f1,#141c17); }
+#uma-plan {
+  --bg: light-dark(#f2f5f1,#141c17); --panel: light-dark(#fff,#1d2821);
+  --soft: light-dark(#f5f7f4,#26332a); --text: light-dark(#25392d,#e5eee7);
+  --sub: light-dark(#647568,#adbeaf); --line: light-dark(#dce5db,#3c4b3f);
+  --green: light-dark(#246343,#9ed8af); --on-green: light-dark(#fff,#14271b);
+  --tint: light-dark(#e9f2e8,#2c4432); --gold: light-dark(#866117,#e4c076);
+  --gold-bg: light-dark(#fcf4df,#403723); --pink: light-dark(#a13e77,#edafd5);
+  --pink-bg: light-dark(#faeaf3,#463244); --blue: light-dark(#456588,#b1cde9);
+  --blue-bg: light-dark(#edf3fa,#2b3b4a); --red: light-dark(#a34736,#f0b3a5);
+  --value-col:82px;
+  color: var(--text); background: var(--bg); min-height:100vh;
+  font: 14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+}
+#uma-plan * { box-sizing:border-box; }
+#uma-plan [hidden] { display:none!important; }
+#uma-plan h1,#uma-plan h2,#uma-plan h3,#uma-plan p { margin:0; }
+#uma-plan button,#uma-plan input,#uma-plan select { font:inherit; }
+#uma-plan button { cursor:pointer; color:inherit; }
+#uma-plan button:disabled { cursor:default; opacity:.55; }
+#uma-plan :is(button,input,select,summary):focus-visible { outline:2px solid var(--green); outline-offset:3px; }
+#uma-plan button,#uma-plan select,#uma-plan input { touch-action:manipulation; }
+#uma-plan input[type=checkbox] { width:17px;height:17px;accent-color:var(--green);margin:0;flex-shrink:0; }
+#uma-plan h1 { font-size:24px;font-weight:600;letter-spacing:-.8px;line-height:1.3; }
+#uma-plan h2 { font-size:19px;font-weight:600;letter-spacing:-.5px; }
+#uma-plan h3 { font-size:14px;font-weight:600; }
+#uma-plan .sub { color:var(--sub);font-size:12px; }
+#uma-plan .num { font-variant-numeric:tabular-nums; }
+#uma-plan .header { background:var(--panel);border-bottom:1px solid var(--line);padding:22px max(24px,calc((100% - 1320px)/2)) 0; }
+#uma-plan .brand { display:flex;align-items:center;gap:11px;margin-bottom:19px; }
+#uma-plan .brand-mark { width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--green);color:var(--on-green);font-size:18px;font-weight:600; }
+#uma-plan .brand-name { font-weight:600;font-size:17px;letter-spacing:1px; }
+#uma-plan .badge { display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:5px;background:var(--soft);color:var(--sub);font-size:11px;white-space:nowrap; }
+#uma-plan .badge.green { color:var(--green);background:var(--tint); }
+#uma-plan .badge.gold { color:var(--gold);background:var(--gold-bg); }
+#uma-plan .badge.pink { color:var(--pink);background:var(--pink-bg); }
+#uma-plan .badge.blue { color:var(--blue);background:var(--blue-bg); }
+#uma-plan .main-tabs { display:flex;gap:25px;flex-wrap:wrap; }
+#uma-plan .main-tab { border:0;border-bottom:3px solid transparent;background:transparent;color:var(--sub);padding:0 0 12px;font-size:13px; }
+#uma-plan .main-tab[aria-selected=true] { border-color:var(--green);color:var(--green);font-weight:600; }
+#uma-plan .page { max-width:1320px;margin:auto;padding:25px 24px 30px; }
+#uma-plan .page-title { display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px; }
+#uma-plan .subtitle { color:var(--sub);font-size:13px;margin-top:6px; }
+#uma-plan .layout { display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:start; }
+#uma-plan .inputs,#uma-plan .results { display:grid;gap:14px;min-width:0; }
+#uma-plan .panel { background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0; }
+#uma-plan .input-panel { padding:16px; }
+#uma-plan .section-head { display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px; }
+#uma-plan .step { color:var(--green);font-size:11px;margin-right:7px; }
+#uma-plan .fields { display:grid;grid-template-columns:1fr 1fr;gap:10px 9px; }
+#uma-plan .field { display:grid;gap:5px;min-width:0;color:var(--sub);font-size:12px; }
+#uma-plan .full { grid-column:1/-1; }
+#uma-plan .field :is(select,input) { width:100%;height:35px;min-width:0;border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:var(--panel);color:var(--text);font-size:12px; }
+#uma-plan .help { color:var(--sub);font-size:11px;margin-top:10px; }
+#uma-plan .policy { display:flex;flex-wrap:wrap;gap:5px;margin-top:11px; }
+#uma-plan .support-list { display:grid;grid-template-columns:1fr 1fr;gap:7px; }
+#uma-plan .support { padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--soft);min-width:0; }
+#uma-plan .support-type { color:var(--green);font-size:10px;letter-spacing:.8px;margin-bottom:3px; }
+#uma-plan .support select { color:var(--text);width:100%;min-width:0;background:transparent;border:0;font-size:12px;padding:0; }
+#uma-plan .support small { font-size:11px;color:var(--sub);display:block;margin-top:4px; }
+#uma-plan details.input-panel { padding:0; }
+#uma-plan details.input-panel>summary { padding:15px 16px;font-size:13px;cursor:pointer; }
+#uma-plan .details-body { padding:0 16px 16px; }
+#uma-plan .stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px 7px;margin-bottom:12px; }
+#uma-plan .primary { border:0;border-radius:8px;background:var(--green);color:var(--on-green);padding:10px 14px;font-weight:500; }
+#uma-plan .calculate { width:100%; }
+#uma-plan .small-action { border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--green);font-size:11px;padding:6px 9px; }
+#uma-plan .calculation-status { color:var(--sub);font-size:11px;text-align:center;margin-top:7px;min-height:17px; }
+#uma-plan .context-controls { display:flex;gap:8px 12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px; }
+#uma-plan .objective { display:flex;gap:7px;align-items:center;color:var(--sub);font-size:11px; }
+#uma-plan .objective select { background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px; }
+#uma-plan .context-metrics { display:flex;gap:5px 18px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--sub); }
+#uma-plan .context-metrics strong { color:var(--text);font-size:13px;font-weight:500; }
+#uma-plan .result-shell { overflow:hidden; }
+#uma-plan .result-tabs { display:flex;gap:24px;padding:0 20px;border-bottom:1px solid var(--line); }
+#uma-plan .result-tab { border:0;border-bottom:2px solid transparent;background:transparent;color:var(--sub);font-size:13px;padding:14px 0 11px;white-space:nowrap; }
+#uma-plan .result-tab[aria-selected=true] { border-color:var(--green);color:var(--green);font-weight:600; }
+#uma-plan .tab-content { padding:19px 20px; }
+#uma-plan .note { padding:10px 12px;border-radius:7px;background:var(--blue-bg);color:var(--blue);font-size:11px; }
+#uma-plan .list { margin-top:0; }
+#uma-plan .list-columns,#uma-plan .skill { display:grid;grid-template-columns:20px minmax(0,1fr) var(--value-col);gap:8px;align-items:start; }
+#uma-plan .list-columns { font-size:11px;color:var(--sub);padding:0 0 7px;border-bottom:1px solid var(--line); }
+#uma-plan .list-columns span:first-child { grid-column:2; }
+#uma-plan .list-columns span:not(:first-child) { text-align:right; }
+#uma-plan .skill { padding:12px 0;border-bottom:1px solid var(--line); }
+#uma-plan .skill:last-child { border-bottom:0; }
+#uma-plan .skill-checkbox { padding-top:4px; }
+#uma-plan .skill-heading { display:flex;gap:5px 6px;align-items:center;flex-wrap:wrap; }
+#uma-plan .rank { color:var(--sub);font-size:11px;font-variant-numeric:tabular-nums;margin-right:2px; }
+#uma-plan .skill-name { font-size:13px;font-weight:500; }
+#uma-plan .acquisition { font-size:11px;color:var(--sub); }
+#uma-plan .skill-meta { display:flex;align-items:start;flex-wrap:wrap;gap:3px 12px;margin-top:4px; }
+#uma-plan .skill-details { margin-top:4px; }
+#uma-plan .skill-meta>.skill-details { margin-top:0; }
+#uma-plan .skill-meta>.skill-details[open] { flex-basis:100%; }
+#uma-plan .skill-details summary { color:var(--blue);font-size:11px;cursor:pointer; }
+#uma-plan .skill-details p { color:var(--sub);font-size:11px;margin-top:5px; }
+#uma-plan .skill-value { text-align:right;font-variant-numeric:tabular-nums; }
+#uma-plan .skill-value strong { display:block;font-size:16px;font-weight:600; }
+#uma-plan .skill-value .negative { color:var(--red); }
+#uma-plan .list-footer { padding-top:10px;border-top:1px solid var(--line);font-size:11px;color:var(--sub); }
+#uma-plan .check-line { display:flex;align-items:center;gap:8px;font-size:12px; }
+#uma-plan .auto-toolbar { display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px; }
+#uma-plan .combination { background:var(--tint);border-radius:8px;padding:13px;margin-bottom:15px; }
+#uma-plan .combination strong { font-weight:500;color:var(--green);font-size:13px; }
+#uma-plan .combo-label { display:flex;align-items:center;justify-content:space-between;margin-bottom:5px; }
+#uma-plan .combination p { color:var(--sub);font-size:11px;margin-top:5px; }
+#uma-plan .combo-stats { display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:12px; }
+#uma-plan .analysis-details { margin-top:12px;border-top:1px solid var(--line);padding-top:10px; }
+#uma-plan .analysis-details>summary,#uma-plan .calculation-details>summary { cursor:pointer;font-size:11px;color:var(--sub); }
+#uma-plan .analysis-comparison { margin-top:15px;border-top:1px solid var(--line);padding-top:15px; }
+#uma-plan .analysis-comparison .section-head { margin-bottom:8px; }
+#uma-plan .analysis-comparison .context-metrics { margin-top:0;margin-bottom:5px; }
+#uma-plan .analysis-comparison .chart-heading { margin-top:12px; }
+#uma-plan .analysis-comparison td { white-space:nowrap; }
+#uma-plan .table-unit { display:block;font-size:10px; }
+#uma-plan .chart { width:100%;display:block;height:180px; }
+#uma-plan .chart-heading { display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;margin-bottom:5px; }
+#uma-plan .chart-legend { display:flex;gap:12px;color:var(--sub);font-size:11px; }
+#uma-plan .legend-mark { display:inline-block;width:16px;border-top:2px solid var(--green);margin-right:4px;vertical-align:middle; }
+#uma-plan .legend-mark.base { border-color:var(--sub);border-top-style:dashed; }
+#uma-plan .table-scroll { overflow-x:auto;margin:12px 0 15px; }
+#uma-plan table { width:100%;border-collapse:collapse;font-size:11px; }
+#uma-plan th { color:var(--sub);font-weight:500;text-align:left;white-space:nowrap; }
+#uma-plan th,#uma-plan td { padding:9px 8px;border-bottom:1px solid var(--line); }
+#uma-plan th:not(:first-child),#uma-plan td:not(:first-child) { text-align:right;font-variant-numeric:tabular-nums; }
+#uma-plan tr.active { background:var(--soft); }
+#uma-plan .divider { border:0;border-top:1px solid var(--line);margin:16px 0; }
+#uma-plan .factor-plan { padding:12px 13px;margin-top:12px;border-radius:8px;background:var(--tint);font-size:12px; }
+#uma-plan .factor-plan strong { color:var(--green);font-weight:500; }
+#uma-plan .factor-plan p { color:var(--sub);font-size:11px;margin-top:4px; }
+#uma-plan .stamina-top { display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;background:var(--soft);border-radius:8px; }
+#uma-plan .stamina-top strong { font-size:19px;font-weight:500; }
+#uma-plan .finish-status { background:var(--gold-bg);padding:13px;border-radius:8px;margin-top:12px; }
+#uma-plan .finish-status strong { color:var(--gold);font-weight:500; }
+#uma-plan .finish-status p { color:var(--sub);font-size:12px;margin-top:4px; }
+#uma-plan .finish-status.ok { background:var(--tint); }
+#uma-plan .finish-status.ok strong { color:var(--green); }
+#uma-plan .stamina-checks { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:13px 0; }
+#uma-plan .stamina-checks>div { padding:10px 0; }
+#uma-plan .stamina-checks span { display:block;font-size:11px;color:var(--sub); }
+#uma-plan .stamina-checks strong { display:block;font-size:13px;font-weight:500;margin-top:4px; }
+#uma-plan .global-plan { padding:14px 20px;background:var(--soft);border-top:1px solid var(--line); }
+#uma-plan .global-plan-top { display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; }
+#uma-plan .global-plan-top>span { font-size:11px;color:var(--sub); }
+#uma-plan .calculation-details { margin-top:7px; }
+#uma-plan .global-plan p { font-size:11px;color:var(--sub);margin-top:6px; }
+#uma-plan .footnote { text-align:center;color:var(--sub);font-size:11px; }
+#uma-plan .inventory-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px; }
+#uma-plan .inventory-item { padding:18px; }
+#uma-plan .inventory-item .field { margin-top:12px; }
+#uma-plan .inventory-icon { display:grid;place-items:center;width:44px;height:44px;border-radius:9px;background:var(--tint);color:var(--green);font-size:21px;margin-bottom:12px; }
+#uma-plan .inventory-note { margin-top:18px;padding:15px 18px;color:var(--sub);font-size:12px; }
+#uma-plan .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+@media(max-width:1000px) {
+  #uma-plan .layout { grid-template-columns:250px minmax(0,1fr);gap:14px; }
+  #uma-plan .page { padding:22px 18px; }
+  #uma-plan .tab-content { padding:16px; }
+  #uma-plan { --value-col:72px; }
+  #uma-plan .skill-value strong { font-size:15px; }
+  #uma-plan .stamina-checks { gap:7px; }
+}
+@media(max-width:740px) {
+  #uma-plan .layout { grid-template-columns:minmax(0,1fr);gap:20px; }
+  #uma-plan .header { padding:18px 16px 0; }
+  #uma-plan .page { padding:20px 14px; }
+  #uma-plan .page-title { align-items:flex-start; }
+  #uma-plan .page-title>.badge { display:none; }
+  #uma-plan h1 { font-size:22px; }
+  #uma-plan .inputs { grid-template-columns:1fr 1fr; }
+  #uma-plan .inputs>.stats-panel,#uma-plan .inputs>.calculate-wrap { grid-column:1/-1; }
+  #uma-plan .support-panel { grid-column:1/-1; }
+  #uma-plan .support-list { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  #uma-plan .inventory-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:460px) {
+  #uma-plan .inputs { grid-template-columns:minmax(0,1fr); }
+  #uma-plan .support-list { grid-template-columns:1fr 1fr; }
+  #uma-plan .main-tabs { gap:18px; }
+  #uma-plan .main-tab { font-size:12px; }
+  #uma-plan .result-tabs { gap:18px;padding:0 15px; }
+  #uma-plan .result-tab { font-size:12px; }
+  #uma-plan { --value-col:58px; }
+  #uma-plan .context-metrics { gap:5px 13px; }
+  #uma-plan .list-columns,#uma-plan .skill { grid-template-columns:19px minmax(0,1fr) var(--value-col);gap:7px; }
+  #uma-plan .skill-value strong { font-size:14px; }
+  #uma-plan .skill-heading .badge { font-size:10px; }
+  #uma-plan .stamina-checks { grid-template-columns:1fr;gap:0; }
+  #uma-plan .stamina-checks>div { display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line); }
+  #uma-plan .stamina-checks strong { margin:0; }
+  #uma-plan .inventory-grid { grid-template-columns:minmax(0,1fr); }
+}
+@media(pointer:coarse) {
+  #uma-plan :is(button,select,input[type=number]) { min-height:44px; }
+  #uma-plan input[type=number],#uma-plan .field select { font-size:16px; }
+  #uma-plan .skill-checkbox { min-height:44px;min-width:24px;display:flex;align-items:flex-start;padding-top:4px; }
+  #uma-plan .check-line { min-height:44px; }
+}
+</style>
+</head>
+<body>
+<div id="uma-plan" lang="ko">
+  <header class="header">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">U</div><div class="brand-name">UMA PLAN</div><span class="badge green">일본 서버</span><span class="badge" title="스킬·카드·수치는 실제 DB 연결 전의 예시입니다.">예시 데이터</span></div>
+    <nav class="main-tabs" role="tablist" aria-label="주 메뉴">
+      <button class="main-tab" id="prep-tab" role="tab" aria-selected="true" aria-controls="prep-panel">육성 준비</button>
+      <button class="main-tab" id="roster-tab" role="tab" aria-selected="false" aria-controls="roster-panel" tabindex="-1">보유 우마무스메</button>
+      <button class="main-tab" id="supports-tab" role="tab" aria-selected="false" aria-controls="supports-panel" tabindex="-1">보유 서포트</button>
+    </nav>
+  </header>
+  <main>
+    <section class="page" id="prep-panel" role="tabpanel" aria-labelledby="prep-tab">
+      <div class="page-title"><h1>스킬 최적화</h1></div>
+      <div class="layout">
+        <aside class="inputs" aria-label="육성 조건 입력">
+          <section class="panel input-panel">
+            <div class="section-head"><h3><span class="step">01</span>목표 레이스</h3><span class="sub">조건 설정</span></div>
+            <div class="fields">
+              <label class="field full">경기장<select data-setting="track"><option value="tokyo">도쿄</option><option value="longchamp">롱샹</option><option value="kyoto">교토</option></select></label>
+              <label class="field">거리<select data-setting="distance"><option value="2400">2,400 m</option><option value="2000">2,000 m</option><option value="1600">1,600 m</option><option value="3200">3,200 m</option></select></label>
+              <label class="field">노면<select data-setting="surface"><option value="turf">잔디</option><option value="dirt">더트</option></select></label>
+              <label class="field">계절<select data-setting="season"><option>봄</option><option>여름</option><option>가을</option><option>겨울</option></select></label>
+              <label class="field">날씨<select data-setting="weather"><option>맑음</option><option>흐림</option><option>비</option><option>눈</option></select></label>
+              <label class="field">마장 상태<select data-setting="going"><option value="good">양호</option><option value="yielding">다습</option><option value="soft">포화</option><option value="heavy">불량</option></select></label>
+              <label class="field">시간<select data-setting="time"><option>낮</option><option>저녁</option><option>밤</option></select></label>
+            </div>
+          </section>
+          <section class="panel input-panel">
+            <div class="section-head"><h3><span class="step">02</span>육성 우마무스메</h3></div>
+            <div class="fields">
+              <label class="field full">우마무스메 · 의상<select data-setting="trainee"><option value="oguri">오구리 캡 · 기본 의상</option><option value="teio">토카이 테이오 · 기본 의상</option><option value="kita">키타산 블랙 · 기본 의상</option></select></label>
+              <label class="field">각질<select data-setting="style"><option value="senko">선행</option><option value="nige">도주</option><option value="sashi">선입</option><option value="oikomi">추입</option></select></label>
+              <label class="field">개화 상태<select data-setting="bloom"><option value="3">★3</option><option value="4">★4</option><option value="5">★5</option></select></label>
+              <label class="field full">육성 시나리오<select data-setting="scenario"><option value="A">시나리오 A · 예시</option><option value="B">시나리오 B · 예시</option></select></label>
+            </div>
+            <div class="policy"><span class="badge">각성 MAX</span><span class="badge pink">진화형 기준</span><span class="badge blue" id="unique-level">고유기 Lv. 4 가정</span></div>
+          </section>
+          <section class="panel input-panel support-panel">
+            <div class="section-head"><h3><span class="step">03</span>서포트 편성</h3><span class="sub">카드 6장</span></div>
+            <div class="support-list" id="deck-inputs"></div>
+          </section>
+          <details class="panel input-panel stats-panel" open>
+            <summary>목표 능력치 · 적성</summary>
+            <div class="details-body">
+              <div class="stats">
+                <label class="field">스피드<input type="number" required min="1" max="4000" value="2000" data-setting="speed"></label>
+                <label class="field">스태미나<input type="number" required min="1" max="4000" value="1600" data-setting="stamina"></label>
+                <label class="field">파워<input type="number" required min="1" max="4000" value="1600" data-setting="power"></label>
+                <label class="field">근성<input type="number" required min="1" max="4000" value="1200" data-setting="guts"></label>
+                <label class="field">지능<input type="number" required min="1" max="4000" value="1600" data-setting="wisdom"></label>
+              </div>
+              <div class="fields">
+                <label class="field">거리 적성<select data-setting="distanceApt"><option>S</option><option>A</option><option>B</option></select></label>
+                <label class="field">각질 적성<select data-setting="styleApt"><option>A</option><option>S</option><option>B</option></select></label>
+                <label class="field">마장 적성<select data-setting="surfaceApt"><option>A</option><option>S</option><option>B</option></select></label>
+                <label class="field">의욕<select data-setting="mood"><option value="best">최상</option><option value="good">양호</option><option value="normal">보통</option></select></label>
+              </div>
+            </div>
+          </details>
+          <div class="calculate-wrap"><button class="primary calculate" id="calculate" type="button">추천 보기</button><p class="calculation-status" id="calculation-status" role="status"></p></div>
+        </aside>
+        <div class="results" id="results" aria-label="추천 결과">
+          <section class="panel result-shell">
+            <div class="result-tabs" role="tablist" aria-label="결과 종류">
+              <button class="result-tab" id="speed-tab" role="tab" aria-selected="true" aria-controls="speed-panel">속도기</button>
+              <button class="result-tab" id="accel-tab" role="tab" aria-selected="false" aria-controls="accel-panel" tabindex="-1">가속기</button>
+              <button class="result-tab" id="factors-tab" role="tab" aria-selected="false" aria-controls="factors-panel" tabindex="-1">흰 인자</button>
+              <button class="result-tab" id="stamina-tab" role="tab" aria-selected="false" aria-controls="stamina-panel" tabindex="-1">스태미나</button>
+            </div>
+            <div class="tab-content" id="speed-panel" role="tabpanel" aria-labelledby="speed-tab">
+              <div class="section-head"><span class="sub">마신 이득순 · 계승 포함</span><button class="small-action" id="all-speed">전체 선택</button></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div id="speed-list" class="list"></div>
+              <p class="list-footer" id="factor-speed-note">흰 인자에서 선택한 속도기도 계산에 반영합니다.</p>
+            </div>
+            <div class="tab-content" id="accel-panel" role="tabpanel" aria-labelledby="accel-tab" hidden>
+              <div class="context-controls"><label class="objective">추천 기준<select id="objective"><option value="maximum">최대</option><option value="efficient" selected>효율</option><option value="robust">안전</option></select></label><span class="sub" id="recommend-policy"></span></div>
+              <div class="combination"><div class="combo-label"><span class="sub" id="recommendation-label">추천 조합 · 효율</span><span class="badge green" id="accel-mode">자동</span></div><strong id="recommended-combo">—</strong><div class="combo-stats"><span id="combo-gain">—</span></div><p id="manual-combo" hidden></p></div>
+              <div class="auto-toolbar"><label class="check-line"><input type="checkbox" id="auto-accel" checked>자동 선택</label><button class="small-action" id="apply-accel">추천 적용</button></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div class="list" id="accel-list"></div>
+              <section class="analysis-comparison" id="accel-details" aria-label="가속 비교"><div class="section-head"><h3>가속 비교</h3><span class="sub" id="scenario-caption"></span></div><div class="context-metrics"><span>진입 <strong class="num" id="entry-speed">—</strong> m/s</span><span>목표 <strong class="num" id="target-speed">—</strong> m/s</span><span>차이 <strong class="num" id="speed-gap">—</strong> m/s</span></div><p class="sub" id="combo-time"></p><div class="chart-heading"><span>종반 속도</span><div class="chart-legend"><span><i class="legend-mark"></i>현재</span><span><i class="legend-mark base"></i>가속 제외</span></div></div><svg class="chart" id="accel-chart" role="img" aria-label="현재 조합과 가속 제외 시의 속도 변화 비교"></svg><div class="table-scroll"><table aria-label="발동 가정별 가속 비교"><thead><tr><th>발동 가정</th><th>진입속도<span class="table-unit">m/s</span></th><th>속도 차이<span class="table-unit">m/s</span></th><th>목표 도달<span class="table-unit">초</span></th><th>가속 이득<span class="table-unit">마신</span></th></tr></thead><tbody id="scenario-table"></tbody></table></div></section>
+            </div>
+            <div class="tab-content" id="factors-panel" role="tabpanel" aria-labelledby="factors-tab" hidden>
+              <div class="section-head"><h3>인자로 준비할 스킬 TOP 10</h3><span class="sub">체크 시 습득 가정에 반영</span></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div class="list" id="factor-list"></div>
+              <div class="factor-plan"><strong id="factor-plan-count">흰 인자 0개 준비</strong><p id="factor-plan-names">선택한 스킬 목록이 표시됩니다.</p></div>
+            </div>
+            <div class="tab-content" id="stamina-panel" role="tabpanel" aria-labelledby="stamina-tab" hidden>
+              <div class="section-head"><h3>완주 · 스퍼트</h3><span class="sub">단독 주행 가정</span></div>
+              <div class="stamina-top"><span class="sub">목표 스태미나</span><strong class="num" id="stamina-value">—</strong></div>
+              <div class="finish-status" id="finish-status"><strong id="finish-verdict">—</strong><p id="finish-description">—</p></div>
+              <div class="stamina-checks"><div><span>결승 전 지구력 고갈</span><strong id="hp-check">—</strong></div><div><span>최속 스퍼트 시작</span><strong id="spurt-check">—</strong></div><div><span>결승선까지 유지</span><strong id="sustain-check">—</strong></div></div>
+              <div class="section-head"><h3>회복 스킬</h3></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>회복</span></div>
+              <div class="list" id="heal-list"></div>
+              <details class="analysis-details"><summary>회복 발동 · 불발 비교</summary><div class="table-scroll"><table aria-label="회복 발동 여부 비교"><thead><tr><th>회복 가정</th><th>결승 지구력</th><th>스퍼트 유지</th></tr></thead><tbody id="heal-table"></tbody></table></div></details>
+            </div>
+            <div class="global-plan"><div class="global-plan-top"><span id="global-count">—</span></div><details class="calculation-details"><summary>계산 기준</summary><p>체크한 스킬은 습득·발동 가정에 반영합니다. 자체·서포트는 획득 경로, 계승·흰 인자는 준비 후보입니다.</p><p>마신은 현재 조합에서 선택한 스킬을 제외했을 때의 손실, 미선택 스킬을 추가했을 때의 이득입니다. 개별 값은 단순 합산하지 않습니다.</p><p>각성 MAX·진화 조건 달성·육성 중 고유기 레벨 상승 조건 달성 기준. 서포트 이벤트 스킬은 완주·선택 조건을 고려하지 않습니다.</p><p>스태미나는 단독 주행 기준이며 몸싸움·상대 디버프는 포함하지 않습니다.</p></details></div>
+          </section>
+          <p class="footnote">스킬·카드·수치는 실제 DB 연결 전의 예시입니다.</p>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="roster-panel" role="tabpanel" aria-labelledby="roster-tab" hidden><div class="page-title"><h1>보유 우마무스메</h1><span class="badge green" id="owned-uma-count">—</span></div><div class="inventory-grid" id="owned-uma-list"></div></section>
+    <section class="page" id="supports-panel" role="tabpanel" aria-labelledby="supports-tab" hidden><div class="page-title"><h1>보유 서포트</h1><span class="badge green" id="owned-support-count">—</span></div><div class="inventory-grid" id="owned-support-list"></div></section>
+  </main>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+</div>
+
+<script>/*
+ * Prototype analysis adapter. All skill records, coefficients, activation cases,
+ * and HP reserves are fixtures, NOT the Japanese game's calculation rules.
+ * Replace FixtureEngine with a validated solver without changing the UI contract.
+ */
+(() => {
+  'use strict';
+  const cases = {
+    best:{name:'유리한 발동',connection:1,delay:0},
+    typical:{name:'대표 발동',connection:.5,delay:.7},
+    worst:{name:'불리한 발동',connection:0,delay:2.2}
+  };
+  const cards = [
+    {id:'A',name:'스피드 카드 A',type:'스피드',slot:1},
+    {id:'H',name:'스피드 카드 H',type:'스피드',slot:1},
+    {id:'B',name:'스피드 카드 B',type:'스피드',slot:2},
+    {id:'I',name:'스피드 카드 I',type:'스피드',slot:2},
+    {id:'C',name:'파워 카드 C',type:'파워',slot:3},
+    {id:'J',name:'파워 카드 J',type:'파워',slot:3},
+    {id:'D',name:'근성 카드 D',type:'근성',slot:4},
+    {id:'K',name:'근성 카드 K',type:'근성',slot:4},
+    {id:'E',name:'지능 카드 E',type:'지능',slot:5},
+    {id:'G',name:'지능 카드 G',type:'지능',slot:5},
+    {id:'F',name:'친구 카드 F',type:'친구',slot:6},
+    {id:'L',name:'그룹 카드 L',type:'그룹',slot:6}
+  ];
+  const roster = [
+    {id:'oguri',name:'오구리 캡',letter:'O',bloom:3,owned:true},
+    {id:'teio',name:'토카이 테이오',letter:'T',bloom:3,owned:true},
+    {id:'kita',name:'키타산 블랙',letter:'K',bloom:3,owned:true},
+    {id:'sky',name:'세이운 스카이',letter:'S',bloom:3,owned:false},
+    {id:'nishi',name:'니시노 플라워',letter:'N',bloom:3,owned:false},
+    {id:'mcqueen',name:'메지로 맥퀸',letter:'M',bloom:3,owned:false}
+  ];
+  const skillRecords = [
+    {id:'s1',name:'종반 고유 속도 A',type:'speed',grade:'고유',origin:'자체 고유',path:'기본 보유',sp:0,target:.65,start:4,duration:5,reason:'종반의 목표속도를 올리는 고유기 예시입니다.',condition:'종반 구간 · 조건 충족 가정',levelScaled:true},
+    {id:'s2',name:'계승 접속 속도 B',type:'speed',grade:'계승 고유',origin:'계승 후보 우마 A',path:'계승 준비',sp:200,entry:1.65,target:.2,start:0,duration:2.5,reason:'접속 성공 정도에 따라 종반 진입속도가 달라지는 후보입니다.',condition:'종반 직전 발동 · 순위 조건 충족 가정',connection:true},
+    {id:'s3',name:'시나리오 속도 C · 진화',type:'speed',grade:'진화',origin:'서포트',cardSlot:1,path:'연속 이벤트 · 시나리오 진화',sp:340,priorDistance:1.4,target:.25,start:0,duration:3,reason:'중반에서 확보한 거리 이득과 종반까지 남는 효과를 함께 반영합니다.',condition:'중반 발동 · 진화 조건 달성 가정',evolution:'원본 금색 속도 C → 시나리오 속도 C · 진화 / 이벤트 완주·시나리오 진화 조건 달성'},
+    {id:'s4',name:'종반 속도 D',type:'speed',grade:'흰색',origin:'서포트',cardSlot:2,path:'힌트',sp:180,target:.35,start:8,duration:4,reason:'종반 가속 이후에 목표속도를 높이는 예시입니다.',condition:'종반 구간 · 발동 시점 가정'},
+    {id:'s5',name:'각성 속도 E · 진화',type:'speed',grade:'진화',origin:'자체 · 각성 MAX',path:'각성 스킬 · 진화',sp:320,target:.45,start:5,duration:4,reason:'각성 MAX으로 개방된 금스킬은 진화형 효과로 비교합니다.',condition:'코너 구간 · 진화 조건 달성 가정',evolution:'원본 금색 속도 E → 각성 속도 E · 진화 / 대상 스킬 습득·진화 조건 달성'},
+    {id:'s6',name:'직선 속도 F',type:'speed',grade:'흰색',origin:'서포트',cardSlot:5,path:'힌트',sp:160,target:.3,start:12,duration:3,reason:'직선에서 발동하는 속도기 예시입니다.',condition:'직선 구간 · 발동 시점 가정'},
+    {id:'a1',name:'주력 가속 A · 진화',type:'accel',grade:'진화',origin:'자체 · 각성 MAX',path:'각성 스킬 · 진화',sp:360,acceleration:.42,start:0,duration:4,primary:true,reason:'종반 초반의 주력 후보입니다. 발동 시점과 속도 차이에 따라 효율이 달라집니다.',condition:'종반 진입 · 발동 조건 충족 가정',evolution:'원본 금색 가속 A → 주력 가속 A · 진화 / 대상 스킬 습득·진화 조건 달성'},
+    {id:'a2',name:'보완 가속 B',type:'accel',grade:'금색',origin:'서포트',cardSlot:5,path:'연속 이벤트',sp:320,acceleration:.28,start:1.2,duration:3,reason:'주력과 겹치는 구간의 추가 이득과 비용을 비교합니다.',condition:'종반 무작위 구간 · 위치 가정'},
+    {id:'a3',name:'계승 가속 C',type:'accel',grade:'계승 고유',origin:'계승 후보 우마 B',path:'계승 준비',sp:200,acceleration:.22,start:.3,duration:2.4,reason:'별도의 계승형 효과로 계산하는 가속 후보입니다.',condition:'종반 코너 · 순위 조건 충족 가정'},
+    {id:'a4',name:'늦은 구간 가속 D',type:'accel',grade:'흰색',origin:'서포트',cardSlot:3,path:'힌트',sp:160,acceleration:.18,start:6,duration:3,reason:'발동할 때 이미 목표속도에 도달했다면 추가 이득이 적습니다.',condition:'늦은 종반 구간 · 위치 가정'},
+    {id:'h1',name:'각성 회복 E · 진화',type:'heal',grade:'진화',origin:'자체 · 각성 MAX',path:'각성 스킬 · 진화',sp:280,recovery:.055,start:5,reason:'발동 시점에 회복하고 지구력 고갈과 유지 여부를 비교합니다.',condition:'중후반 발동 · 진화 조건 달성 가정',evolution:'원본 금색 회복 E → 각성 회복 E · 진화 / 대상 스킬 습득·진화 조건 달성'},
+    {id:'h2',name:'코너 회복 F',type:'heal',grade:'흰색',origin:'서포트',cardSlot:3,path:'힌트',sp:160,recovery:.015,start:9,reason:'소량 회복의 보완 효과를 확인합니다.',condition:'코너 구간 · 발동 시점 가정'}
+  ];
+  const factorRecords = [
+    {id:'f1',name:'중반 접속 속도 G',type:'speed',entry:.9,target:.15,start:0,duration:2,priorDistance:.5,sp:180,connection:true,reason:'추가 접속 후보로 진입속도와 가속 추천 변화를 확인합니다.'},
+    {id:'f2',name:'종반 속도 H',type:'speed',target:.4,start:9,duration:4,sp:180},
+    {id:'f3',name:'거리 코너 I',type:'speed',target:.35,start:7,duration:4,sp:160},
+    {id:'f4',name:'거리 직선 J',type:'speed',target:.3,start:12,duration:4,sp:160},
+    {id:'f5',name:'각질 코너 K',type:'speed',priorDistance:.95,sp:160},
+    {id:'f6',name:'구간 가속 L',type:'accel',acceleration:.19,start:1,duration:3,sp:180},
+    {id:'f7',name:'각질 직선 M',type:'speed',target:.25,start:13,duration:4,sp:160},
+    {id:'f8',name:'끝 구간 속도 N',type:'speed',target:.28,start:16,duration:3,sp:180},
+    {id:'f9',name:'중반 속도 O',type:'speed',priorDistance:.7,sp:180},
+    {id:'f10',name:'보완 가속 P',type:'accel',acceleration:.14,start:3,duration:3,sp:160},
+    {id:'f11',name:'직선 속도 Q',type:'speed',target:.2,start:17,duration:3,sp:160},
+    {id:'f12',name:'중간 구간 속도 R',type:'speed',priorDistance:.55,sp:180}
+  ].map(s=>({...s,grade:'흰색',origin:'흰 인자',path:'인자 준비',condition:s.connection?'종반 직전 발동 · 접속 가정':'스킬 조건 충족·발동 위치 가정',reason:s.reason||'현재 편성 밖의 후보를 습득했을 때의 추가 이득을 비교합니다.'}));
+  const all = new Map([...skillRecords,...factorRecords].map(s=>[s.id,s]));
+  const ordered = ids => [...ids].sort();
+  const clamp = (v,lo,hi) => Math.max(lo,Math.min(hi,v));
+  const sum = (arr,fn) => arr.reduce((a,b)=>a+fn(b),0);
+
+  class FixtureEngine {
+    constructor(settings) {
+      this.settings = Object.freeze({...settings,server:'JP',awakening:'MAX'});
+      this.cache = new Map();
+      this.baselines = new Map();
+    }
+    available() {
+      const list = skillRecords.map(s=>({...s}));
+      if(this.settings.support5==='G') list.push({...all.get('f1'),origin:'서포트',cardSlot:5,path:'힌트'});
+      if(this.settings.support1==='H') {
+        const s=list.find(s=>s.id==='s3');s.name='시나리오 속도 C2 · 진화';s.target=.2;s.priorDistance=1.1;
+      }
+      if(this.settings.scenario==='B') {
+        const s=list.find(s=>s.id==='s3');s.start=3;s.name+=' · 분기 B';
+      }
+      return list;
+    }
+    record(id) { return this.available().find(s=>s.id===id)||all.get(id); }
+    factors() { const known=new Set(this.available().map(s=>s.id));return factorRecords.filter(s=>!known.has(s.id)); }
+    simulate(speedIds,accelIds,caseId='typical',healIds=new Set()) {
+      const key=[caseId,ordered(speedIds).join(','),ordered(accelIds).join(','),ordered(healIds).join(',')].join('|');
+      if(this.cache.has(key))return this.cache.get(key);
+      const st=this.settings, c=cases[caseId], distance=Number(st.distance), segment=distance/3;
+      const speed=ordered(speedIds).map(id=>this.record(id)).filter(Boolean);
+      const acceleration=ordered(accelIds).map(id=>this.record(id)).filter(Boolean);
+      const healing=ordered(healIds).map(id=>this.record(id)).filter(Boolean);
+      const goingMultiplier={good:1,yielding:.97,soft:.94,heavy:.90}[st.going]||1;
+      const apt=st.distanceApt==='S'?.22:st.distanceApt==='B'?-.35:0;
+      const styleShift={nige:.08,senko:0,sashi:.06,oikomi:.1}[st.style]||0;
+      const baseTarget=24+(Number(st.speed)-2000)*.00055+apt+styleShift+(st.mood==='normal'?-.08:0);
+      const baseEntry=20.15+(Number(st.speed)-2000)*.0003;
+      const baseAccel=.40*Math.sqrt(Number(st.power)/1600)*goingMultiplier*(st.surfaceApt==='B'?.9:1);
+      const level=Number(st.bloom)+1;
+      const targetEffect=s=>(s.target||0)*(s.levelScaled?(1+(level-4)*.04):1);
+      const startTime=s=>(s.start||0)+(s.primary?c.delay:0)+(s.connection?0:(caseId==='worst'?.6:0));
+      const duration=s=>s.duration||0;
+      let velocity=baseEntry+sum(speed,s=>(s.entry||0)*c.connection);
+      const entrySpeed=velocity;
+      const targetAt=t=>baseTarget+sum(speed,s=>t>=startTime(s)&&t<startTime(s)+duration(s)?targetEffect(s)*(s.connection?c.connection:1):0);
+      const entryTarget=targetAt(0);
+      let position=sum(speed,s=>(s.priorDistance||0)*(s.connection?Math.max(.4,c.connection):1));
+      let time=0, reached=null, effectiveAccelTime=0;
+      const hpMax=distance+.8*Number(st.stamina);
+      // Approximate pre-segment HP consumption exists solely to exercise UI states.
+      let hp=hpMax-distance*.68-sum(speed,s=>(s.priorDistance||0)*22);
+      const hpStart=hp;let hpEmptyAt=null;const healed=new Set();let recovered=0;
+      const trajectory=[{t:0,x:position,v:velocity,target:entryTarget,hp}];
+      const dt=.04;
+      while(position<segment && time<180) {
+        const target=targetAt(time);
+        const extra=sum(acceleration,s=>time>=startTime(s)&&time<startTime(s)+duration(s)?s.acceleration||0:0);
+        const old=velocity;
+        if(velocity<target-.0001) { velocity=Math.min(target,velocity+(baseAccel+extra)*dt);if(extra>0)effectiveAccelTime+=dt; }
+        else velocity=Math.max(target,velocity-.8*dt);
+        for(const s of healing) if(!healed.has(s.id)&&time>=s.start) {
+          const amount=Math.min(hpMax-hp,hpMax*s.recovery);hp+=amount;recovered+=amount;healed.add(s.id);
+        }
+        const drain=20*((velocity-(20-(distance-2000)/1000)+12)**2)/144;
+        const gutsFactor=1.6*Math.sqrt(1200/Number(st.guts));
+        hp-=drain*gutsFactor*dt;
+        if(hp<0&&hpEmptyAt===null)hpEmptyAt=time;
+        const next=position+(old+velocity)*.5*dt;
+        let used=dt;
+        if(next>segment)used=dt*(segment-position)/(next-position);
+        position=Math.min(segment,next);time+=used;
+        if(reached===null&&velocity>=target-.001)reached=time;
+        trajectory.push({t:time,x:position,v:velocity,target,hp});
+      }
+      const result={entrySpeed,entryTarget,gap:Math.max(0,entryTarget-entrySpeed),finishTime:time,reached,effectiveAccelTime,trajectory,hpMax,hpStart,hpFinal:hp,hpEmptyAt,recovered,segment};
+      this.cache.set(key,result);return result;
+    }
+    positionAt(result,time) {
+      const a=result.trajectory;
+      if(time>=a[a.length-1].t)return a[a.length-1].x+(time-a[a.length-1].t)*a[a.length-1].v;
+      const index=clamp(Math.floor(time/.04),0,a.length-2);
+      const p=a[index],n=a[index+1],f=clamp((time-p.t)/(n.t-p.t||1),0,1);
+      return p.x+(n.x-p.x)*f;
+    }
+    gain(speedIds,accelIds,caseId) {
+      if(!this.baselines.has(caseId))this.baselines.set(caseId,this.simulate(new Set(),new Set(),caseId));
+      const run=this.simulate(speedIds,accelIds,caseId),baseline=this.baselines.get(caseId);
+      return (run.segment-this.positionAt(baseline,run.finishTime))/2.5;
+    }
+    marginal(id,type,selection,caseId) {
+      const speed=new Set(selection.speed),accel=new Set(selection.accel);
+      const group=type==='speed'?speed:accel,selected=group.has(id);
+      const before=this.gain(speed,accel,caseId);
+      if(selected)group.delete(id);else group.add(id);
+      const after=this.gain(speed,accel,caseId);
+      return selected?before-after:after-before;
+    }
+    recommend(selection,caseId,objective) {
+      const pool=this.available().filter(s=>s.type==='accel');
+      const known=new Set(pool.map(s=>s.id));
+      const forced=new Set([...selection.accel].filter(id=>!known.has(id)));
+      const candidates=[];
+      for(let mask=0;mask<2**pool.length;mask++) {
+        const ids=new Set([...forced,...pool.filter((s,i)=>mask&(1<<i)).map(s=>s.id)]);
+        const added=Object.keys(cases).map(c=>this.gain(selection.speed,ids,c)-this.gain(selection.speed,forced,c));
+        const index=Object.keys(cases).indexOf(caseId);
+        candidates.push({ids,baseIds:new Set([...ids].filter(id=>known.has(id))),sp:sum(pool.filter(s=>ids.has(s.id)),s=>s.sp),gain:added[index],worstGain:added[Object.keys(cases).indexOf('worst')]});
+      }
+      const metric=objective==='robust'?'worstGain':'gain';
+      const maximum=Math.max(...candidates.map(c=>c[metric]));
+      const threshold=objective==='efficient'?maximum*.9:maximum;
+      const eligible=candidates.filter(c=>c[metric]>=threshold-1e-8);
+      eligible.sort((a,b)=>a.sp-b.sp||b[metric]-a[metric]||ordered(a.ids).join(',').localeCompare(ordered(b.ids).join(',')));
+      return eligible[0];
+    }
+    analyze(selection,caseId,objective) {
+      const run=this.simulate(selection.speed,selection.accel,caseId,selection.heal);
+      const noAccel=this.simulate(selection.speed,new Set(),caseId,selection.heal);
+      const recommendation=this.recommend(selection,caseId,objective);
+      const scenarios=Object.keys(cases).map(c=>{
+        const a=this.simulate(selection.speed,selection.accel,c,selection.heal);
+        const b=this.simulate(selection.speed,new Set(),c,selection.heal);
+        return {id:c,name:cases[c].name,...a,accelGain:(a.segment-this.positionAt(b,a.finishTime))/2.5};
+      });
+      const withoutHeal=this.simulate(selection.speed,selection.accel,caseId,new Set());
+      const firstSpurtReserve=100,lastSpurtReserve=70;
+      const stamina={normal:run,failed:withoutHeal,depleted:run.hpEmptyAt!==null,canStart:run.hpStart>(run.hpStart-withoutHeal.hpFinal)+firstSpurtReserve,canSustain:run.hpEmptyAt===null&&run.hpFinal>=lastSpurtReserve};
+      return {mode:'fixture',server:'JP',caseId,objective,run,noAccel,recommendation,scenarios,stamina};
+    }
+  }
+  window.UmaPlanner={FixtureEngine,skillRecords,factorRecords,cards,roster,cases};
+})();
+</script>
+<script>(() => {
+  'use strict';
+  const root=document.getElementById('uma-plan');
+  const q=s=>root.querySelector(s),qa=s=>[...root.querySelectorAll(s)];
+  const setText=(s,v)=>{q(s).textContent=v;};
+  const {FixtureEngine,cards,roster}=window.UmaPlanner;
+  const num=(v,d=2)=>Number(v).toFixed(d), signed=v=>(v>=0?'+':'')+num(v);
+  const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let caseId='typical',objective='efficient',automatic=true;
+  let selectedSpeed=new Set(),selectedAccel=new Set(),selectedHeal=new Set(),selectedFactors=new Set();
+  let applied,engine,result,available;
+  const defaultDeck=['A','B','C','D','E','F'];
+  q('#deck-inputs').innerHTML=defaultDeck.map((id,i)=>{
+    const matching=cards.filter(c=>c.slot===i+1);
+    return `<div class="support"><div class="support-type">${matching[0].type}</div><select data-setting="support${i+1}" aria-label="서포트 ${i+1}">${matching.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select><small>SSR${i===5?' · 대여':''}</small></div>`;
+  }).join('');
+  const initial={};qa('[data-setting]').forEach(el=>initial[el.dataset.setting]=el.value);
+  function readInputs(){return Object.fromEntries(qa('[data-setting]').map(el=>[el.dataset.setting,el.value||initial[el.dataset.setting]]));}
+  function grade(s){const cls=s.grade==='진화'?'pink':s.grade==='금색'?'gold':s.grade.includes('고유')?'blue':'';return `<span class="badge ${cls}">${esc(s.grade)}</span>`;}
+  function source(s){return s.cardSlot?cards.find(c=>c.id===applied['support'+s.cardSlot]).name:s.origin.replace(' · 각성 MAX','');}
+  function pool(type){return available.filter(s=>s.type===type);}
+  function selection(){
+    const speed=new Set(selectedSpeed),accel=new Set(selectedAccel);
+    for(const id of selectedFactors){const s=engine.record(id);(s.type==='speed'?speed:accel).add(id);}
+    return {speed,accel,heal:new Set(selectedHeal)};
+  }
+  function applyRecommended(){const r=engine.recommend(selection(),caseId,objective);selectedAccel=new Set(r.baseIds);}
+  function rebuild(){
+    engine=new FixtureEngine(applied);available=engine.available();
+    selectedSpeed=new Set(pool('speed').map(s=>s.id));selectedHeal=new Set();
+    // Factor choices are retained; when a normal route appears they move into the speed pool.
+    const candidateIds=new Set(engine.factors().map(s=>s.id));
+    selectedFactors=new Set([...selectedFactors].filter(id=>candidateIds.has(id)));
+    automatic=true;applyRecommended();
+  }
+  function preserveFocus(){
+    const el=document.activeElement;
+    if(!root.contains(el))return ()=>{};
+    const key=el.dataset.skillId?`[data-skill-id="${el.dataset.skillId}"]`:el.dataset.factorId?`[data-factor-id="${el.dataset.factorId}"]`:null;
+    return ()=>{if(key)q(key)?.focus({preventScroll:true});};
+  }
+  function skillRow(s,index,type,value,recommended){
+    const chosen=(type==='speed'?selectedSpeed:type==='accel'?selectedAccel:selectedHeal).has(s.id);
+    const deltaLabel=chosen?'제외 시 손실':'추가 시 이득';
+    const valueText=type==='heal'?num(s.recovery*100,1)+'%':signed(value);
+    const detailLabel=type==='heal'?'지구력 회복':deltaLabel+' · 마신';
+    const validity=type==='heal'?'':value<0?'<span class="badge gold">손해 가능</span>':value<.05?'<span class="badge">추가 효율 낮음</span>':s.connection?'<span class="badge blue">접속 의존</span>':'';
+    return `<div class="skill" data-row-id="${s.id}"><label class="skill-checkbox"><input type="checkbox" data-skill-id="${s.id}" data-skill-type="${type}" aria-label="${esc(s.name)} 효과 반영" ${chosen?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${String(index+1).padStart(2,'0')}</span><span class="skill-name">${esc(s.name)}</span>${grade(s)}${recommended?'<span class="badge green">추천</span>':validity}</div><div class="skill-meta"><span class="acquisition">${esc(source(s))}</span><details class="skill-details"><summary>상세</summary><p>${esc(s.reason)}</p><p>획득: ${esc(s.path)}</p><p>발동: ${esc(s.condition)}</p>${s.evolution?`<p>${esc(s.evolution)}</p>`:''}<p>${detailLabel}</p></details></div></div><div class="skill-value"><strong title="${detailLabel}" class="${value<0?'negative':''}">${valueText}</strong></div></div>`;
+  }
+  function renderSkills(){
+    const sel=selection(),rec=result.recommendation.baseIds;
+    for(const type of ['speed','accel']){
+      const list=pool(type).map(s=>({...s,value:engine.marginal(s.id,type,sel,caseId)})).sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+      q('#'+type+'-list').innerHTML=list.map((s,i)=>skillRow(s,i,type,s.value,type==='accel'&&rec.has(s.id))).join('');
+    }
+    q('#heal-list').innerHTML=pool('heal').map((s,i)=>skillRow(s,i,'heal',0,false)).join('');
+    const extra=[...selectedFactors].map(id=>engine.record(id)).filter(s=>s.type==='speed');
+    setText('#factor-speed-note',extra.length?`흰 인자 반영: ${extra.map(s=>s.name).join(' · ')}`:'');q('#factor-speed-note').hidden=!extra.length;
+  }
+  function renderFactors(){
+    const sel=selection();
+    const ranked=engine.factors().map(s=>({...s,value:engine.marginal(s.id,s.type,sel,caseId)})).sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+    const top=ranked.slice(0,10),topIds=new Set(top.map(s=>s.id));
+    const pinned=ranked.filter(s=>selectedFactors.has(s.id)&&!topIds.has(s.id));
+    q('#factor-list').innerHTML=[...top,...pinned].map(s=>{
+      const rank=ranked.findIndex(r=>r.id===s.id)+1,chosen=selectedFactors.has(s.id);
+      return `<div class="skill" data-factor-row="${s.id}"><label class="skill-checkbox"><input type="checkbox" data-factor-id="${s.id}" aria-label="${esc(s.name)} 인자 준비 및 습득 가정" ${chosen?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${String(rank).padStart(2,'0')}</span><span class="skill-name">${esc(s.name)}</span><span class="badge">${s.type==='speed'?'속도':'가속'}</span>${rank>10?'<span class="badge">선택 유지</span>':''}</div><details class="skill-details"><summary>상세</summary><p>${esc(s.reason)}</p><p>발동: ${esc(s.condition)}</p></details></div><div class="skill-value"><strong title="${chosen?'제외 시 손실':'추가 시 이득'} · 마신">${signed(s.value)}</strong></div></div>`;
+    }).join('');
+    const names=[...selectedFactors].map(id=>engine.record(id).name);
+    setText('#factor-plan-count',`${names.length}개 선택`);
+    setText('#factor-plan-names',names.join(' · '));q('.factor-plan').hidden=!names.length;
+  }
+  function renderChart(){
+    const svg=q('#accel-chart'),width=Math.max(260,svg.parentElement.clientWidth),height=180;
+    const left=43,right=14,top=16,bottom=33,until=12;
+    const a=result.run.trajectory.filter(p=>p.t<=until),b=result.noAccel.trajectory.filter(p=>p.t<=until);
+    const values=[...a,...b].map(p=>p.v);const low=Math.floor(Math.min(...values)*2)/2-.2,high=Math.ceil(Math.max(...values)*2)/2+.2;
+    const x=t=>left+t/until*(width-left-right),y=v=>top+(high-v)/(high-low)*(height-top-bottom);
+    const path=arr=>arr.filter((_,i)=>i%4===0).map((p,i)=>(i?'L':'M')+x(p.t).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+    svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+    let html='<title>종반 초반 속도 변화 · 동작 확인용 예시</title><desc>실선은 현재 선택 조합, 점선은 가속기를 제외한 조합입니다.</desc>';
+    for(let i=0;i<4;i++){const v=low+(high-low)*i/3;html+=`<line x1="${left}" y1="${y(v)}" x2="${width-right}" y2="${y(v)}" stroke="var(--line)"/><text x="${left-7}" y="${y(v)+4}" text-anchor="end" fill="var(--sub)" font-size="11">${num(v,1)}</text>`;}
+    for(const t of [0,4,8,12])html+=`<text x="${x(t)}" y="${height-15}" text-anchor="middle" fill="var(--sub)" font-size="11">${t}s</text>`;
+    html+=`<text x="${left}" y="11" fill="var(--sub)" font-size="10">속도 m/s</text><path d="${path(b)}" fill="none" stroke="var(--sub)" stroke-width="1.6" stroke-dasharray="5 4"/><path d="${path(a)}" fill="none" stroke="var(--green)" stroke-width="2.3"/>`;
+    svg.innerHTML=html;
+  }
+  function renderAccel(){
+    const recommendation=result.recommendation;
+    const names=[...recommendation.ids].map(id=>engine.record(id).name);
+    setText('#recommended-combo',names.join(' + ')||'추가 가속 없이 비교');
+    const policy={efficient:'최대 이득의 90% 이상',maximum:'최대 가속 이득',robust:'불리한 발동에서 최대 이득'};
+    const labels={maximum:'최대',efficient:'효율',robust:'안전'};
+    setText('#recommendation-label',`추천 조합 · ${labels[objective]}`);
+    setText('#recommend-policy',policy[objective]);
+    const recRun=engine.simulate(selection().speed,recommendation.ids,caseId);
+    const noAccel=engine.simulate(selection().speed,new Set(),caseId);
+    const combinationGain=(recRun.segment-engine.positionAt(noAccel,recRun.finishTime))/2.5;
+    setText('#combo-gain',`${signed(combinationGain)} 마신`);q('#combo-gain').title='모든 가속기를 제외한 조합 대비 이득';
+    setText('#combo-time',`첫 목표속도 도달 ${recRun.reached===null?'미도달':num(recRun.reached,1)+'초'}`);
+    q('#manual-combo').hidden=automatic;
+    const selectedNames=[...selection().accel].map(id=>engine.record(id).name);
+    setText('#manual-combo','수동 선택: '+(selectedNames.join(' + ')||'가속 미선택'));
+    setText('#accel-mode',automatic?'자동':'수동');q('#auto-accel').checked=automatic;
+    const scenarioNames={best:'유리',typical:'대표',worst:'불리'};
+    q('#scenario-table').innerHTML=result.scenarios.map(s=>`<tr class="${s.id===caseId?'active':''}"><td>${scenarioNames[s.id]}</td><td>${num(s.entrySpeed)}</td><td>${num(s.gap)}</td><td>${s.reached===null?'미도달':num(s.reached,1)}</td><td>${signed(s.accelGain)}</td></tr>`).join('');
+    renderChart();
+  }
+  function renderStamina(){
+    const s=result.stamina,normal=s.normal,failed=s.failed;
+    setText('#stamina-value',Number(applied.stamina).toLocaleString('ko-KR'));
+    setText('#finish-verdict',s.depleted?'지구력 보완 필요':s.canSustain?'목표 스퍼트 유지 가능':'완주 여유가 작음 · 회복 검토');
+    setText('#finish-description',`회복 ${selectedHeal.size}개 발동 · 결승 지구력 ${Math.round(normal.hpFinal).toLocaleString('ko-KR')}`);
+    q('#finish-status').classList.toggle('ok',s.canSustain);
+    setText('#hp-check',s.depleted?'고갈 예상':'고갈 없음');
+    setText('#spurt-check',s.canStart?'가능':'지연 검토');
+    setText('#sustain-check',s.canSustain?'가능':'부족 / 여유 작음');
+    q('#heal-table').innerHTML=[['선택한 회복 정상 발동',normal],['선택한 회복 모두 불발',failed]].map(([name,r])=>`<tr><td>${name}</td><td>${Math.round(r.hpFinal).toLocaleString('ko-KR')}</td><td>${r.hpEmptyAt===null&&r.hpFinal>=70?'유지 가능':'보완 필요'}</td></tr>`).join('');
+  }
+  function render(){
+    const restore=preserveFocus();
+    const openDetails=qa('.skill details[open]').map(el=>{const row=el.closest('.skill');return row.dataset.rowId||row.dataset.factorRow;});
+    result=engine.analyze(selection(),caseId,objective);
+    const sel=selection();
+    setText('#entry-speed',num(result.run.entrySpeed));setText('#target-speed',num(result.run.entryTarget));setText('#speed-gap',num(result.run.gap));
+    setText('#scenario-caption',caseId==='worst'?'불리한 발동 기준':'대표 발동 기준');
+    setText('#global-count',`속도 ${sel.speed.size} · 가속 ${sel.accel.size} · 회복 ${sel.heal.size} · 흰 인자 ${selectedFactors.size}`);
+    renderSkills();renderFactors();renderAccel();renderStamina();
+    for(const id of openDetails){const details=q(`[data-row-id="${id}"] details, [data-factor-row="${id}"] details`);if(details)details.open=true;}
+    restore();
+  }
+  function updateUnique(){setText('#unique-level',`고유기 Lv. ${Number(q('[data-setting="bloom"]').value)+1} 가정`);}
+  function activateTab(tab){
+    const list=tab.closest('[role=tablist]');
+    for(const peer of list.querySelectorAll('[role=tab]')){
+      const active=peer===tab;peer.setAttribute('aria-selected',String(active));peer.tabIndex=active?0:-1;q('#'+peer.getAttribute('aria-controls')).hidden=!active;
+    }
+    if(tab.id==='accel-tab')renderChart();
+  }
+  qa('[role=tablist]').forEach(list=>{
+    list.addEventListener('click',e=>{const tab=e.target.closest('[role=tab]');if(tab)activateTab(tab);});
+    list.addEventListener('keydown',e=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+      const tabs=[...list.querySelectorAll('[role=tab]')],i=tabs.indexOf(document.activeElement);if(i<0)return;
+      e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;activateTab(tabs[next]);tabs[next].focus();
+    });
+  });
+  root.addEventListener('change',e=>{
+    const el=e.target;
+    if(el.matches('[data-setting]')){
+      if(el.dataset.setting==='trainee')q('[data-setting="bloom"]').value=String(roster.find(r=>r.id===el.value).bloom);
+      if(el.dataset.setting==='bloom')roster.find(r=>r.id===q('[data-setting="trainee"]').value).bloom=Number(el.value);
+      updateUnique();setText('#calculation-status','입력 변경 · 추천 보기로 적용');
+    }
+    if(el.dataset.skillId){
+      const type=el.dataset.skillType,group=type==='speed'?selectedSpeed:type==='accel'?selectedAccel:selectedHeal;
+      if(el.checked)group.add(el.dataset.skillId);else group.delete(el.dataset.skillId);
+      if(type==='accel')automatic=false;else if(type==='speed'&&automatic)applyRecommended();
+      render();setText('#live','선택한 스킬의 마신·가속 추천·스태미나 결과를 갱신했습니다.');
+    }
+    if(el.dataset.factorId){
+      if(el.checked)selectedFactors.add(el.dataset.factorId);else selectedFactors.delete(el.dataset.factorId);
+      if(automatic)applyRecommended();render();setText('#live','흰 인자 선택을 습득 가정에 반영하고 가속 추천을 갱신했습니다.');
+    }
+    if(el.id==='auto-accel'){automatic=el.checked;if(automatic)applyRecommended();render();}
+    if(el.id==='objective'){objective=el.value;caseId=objective==='robust'?'worst':'typical';if(automatic)applyRecommended();render();}
+    if(el.dataset.ownedUma){roster.find(r=>r.id===el.dataset.ownedUma).owned=el.checked;renderInventoryCounts();}
+    if(el.dataset.ownedSupport)renderInventoryCounts();
+    if(el.dataset.ownedBloom){
+      const r=roster.find(r=>r.id===el.dataset.ownedBloom);r.bloom=Number(el.value);
+      if(q('[data-setting="trainee"]').value===r.id){q('[data-setting="bloom"]').value=el.value;updateUnique();setText('#calculation-status','개화 상태가 변경되었습니다. 추천 보기를 눌러 반영하세요.');}
+    }
+  });
+  q('#all-speed').addEventListener('click',()=>{selectedSpeed=new Set(pool('speed').map(s=>s.id));if(automatic)applyRecommended();render();});
+  q('#apply-accel').addEventListener('click',()=>{automatic=true;applyRecommended();render();});
+  q('#calculate').addEventListener('click',()=>{
+    const invalid=qa('[data-setting]').find(el=>!el.checkValidity()||el.value==='');
+    if(invalid){const detail=invalid.closest('details');if(detail)detail.open=true;invalid.reportValidity();setText('#calculation-status','목표 능력치를 1~4,000 범위로 입력하세요.');return;}
+    applied=readInputs();rebuild();render();renderInventory();setText('#calculation-status','조건 적용 완료');setText('#live','입력한 조건으로 예시 결과를 갱신했습니다.');
+    if(window.matchMedia?.('(max-width: 740px)').matches)q('#results').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  const ownedSupportIds=new Set(defaultDeck.slice(0,5));
+  function renderInventoryCounts(){setText('#owned-uma-count',qa('[data-owned-uma]:checked').length+'명 등록');setText('#owned-support-count',qa('[data-owned-support]:checked').length+'장 등록');}
+  function renderInventory(){
+    qa('[data-owned-support]').forEach(el=>{if(el.checked)ownedSupportIds.add(el.dataset.ownedSupport);else ownedSupportIds.delete(el.dataset.ownedSupport);});
+    q('#owned-uma-list').innerHTML=roster.map(r=>`<div class="panel inventory-item"><div class="inventory-icon" aria-hidden="true">${r.letter}</div><label class="check-line"><input type="checkbox" data-owned-uma="${r.id}" ${r.owned?'checked':''}>${r.name}</label><p class="help">기본 의상</p><label class="field">개화 상태<select data-owned-bloom="${r.id}" aria-label="${r.name} 개화 상태">${[3,4,5].map(v=>`<option value="${v}" ${v===r.bloom?'selected':''}>★${v}</option>`).join('')}</select></label></div>`).join('');
+    q('#owned-support-list').innerHTML=cards.map(c=>`<div class="panel inventory-item"><div class="inventory-icon" aria-hidden="true">${c.id}</div><label class="check-line"><input type="checkbox" data-owned-support="${c.id}" ${ownedSupportIds.has(c.id)?'checked':''}>${c.name}</label><p class="help">SSR · ${c.type}</p></div>`).join('');renderInventoryCounts();
+  }
+  applied=readInputs();rebuild();render();renderInventory();updateUnique();
+  new ResizeObserver(()=>{if(!q('#accel-panel').hidden)renderChart();}).observe(q('#accel-chart').parentElement);
+  // Explicit prototype inspection surface for integration and behavioral checks.
+  window.UmaPlanner.inspect=()=>({applied:{...applied},automatic,caseId,objective,selected:{speed:[...selectedSpeed],accel:[...selectedAccel],heal:[...selectedHeal],factors:[...selectedFactors]},result});
+})();
+</script>
+</body>
+</html>

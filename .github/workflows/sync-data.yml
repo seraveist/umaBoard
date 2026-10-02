@@ -1,0 +1,75 @@
+name: Sync JP data
+on:
+  schedule:
+    - cron: '0 0 * * *'
+      timezone: 'Asia/Seoul'
+  workflow_dispatch:
+    inputs:
+      refresh_courses:
+        description: 'alpha 상세 코스도 최신 파일로 갱신'
+        type: boolean
+        required: false
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-data.yml'
+      - 'scripts/**'
+      - 'curated/**'
+      - 'sync-config.json'
+permissions:
+  contents: write
+concurrency:
+  group: uma-data-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .cache/raw
+          key: raw-jp-v1-${{ hashFiles('data/manifest.json', 'sync-config.json') }}
+          restore-keys: raw-jp-v1-
+      - name: Check normalization and rollback behavior
+        run: python -m unittest discover -s tests -v
+      - name: Fetch changed source blobs, normalize, validate and activate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REFRESH_COURSES: ${{ inputs.refresh_courses }}
+        run: |
+          if [ "$REFRESH_COURSES" = "true" ]; then
+            python scripts/sync_data.py --refresh-courses
+          else
+            python scripts/sync_data.py
+          fi
+      - name: Validate activated bundle
+        run: python scripts/validate_data.py
+      - name: Commit changed data
+        run: |
+          git add data/manifest.json data/bundles
+          if git diff --cached --quiet; then
+            echo 'No data changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(data): sync JP source data'
+          git push origin HEAD:main
+      - name: Save synchronization status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: jp-sync-status-${{ github.run_id }}
+          path: .cache/sync-status.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14

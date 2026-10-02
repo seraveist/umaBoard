@@ -1,0 +1,109 @@
+<div id="uma-plan" lang="ko">
+  <header class="header">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">U</div><div class="brand-name">UMA PLAN</div><span class="badge green">일본 서버</span><span class="badge" title="스킬·카드·수치는 실제 DB 연결 전의 예시입니다.">예시 데이터</span></div>
+    <nav class="main-tabs" role="tablist" aria-label="주 메뉴">
+      <button class="main-tab" id="prep-tab" role="tab" aria-selected="true" aria-controls="prep-panel">육성 준비</button>
+      <button class="main-tab" id="roster-tab" role="tab" aria-selected="false" aria-controls="roster-panel" tabindex="-1">보유 우마무스메</button>
+      <button class="main-tab" id="supports-tab" role="tab" aria-selected="false" aria-controls="supports-panel" tabindex="-1">보유 서포트</button>
+    </nav>
+  </header>
+  <main>
+    <section class="page" id="prep-panel" role="tabpanel" aria-labelledby="prep-tab">
+      <div class="page-title"><h1>스킬 최적화</h1></div>
+      <div class="layout">
+        <aside class="inputs" aria-label="육성 조건 입력">
+          <section class="panel input-panel">
+            <div class="section-head"><h3><span class="step">01</span>목표 레이스</h3><span class="sub">조건 설정</span></div>
+            <div class="fields">
+              <label class="field full">경기장<select data-setting="track"><option value="tokyo">도쿄</option><option value="longchamp">롱샹</option><option value="kyoto">교토</option></select></label>
+              <label class="field">거리<select data-setting="distance"><option value="2400">2,400 m</option><option value="2000">2,000 m</option><option value="1600">1,600 m</option><option value="3200">3,200 m</option></select></label>
+              <label class="field">노면<select data-setting="surface"><option value="turf">잔디</option><option value="dirt">더트</option></select></label>
+              <label class="field">계절<select data-setting="season"><option>봄</option><option>여름</option><option>가을</option><option>겨울</option></select></label>
+              <label class="field">날씨<select data-setting="weather"><option>맑음</option><option>흐림</option><option>비</option><option>눈</option></select></label>
+              <label class="field">마장 상태<select data-setting="going"><option value="good">양호</option><option value="yielding">다습</option><option value="soft">포화</option><option value="heavy">불량</option></select></label>
+              <label class="field">시간<select data-setting="time"><option>낮</option><option>저녁</option><option>밤</option></select></label>
+            </div>
+          </section>
+          <section class="panel input-panel">
+            <div class="section-head"><h3><span class="step">02</span>육성 우마무스메</h3></div>
+            <div class="fields">
+              <label class="field full">우마무스메 · 의상<select data-setting="trainee"><option value="oguri">오구리 캡 · 기본 의상</option><option value="teio">토카이 테이오 · 기본 의상</option><option value="kita">키타산 블랙 · 기본 의상</option></select></label>
+              <label class="field">각질<select data-setting="style"><option value="senko">선행</option><option value="nige">도주</option><option value="sashi">선입</option><option value="oikomi">추입</option></select></label>
+              <label class="field">개화 상태<select data-setting="bloom"><option value="3">★3</option><option value="4">★4</option><option value="5">★5</option></select></label>
+              <label class="field full">육성 시나리오<select data-setting="scenario"><option value="A">시나리오 A · 예시</option><option value="B">시나리오 B · 예시</option></select></label>
+            </div>
+            <div class="policy"><span class="badge">각성 MAX</span><span class="badge pink">진화형 기준</span><span class="badge blue" id="unique-level">고유기 Lv. 4 가정</span></div>
+          </section>
+          <section class="panel input-panel support-panel">
+            <div class="section-head"><h3><span class="step">03</span>서포트 편성</h3><span class="sub">카드 6장</span></div>
+            <div class="support-list" id="deck-inputs"></div>
+          </section>
+          <details class="panel input-panel stats-panel" open>
+            <summary>목표 능력치 · 적성</summary>
+            <div class="details-body">
+              <div class="stats">
+                <label class="field">스피드<input type="number" required min="1" max="4000" value="2000" data-setting="speed"></label>
+                <label class="field">스태미나<input type="number" required min="1" max="4000" value="1600" data-setting="stamina"></label>
+                <label class="field">파워<input type="number" required min="1" max="4000" value="1600" data-setting="power"></label>
+                <label class="field">근성<input type="number" required min="1" max="4000" value="1200" data-setting="guts"></label>
+                <label class="field">지능<input type="number" required min="1" max="4000" value="1600" data-setting="wisdom"></label>
+              </div>
+              <div class="fields">
+                <label class="field">거리 적성<select data-setting="distanceApt"><option>S</option><option>A</option><option>B</option></select></label>
+                <label class="field">각질 적성<select data-setting="styleApt"><option>A</option><option>S</option><option>B</option></select></label>
+                <label class="field">마장 적성<select data-setting="surfaceApt"><option>A</option><option>S</option><option>B</option></select></label>
+                <label class="field">의욕<select data-setting="mood"><option value="best">최상</option><option value="good">양호</option><option value="normal">보통</option></select></label>
+              </div>
+            </div>
+          </details>
+          <div class="calculate-wrap"><button class="primary calculate" id="calculate" type="button">추천 보기</button><p class="calculation-status" id="calculation-status" role="status"></p></div>
+        </aside>
+        <div class="results" id="results" aria-label="추천 결과">
+          <section class="panel result-shell">
+            <div class="result-tabs" role="tablist" aria-label="결과 종류">
+              <button class="result-tab" id="speed-tab" role="tab" aria-selected="true" aria-controls="speed-panel">속도기</button>
+              <button class="result-tab" id="accel-tab" role="tab" aria-selected="false" aria-controls="accel-panel" tabindex="-1">가속기</button>
+              <button class="result-tab" id="factors-tab" role="tab" aria-selected="false" aria-controls="factors-panel" tabindex="-1">흰 인자</button>
+              <button class="result-tab" id="stamina-tab" role="tab" aria-selected="false" aria-controls="stamina-panel" tabindex="-1">스태미나</button>
+            </div>
+            <div class="tab-content" id="speed-panel" role="tabpanel" aria-labelledby="speed-tab">
+              <div class="section-head"><span class="sub">마신 이득순 · 계승 포함</span><button class="small-action" id="all-speed">전체 선택</button></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div id="speed-list" class="list"></div>
+              <p class="list-footer" id="factor-speed-note">흰 인자에서 선택한 속도기도 계산에 반영합니다.</p>
+            </div>
+            <div class="tab-content" id="accel-panel" role="tabpanel" aria-labelledby="accel-tab" hidden>
+              <div class="context-controls"><label class="objective">추천 기준<select id="objective"><option value="maximum">최대</option><option value="efficient" selected>효율</option><option value="robust">안전</option></select></label><span class="sub" id="recommend-policy"></span></div>
+              <div class="combination"><div class="combo-label"><span class="sub" id="recommendation-label">추천 조합 · 효율</span><span class="badge green" id="accel-mode">자동</span></div><strong id="recommended-combo">—</strong><div class="combo-stats"><span id="combo-gain">—</span></div><p id="manual-combo" hidden></p></div>
+              <div class="auto-toolbar"><label class="check-line"><input type="checkbox" id="auto-accel" checked>자동 선택</label><button class="small-action" id="apply-accel">추천 적용</button></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div class="list" id="accel-list"></div>
+              <section class="analysis-comparison" id="accel-details" aria-label="가속 비교"><div class="section-head"><h3>가속 비교</h3><span class="sub" id="scenario-caption"></span></div><div class="context-metrics"><span>진입 <strong class="num" id="entry-speed">—</strong> m/s</span><span>목표 <strong class="num" id="target-speed">—</strong> m/s</span><span>차이 <strong class="num" id="speed-gap">—</strong> m/s</span></div><p class="sub" id="combo-time"></p><div class="chart-heading"><span>종반 속도</span><div class="chart-legend"><span><i class="legend-mark"></i>현재</span><span><i class="legend-mark base"></i>가속 제외</span></div></div><svg class="chart" id="accel-chart" role="img" aria-label="현재 조합과 가속 제외 시의 속도 변화 비교"></svg><div class="table-scroll"><table aria-label="발동 가정별 가속 비교"><thead><tr><th>발동 가정</th><th>진입속도<span class="table-unit">m/s</span></th><th>속도 차이<span class="table-unit">m/s</span></th><th>목표 도달<span class="table-unit">초</span></th><th>가속 이득<span class="table-unit">마신</span></th></tr></thead><tbody id="scenario-table"></tbody></table></div></section>
+            </div>
+            <div class="tab-content" id="factors-panel" role="tabpanel" aria-labelledby="factors-tab" hidden>
+              <div class="section-head"><h3>인자로 준비할 스킬 TOP 10</h3><span class="sub">체크 시 습득 가정에 반영</span></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>마신</span></div>
+              <div class="list" id="factor-list"></div>
+              <div class="factor-plan"><strong id="factor-plan-count">흰 인자 0개 준비</strong><p id="factor-plan-names">선택한 스킬 목록이 표시됩니다.</p></div>
+            </div>
+            <div class="tab-content" id="stamina-panel" role="tabpanel" aria-labelledby="stamina-tab" hidden>
+              <div class="section-head"><h3>완주 · 스퍼트</h3><span class="sub">단독 주행 가정</span></div>
+              <div class="stamina-top"><span class="sub">목표 스태미나</span><strong class="num" id="stamina-value">—</strong></div>
+              <div class="finish-status" id="finish-status"><strong id="finish-verdict">—</strong><p id="finish-description">—</p></div>
+              <div class="stamina-checks"><div><span>결승 전 지구력 고갈</span><strong id="hp-check">—</strong></div><div><span>최속 스퍼트 시작</span><strong id="spurt-check">—</strong></div><div><span>결승선까지 유지</span><strong id="sustain-check">—</strong></div></div>
+              <div class="section-head"><h3>회복 스킬</h3></div>
+              <div class="list-columns" aria-hidden="true"><span>스킬</span><span>회복</span></div>
+              <div class="list" id="heal-list"></div>
+              <details class="analysis-details"><summary>회복 발동 · 불발 비교</summary><div class="table-scroll"><table aria-label="회복 발동 여부 비교"><thead><tr><th>회복 가정</th><th>결승 지구력</th><th>스퍼트 유지</th></tr></thead><tbody id="heal-table"></tbody></table></div></details>
+            </div>
+            <div class="global-plan"><div class="global-plan-top"><span id="global-count">—</span></div><details class="calculation-details"><summary>계산 기준</summary><p>체크한 스킬은 습득·발동 가정에 반영합니다. 자체·서포트는 획득 경로, 계승·흰 인자는 준비 후보입니다.</p><p>마신은 현재 조합에서 선택한 스킬을 제외했을 때의 손실, 미선택 스킬을 추가했을 때의 이득입니다. 개별 값은 단순 합산하지 않습니다.</p><p>각성 MAX·진화 조건 달성·육성 중 고유기 레벨 상승 조건 달성 기준. 서포트 이벤트 스킬은 완주·선택 조건을 고려하지 않습니다.</p><p>스태미나는 단독 주행 기준이며 몸싸움·상대 디버프는 포함하지 않습니다.</p></details></div>
+          </section>
+          <p class="footnote">스킬·카드·수치는 실제 DB 연결 전의 예시입니다.</p>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="roster-panel" role="tabpanel" aria-labelledby="roster-tab" hidden><div class="page-title"><h1>보유 우마무스메</h1><span class="badge green" id="owned-uma-count">—</span></div><div class="inventory-grid" id="owned-uma-list"></div></section>
+    <section class="page" id="supports-panel" role="tabpanel" aria-labelledby="supports-tab" hidden><div class="page-title"><h1>보유 서포트</h1><span class="badge green" id="owned-support-count">—</span></div><div class="inventory-grid" id="owned-support-list"></div></section>
+  </main>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+</div>
