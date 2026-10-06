@@ -18,7 +18,8 @@
 Python 3.12 이상과 Node.js 24를 검증에 사용합니다. 외부 Python/JavaScript 패키지는 필요하지 않습니다.
 
 ```sh
-python -m http.server 8000
+python scripts/build_pages.py --fetch-portraits
+python -m http.server 8000 --directory .cache/pages
 ```
 
 - `http://localhost:8000/`: 실제 JP 데이터로 의상·개화·각질·코스·서포트·목표 능력치·적성을 선택해 비교합니다.
@@ -28,6 +29,7 @@ python -m http.server 8000
 
 ```sh
 python scripts/sync_data.py
+python scripts/sync_portraits.py
 python scripts/validate_data.py
 ```
 
@@ -49,6 +51,14 @@ GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정�
 2026-10-02 초기 묶음: 스킬 **2,194**, 의상 **270**, 서포트 **563**, 상세 코스 **138**.
 코스 `10613`은 원본의 마지막 코너가 결승선을 초과하여 선택에서 제외합니다. 원본 좌표는 보존합니다.
 현재 공개 소스의 수록 수이며 게임 전체 커버리지를 보증하는 숫자는 아닙니다.
+
+포트레잇은 **UmaTools만** 사용합니다. `data/portraits.json`에 활성 데이터와 같은 UmaTools commit의
+의상별·SSR 카드별 이미지 경로와 Git blob을 기록합니다. WebP를 우선 사용하고 없으면 같은 소스의 PNG를 사용합니다.
+현재 의상 266종·SSR 311장에 이미지가 있으며, 누락된 의상 4종·SSR 5장은 이미지 없이 이름으로 선택할 수 있습니다.
+GameTora 등 다른 이미지 소스로 보완하지 않습니다.
+Pages 빌드가 필요한 이미지만 받아 Git blob·크기·형식을 검사하고 자체 정적 경로로 배포합니다.
+다운로드 파일은 Actions 캐시에 보관하므로 변경되지 않은 이미지를 매번 다시 받지 않습니다.
+다운로드에 실패한 이미지도 배포 목록에서 제외하여 계산 화면에 깨진 이미지 주소를 만들지 않습니다.
 
 ## GitHub Actions
 
@@ -75,6 +85,7 @@ GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정�
 - 육성 우마무스메와 SSR 서포트 선택창은 한글 이름·띄어쓰기 없는 이름·일본어 이름으로 검색할 수 있습니다. 검색 입력만으로 편성은 바뀌지 않으며 목록에서 선택해야 적용됩니다. 같은 이름/타입의 카드도 서로 다른 ID로 구분합니다.
 - 서포트 선택 목록은 SSR만 표시합니다. SR/R 원본 데이터와 획득 관계는 DB에 보존합니다.
 - 계승 고유기에는 원본 고유기의 획득 경로로 확인한 제공 우마무스메와 의상명을 표시합니다.
+- 육성 우마무스메·SSR 서포트 선택창에는 해당 의상·카드의 포트레잇을 표시합니다. 이미지가 없어도 선택·계산은 가능합니다.
 - 개화에 따라 저레어 의상의 원본/승격 고유기 ID와 최종 고유 Lv4~6을 구분하고 효과별 배율을 반영합니다.
 - 진화 분기와 원본 관계를 보존합니다. 획득 가능한 원본에 적용되는 진화 후보를 구성하고 금색 원본은 중복 표시하지 않습니다.
 - 흰 인자 후보는 일반 흰 스킬 ID로 구성합니다. 별도 인자 마스터·인자 ID·부모 개체·프렌드 검색은 필요하지 않습니다.
@@ -122,6 +133,7 @@ python scripts/build_pages.py
 ```
 
 Pages 배포 파일은 `.cache/pages/`에 생성됩니다. 상대 경로를 사용하므로 `/umaBoard/` 하위에서도 데이터와 계산 worker가 로드됩니다.
+`build_pages.py` 기본 검증은 캐시에 있는 이미지만 포함합니다. 최초 다운로드와 실제 배포에는 `--fetch-portraits`를 사용합니다.
 
 ## 구조
 
@@ -134,6 +146,7 @@ Pages 배포 파일은 `.cache/pages/`에 생성됩니다. 상대 경로를 사�
 | `curated/rules.json` | 출처를 명시한 보완 관계와 검증 대기 목록 |
 | `data/manifest.json` | 현재 활성 묶음, 출처 commit/blob, 해시와 어댑터 버전 |
 | `data/bundles/` | 정규화 데이터와 동일 버전의 검증 결과 |
+| `data/portraits.json` | UmaTools 전용 의상·SSR 이미지 목록, 출처 commit/blob, 누락 ID |
 | `docs/` | 수집 설계, 조사 기록, 엔진 연결 계약 |
 | `tests/` | 정규화·실패 복구·실제 후보·속도/가속/HP·추천 정책 검증 |
 

@@ -56,11 +56,15 @@ jobs:
           fi
       - name: Validate activated bundle
         run: python scripts/validate_data.py
+      - name: Synchronize available UmaTools portraits (SSR supports only)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/sync_portraits.py
       - name: Check candidate and engine compatibility with new data
         run: node --test tests/*.test.mjs
       - name: Commit changed data
         run: |
-          git add data/manifest.json data/bundles
+          git add data/manifest.json data/bundles data/portraits.json
           if git diff --cached --quiet; then
             echo 'No data changes to commit.'
             exit 0

@@ -4,8 +4,24 @@ import {readFileSync} from 'node:fs';
 import {skillName,outfitName,selectableSupports,cardName} from '../assets/display.mjs';
 import {searchKey} from '../assets/search-select.mjs';
 import {buildCandidates} from '../assets/candidates.mjs';
+import {portraitPath} from '../assets/portraits.mjs';
 const manifest=JSON.parse(readFileSync(new URL('../data/manifest.json',import.meta.url)));
 const data=JSON.parse(readFileSync(new URL('../'+manifest.dataset_path,import.meta.url)));
+const portraits=JSON.parse(readFileSync(new URL('../data/portraits.json',import.meta.url)));
+
+test('portrait paths use exact outfit/card IDs and only local assets',()=>{
+ assert.equal(portraits.source.repository,'daftuyda/UmaTools');
+ assert.equal(portraits.source.commit,manifest.sources.find(source=>source.source_id==='umatools').commit);
+ for(const kind of ['outfits','supports'])for(const [id,entry] of Object.entries(portraits[kind])){
+  assert.ok(data[kind][id]);assert.equal(portraitPath(portraits,kind,id),entry.path);
+  if(kind==='supports')assert.equal(data.supports[id].rarity,'SSR');
+ }
+ for(const kind of ['outfits','supports'])for(const id of portraits.missing[kind]){
+  assert.ok(data[kind][id]);assert.equal(portraitPath(portraits,kind,id),null);
+ }
+ const catalog={outfits:{'1':{path:'https://gametora.com/image.png'},'2':{path:'assets/portraits/outfits/1-'+ 'a'.repeat(40)+'.webp'}}};
+ assert.equal(portraitPath(catalog,'outfits','1'),null);assert.equal(portraitPath(catalog,'outfits','2'),null);
+});
 
 test('character localization keeps Japanese outfit titles and all skill names',()=>{
  const outfit=data.outfits['114101'];assert.match(outfitName(outfit),/^에피파네이아 · /);

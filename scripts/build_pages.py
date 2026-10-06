@@ -1,4 +1,5 @@
 """Stage the static app and only its active, validated data bundle for Pages."""
+import argparse
 import json
 import shutil
 from pathlib import Path
@@ -6,9 +7,13 @@ from pathlib import Path
 from umaboard.common import DataError
 from umaboard.sync import load_active
 from umaboard.validate import validate_dataset
+from umaboard.portraits import stage_portraits
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Stage the static app for GitHub Pages')
+    parser.add_argument('--fetch-portraits', action='store_true', help='Download missing pinned UmaTools images into the build cache')
+    args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     manifest, data = load_active(root)
     if data is None:
@@ -29,12 +34,14 @@ def main():
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
     shutil.copytree(root / 'assets', output / 'assets')
+    portraits = stage_portraits(root, output, fetch=args.fetch_portraits)
     # The prototype is self-contained; its authoring sources are unnecessary.
     (output / 'prototype').mkdir()
     shutil.copyfile(root / 'prototype/index.html', output / 'prototype/index.html')
     (output / '.nojekyll').touch()
     print(json.dumps({'output': str(output.relative_to(root)),
                       'data_version': manifest['active_version'],
+                      'portraits': portraits,
                       'files': sum(p.is_file() for p in output.rglob('*'))}))
 
 

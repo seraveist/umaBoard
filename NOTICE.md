@@ -8,7 +8,7 @@ Generated records contain factual skill identifiers, effects, conditions, course
 - mee1080/umasim: https://github.com/mee1080/umasim — supplemental inheritance records and scenario investigation reference.
 - alpha123/uma-skill-tools: https://github.com/alpha123/uma-skill-tools — course geometry snapshot.
 
-No upstream application code, original complete JSON/MDB archives, character/card images, audio, or story assets are committed. Raw inputs are kept in ignored local/Actions caches.
+No upstream application code, original complete JSON/MDB archives, character/card images, audio, or story assets are committed. Raw inputs are kept in ignored local/Actions caches. The Pages artifact additionally includes available character and SSR support thumbnails downloaded exclusively from the pinned daftuyda/UmaTools commit. Their paths and Git blob hashes are recorded in `data/portraits.json`. UmaTools attributes its game materials to GameTora; game images remain the property of Cygames, Inc. The project code license does not cover those images. No direct GameTora image fallback is used.
 The normalized contract retains raw field values needed to interpret game semantics; it is not a claim of validated game mechanics or full current-game coverage.
 
 The independently authored comparison engine also consulted mathematical relationships and effect semantics in pinned alpha RaceSolver/HpPolicy and umasim race sources.

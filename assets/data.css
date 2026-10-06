@@ -26,7 +26,11 @@
 #uma-plan .search-select::after{content:'⌕';position:absolute;right:9px;top:8px;color:var(--sub);pointer-events:none}
 #uma-plan .search-options,#uma-plan .search-empty{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:7px;box-shadow:0 6px 18px #0002}
 #uma-plan .search-options{max-height:min(300px,45vh);overflow:auto;overscroll-behavior:contain}
-#uma-plan .search-option{padding:10px 11px;cursor:pointer;font-size:12px;overflow-wrap:anywhere;line-height:1.5}
+#uma-plan .search-option{display:flex;align-items:center;gap:9px;padding:8px 10px;cursor:pointer;font-size:12px;overflow-wrap:anywhere;line-height:1.5;min-height:40px}
+#uma-plan .search-option>span{min-width:0}
+#uma-plan .option-portrait{width:34px;height:34px;flex-shrink:0;object-fit:contain;border-radius:4px}
+#uma-plan .selected-portrait{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:30px;height:30px;object-fit:contain;border-radius:4px;pointer-events:none}
+#uma-plan .search-select.has-portrait input{padding-left:42px}
 #uma-plan .search-option:hover,#uma-plan .search-option.active{background:var(--tint);color:var(--green)}
 #uma-plan .search-option[aria-selected=true]{font-weight:600}
 #uma-plan .search-empty{padding:12px;color:var(--sub);font-size:12px}

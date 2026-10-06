@@ -3,6 +3,7 @@ import {fixedContext} from './activation.mjs';
 import {validateSetup,STAT_KEYS} from './physics.mjs';
 import {skillName,umaName,outfitName,cardName,cardLabel,selectableSupports} from './display.mjs';
 import {searchableSelect} from './search-select.mjs';
+import {portraitPath} from './portraits.mjs';
 const root=document.querySelector('#uma-plan'),q=s=>root.querySelector(s),qa=s=>[...root.querySelectorAll(s)];
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tracks={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'고쿠라','10101':'오이','10201':'롱샹','10103':'가와사키','10104':'후나바시','10105':'모리오카','10202':'산타 아니타 파크','10203':'델 마'};
@@ -134,8 +135,12 @@ async function load(){
   [q('#outfit'),q('#course'),q('#scenario')].forEach(x=>x.disabled=false);
   const outfitKeywords=new Map(Object.values(data.outfits).map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
   const cardKeywords=new Map(cards.map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
-  searchableSelect(q('#outfit'),{id:'outfit-search',placeholder:'우마무스메 이름 검색',keywords:outfitKeywords});
-  qa('[data-support]').forEach((select,i)=>searchableSelect(select,{id:`support-${i}-search`,placeholder:'SSR 이름 검색',keywords:cardKeywords}));
+  let portraits={};
+  try{const response=await fetch('data/portraits.json',{cache:'no-cache'});if(response.ok)portraits=await response.json();}catch{}
+  const outfitPortraits=new Map(Object.keys(data.outfits).map(id=>[id,portraitPath(portraits,'outfits',id)]));
+  const cardPortraits=new Map(cards.map(s=>[s.id,portraitPath(portraits,'supports',s.id)]));
+  searchableSelect(q('#outfit'),{id:'outfit-search',placeholder:'우마무스메 이름 검색',keywords:outfitKeywords,portraits:outfitPortraits});
+  qa('[data-support]').forEach((select,i)=>searchableSelect(select,{id:`support-${i}-search`,placeholder:'SSR 이름 검색',keywords:cardKeywords,portraits:cardPortraits}));
   q('#data-status').textContent=`스킬 ${manifest.counts.skills.toLocaleString()}개 · JP`;
   send('load',data);
  }catch(error){q('#data-status').textContent='자료를 불러오지 못했습니다.';q('#input-status').classList.add('error-message');q('#input-status').textContent=location.protocol==='file:'?'로컬 서버로 실행하세요: python -m http.server 8000':'데이터 파일 또는 연결을 확인하고 새로고침하세요.';console.error(error);}

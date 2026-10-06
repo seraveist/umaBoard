@@ -1,7 +1,7 @@
 // Keep IDs in a native select; typing only searches and never changes selection.
 export const searchKey=value=>String(value??'').normalize('NFKC').toLocaleLowerCase('ko').replace(/\s+/g,'');
 
-export function searchableSelect(select,{id,placeholder='이름 검색',keywords=new Map()}={}){
+export function searchableSelect(select,{id,placeholder='이름 검색',keywords=new Map(),portraits=new Map()}={}){
  const wrapper=document.createElement('div');wrapper.className='search-select';
  const input=document.createElement('input');input.id=id;input.type='text';input.placeholder=placeholder;
  input.autocomplete='off';input.spellcheck=false;input.setAttribute('role','combobox');
@@ -9,11 +9,19 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
  const list=document.createElement('div');list.id=id+'-list';list.className='search-options';list.hidden=true;
  list.setAttribute('role','listbox');list.setAttribute('aria-label',placeholder);input.setAttribute('aria-controls',list.id);
  const status=document.createElement('div');status.className='search-empty';status.textContent='검색 결과 없음';status.hidden=true;
- wrapper.append(input,list,status);select.hidden=true;select.after(wrapper);
+ const failed=new Set();
+ const preview=document.createElement('img');preview.className='selected-portrait';preview.alt='';preview.hidden=true;
+ preview.setAttribute('aria-hidden','true');preview.decoding='async';
+ preview.addEventListener('error',()=>{failed.add(preview.getAttribute('src'));preview.hidden=true;wrapper.classList.remove('has-portrait');});
+ wrapper.append(preview,input,list,status);select.hidden=true;select.after(wrapper);
  const rows=[...select.options].map((o,index)=>({value:o.value,label:o.textContent,index,
   key:searchKey(o.textContent+' '+(keywords.get(o.value)||''))}));
  let matches=[],active=-1,composing=false,searching=false;
- const sync=()=>{input.value=select.selectedOptions[0]?.textContent||'';input.title=input.value;input.disabled=select.disabled;};
+ const sync=()=>{
+  input.value=select.selectedOptions[0]?.textContent||'';input.title=input.value;input.disabled=select.disabled;
+  const candidate=portraits.get(select.value),path=failed.has(candidate)?null:candidate;preview.hidden=!path;wrapper.classList.toggle('has-portrait',!!path);
+  if(path){if(preview.getAttribute('src')!==path)preview.src=path;}else preview.removeAttribute('src');
+ };
  function setActive(index){
   active=index;
   [...list.children].forEach((node,i)=>node.classList.toggle('active',i===active));
@@ -27,11 +35,18 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
   document.dispatchEvent(new CustomEvent('uma-picker-open',{detail:wrapper}));
   const tokens=String(query).trim().split(/\s+/).filter(Boolean).map(searchKey);
   searching=tokens.length>0;
+  if(searching){preview.hidden=true;wrapper.classList.remove('has-portrait');}
   matches=rows.filter(row=>tokens.every(token=>row.key.includes(token)));
   list.replaceChildren(...matches.map(row=>{
    const node=document.createElement('div');node.id=id+'-option-'+row.index;node.className='search-option';
    node.setAttribute('role','option');node.setAttribute('aria-selected',String(row.value===select.value));
-   node.dataset.value=row.value;node.textContent=row.label;return node;
+   node.dataset.value=row.value;
+   const path=portraits.get(row.value);
+   if(path&&!failed.has(path)){
+    const img=document.createElement('img');img.src=path;img.alt='';img.className='option-portrait';
+    img.loading='lazy';img.decoding='async';img.addEventListener('error',()=>{failed.add(path);img.remove();});node.append(img);
+   }
+   const text=document.createElement('span');text.textContent=row.label;node.append(text);return node;
   }));
   list.hidden=false;status.hidden=matches.length!==0;input.setAttribute('aria-expanded','true');
   wrapper.classList.toggle('opens-up',innerHeight-input.getBoundingClientRect().bottom<200&&input.getBoundingClientRect().top>200);

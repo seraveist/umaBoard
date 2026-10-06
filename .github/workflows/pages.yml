@@ -38,6 +38,12 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
+      - name: Restore pinned portrait blobs
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .cache/portrait-blobs
+          key: portraits-umatools-v1-${{ hashFiles('data/portraits.json') }}
+          restore-keys: portraits-umatools-v1-
       - name: Test normalization and engine before publishing
         run: |
           python -m unittest discover -s tests -v
@@ -48,7 +54,7 @@ jobs:
           node --check prototype/model.js
           node --check prototype/app.js
       - name: Stage app and validate active dataset
-        run: python scripts/build_pages.py
+        run: python scripts/build_pages.py --fetch-portraits
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
