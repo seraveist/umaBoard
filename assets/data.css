@@ -31,6 +31,11 @@
 #uma-plan .option-portrait{width:34px;height:34px;flex-shrink:0;object-fit:contain;border-radius:4px}
 #uma-plan .selected-portrait{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:30px;height:30px;object-fit:contain;border-radius:4px;pointer-events:none}
 #uma-plan .search-select.has-portrait input{padding-left:42px}
+#uma-plan .option-type-badge{width:20px;height:20px;flex-shrink:0;object-fit:contain}
+#uma-plan .selected-type-badge{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:20px;height:20px;object-fit:contain}
+#uma-plan .search-select.has-type-badge input{padding-left:32px}
+#uma-plan .search-select.has-portrait .selected-type-badge{left:40px}
+#uma-plan .search-select.has-portrait.has-type-badge input{padding-left:66px}
 #uma-plan .search-option:hover,#uma-plan .search-option.active{background:var(--tint);color:var(--green)}
 #uma-plan .search-option[aria-selected=true]{font-weight:600}
 #uma-plan .search-empty{padding:12px;color:var(--sub);font-size:12px}

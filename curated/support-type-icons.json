@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-06",
+  "sync_policy": "static_snapshot",
+  "source": {
+    "source_page": "https://gametora.com/ja/umamusume/supports",
+    "files": [
+      {
+        "name": "speed",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_00.png",
+        "bytes": 1937,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "2f717daa28f973885cbf5f1b5ad4aab097532bfba043b8551ad5440bd9c19a47",
+        "asset_path": "assets/support-types/speed.png"
+      },
+      {
+        "name": "stamina",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_01.png",
+        "bytes": 1554,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "3f3efa620b9aeb3f33aa753befef52aeaea34facd6bb21982a8d448f0d7c72a8",
+        "asset_path": "assets/support-types/stamina.png"
+      },
+      {
+        "name": "power",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_02.png",
+        "bytes": 1773,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "aa700b28f8ac6bdcb8ef0fdbd5dbe1fe4194228eb85f40aee5a50349e27b7b51",
+        "asset_path": "assets/support-types/power.png"
+      },
+      {
+        "name": "guts",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_03.png",
+        "bytes": 2028,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "c6e072b1d58756a25feef5e4d85fe665fa5ad6bd234c4f39174efd17896881c3",
+        "asset_path": "assets/support-types/guts.png"
+      },
+      {
+        "name": "int",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_04.png",
+        "bytes": 2218,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "a0be3937ae5c4c48d3785c3365c478889f3f2ea10f6a46c05f0b0e5ed53c8adc",
+        "asset_path": "assets/support-types/wisdom.png"
+      },
+      {
+        "name": "friend",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_05.png",
+        "bytes": 1372,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "ba4628daaf0e4475cc3c463c31141a1d79c229e2a95e94e626e16448044d48d2",
+        "asset_path": "assets/support-types/friend.png"
+      },
+      {
+        "name": "group",
+        "url": "https://gametora.com/images/umamusume/icons/utx_ico_obtain_06.png",
+        "bytes": 2319,
+        "size": [
+          70,
+          70
+        ],
+        "sha256": "437c98ce45aa7e2548a172a12cde3c3b662bc9571fefc8d75b8c4f22804ad6cd",
+        "asset_path": "assets/support-types/group.png"
+      }
+    ]
+  }
+}

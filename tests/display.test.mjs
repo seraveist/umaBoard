@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {skillName,outfitName,selectableSupports,cardName} from '../assets/display.mjs';
+import {skillName,outfitName,selectableSupports,cardName,cardLabel} from '../assets/display.mjs';
 import {searchKey} from '../assets/search-select.mjs';
 import {buildCandidates} from '../assets/candidates.mjs';
 import {portraitPath} from '../assets/portraits.mjs';
@@ -37,6 +37,7 @@ test('selector includes only SSR while the master retains SR/R and group titles'
  assert.ok(Object.values(data.supports).some(card=>card.rarity==='R'));
  const pisa=cards.find(card=>card.name_jp.startsWith('ヴィクトワールピサ'));
  assert.equal(cardName(pisa),'빅투아르 피사');
+ assert.equal(cardLabel(pisa),'빅투아르 피사');
  assert.equal(outfitName({name_jp:'新キャラ',name_ko:null,outfit_name_jp:'衣装'}),'新キャラ · 衣装');
  const group=cards.find(card=>card.type==='Group');assert.equal(cardName(group),group.name_jp.replace(/\s+\(SSR\)$/,''));
 });

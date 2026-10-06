@@ -1,7 +1,7 @@
 import {buildCandidates} from './candidates.mjs';
 import {fixedContext} from './activation.mjs';
 import {validateSetup,STAT_KEYS} from './physics.mjs';
-import {skillName,umaName,outfitName,cardName,cardLabel,selectableSupports} from './display.mjs';
+import {skillName,umaName,outfitName,cardName,cardLabel,cardTypes,cardTypeBadge,selectableSupports} from './display.mjs';
 import {searchableSelect} from './search-select.mjs';
 import {portraitPath} from './portraits.mjs';
 const root=document.querySelector('#uma-plan'),q=s=>root.querySelector(s),qa=s=>[...root.querySelectorAll(s)];
@@ -134,13 +134,14 @@ async function load(){
   q('#deck-inputs').innerHTML=Array.from({length:6},(_,i)=>`<div class="field"><label for="support-${i}-search">서포트 ${i+1}</label><select data-support="${i}" hidden>${options}</select></div>`).join('');
   [q('#outfit'),q('#course'),q('#scenario')].forEach(x=>x.disabled=false);
   const outfitKeywords=new Map(Object.values(data.outfits).map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
-  const cardKeywords=new Map(cards.map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
+  const cardKeywords=new Map(cards.map(s=>[s.id,[s.name_jp,cardTypes[s.type],s.id,...(s.search_aliases_ko||[])].join(' ')]));
   let portraits={};
   try{const response=await fetch('data/portraits.json',{cache:'no-cache'});if(response.ok)portraits=await response.json();}catch{}
   const outfitPortraits=new Map(Object.keys(data.outfits).map(id=>[id,portraitPath(portraits,'outfits',id)]));
   const cardPortraits=new Map(cards.map(s=>[s.id,portraitPath(portraits,'supports',s.id)]));
+  const cardBadges=new Map(cards.map(s=>[s.id,cardTypeBadge(s)]));
   searchableSelect(q('#outfit'),{id:'outfit-search',placeholder:'우마무스메 이름 검색',keywords:outfitKeywords,portraits:outfitPortraits});
-  qa('[data-support]').forEach((select,i)=>searchableSelect(select,{id:`support-${i}-search`,placeholder:'SSR 이름 검색',keywords:cardKeywords,portraits:cardPortraits}));
+  qa('[data-support]').forEach((select,i)=>searchableSelect(select,{id:`support-${i}-search`,placeholder:'SSR 이름 검색',keywords:cardKeywords,portraits:cardPortraits,badges:cardBadges}));
   q('#data-status').textContent=`스킬 ${manifest.counts.skills.toLocaleString()}개 · JP`;
   send('load',data);
  }catch(error){q('#data-status').textContent='자료를 불러오지 못했습니다.';q('#input-status').classList.add('error-message');q('#input-status').textContent=location.protocol==='file:'?'로컬 서버로 실행하세요: python -m http.server 8000':'데이터 파일 또는 연결을 확인하고 새로고침하세요.';console.error(error);}

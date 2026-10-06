@@ -1,7 +1,7 @@
 // Keep IDs in a native select; typing only searches and never changes selection.
 export const searchKey=value=>String(value??'').normalize('NFKC').toLocaleLowerCase('ko').replace(/\s+/g,'');
 
-export function searchableSelect(select,{id,placeholder='이름 검색',keywords=new Map(),portraits=new Map()}={}){
+export function searchableSelect(select,{id,placeholder='이름 검색',keywords=new Map(),portraits=new Map(),badges=new Map()}={}){
  const wrapper=document.createElement('div');wrapper.className='search-select';
  const input=document.createElement('input');input.id=id;input.type='text';input.placeholder=placeholder;
  input.autocomplete='off';input.spellcheck=false;input.setAttribute('role','combobox');
@@ -13,7 +13,10 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
  const preview=document.createElement('img');preview.className='selected-portrait';preview.alt='';preview.hidden=true;
  preview.setAttribute('aria-hidden','true');preview.decoding='async';
  preview.addEventListener('error',()=>{failed.add(preview.getAttribute('src'));preview.hidden=true;wrapper.classList.remove('has-portrait');});
- wrapper.append(preview,input,list,status);select.hidden=true;select.after(wrapper);
+ const typeBadge=document.createElement('img');typeBadge.id=id+'-type';typeBadge.className='selected-type-badge';typeBadge.hidden=true;typeBadge.decoding='async';
+ typeBadge.addEventListener('error',()=>{failed.add(typeBadge.getAttribute('src'));typeBadge.hidden=true;wrapper.classList.remove('has-type-badge');input.removeAttribute('aria-describedby');});
+ typeBadge.addEventListener('click',()=>{input.focus();if(list.hidden){show();input.select();}});
+ wrapper.append(preview,typeBadge,input,list,status);select.hidden=true;select.after(wrapper);
  const rows=[...select.options].map((o,index)=>({value:o.value,label:o.textContent,index,
   key:searchKey(o.textContent+' '+(keywords.get(o.value)||''))}));
  let matches=[],active=-1,composing=false,searching=false;
@@ -21,6 +24,12 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
   input.value=select.selectedOptions[0]?.textContent||'';input.title=input.value;input.disabled=select.disabled;
   const candidate=portraits.get(select.value),path=failed.has(candidate)?null:candidate;preview.hidden=!path;wrapper.classList.toggle('has-portrait',!!path);
   if(path){if(preview.getAttribute('src')!==path)preview.src=path;}else preview.removeAttribute('src');
+  const badge=badges.get(select.value),badgePath=badge&&!failed.has(badge.src)?badge.src:null;
+  typeBadge.hidden=!badgePath;wrapper.classList.toggle('has-type-badge',!!badgePath);
+  if(badgePath){
+   if(typeBadge.getAttribute('src')!==badgePath)typeBadge.src=badgePath;
+   typeBadge.alt=badge.label;typeBadge.title=badge.label;input.setAttribute('aria-describedby',typeBadge.id);
+  }else{typeBadge.removeAttribute('src');input.removeAttribute('aria-describedby');}
  };
  function setActive(index){
   active=index;
@@ -35,7 +44,7 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
   document.dispatchEvent(new CustomEvent('uma-picker-open',{detail:wrapper}));
   const tokens=String(query).trim().split(/\s+/).filter(Boolean).map(searchKey);
   searching=tokens.length>0;
-  if(searching){preview.hidden=true;wrapper.classList.remove('has-portrait');}
+  if(searching){preview.hidden=true;typeBadge.hidden=true;wrapper.classList.remove('has-portrait','has-type-badge');input.removeAttribute('aria-describedby');}
   matches=rows.filter(row=>tokens.every(token=>row.key.includes(token)));
   list.replaceChildren(...matches.map(row=>{
    const node=document.createElement('div');node.id=id+'-option-'+row.index;node.className='search-option';
@@ -45,6 +54,11 @@ export function searchableSelect(select,{id,placeholder='이름 검색',keywords
    if(path&&!failed.has(path)){
     const img=document.createElement('img');img.src=path;img.alt='';img.className='option-portrait';
     img.loading='lazy';img.decoding='async';img.addEventListener('error',()=>{failed.add(path);img.remove();});node.append(img);
+   }
+   const badge=badges.get(row.value);
+   if(badge&&!failed.has(badge.src)){
+    const img=document.createElement('img');img.src=badge.src;img.alt=badge.label;img.title=badge.label;img.className='option-type-badge';
+    img.decoding='async';img.addEventListener('error',()=>{failed.add(badge.src);img.remove();});node.append(img);
    }
    const text=document.createElement('span');text.textContent=row.label;node.append(text);return node;
   }));
