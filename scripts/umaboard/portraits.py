@@ -69,11 +69,16 @@ def synchronize_catalog(root, client=None):
     client = client or HttpClient(os.environ.get('GITHUB_TOKEN'))
     manifest, data = load_active(root)
     source = next(s for s in manifest['sources'] if s['source_id'] == 'umatools')
-    # The same commit as the active mechanics data; no GameTora or other fallback.
-    tree = client.json(f'https://api.github.com/repos/{REPOSITORY}/git/trees/{source["commit"]}?recursive=1')
+    # Image-only additions must be found even when the mechanics JSON is unchanged.
+    commits = client.json(f'https://api.github.com/repos/{REPOSITORY}/commits?per_page=1')
+    if not commits:
+        raise DataError('portrait repository has no commits')
+    image_source = {'repository': REPOSITORY, 'commit': commits[0]['sha']}
+    tree = client.json(f'https://api.github.com/repos/{REPOSITORY}/git/trees/{image_source["commit"]}?recursive=1')
     selected = {**source, 'files': [f for f in source['files'] if f['key'] in KINDS]}
     raw, _ = raw_inputs(client, [selected], root / '.cache/raw')
-    catalog = catalog_for(source, raw, data, tree)
+    catalog = catalog_for(image_source, raw, data, tree)
+    catalog['data_source_commit'] = source['commit']
     changed = write_json(root / 'data/portraits.json', catalog)
     return catalog, changed
 

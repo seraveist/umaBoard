@@ -3,10 +3,11 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from umaboard.common import DataError
-from umaboard.portraits import catalog_for, portrait_bytes, stage_portraits, write_json
+from umaboard.portraits import catalog_for, portrait_bytes, stage_portraits, synchronize_catalog, write_json
 from umaboard.sync import git_blob_sha
 
 
@@ -83,6 +84,28 @@ class PortraitTests(unittest.TestCase):
             modified = path.stat().st_mtime_ns
             self.assertFalse(write_json(path, second))
             self.assertEqual(path.stat().st_mtime_ns, modified)
+
+    def test_image_only_upstream_addition_is_found_without_a_mechanics_change(self):
+        _, source, raw, data, tree = self.fixture()
+        raw['outfits'].append({'UmaId': '100102', 'UmaImage': '/assets/character_thumbs/100102-special-week.png'})
+        manifest = {'sources': [{**source, 'source_id': 'umatools', 'files': []}]}
+        class Client:
+            commit = 'a' * 40
+            def json(self, url):
+                return [{'sha': self.commit}] if '/commits?' in url else tree
+        client = Client()
+        with tempfile.TemporaryDirectory() as directory, patch('umaboard.portraits.load_active', return_value=(manifest, data)), patch('umaboard.portraits.raw_inputs', return_value=(raw, [])):
+            root = Path(directory)
+            first, _ = synchronize_catalog(root, client)
+            self.assertIn('100102', first['missing']['outfits'])
+            client.commit = 'b' * 40
+            tree['tree'].append({**tree['tree'][0], 'path': 'public/assets/character_thumbs/100102-special-week.webp'})
+            second, changed = synchronize_catalog(root, client)
+            self.assertTrue(changed)
+            self.assertIn('100102', second['outfits'])
+            self.assertEqual(second['source']['commit'], 'b' * 40)
+            self.assertEqual(second['data_source_commit'], source['commit'])
+            self.assertEqual(manifest['sources'][0]['commit'], 'a' * 40)
 
 
 if __name__ == '__main__':

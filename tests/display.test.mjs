@@ -11,7 +11,7 @@ const portraits=JSON.parse(readFileSync(new URL('../data/portraits.json',import.
 
 test('portrait paths use exact outfit/card IDs and only local assets',()=>{
  assert.equal(portraits.source.repository,'daftuyda/UmaTools');
- assert.equal(portraits.source.commit,manifest.sources.find(source=>source.source_id==='umatools').commit);
+ assert.equal(portraits.data_source_commit,manifest.sources.find(source=>source.source_id==='umatools').commit);
  for(const kind of ['outfits','supports'])for(const [id,entry] of Object.entries(portraits[kind])){
   assert.ok(data[kind][id]);assert.equal(portraitPath(portraits,kind,id),entry.path);
   if(kind==='supports')assert.equal(data.supports[id].rarity,'SSR');
