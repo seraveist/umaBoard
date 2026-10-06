@@ -17,6 +17,7 @@ export class PreparationEngine{
   this.compiled=new Map([...this.records].map(([id,s])=>[id,compileSkill(s,setup)]));
   this.runs=new Map();this.scores=new Map();this.recommendations=new Map();this.costs=new Map();
   this.selected=new Set();this.speedDisabled=new Set();this.userDisabled=new Set();this.auto=true;this.objective='maximum';
+  this.fixedIds=new Set();this.userSelected=new Set();this.automaticIds=new Set();this.manualIds=new Set();
   this.rules=selectionRules(data,this.records);
   // A pure heal changes HP only unless a supported skill observes HP, skill
   // possession or activation counts. Keep such dependencies conservative.
@@ -37,17 +38,33 @@ export class PreparationEngine{
   // Keep the stronger supported tier and one evolution branch. Prerequisites do not stack.
   list.sort((a,b)=>Number(supported(this.compiled.get(b.id)))-Number(supported(this.compiled.get(a.id)))||
    this.strength(b)-this.strength(a)||a.id.localeCompare(b.id));
-  this.selected=new Set(this.normalize(list.map(s=>s.id)));
+  this.fixedIds=new Set(this.normalize(list.map(s=>s.id)));this.syncSelection();
  }
+ baselineSelection(){return this.normalize([...this.fixedIds,...[...this.userSelected].sort()]);}
+ protectedSpeed(id){return this.fixedIds.has(id)||this.userSelected.has(id)&&this.record(id).categories.some(c=>['speed','passive'].includes(c));}
+ clearSpeedSelection(){for(const id of [...this.userSelected])if(this.record(id).categories.some(c=>['speed','passive'].includes(c)))this.toggle(id,false,'speed');}
+ syncSelection(){this.selected=new Set(this.normalize([...this.baselineSelection(),...[...(this.auto?this.automaticIds:this.manualIds)].sort()]));}
+ useAutomatic(){this.auto=true;this.manualIds.clear();this.notice='';this.syncSelection();}
  strength(skill){return skill.invocations.reduce((sum,i)=>sum+i.effects.reduce((n,e)=>n+Math.max(0,e.value_raw),0),0);}
  toggle(id,checked,source=''){
   if(!this.records.has(id))throw new Error('알 수 없는 스킬입니다.');
-  const preview=previewToggle(this.records,this.rules,this.selected,id,checked);
+  if(this.fixedIds.has(id)){this.notice=checked?'':'확정 경로의 기본 스킬은 고정 선택입니다.';return;}
+  const preview=previewToggle(this.records,this.rules,this.selected,id,checked,this.fixedIds);
   this.notice=preview.notice;if(this.notice)return;
   if(checked)this.userDisabled.delete(id);else this.userDisabled.add(id);
   if(this.record(id).categories.includes('speed')){if(checked)this.speedDisabled.delete(id);else this.speedDisabled.add(id);}
-  this.selected=new Set(preview.selected);
-  if(source==='acceleration'||this.record(id).categories.includes('acceleration')&&!this.record(id).categories.includes('speed'))this.auto=false;
+  const next=new Set(preview.selected),skill=this.record(id);
+  const manual=source==='acceleration'||source==='routes'&&skill.categories.includes('acceleration')||skill.categories.includes('acceleration')&&!skill.categories.includes('speed');
+  this.userSelected=new Set([...this.userSelected].filter(other=>next.has(other)));
+  if(manual){
+   this.auto=false;this.automaticIds.clear();
+   this.manualIds=new Set([...next].filter(other=>!this.fixedIds.has(other)&&!this.userSelected.has(other)));
+  }else{
+   if(checked)this.userSelected.add(id);
+   this.automaticIds=new Set([...this.automaticIds].filter(other=>next.has(other)&&!this.userSelected.has(other)));
+   this.manualIds=new Set([...this.manualIds].filter(other=>next.has(other)&&!this.userSelected.has(other)));
+  }
+  this.syncSelection();
  }
  selectMany(ids,source='speed'){
   this.notice='';
@@ -59,7 +76,7 @@ export class PreparationEngine{
   return this.normalize(ids).filter(id=>supported(this.compiled.get(id))&&(this.healDependent||!this.record(id).categories.every(c=>c==='heal')));
  }
  simulate(ids,q=.5,failHeals=false,omitAcceleration=false){
-  const normalized=this.normalize(ids),key=keyOf(normalized)+'|'+q+'|'+failHeals+'|'+omitAcceleration;
+  const normalized=this.normalize(ids).sort(),key=keyOf(normalized)+'|'+q+'|'+failHeals+'|'+omitAcceleration;
   if(!this.runs.has(key)){
    let compiled=normalized.map(id=>this.compiled.get(id)).filter(supported);
    if(omitAcceleration)compiled=compiled.map(s=>({...s,invocations:s.invocations.map(i=>({...i,effects:i.effects.filter(e=>e.kind!=='acceleration')}))}));
@@ -80,19 +97,33 @@ export class PreparationEngine{
   this.scores.set(key,result);if(this.scores.size>20000)this.scores.delete(this.scores.keys().next().value);
   return result;
  }
- marginal(id,selection=this.selected,samples=[.5]){
+ marginal(id,selection=this.selected,samples){
   const compiled=this.compiled.get(id);
   if(!supported(compiled))return {id,status:compiled.status,reasons:compiled.reasons,gain:null};
+  if(!this.fixedIds.has(id)&&[...this.fixedIds].some(other=>!this.compatible(id,other)))
+   return {id,status:'inactive',reasons:['고정 스킬과 함께 습득 불가'],gain:null};
+  const safety=this.objective==='safe'&&this.record(id).categories.includes('acceleration');
+  samples??=safety?SAMPLES:[.5];
   const others=[...selection].filter(other=>this.compatible(id,other));
   // At the inheritance limit an unchecked unique is a replacement candidate,
   // not a fictitious seventh inherited skill or a silently ignored addition.
-  let gain;
+  let gain,safetyGain;
+  const evaluate=withIds=>{
+   const paired=this.compare(withIds,others,samples);
+   let contribution;
+   if(safety&&samples.length===SAMPLES.length){
+    const baseline=this.baselineSelection(),withBase=this.compare(withIds,baseline,samples),withoutBase=this.compare(others,baseline,samples);
+    if(withBase&&withoutBase)contribution=withBase.min-withoutBase.min;
+   }
+   return {gain:paired,safetyGain:contribution};
+  };
   const inherits=others.filter(other=>this.record(other).inherited);
   if(this.record(id).inherited&&inherits.length>=INHERITANCE_LIMIT){
-   gain=inherits.map(replaced=>this.compare([...others.filter(other=>other!==replaced),id],others,samples)).filter(Boolean)
-    .sort((a,b)=>b.median-a.median)[0]||null;
-  }else gain=this.compare([...others,id],others,samples);
-  return {id,status:gain?compiled.status:'unsupported',reasons:gain?[]:['주행 비교 실패'],assumed:compiled.assumed,gain};
+   const best=inherits.map(replaced=>evaluate([...others.filter(other=>other!==replaced),id])).filter(s=>s.gain)
+    .sort((a,b)=>(safety?(b.safetyGain??-Infinity)-(a.safetyGain??-Infinity):0)||b.gain.median-a.gain.median)[0];
+   gain=best?.gain||null;safetyGain=best?.safetyGain;
+  }else ({gain,safetyGain}=evaluate([...others,id]));
+  return {id,status:gain?compiled.status:'unsupported',reasons:gain?[]:['주행 비교 실패'],assumed:compiled.assumed,gain,safetyGain};
  }
  cost(id){
   if(this.costs.has(id))return this.costs.get(id);
@@ -108,8 +139,9 @@ export class PreparationEngine{
   if(!['maximum','safe'].includes(this.objective))throw new Error('추천 기준을 확인하세요.');
   const eligible=[...this.records.values()].filter(s=>s.categories.includes('acceleration')&&!excluded.has(s.id)&&!this.speedDisabled.has(s.id)&&supported(this.compiled.get(s.id)));
   // Unavailable ordinary whites compete with inherited and obtainable accelerations.
-  const fixed=[...this.selected].filter(id=>!excluded.has(id)&&(!this.record(id).categories.includes('acceleration')||this.record(id).categories.includes('speed')||nativeUnique(this.record(id))));
-  const inheritedRank=eligible.filter(s=>s.inherited).map(s=>this.marginal(s.id,fixed)).filter(positiveGain).sort(scoreOrder);
+  const fixed=this.baselineSelection().filter(id=>!excluded.has(id));
+  const inheritedRank=eligible.filter(s=>s.inherited).map(s=>this.marginal(s.id,fixed)).filter(s=>this.objective==='safe'?s.gain?.max>.005:positiveGain(s))
+   .sort((a,b)=>this.objective==='safe'?(b.safetyGain??0)-(a.safetyGain??0)||(b.gain?.max??0)-(a.gain?.max??0)||scoreOrder(a,b):scoreOrder(a,b));
   const inheritedPool=new Set(inheritedRank.slice(0,INHERITANCE_TOP).map(s=>s.id));
   const poolReduced=inheritedRank.length>INHERITANCE_TOP;
   const candidates=eligible.filter(s=>(!s.inherited||inheritedPool.has(s.id))&&!fixed.includes(s.id)&&fixed.every(other=>this.compatible(s.id,other))).map(s=>s.id);
@@ -170,20 +202,22 @@ export class PreparationEngine{
   // not both disappear merely because each currently has zero marginal gain.
   let removed=0;
   for(;;){
-   const redundant=[...this.selected].sort((a,b)=>(this.cost(b)??Infinity)-(this.cost(a)??Infinity)||a.localeCompare(b))
-    .find(id=>{const s=this.scoreSkill(id);return !positiveGain(s)&&!(this.record(id).categories.includes('heal')&&s.hpGain>.5);});
-   if(redundant){this.selected.delete(redundant);excluded.add(redundant);removed++;continue;}
+   const redundant=[...this.selected].filter(id=>!this.protectedSpeed(id)).sort((a,b)=>(this.cost(b)??Infinity)-(this.cost(a)??Infinity)||a.localeCompare(b))
+    .find(id=>{const s=this.scoreSkill(id);return !positiveGain(s)&&!positiveGain(s,'acceleration')&&!(this.record(id).categories.includes('heal')&&s.hpGain>.5);});
+   if(redundant){this.removeSelection(redundant);excluded.add(redundant);removed++;continue;}
    const entries=this.scoredSkills(),tables=skillTables(this.records,entries),visible=visibleSkillIds(tables);
-   const rejected=[...this.selected].filter(id=>!visible.has(id)).sort((a,b)=>(this.cost(b)??Infinity)-(this.cost(a)??Infinity)||a.localeCompare(b));
+   const rejected=[...this.selected].filter(id=>!this.protectedSpeed(id)&&!visible.has(id)).sort((a,b)=>(this.cost(b)??Infinity)-(this.cost(a)??Infinity)||a.localeCompare(b));
    if(!rejected.length)return {entries,tables,removed};
-   const id=rejected[0];this.selected.delete(id);excluded.add(id);removed++;
+   const id=rejected[0];this.removeSelection(id);excluded.add(id);removed++;
   }
  }
+ removeSelection(id){this.userSelected.delete(id);this.automaticIds.delete(id);this.manualIds.delete(id);this.syncSelection();}
  analyze(){
+  this.syncSelection();
   const excluded=new Set();let recommendation,settled;
   for(;;){
    recommendation=this.auto?this.recommendation(excluded):{ids:[],fixedIds:[...this.selected],gain:null,search:'manual',candidateCount:0,evaluations:0};
-   if(this.auto)this.selected=new Set(this.normalize([...recommendation.fixedIds,...recommendation.ids]));
+   if(this.auto){this.automaticIds=new Set(recommendation.ids);this.syncSelection();}
    settled=this.settleSelection(excluded);
    if(!this.auto||!settled.removed)break;
    // The exclusion set only grows, so filtered selections cannot cycle back in.
@@ -193,8 +227,11 @@ export class PreparationEngine{
   const runs=SAMPLES.map(q=>this.simulate(selected,q)),main=runs[2];
   const accelValues=SAMPLES.map((q,k)=>{const reference=this.simulate(selected,q,false,true);return runs[k].status==='ok'&&reference.status==='ok'?lengthsBetween(runs[k],reference):null;});
   const comparison=accelValues.some(x=>x===null)?null:{median:accelValues[2],min:Math.min(...accelValues),max:Math.max(...accelValues),values:accelValues};
-  const failed=this.simulate(selected,.5,true);
+  const failed=this.simulate(selected,.5,true),reference=this.simulate(selected,.5,false,true);
+  const graphPoints=r=>r.trace.filter(p=>p.t>=r.entry.t-4&&p.t<=r.entry.t+12).map(p=>({...p,t:p.t-r.entry.t}));
   return {modelVersion:MODEL_VERSION,mode:'comparison',blockingReason:main.status==='ok'?null:main.reason,selected,auto:this.auto,objective:this.objective,skills,tables:settled.tables,notice:this.notice,
+   fixedIds:[...this.fixedIds],userSelected:[...this.userSelected],automaticIds:[...this.automaticIds],manualIds:[...this.manualIds],visibleSelected:selected.filter(id=>visible.has(id)),
+   accelerationGraph:main.entry&&reference.entry?{sample:.5,selected:graphPoints(main),reference:graphPoints(reference)}:null,
    fullSpurtExcluded:runs.some(r=>r.fullSpurtExcluded),
    recommendation:{...recommendation,cost:undefined},comparison,
    acceleration:runs.map((r,index)=>({sample:SAMPLES[index],status:r.status,entry:r.entry,reach:r.reach})),

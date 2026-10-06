@@ -5,7 +5,7 @@ import {sampleBranches,branchReady,slopeAt} from './activation.mjs';
 // feasibility projection: we do not manufacture a late/reduced spurt decision.
 export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={}){
  const d=setup.course.distance,selected=new Set(compiledSkills.map(s=>s.id));
- const pending=compiledSkills.flatMap(s=>s.invocations.map(i=>({...i,id:s.id,preMet:false,done:false,
+ const pending=compiledSkills.slice().sort((a,b)=>a.id.localeCompare(b.id)).flatMap(s=>s.invocations.map(i=>({...i,id:s.id,preMet:false,done:false,
   condition:sampleBranches(i.condition,q),precondition:sampleBranches(i.precondition,q,true)})));
  const passive={speed:0,stamina:0,power:0,guts:0,wisdom:0},used=new Set(),counts=[0,0,0,0],events=[],active=[];
  const state={x:0,prevX:0,t:0,phase:0,hp:1,hpMax:1,used,selected,counts,laterCount:0,healCount:0,passiveCount:0};
@@ -20,7 +20,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
  const physics=buildPhysics(setup,passive);
  state.hp=state.hpMax=physics.hpMax;
  let velocity=3,currentOffset=0,entry=null,reach=null,legStart=null,staminaFight=false,depletion=null;
- const positions=[0];
+ const positions=[0],trace=[];
  // A fixed 0.1s gate delay is shared between the compared trajectories.
  const delay=.1;
  for(let frame=0;state.x<d&&frame<100000;frame++){
@@ -55,6 +55,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
   if(staminaFight)target+=physics.staminaSpeed;
   const startDash=state.x<d/6&&velocity<.85*physics.bs;
   if(startDash)target=.85*physics.bs;
+  if(frame%2===0&&state.x>=2*d/3-120&&(legStart===null||t-legStart<=12.2))trace.push({t,x:state.x,v:velocity+currentOffset,target});
   const leg=legStart!==null&&t-legStart<physics.legDuration?physics.legAccel:0;
   const acceleration=physics.acceleration(state.phase,uphill)+accelerationBonus+leg+(startDash?24:0);
   if(entry===null&&state.phase>=2)entry={x:state.x,t,speed:velocity+currentOffset,target,targetGap:Math.max(0,target-velocity-currentOffset)};
@@ -73,7 +74,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
     hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,fullSpeedFeasible:depletion===null,
-    events,passive,fullSpurtExcluded:physics.fullSpurtExcluded,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
+    events,passive,trace,fullSpurtExcluded:physics.fullSpurtExcluded,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
   }
  }
  throw new Error('단독 비교 계산이 수렴하지 않았습니다.');

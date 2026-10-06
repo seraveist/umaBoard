@@ -12,8 +12,10 @@ self.onmessage=({data:message})=>{
    if(previous&&baseKey(previous.setup)===baseKey(payload)){
     engine.userDisabled=new Set([...previous.userDisabled].filter(id=>engine.records.has(id)));
     engine.speedDisabled=new Set([...previous.speedDisabled].filter(id=>engine.records.has(id)));
-    engine.selected=new Set(engine.normalize([...previous.selected,...engine.selected].filter(id=>engine.records.has(id)&&!engine.userDisabled.has(id))));
+    engine.userSelected=new Set(engine.normalize([...engine.fixedIds,...previous.userSelected]).filter(id=>!engine.fixedIds.has(id)));
+    engine.manualIds=new Set(engine.normalize([...engine.baselineSelection(),...previous.manualIds]).filter(id=>!engine.fixedIds.has(id)&&!engine.userSelected.has(id)));
     engine.auto=previous.auto;engine.objective=previous.objective;
+    engine.syncSelection();
    }
   }
   else if(type==='batch')for(const action of payload)applyEngineAction(engine,action);

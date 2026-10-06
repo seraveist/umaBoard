@@ -156,8 +156,9 @@ test('normal and enhanced inheritance versions of the same unique cannot stack',
 test('turning off a compound speed skill cannot let automatic acceleration turn it back on',()=>{
  const hybrid=skill('hybrid','target_speed',3500);hybrid.categories.push('acceleration');
  hybrid.invocations[0].effects.push({kind:'acceleration',value_raw:4000,unit:'umatools_raw',extras_raw:{}});
- const e=new PreparationEngine(fixture([hybrid],{hybrid:100}),setup);
- assert.ok(e.selected.has('hybrid'));e.toggle('hybrid',false);
+ const f=fixture([hybrid],{hybrid:100});f.acquisition_routes=[];
+ const e=new PreparationEngine(f,setup);e.toggle('hybrid',true,'speed');
+ assert.ok(e.selected.has('hybrid'));e.toggle('hybrid',false,'speed');
  assert.equal(e.auto,true);assert.ok(!e.analyze().selected.includes('hybrid'));
  e.toggle('hybrid',true,'acceleration');assert.equal(e.auto,false);
 });
@@ -259,8 +260,9 @@ test('ranked bulk selection preserves existing inherits, skips alternatives and 
  e.toggle('i9',true,'speed');applyEngineAction(e,{type:'selectMany',ids:inherits.map(s=>s.id),source:'speed'});
  assert.equal(e.selected.size,6);assert.ok(e.selected.has('i9'));assert.ok(!e.selected.has('i5'));
  const a=skill('a','target_speed',1500),b=skill('b','target_speed',3000);
- const alternatives=new PreparationEngine(fixture([a,b],{},[{kind:'version_family',from_id:'a',to_id:'b'}]),setup);
- alternatives.selected.clear();alternatives.selectMany(['b','a']);assert.deepEqual([...alternatives.selected],['b']);
+ const options=fixture([a,b],{a:100,b:200},[{kind:'version_family',from_id:'a',to_id:'b'}]);options.acquisition_routes=[];
+ const alternatives=new PreparationEngine(options,setup);
+ alternatives.selectMany(['b','a']);assert.deepEqual([...alternatives.selected],['b']);
 });
 test('selection batches apply the latest intent before one analysis and reject removed efficiency mode',()=>{
  const a=skill('a','target_speed',3500);const e=new PreparationEngine(fixture([a]),setup);
@@ -279,4 +281,61 @@ test('recommendation cache accounts for inherited heals consuming an inheritance
  const f=fixture([...accelerations,heal],Object.fromEntries(accelerations.map(s=>[s.id,100])));f.acquisition_routes=[];
  const e=new PreparationEngine(f,setup);assert.equal(e.healDependent,false);assert.equal(e.recommendation().ids.length,6);
  e.toggle('h',true,'heal');assert.equal(e.recommendation().ids.length,5);
+});
+test('obtainable speed remains fixed at zero gain and can become useful with acceleration',()=>{
+ const speed=skill('speed','target_speed',3500),accel=skill('accel');
+ const e=new PreparationEngine(fixture([speed]),setup),r=e.analyze();
+ assert.ok(r.fixedIds.includes(speed.id));assert.ok(r.selected.includes(speed.id));assert.equal(e.marginal(speed.id).gain.median,0);
+ assert.ok(!r.visibleSelected.includes(speed.id));assert.ok(!r.tables.speed.ordinary.includes(speed.id));
+ e.toggle(speed.id,false,'speed');assert.match(e.notice,/고정/);assert.ok(e.selected.has(speed.id));
+ assert.ok(lengthsBetween(run([speed,accel]),run([accel]))>.3);
+});
+test('fixed upper tiers cannot be unchecked or replaced with an incompatible optional tier',()=>{
+ const lower=skill('lower','target_speed',1500),upper=skill('upper','target_speed',3500);
+ const e=new PreparationEngine(fixture([lower,upper],{},[{kind:'version_family',from_id:lower.id,to_id:upper.id}]),setup);
+ assert.deepEqual([...e.fixedIds],[upper.id]);e.toggle(lower.id,true,'speed');assert.match(e.notice,/고정/);
+ assert.deepEqual([...e.selected],[upper.id]);assert.equal(e.marginal(lower.id).status,'inactive');
+});
+test('a user speed choice survives zero gain after a manual acceleration change until explicitly cleared',()=>{
+ const speed=skill('speed','target_speed',3500),accel=skill('accel');
+ const f=fixture([speed,accel],{speed:100,accel:100});f.acquisition_routes=[];const e=new PreparationEngine(f,setup);
+ assert.ok(e.analyze().tables.speed.ordinary.includes(speed.id));e.toggle(speed.id,true,'speed');e.analyze();
+ e.toggle(accel.id,false,'acceleration');const result=e.analyze();
+ assert.equal(e.marginal(speed.id).gain.median,0);assert.ok(result.userSelected.includes(speed.id));assert.ok(result.selected.includes(speed.id));assert.ok(!result.visibleSelected.includes(speed.id));
+ e.clearSpeedSelection();assert.ok(!e.selected.has(speed.id));assert.deepEqual(e.userSelected,new Set());
+});
+test('automatically chosen hybrids never become the next automatic speed baseline',()=>{
+ const hybrid=skill('hybrid','target_speed',3500);hybrid.categories.push('acceleration');
+ hybrid.invocations[0].effects.push({kind:'acceleration',value_raw:4000,unit:'umatools_raw',extras_raw:{}});
+ const f=fixture([hybrid],{hybrid:100});f.acquisition_routes=[];const e=new PreparationEngine(f,setup);
+ const first=e.analyze();assert.ok(first.automaticIds.includes(hybrid.id));assert.deepEqual(e.baselineSelection(),[]);
+ for(let i=0;i<2;i++){e.useAutomatic();const again=e.analyze();assert.deepEqual(again.selected,first.selected);assert.deepEqual(again.comparison,first.comparison);assert.deepEqual(again.userSelected,[]);}
+ e.toggle(hybrid.id,false,'speed');assert.ok(!e.analyze().selected.includes(hybrid.id));
+ e.toggle(hybrid.id,true,'speed');assert.ok(e.baselineSelection().includes(hybrid.id));assert.ok(!e.analyze().automaticIds.includes(hybrid.id));
+});
+test('safe insurance with zero central gain survives pruning by worst-sample contribution',()=>{
+ const early=skill('early','acceleration',4000,[[atom('phase_random','==',1),atom('remain_distance','<=',920)]]);
+ const cover=skill('cover','acceleration',2000,[[atom('remain_distance','<=',670)]]);
+ const e=new PreparationEngine(fixture([early,cover],{early:100,cover:100}),setup);e.objective='safe';
+ const expected=e.recommendation().gain.min,result=e.analyze(),entry=result.skills.find(s=>s.id===cover.id);
+ assert.ok(result.selected.includes(cover.id));assert.ok(result.tables.acceleration.ordinary.includes(cover.id));
+ assert.equal(entry.gain.median,0);assert.ok(entry.safetyGain>.14);assert.ok(Math.abs(result.recommendation.gain.min-expected)<1e-8);
+});
+test('linked activation and uncached traces are identical for the same unordered skill set',()=>{
+ const helper=skill('101','target_speed',1000),gated=skill('102','acceleration',4000,[[atom('phase','>=',2),atom('is_used_skill_id','==',101)]]);
+ const e=new PreparationEngine(fixture([helper,gated]),setup),first=e.simulate([helper.id,gated.id]);
+ e.runs.clear();const second=e.simulate([gated.id,helper.id]);
+ assert.equal(second.finishTime,first.finishTime);assert.deepEqual(second.events,first.events);assert.deepEqual(second.trace,first.trace);
+ assert.deepEqual(run([helper,gated]).events,run([gated,helper]).events);
+});
+test('actual Kyoto recommendation repeats exactly with fixed support speeds and a graph from the final pair',()=>{
+ const s={...setup,course:data.courses['10808'],outfitId:'114101',supportIds:['30023'],mood:2,weather:2,
+  stats:{speed:2200,stamina:1500,power:1700,guts:1200,wisdom:1700},aptitudes:{distance:'S',surface:'A',style:'A'}};
+ const e=new PreparationEngine(data,s),first=e.analyze();
+ assert.ok(first.fixedIds.length>0);assert.ok(first.accelerationGraph.selected.length>20);assert.ok(first.accelerationGraph.reference.length>20);
+ const main=e.simulate(first.selected),reference=e.simulate(first.selected,.5,false,true);
+ for(const [rows,source]of [[first.accelerationGraph.selected,main],[first.accelerationGraph.reference,reference]])for(const p of rows){
+  assert.ok(p.t>=-4&&p.t<=12);assert.ok(source.trace.some(t=>Math.abs(t.t-source.entry.t-p.t)<1e-8&&t.v===p.v&&t.target===p.target));
+ }
+ for(let i=0;i<2;i++){e.useAutomatic();const again=e.analyze();assert.deepEqual(again.selected,first.selected);assert.deepEqual(again.tables,first.tables);assert.deepEqual(again.comparison,first.comparison);assert.deepEqual(again.fixedIds,first.fixedIds);assert.deepEqual(again.accelerationGraph,first.accelerationGraph);}
 });

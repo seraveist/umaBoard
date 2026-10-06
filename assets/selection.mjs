@@ -28,8 +28,11 @@ export function selectionRules(data,records){
  return {compatible,normalize};
 }
 
-export function previewToggle(records,rules,selected,id,checked){
+export function previewToggle(records,rules,selected,id,checked,locked=new Set()){
  if(!records.has(id))return {selected:[...selected],notice:''};
+ if(locked.has(id))return {selected:[...selected],notice:checked?'':'확정 경로의 기본 스킬은 고정 선택입니다.'};
+ if(checked&&[...locked].some(other=>!rules.compatible(id,other)))
+  return {selected:[...selected],notice:'고정 스킬과 함께 배울 수 없는 스킬입니다.'};
  const others=[...selected].filter(other=>rules.compatible(id,other));
  if(checked&&records.get(id).inherited&&others.filter(other=>records.get(other).inherited).length>=INHERITANCE_LIMIT)
   return {selected:[...selected],notice:'계승 고유기는 속도·가속 합계 최대 6개까지 선택할 수 있습니다.'};
