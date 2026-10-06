@@ -80,8 +80,15 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
     }
   }}
   const nativeUniqueIds=new Set([...routeBy.keys()].filter(id=>['unique','unique_low_star','unique_upgraded'].includes(data.skills[id]?.rarity)));
+  const uniqueOwners=new Map();
+  for(const route of data.acquisition_routes){
+    if(route.owner_type!=='outfit'||!['unique','unique_low_star','unique_upgraded'].includes(data.skills[route.skill_id]?.rarity))continue;
+    if(!uniqueOwners.has(route.skill_id))uniqueOwners.set(route.skill_id,new Set());
+    uniqueOwners.get(route.skill_id).add(route.owner_id);
+  }
   const inheritance=Object.values(data.skills).filter(s=>s.inherited&&s.parent_ids.length&&!s.parent_ids.some(id=>nativeUniqueIds.has(id))&&s.jp_available&&possibleInContext(s,context))
-    .map(s=>({...s,routes:[{kind:'inheritance',owner_type:'outfit',owner_id:null}],choice_groups:[]}));
+    .map(s=>({...s,routes:[{kind:'inheritance',owner_type:'outfit',owner_id:null}],choice_groups:[],
+      inheritance_outfit_ids:[...new Set(s.parent_ids.flatMap(id=>[...(uniqueOwners.get(id)||[])]))].sort()}));
   // A normal purchasable white skill has a positive base cost. Rarity 1 alone also
   // includes LoH Hero buffs, Carnival bonuses and innate traits, which are not factors.
   // Cost is an admission check here, never a user SP budget or discount calculation.

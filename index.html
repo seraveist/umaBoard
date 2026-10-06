@@ -16,7 +16,7 @@
 <label class="field">의욕<select id="mood"><option value="2">최상</option><option value="1">상</option><option value="0">보통</option><option value="-1">하</option><option value="-2">최하</option></select></label>
 </div></section>
 <section class="panel input-panel"><div class="section-head"><h3>육성 우마무스메</h3></div><div class="fields">
-<label class="field full">우마무스메 · 의상<select id="outfit" disabled></select></label><label class="field">개화 상태<select id="bloom"><option value="3">★3</option><option value="4">★4</option><option value="5">★5</option></select></label>
+<div class="field full"><label for="outfit-search">우마무스메 · 의상</label><select id="outfit" disabled hidden></select></div><label class="field">개화 상태<select id="bloom"><option value="3">★3</option><option value="4">★4</option><option value="5">★5</option></select></label>
 <label class="field">시나리오<select id="scenario" disabled></select></label></div><div class="policy"><span class="badge">각성 MAX</span><span class="badge pink">진화형 기준</span></div></section>
 <section class="panel input-panel stats-panel"><div class="section-head"><h3>목표 능력치 · 적성</h3></div><div class="stats">
 <label class="field">스피드<input id="stat-speed" type="number" min="1" max="3000" step="1" value="1700" required></label>
@@ -28,7 +28,7 @@
 <label class="field">마장 적성<select id="apt-surface" data-aptitude><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></label>
 <label class="field">각질 적성<select id="apt-style" data-aptitude><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></label>
 </div></section>
-<section class="panel input-panel support-panel"><div class="section-head"><h3>서포트 편성</h3><span class="sub">최대 6장</span></div><div class="support-list" id="deck-inputs"></div></section>
+<section class="panel input-panel support-panel"><div class="section-head"><h3>서포트 편성</h3><span class="sub">SSR · 최대 6장</span></div><div class="support-list" id="deck-inputs"></div></section>
 <div class="calculate-wrap"><button class="primary calculate" id="show-skills" disabled>계산하기</button><p class="calculation-status" id="input-status" role="status"></p></div></aside>
 <div class="results"><section class="panel result-shell" aria-busy="true">
 <div class="result-tabs" role="tablist" aria-label="스킬 종류"><button class="result-tab" role="tab" id="tab-speed" aria-selected="true" aria-controls="panel-speed" data-tab="speed">속도기</button><button class="result-tab" role="tab" id="tab-acceleration" aria-selected="false" aria-controls="panel-acceleration" data-tab="acceleration" tabindex="-1">가속기</button><button class="result-tab" role="tab" id="tab-factors" aria-selected="false" aria-controls="panel-factors" data-tab="factors" tabindex="-1">흰 인자</button><button class="result-tab" role="tab" id="tab-heal" aria-selected="false" aria-controls="panel-heal" data-tab="heal" tabindex="-1">스태미나</button></div>

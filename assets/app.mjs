@@ -1,23 +1,24 @@
 import {buildCandidates} from './candidates.mjs';
 import {fixedContext} from './activation.mjs';
 import {validateSetup,STAT_KEYS} from './physics.mjs';
+import {skillName,umaName,outfitName,cardName,cardLabel,selectableSupports} from './display.mjs';
+import {searchableSelect} from './search-select.mjs';
 const root=document.querySelector('#uma-plan'),q=s=>root.querySelector(s),qa=s=>[...root.querySelectorAll(s)];
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tracks={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'고쿠라','10101':'오이','10201':'롱샹','10103':'가와사키','10104':'후나바시','10105':'모리오카','10202':'산타 아니타 파크','10203':'델 마'};
-const cardTypes={Speed:'스피드',Stamina:'스태미나',Power:'파워',Guts:'근성',Wit:'지능',Wisdom:'지능',Friend:'친구',Group:'그룹'};
 const kinds={self:'자체 · 각성 MAX',outfit_event:'자체 이벤트',support_hint:'서포트 힌트',support_event:'서포트 이벤트',scenario_event:'시나리오',evolution:'진화',inheritance:'계승 준비'};
 const grades={white:'흰색',gold:'금색',unique:'고유',unique_low_star:'고유',unique_upgraded:'고유',evolution:'진화',inherited:'계승 고유'};
 const objectives={maximum:'표본 중앙의 최대 이득 · 같은 이득이면 낮은 기준 비용',efficient:'최대 추가 이득 90% 이상을 유지하는 효율 조합',safe:'5개 표본 중 가장 불리한 이득을 최대한 커버'};
 let data,candidates,result,records=new Map(),lastRequest=0,busy=true,dirty=false,appliedSetup,focusSkill;
 let visible={speed:30,acceleration:30,factors:10,heal:30};
 const worker=new Worker(new URL('./engine-worker.mjs',import.meta.url),{type:'module'});
-const displayName=s=>s.name_ko||s.name_jp;
+const displayName=skillName;
 const option=(id,label)=>`<option value="${esc(id)}">${esc(label)}</option>`;
 const signed=n=>Number.isFinite(n)?`${n<-.005?'−':'+'}${Math.abs(n).toFixed(2)}`:'—';
 const number=(n,decimals=2)=>Number.isFinite(n)?n.toFixed(decimals):'—';
 function sources(s){
- if(s.inherited)return '계승 준비';
- return [...new Set((s.routes||[]).map(r=>r.owner_type==='support'?data.supports[r.owner_id].name_jp+' · '+kinds[r.kind]:kinds[r.kind]||r.kind))].join(' / ')||'인자 준비';
+ if(s.inherited)return (s.inheritance_outfit_ids||[]).map(id=>outfitName(data.outfits[id])).join(' / ')||'계승 준비';
+ return [...new Set((s.routes||[]).map(r=>r.owner_type==='support'?cardName(data.supports[r.owner_id])+' ('+data.supports[r.owner_id].rarity+') · '+kinds[r.kind]:kinds[r.kind]||r.kind))].join(' / ')||'인자 준비';
 }
 function lockResults(){qa('[data-skill-id],[data-more],#objective,#restore-auto').forEach(x=>x.disabled=busy||dirty||!result);}
 function send(type,payload){
@@ -48,7 +49,7 @@ function renderList(type,scores){
   const badgeClass=s.rarity==='evolution'?'pink':s.rarity==='gold'?'gold':s.inherited?'blue':'';
   const value=heal?'회복':entry.gain?signed(entry.gain.median):'—';
   const detail=[...(entry.reasons||[]),entry.assumed?.length?'순위·상대 조건 충족을 가정합니다.':''].filter(Boolean).join(' · ');
-  return `<div class="data-row"><label><input type="checkbox" data-skill-id="${esc(s.id)}" aria-label="${esc(displayName(s))} 선택" ${selected.has(s.id)?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${entry.gain?index+1:'—'}</span><span class="skill-name">${esc(displayName(s))}</span><span class="badge ${badgeClass}">${grades[s.rarity]||'기타'}</span>${s.categories.includes('speed')&&s.categories.includes('acceleration')?'<span class="badge">복합</span>':''}${s.categories.includes('passive')?'<span class="badge green">능력치</span>':''}${s.choice_groups?.length?'<span class="badge">진화 분기</span>':''}${entry.pinned?'<span class="badge">선택 유지</span>':''}</div>${s.name_ko?`<p class="jp-name">${esc(s.name_jp)}</p>`:''}<div class="skill-meta">${esc(sources(s))}</div>${status?`<p class="skill-state ${unsupported?'unsupported':''}" title="${esc(detail)}">${status}</p>`:''}<details class="skill-details"><summary>스킬 설명</summary><p>${esc(s.description_jp||'원본 설명 없음')}</p>${detail?`<p>${esc(detail)}</p>`:''}</details></div><div class="skill-value"><strong class="${entry.gain?.median<-.005?'negative':''}">${value}</strong>${!heal&&entry.gain?'<span class="sub">마신</span>':''}</div></div>`;
+  return `<div class="data-row"><label><input type="checkbox" data-skill-id="${esc(s.id)}" aria-label="${esc(displayName(s))} 선택" ${selected.has(s.id)?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${entry.gain?index+1:'—'}</span><span class="skill-name">${esc(displayName(s))}</span><span class="badge ${badgeClass}">${grades[s.rarity]||'기타'}</span>${s.categories.includes('speed')&&s.categories.includes('acceleration')?'<span class="badge">복합</span>':''}${s.categories.includes('passive')?'<span class="badge green">능력치</span>':''}${s.choice_groups?.length?'<span class="badge">진화 분기</span>':''}${entry.pinned?'<span class="badge">선택 유지</span>':''}</div><div class="skill-meta">${esc(sources(s))}</div>${status?`<p class="skill-state ${unsupported?'unsupported':''}" title="${esc(detail)}">${status}</p>`:''}<details class="skill-details"><summary>스킬 설명</summary><p>${esc(s.description_jp||'원본 설명 없음')}</p>${detail?`<p>${esc(detail)}</p>`:''}</details></div><div class="skill-value"><strong class="${entry.gain?.median<-.005?'negative':''}">${value}</strong>${!heal&&entry.gain?'<span class="sub">마신</span>':''}</div></div>`;
  }).join('')+(sorted.length>limit?`<button class="data-more" data-more="${type}">더 보기</button>`:'');
  if(!sorted.length)q(`#${type}-list`).innerHTML='<p class="empty-list">지원 범위에서 추천할 후보가 없습니다.</p>';
 }
@@ -90,7 +91,7 @@ function apply(){
   records=new Map([...candidates.learned,...candidates.inheritance,...candidates.factorCandidates].map(s=>[s.id,s]));
   visible={speed:30,acceleration:30,factors:10,heal:30};dirty=false;q('#input-status').classList.remove('error-message');
   q('#scenario-note').textContent=appliedSetup.scenarioId?'시나리오 특수 획득 경로·선택 제한은 추가 검증 중입니다.':'';
-  q('#result-context').textContent=`${tracks[appliedSetup.course.track_id]||appliedSetup.course.track_id} ${appliedSetup.course.distance}m · ${q('#style option:checked').textContent} · ${data.outfits[appliedSetup.outfitId].name_jp}`;
+  q('#result-context').textContent=`${tracks[appliedSetup.course.track_id]||appliedSetup.course.track_id} ${appliedSetup.course.distance}m · ${q('#style option:checked').textContent} · ${umaName(data.outfits[appliedSetup.outfitId])}`;
   send('setup',appliedSetup);
  }catch(error){busy=false;dirty=true;q('#show-skills').disabled=false;q('#input-status').textContent=error.message;q('#input-status').classList.add('error-message');lockResults();}
 }
@@ -107,6 +108,7 @@ q('[role=tablist]').addEventListener('keydown',event=>{
 });
 root.addEventListener('change',event=>{
  const el=event.target;
+ if(el.closest('.search-select'))return;
  if(el.dataset.skillId){focusSkill=el.dataset.skillId;send('toggle',{id:el.dataset.skillId,checked:el.checked,source:el.closest('[role=tabpanel]').id.replace('panel-','')});return;}
  if(el.id==='objective'){send('objective',el.value);return;}
  if(el.id==='outfit')syncBloom();
@@ -121,15 +123,19 @@ async function load(){
   if(!/^data\/bundles\/[a-f0-9]{64}\/dataset\.json$/.test(manifest.dataset_path))throw new Error('invalid data path');
   const bundle=await fetch(manifest.dataset_path);if(!bundle.ok)throw new Error('bundle unavailable');data=await bundle.json();
   if(data.server!=='JP'||data.schema_version!==1)throw new Error('unsupported data version');
-  q('#outfit').innerHTML=Object.values(data.outfits).sort((a,b)=>a.name_jp.localeCompare(b.name_jp,'ja')).map(s=>option(s.id,`${s.name_jp} · ${s.outfit_name_jp}`)).join('');
+  q('#outfit').innerHTML=Object.values(data.outfits).sort((a,b)=>umaName(a).localeCompare(umaName(b),'ko')||a.id.localeCompare(b.id)).map(s=>option(s.id,outfitName(s))).join('');
   q('#outfit').value=data.outfits['114101']?'114101':Object.keys(data.outfits)[0];syncBloom();
   const courses=Object.values(data.courses).filter(c=>c.selectable).sort((a,b)=>Number(a.track_id)-Number(b.track_id)||a.distance-b.distance||a.id.localeCompare(b.id));
   q('#course').innerHTML=courses.map(c=>option(c.id,`${tracks[c.track_id]||c.track_id} · ${c.distance}m · ${c.surface===1?'잔디':'더트'}`)).join('');
   q('#course').value=data.courses['11203']?'11203':courses[0].id;
   q('#scenario').innerHTML=option('','선택 안 함')+Object.values(data.scenarios).map(s=>option(s.id,s.name_jp)).join('');
-  const cards=Object.values(data.supports).sort((a,b)=>a.name_jp.localeCompare(b.name_jp,'ja')),options=option('','미편성')+cards.map(s=>option(s.id,`${s.rarity} · ${s.name_jp.replace(/\s+\((SSR|SR|R)\)$/,'')} · ${cardTypes[s.type]||s.type}`)).join('');
-  q('#deck-inputs').innerHTML=Array.from({length:6},(_,i)=>`<label class="field">서포트 ${i+1}<select data-support="${i}">${options}</select></label>`).join('');
+  const cards=selectableSupports(data),options=option('','미편성')+cards.map(s=>option(s.id,cardLabel(s))).join('');
+  q('#deck-inputs').innerHTML=Array.from({length:6},(_,i)=>`<div class="field"><label for="support-${i}-search">서포트 ${i+1}</label><select data-support="${i}" hidden>${options}</select></div>`).join('');
   [q('#outfit'),q('#course'),q('#scenario')].forEach(x=>x.disabled=false);
+  const outfitKeywords=new Map(Object.values(data.outfits).map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
+  const cardKeywords=new Map(cards.map(s=>[s.id,[s.name_jp,...(s.search_aliases_ko||[])].join(' ')]));
+  searchableSelect(q('#outfit'),{id:'outfit-search',placeholder:'우마무스메 이름 검색',keywords:outfitKeywords});
+  qa('[data-support]').forEach((select,i)=>searchableSelect(select,{id:`support-${i}-search`,placeholder:'SSR 이름 검색',keywords:cardKeywords}));
   q('#data-status').textContent=`스킬 ${manifest.counts.skills.toLocaleString()}개 · JP`;
   send('load',data);
  }catch(error){q('#data-status').textContent='자료를 불러오지 못했습니다.';q('#input-status').classList.add('error-message');q('#input-status').textContent=location.protocol==='file:'?'로컬 서버로 실행하세요: python -m http.server 8000':'데이터 파일 또는 연결을 확인하고 새로고침하세요.';console.error(error);}

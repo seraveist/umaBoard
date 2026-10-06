@@ -7,7 +7,6 @@
 #uma-plan .data-row .skill-info{min-width:0;flex:1}
 #uma-plan .data-row .skill-name{overflow-wrap:anywhere}
 #uma-plan .data-row .skill-heading{flex-wrap:wrap}
-#uma-plan .jp-name{font-size:11px;color:var(--sub);margin-top:4px}
 #uma-plan .data-more{display:block;margin:15px auto 0;border:1px solid var(--line);border-radius:7px;background:var(--panel);padding:8px 18px}
 #uma-plan .empty-list{padding:20px 0;font-size:13px;color:var(--sub)}
 #uma-plan .error-message{color:var(--pink);white-space:normal}
@@ -19,3 +18,16 @@
 #uma-plan [aria-busy=true] .tab-content{opacity:.65}
 #uma-plan .table-scroll{max-width:100%}
 #uma-plan .finish-status{margin-top:0;margin-bottom:10px}
+#uma-plan .support-list{grid-template-columns:1fr;gap:8px}
+#uma-plan .support-list>.field{grid-template-columns:48px minmax(0,1fr);align-items:center;gap:5px}
+#uma-plan .support-list>.field>label{font-size:11px}
+#uma-plan .search-select{position:relative;min-width:0}
+#uma-plan .search-select input{width:100%;padding-right:25px;background:var(--soft)}
+#uma-plan .search-select::after{content:'⌕';position:absolute;right:9px;top:8px;color:var(--sub);pointer-events:none}
+#uma-plan .search-options,#uma-plan .search-empty{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:7px;box-shadow:0 6px 18px #0002}
+#uma-plan .search-options{max-height:min(300px,45vh);overflow:auto;overscroll-behavior:contain}
+#uma-plan .search-option{padding:10px 11px;cursor:pointer;font-size:12px;overflow-wrap:anywhere;line-height:1.5}
+#uma-plan .search-option:hover,#uma-plan .search-option.active{background:var(--tint);color:var(--green)}
+#uma-plan .search-option[aria-selected=true]{font-weight:600}
+#uma-plan .search-empty{padding:12px;color:var(--sub);font-size:12px}
+#uma-plan .search-select.opens-up .search-options,#uma-plan .search-select.opens-up .search-empty{top:auto;bottom:calc(100% + 4px)}

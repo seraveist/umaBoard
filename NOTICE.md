@@ -13,3 +13,5 @@ The normalized contract retains raw field values needed to interpret game semant
 
 The independently authored comparison engine also consulted mathematical relationships and effect semantics in pinned alpha RaceSolver/HpPolicy and umasim race sources.
 Exact reference commits, the comparison assumptions, and the unsupported mechanics are documented in docs/ENGINE_VALIDATION.md. No upstream solver/parser application implementation is vendored.
+
+Korean character-name labels are a curated name-only snapshot from YIRer/umamusume_trainers `db/db.json` at commit `d840af64d80346c5d4ab15a719f8d47e8b38095d`, blob `cead5efd6fa4790ec6472a78e03b9e68d4d9de17`. The snapshot is recorded in `curated/names-ko.json`, with project spelling/spacing corrections and search aliases. No event text, upstream application code or images from that project are distributed. Outfit titles, group/card titles and skill names remain Japanese. This is a display layer; it does not replace JP mechanics with Korean-server data or add a daily external synchronization source.

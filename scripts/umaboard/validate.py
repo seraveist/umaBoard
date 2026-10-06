@@ -57,6 +57,8 @@ def validate_dataset(data, config, previous=None, allow_count_decrease=False):
     if data['curation']['status']!='complete':warnings.append({'kind':'manual_curation_pending','items':data['curation']['pending']})
     if data['diagnostics']['unknown_effect_codes']:warnings.append({'kind':'unknown_effects_preserved','codes':data['diagnostics']['unknown_effect_codes']})
     if data['diagnostics']['unparsed_conditions']:warnings.append({'kind':'condition_parser_partial','count':data['diagnostics']['unparsed_conditions']})
+    if data['diagnostics'].get('missing_korean_character_names'):
+        warnings.append({'kind':'korean_character_name_missing','names_jp':data['diagnostics']['missing_korean_character_names']})
     return {'schema_version':1,'status':'passed','counts':counts,'acquisition_routes':len(data['acquisition_routes']),
             'evolution_rules':len(data['evolution_rules']),'relations':len(data['relations']),
             'warnings':warnings,'race_calculation_validated':False}

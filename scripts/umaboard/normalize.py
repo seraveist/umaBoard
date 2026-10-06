@@ -136,18 +136,29 @@ def flat_ids(value):
 
 def normalize(raw, curated):
     primary=rows(raw['skills'],'skills_all.json')
+    labels=curated.get('korean_names',{})
+    names=labels.get('names',{});aliases=labels.get('aliases',{})
+    if not isinstance(names,dict) or any(not isinstance(v,str) or not v.strip() for v in names.values()):
+        raise DataError('Korean character names must be nonempty strings')
+    if not isinstance(aliases,dict) or any(not isinstance(v,list) or any(not isinstance(a,str) for a in v) for v in aliases.values()):
+        raise DataError('Korean search aliases must be string arrays')
     outfits={}
     for row in rows(raw['outfits'],'uma_data.json'):
         sid=identifier(row['UmaId'])
         if sid in outfits:raise DataError('duplicate outfit ID '+sid)
-        outfits[sid]={'id':sid,'name_jp':row['UmaNameJP'],'outfit_name_jp':row.get('UmaNicknameJP',''),
+        outfits[sid]={'id':sid,'name_jp':row['UmaNameJP'],'name_ko':names.get(row['UmaNameJP']),
+                      'search_aliases_ko':aliases.get(row['UmaNameJP'],[]),'outfit_name_jp':row.get('UmaNicknameJP',''),
                       'base_stars':row['UmaBaseStars'],'aptitudes':row.get('UmaAptitudes',{}),
                       'awakening':'MAX','origin':'umatools'}
     supports={}
     for row in rows(raw['supports'],'support_hints.json'):
         sid=identifier(row['SupportId'])
         if sid in supports:raise DataError('duplicate support ID '+sid)
-        supports[sid]={'id':sid,'name_jp':row['SupportNameJP'],'rarity':row['SupportRarity'],
+        character_name=re.sub(r'\s+\((SSR|SR|R)\)$','',row['SupportNameJP'])
+        # Group names are card titles, not character names; preserve Japanese.
+        supports[sid]={'id':sid,'name_jp':row['SupportNameJP'],
+                       'name_ko':names.get(character_name) if row['SupportType']!='Group' else None,
+                       'search_aliases_ko':aliases.get(character_name,[]),'rarity':row['SupportRarity'],
                        'type':row['SupportType'],'origin':'umatools'}
     skills={};routes={};relations={};evolutions={};costs={}
     def add_route(sid,owner_type,owner_id,kind,**extra):
@@ -239,6 +250,8 @@ def normalize(raw, curated):
     common=set(skills)&set(secondary_by)-set(secondary_only)
     different_names=[sid for sid in sorted(common) if skills[sid]['name_jp']!=secondary_by[sid]['name']]
     diagnostics={'secondary_only_ids':secondary_only,'primary_only_ids':sorted(set(skills)-set(secondary_by)),
+                 'missing_korean_character_names':sorted({o['name_jp'] for o in outfits.values() if not o['name_ko']}
+                     | {re.sub(r'\s+\((SSR|SR|R)\)$','',s['name_jp']) for s in supports.values() if s['type']!='Group' and not s['name_ko']}),
                  'shared_ids':len(common),'shared_name_differences':different_names,
                  'unknown_effect_codes':dict(Counter(str(code) for s in skills.values() for code in s['unknown_effect_codes'])),
                  'unparsed_conditions':sum(s['unparsed_condition'] for s in skills.values())}
@@ -252,4 +265,5 @@ def normalize(raw, curated):
              'internal_acceleration_comparison_cost':costs,
              'curation':{'status':curated['review_status'],'pending':curated.get('pending',[])},
              'diagnostics':diagnostics}
+    if labels.get('source'):dataset['curation']['korean_names_source']=labels['source']
     return dataset

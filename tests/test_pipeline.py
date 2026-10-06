@@ -38,6 +38,18 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_name_overlay_never_changes_jp_skills_titles_or_support_rarity(self):
+        raw,rules=fixtures()
+        rules['korean_names']={'names':{'テストウマ':'테스트 우마','テストSSR':'테스트 서포트'},
+                               'aliases':{'テストウマ':['테스트말']}}
+        data=normalize(raw,rules)
+        self.assertEqual(data['outfits']['100101']['name_ko'],'테스트 우마')
+        self.assertEqual(data['outfits']['100101']['outfit_name_jp'],'テスト衣装')
+        self.assertEqual(data['outfits']['100101']['search_aliases_ko'],['테스트말'])
+        self.assertEqual(data['supports']['30001']['name_ko'],'테스트 서포트')
+        self.assertEqual(data['supports']['30001']['rarity'],'SSR')
+        self.assertEqual(data['skills']['110011']['name_jp'],'スキル110011')
+
     def test_current_speed_and_target_speed_are_not_mixed(self):
         raw,rules=fixtures()
         raw['skills'][0]['condition_groups'][0]['effects']=[

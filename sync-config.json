@@ -8,5 +8,5 @@
   ],
   "minimum_records": {"skills": 2000, "outfits": 200, "supports": 400, "courses": 100},
   "maximum_count_decrease_ratio": 0.05,
-  "curated_files": ["curated/rules.json"]
+  "curated_files": ["curated/rules.json", "curated/names-ko.json"]
 }
