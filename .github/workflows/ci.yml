@@ -27,6 +27,8 @@ jobs:
         run: node --test tests/*.test.mjs
       - name: Validate active dataset
         run: python scripts/validate_data.py
+      - name: Check GitHub Pages artifact
+        run: python scripts/build_pages.py
       - name: Check browser scripts
         run: |
           for script in assets/*.mjs; do node --check "$script"; done

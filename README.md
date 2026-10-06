@@ -9,6 +9,12 @@
 
 ## 실행
 
+테스트 페이지: **[https://seraveist.github.io/umaBoard/](https://seraveist.github.io/umaBoard/)**
+
+최초 공개에는 저장소의 [Settings → Pages](https://github.com/seraveist/umaBoard/settings/pages)에서
+`Build and deployment → Source → GitHub Actions`를 선택해야 합니다.
+이후 **Deploy GitHub Pages**가 성공하면 위 주소에서 사용할 수 있습니다.
+
 Python 3.12 이상과 Node.js 24를 검증에 사용합니다. 외부 Python/JavaScript 패키지는 필요하지 않습니다.
 
 ```sh
@@ -48,12 +54,15 @@ GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정�
 
 - **CI**: push/PR에서 정규화·실패 복구, 실제 후보와 계산 엔진 테스트, 활성 데이터 검증과 JS 구문 검사를 수행합니다.
 - **Sync JP data**: `Asia/Seoul` **매일 00:00**, 수동 실행, 수집 코드·설정 변경 시 실행합니다.
+- **Deploy GitHub Pages**: main 변경·수동 실행·데이터 동기화 성공 후, 최신 main을 검증하여 테스트 페이지에 배포합니다.
 - 검증된 변경이 있을 때만 `github-actions[bot]`이 데이터 commit을 만듭니다. force push는 없습니다.
 - 실패하면 이전 활성 묶음을 유지하고 실행을 실패 상태로 반환합니다. 실행 상태는 Actions summary와 artifact로 남깁니다.
 - 예약 실행은 기본 브랜치에서 동작하며 GitHub 부하에 따라 지연될 수 있습니다. 공개 저장소의 장기 비활성으로 일정이 중지될 수도 있습니다.
 - 상위 UmaTools 정기 수집은 한국/일본 시간 08:00입니다. 자정 실행 성공과 최신 게임 반영은 구분합니다.
 - `GITHUB_TOKEN`으로 만든 데이터 push가 후속 CI/배포를 자동 실행한다고 가정하지 않습니다. 동기화 workflow에서도 후보·엔진 호환 테스트를 수행한 뒤 commit합니다.
-- 배포와 GitHub Pages 활성화는 이 초기 구성에 포함하지 않습니다.
+- Pages는 `workflow_run`으로 동기화 성공을 받아 bot의 데이터 commit도 배포합니다. 동기화가 실패하면 해당 실행은 배포하지 않습니다.
+- 배포 파일은 화면·JS/CSS·활성 데이터 묶음·출처/라이선스만 포함합니다. 이전 데이터 묶음, 수집 원본과 테스트 코드는 제외합니다.
+- 최초 Pages 활성화 전에 배포가 실패했다면, 설정 후 Actions에서 **Deploy GitHub Pages → Run workflow** 또는 실패 실행의 **Re-run failed jobs**를 선택합니다.
 
 ## 데이터 적용 정책
 
@@ -105,7 +114,10 @@ DB 전체의 `calculation_status`는 아직 `unvalidated`이며, 엔진 결과�
 python -m unittest discover -s tests -v
 node --test tests/*.test.mjs
 python scripts/validate_data.py
+python scripts/build_pages.py
 ```
+
+Pages 배포 파일은 `.cache/pages/`에 생성됩니다. 상대 경로를 사용하므로 `/umaBoard/` 하위에서도 데이터와 계산 worker가 로드됩니다.
 
 ## 구조
 
