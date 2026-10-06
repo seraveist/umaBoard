@@ -321,6 +321,14 @@ test('safe insurance with zero central gain survives pruning by worst-sample con
  assert.ok(result.selected.includes(cover.id));assert.ok(result.tables.acceleration.ordinary.includes(cover.id));
  assert.equal(entry.gain.median,0);assert.ok(entry.safetyGain>.14);assert.ok(Math.abs(result.recommendation.gain.min-expected)<1e-8);
 });
+test('bulk speed selection explicitly pins an already automatically selected hybrid',()=>{
+ const hybrid=skill('hybrid','target_speed',3500);hybrid.categories.push('acceleration');
+ hybrid.invocations[0].effects.push({kind:'acceleration',value_raw:4000,unit:'umatools_raw',extras_raw:{}});
+ const f=fixture([hybrid],{hybrid:100});f.acquisition_routes=[];const e=new PreparationEngine(f,setup);
+ assert.ok(e.analyze().automaticIds.includes(hybrid.id));e.selectMany([hybrid.id],'speed');
+ assert.ok(e.userSelected.has(hybrid.id));assert.ok(!e.automaticIds.has(hybrid.id));
+ assert.deepEqual(e.analyze().recommendation.fixedIds,[hybrid.id]);e.clearSpeedSelection();assert.ok(!e.analyze().selected.includes(hybrid.id));
+});
 test('linked activation and uncached traces are identical for the same unordered skill set',()=>{
  const helper=skill('101','target_speed',1000),gated=skill('102','acceleration',4000,[[atom('phase','>=',2),atom('is_used_skill_id','==',101)]]);
  const e=new PreparationEngine(fixture([helper,gated]),setup),first=e.simulate([helper.id,gated.id]);

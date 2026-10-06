@@ -69,9 +69,13 @@ function previewAction(action){
   const manual=action.source==='acceleration'||action.source==='routes'&&skill.categories.includes('acceleration')||skill.categories.includes('acceleration')&&!skill.categories.includes('speed');
   if(manual)draftAuto=false;else if(action.checked)draftUserSelected.add(action.id);
  }else if(action.type==='selectMany'){
-  for(const id of action.ids)if(!draftSelected.has(id)&&[...draftSelected].every(other=>rules.compatible(id,other))){
-   const next=previewToggle(records,rules,draftSelected,id,true,fixedIds);
-   if(!next.notice)previewAction({type:'toggle',id,checked:true,source:action.source});
+  for(const id of action.ids){
+   if(fixedIds.has(id))continue;
+   if(action.source==='speed'&&draftSelected.has(id)&&!draftUserSelected.has(id)&&records.get(id).categories.some(c=>['speed','passive'].includes(c))){previewAction({type:'toggle',id,checked:true,source:action.source});continue;}
+   if(!draftSelected.has(id)&&[...draftSelected].every(other=>rules.compatible(id,other))){
+    const next=previewToggle(records,rules,draftSelected,id,true,fixedIds);
+    if(!next.notice)previewAction({type:'toggle',id,checked:true,source:action.source});
+   }
   }
  }else if(action.type==='clearSpeed'){
   for(const id of [...draftUserSelected])if(records.get(id).categories.some(c=>['speed','passive'].includes(c)))previewAction({type:'toggle',id,checked:false,source:'speed'});
@@ -195,7 +199,11 @@ function readSetup(){
 }
 function apply(){
  try{
-  appliedSetup=readSetup();candidates=buildCandidates(data,{...appliedSetup,context:fixedContext(appliedSetup)});
+  const setup=readSetup();
+  // The input-panel button also applies staged choices when race/deck inputs
+  // are unchanged; rebuilding the setup here would discard those choices.
+  if(result&&!dirty&&!setupBusy&&JSON.stringify(setup)===JSON.stringify(appliedSetup)){calculateSelection();return;}
+  appliedSetup=setup;candidates=buildCandidates(data,{...appliedSetup,context:fixedContext(appliedSetup)});
   records=new Map([...candidates.learned,...candidates.inheritance,...candidates.factorCandidates].map(s=>[s.id,s]));
   rules=selectionRules(data,records);pendingActions=[];setupBusy=true;
   dirty=false;q('#input-status').classList.remove('error-message');

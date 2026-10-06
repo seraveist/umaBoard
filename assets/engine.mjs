@@ -69,8 +69,14 @@ export class PreparationEngine{
  selectMany(ids,source='speed'){
   this.notice='';
   // Ranked additions preserve existing choices and skip incompatible versions.
-  for(const id of ids)if(this.records.has(id)&&!this.selected.has(id)&&[...this.selected].every(other=>this.compatible(id,other))&&
-   (!this.record(id).inherited||[...this.selected].filter(other=>this.record(other).inherited).length<INHERITANCE_LIMIT))this.toggle(id,true,source);
+  for(const id of ids){
+   if(!this.records.has(id)||this.fixedIds.has(id))continue;
+   // Choosing all speeds explicitly accepts already checked automatic/manual
+   // hybrids as speed choices, rather than silently leaving them automatic.
+   if(source==='speed'&&this.selected.has(id)&&!this.userSelected.has(id)&&this.record(id).categories.some(c=>['speed','passive'].includes(c))){this.toggle(id,true,source);continue;}
+   if(!this.selected.has(id)&&[...this.selected].every(other=>this.compatible(id,other))&&
+    (!this.record(id).inherited||[...this.selected].filter(other=>this.record(other).inherited).length<INHERITANCE_LIMIT))this.toggle(id,true,source);
+  }
  }
  comparisonIds(ids){
   return this.normalize(ids).filter(id=>supported(this.compiled.get(id))&&(this.healDependent||!this.record(id).categories.every(c=>c==='heal')));
