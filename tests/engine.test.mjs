@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {compileSkill,fixedContext} from '../assets/activation.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {PreparationEngine} from '../assets/engine.mjs';
-import {buildPhysics,lengthsBetween,positionAt,uniqueLevel,uniqueMultiplier,validateSetup} from '../assets/physics.mjs';
+import {buildPhysics,lengthsBetween,positionAt,uniqueLevel,uniqueMultiplier,validateSetup,wisdomSkillBase} from '../assets/physics.mjs';
+import {acquisitionPlan} from '../assets/acquisition-plan.mjs';
 const manifest=JSON.parse(readFileSync(new URL('../data/manifest.json',import.meta.url)));
 const data=JSON.parse(readFileSync(new URL('../'+manifest.dataset_path,import.meta.url)));
 const flat={id:'test',selectable:true,distance:2400,distance_type:3,surface:1,turn:2,track_id:'10006',course_set_status:[],corners:[],straights:[{start:0,end:2400,frontType:1}],slopes:[]};
@@ -121,8 +122,19 @@ test('real skills use source-specific units, inherited variants and native uniqu
  assert.equal(compileSkill(data.skills['901351'],{...s,style:3}).invocations[0].duration,8.64);
  assert.equal(compileSkill(data.skills['901351'],s).invocations[0].duration,2.88);
 });
-test('unsupported high-speed mechanics and unresolved US coordinates block misleading results',()=>{
- assert.throws(()=>validateSetup({...setup,stats:{...setup.stats,speed:2100}}),/전개스퍼트/);
+test('high-speed inputs retain their real ordinary speed and label excluded full spurt',()=>{
+ const speeds=[1200,2000,2100,2500,3000].map(speed=>({...setup,stats:{...setup.stats,speed}}));
+ for(const s of speeds)assert.doesNotThrow(()=>validateSetup(s));
+ const physics=speeds.map(s=>buildPhysics(s));
+ assert.ok(physics.every((p,i)=>i===0||p.spurt>physics[i-1].spurt));
+ assert.equal(physics[1].fullSpurtExcluded,false);assert.equal(physics[2].fullSpurtExcluded,true);
+ assert.equal(run([],speeds[2]).status,'ok');assert.equal(run([],speeds[2]).fullSpurtExcluded,true);
+ assert.equal(physics[2].modified.speed,1650);
+ assert.doesNotThrow(()=>validateSetup({...setup,mood:2,stats:{...setup.stats,speed:1950}}));
+ assert.throws(()=>validateSetup({...setup,stats:{...setup.stats,speed:2000.5}}),/정수/);
+ assert.throws(()=>validateSetup({...setup,stats:{...setup.stats,speed:3001}}),/1~3000/);
+});
+test('unresolved US coordinates still block unsupported course geometry',()=>{
  assert.throws(()=>validateSetup({...setup,course:data.courses['11619']}),/출발 좌표/);
 });
 test('reference step refinement keeps a paired late-acceleration benefit within 0.06 lengths',()=>{
@@ -153,4 +165,61 @@ test('native acceleration-only uniques start selected and have no purchase cost'
  const e=new PreparationEngine(fixture([unique]),setup);
  assert.ok(e.selected.has('unique'));assert.equal(e.cost('unique'),0);
  assert.ok(e.analyze().selected.includes('unique'));
+});
+test('wisdom thresholds, mood and activation phase buff gold/native speeds but not white/inherited skills',()=>{
+ assert.deepEqual([1220,1221,1401,1420,1421,1601,1620,1621,2001,2100,2101].map(x=>Number(wisdomSkillBase(x).toFixed(2))),[0,.02,.2,.2,.26,.8,.8,.81,1,1,1.01]);
+ const low={...setup,stats:{...setup.stats,wisdom:1200}},high={...setup,stats:{...setup.stats,wisdom:1601}};
+ const gold=skill('gold','target_speed',3500,[[atom('remain_distance','<=',300)]]);gold.rarity='gold';
+ assert.ok(run([gold],high).finishTime<run([gold],low).finishTime);
+ const white=skill('white','target_speed',3500);
+ assert.equal(run([white],high).finishTime,run([white],low).finishTime);
+ const inherited={...white,id:'inherited',rarity:'inherited',inherited:true};
+ assert.equal(run([inherited],high).finishTime,run([inherited],low).finishTime);
+ const p=buildPhysics({...high,style:1});
+ assert.ok(p.wisdomSpeedMultiplier(0)>p.wisdomSpeedMultiplier(3));
+ assert.ok(buildPhysics({...high,mood:2}).wisdomSpeedMultiplier(1)>buildPhysics(high).wisdomSpeedMultiplier(1));
+ const passive=skill('wisdom','passive_wisdom',4010000,[[atom('always','==',1)]]);
+ assert.ok(run([gold,passive],low).finishTime<run([gold],low).finishTime);
+});
+test('zero-benefit pruning preserves one of two individually sufficient accelerations',()=>{
+ const a=skill('a','acceleration',1000000),b=skill('b','acceleration',1000000);
+ const e=new PreparationEngine(fixture([a,b],{a:100,b:200}),setup);
+ e.toggle('a',true,'acceleration');e.toggle('b',true,'acceleration');
+ assert.ok(Math.abs(e.marginal('a').gain.median)<1e-8);
+ const result=e.analyze();
+ assert.deepEqual(result.selected,['a']);assert.ok(result.skills.every(x=>x.gain.median>.005));
+ assert.ok(result.comparison.median>0);
+});
+test('inheritance is capped at six across kinds and each table contains only its positive top ten',()=>{
+ const inherits=Array.from({length:12},(_,i)=>({...skill(String(i).padStart(2,'0'),'target_speed',1000+i*100,[[atom('remain_distance','<=',300)]]),rarity:'inherited',inherited:true,parent_ids:['parent-'+i]}));
+ const f=fixture(inherits);f.acquisition_routes=[];
+ const e=new PreparationEngine(f,setup);e.auto=false;
+ assert.equal(e.analyze().tables.speed.inheritance.length,10);
+ for(const s of inherits.slice(6))e.toggle(s.id,true,'speed');
+ e.toggle(inherits[0].id,true,'speed');assert.equal(e.selected.size,6);assert.match(e.notice,/최대 6/);
+ const result=e.analyze();assert.ok(result.tables.speed.inheritance.length<=10);
+ assert.ok(result.selected.length<=6);assert.ok(result.selected.every(id=>result.tables.speed.inheritance.includes(id)));
+ assert.ok(!result.skills.some(s=>s.pinned));
+});
+test('unavailable ordinary white acceleration enters the main table, optimizer and factor acquisition plan',()=>{
+ const a=skill('factor-acceleration'),speed=skill('native-speed','target_speed',1500);
+ const f=fixture([a,speed],{[a.id]:100});f.acquisition_routes=f.acquisition_routes.filter(r=>r.skill_id===speed.id);
+ const e=new PreparationEngine(f,setup),r=e.analyze();
+ assert.ok(r.tables.acceleration.ordinary.includes(a.id));assert.ok(r.selected.includes(a.id));
+ assert.equal(r.skills.find(s=>s.id===a.id).source,'factor');assert.ok(!('factors' in r));
+ const plan=acquisitionPlan(f,e.records,r.selected);assert.ok(plan.find(g=>g.key==='factor').skills.some(s=>s.id===a.id));
+});
+test('a supported heal remains selectable by HP gain even though its forced-spurt length gain is zero',()=>{
+ const heal=skill('heal','heal',550,[[atom('phase','==',1)]],{duration_raw:0});
+ const e=new PreparationEngine(fixture([heal]),setup);e.toggle(heal.id,true,'heal');
+ const r=e.analyze();assert.ok(r.tables.heal.includes(heal.id));assert.ok(r.selected.includes(heal.id));
+ assert.equal(r.skills[0].gain.median,0);assert.ok(r.skills[0].hpGain>0);
+});
+test('Kyoto 2200 white descent overlaps late entry and is available as a factor or support skill',()=>{
+ const s={...setup,course:data.courses['10808'],outfitId:'114101',bloom:5,supportIds:[],stats:{speed:1900,stamina:1500,power:1700,guts:1200,wisdom:1700}};
+ const c=compileSkill(data.skills['201342'],s);assert.equal(c.status,'supported');
+ assert.deepEqual(c.invocations[0].condition[0].windows,[[1375,1525]]);assert.equal(c.invocations[0].duration,6.6);
+ assert.ok(lengthsBetween(simulateSolo(s,[c]),simulateSolo(s,[]))>0);
+ const missing=new PreparationEngine(data,s);assert.ok(missing.candidates.factorCandidates.some(s=>s.id==='201342'));
+ const available=new PreparationEngine(data,{...s,supportIds:['30023']});assert.ok(available.candidates.learned.some(s=>s.id==='201342'));
 });

@@ -1,5 +1,5 @@
 // Independently implemented equations. Reference versions and omissions: docs/ENGINE_VALIDATION.md.
-export const MODEL_VERSION='solo-comparison-v1';
+export const MODEL_VERSION='solo-comparison-v2';
 export const STAT_KEYS=['speed','stamina','power','guts','wisdom'];
 const SPEED=[[1,.98,.962],[.978,.991,.975],[.938,.998,.994],[.931,1,1]];
 const ACCEL=[[1,1,.996],[.985,1,.996],[.975,1,1],[.945,1,.997]];
@@ -10,6 +10,16 @@ const SURFACE_ACCEL={S:1.05,A:1,B:.9,C:.8,D:.7,E:.5,F:.3,G:.1};
 const STYLE_WISDOM={S:1.1,A:1,B:.85,C:.75,D:.6,E:.4,F:.2,G:.1};
 const LEG_STYLE=[[1,.7,.75,.7],[1,.8,.7,.75],[1,.9,.875,.86],[1,.9,1,.9]];
 const LEG_TIME=[.45,1,.875,.8];
+const WISDOM_SKILL=[[.26,.23,.19,.16],[.21,.21,.21,.21],[.19,.18,.23,.24],[.15,.17,.25,.27]];
+// JP wisdom speed-skill buff uses the mood-adjusted raw stat, not raceStat or style aptitude.
+export function wisdomSkillBase(value){
+ const n=Math.floor(value);if(n<=1220)return 0;
+ let buff=Math.floor((Math.min(n,1401)-1201)/20)*.02;
+ if(n>1420)buff+=Math.floor((Math.min(n,1601)-1401)/20)*.06;
+ if(n>1620)buff+=Math.floor((Math.min(n,2001)-1601)/20)*.01;
+ if(n>2100)buff+=Math.floor((Math.min(n,3101)-2001)/100)*.01;
+ return buff;
+}
 export const baseSpeed=distance=>22-distance/1000;
 export const raceStat=value=>value>1200?1200+Math.floor((value-1200)/2):value;
 export const phaseAt=(x,d)=>x<d/6?0:x<2*d/3?1:x<5*d/6?2:3;
@@ -25,9 +35,8 @@ export function validateSetup(setup){
  if(![1,2,3,4].includes(setup.style))throw new Error('각질을 확인하세요.');
  if(![1,2,3,4].includes(setup.going))throw new Error('마장 상태를 확인하세요.');
  if(![-2,-1,0,1,2].includes(setup.mood))throw new Error('의욕을 확인하세요.');
- for(const key of STAT_KEYS)if(!Number.isFinite(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('목표 능력치는 1~3000 사이로 입력하세요.');
+ for(const key of STAT_KEYS)if(!Number.isInteger(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('목표 능력치는 1~3000 사이의 정수로 입력하세요.');
  for(const key of ['distance','surface','style'])if(!(setup.aptitudes[key] in DISTANCE_SPEED))throw new Error('적성을 확인하세요.');
- if(setup.stats.speed*(1+.02*setup.mood)>2000)throw new Error('의욕 반영 스피드 2000 초과의 전개스퍼트는 아직 계산하지 않습니다.');
 }
 export function buildPhysics(setup,passive={}){
  const {course,stats,style,going,mood,aptitudes}=setup,coeff=1+.02*mood;
@@ -44,7 +53,10 @@ export function buildPhysics(setup,passive={}){
   hpMax:course.distance+.8*modified.stamina*HP_STYLE[style-1],
   legAccel,legDuration:3*LEG_TIME[course.distance_type-1],
   staminaSpeed:rawStamina>1200?Math.sqrt(rawStamina-1200)*.0085*staminaDistance:0,
-  fullSpurtUnsupported:stats.speed*coeff+(passive.speed||0)>2000,
+  // Keep the entered speed in the ordinary equations; never clamp it to 2000.
+  // Full-spurt's additional speed ceiling is still unverified and is excluded explicitly.
+  fullSpurtExcluded:stats.speed>2000||stats.speed*coeff+(passive.speed||0)>2000,
+  wisdomSpeedMultiplier(phase){return 1+wisdomSkillBase(stats.wisdom*coeff+(passive.wisdom||0))*WISDOM_SKILL[style-1][phase];},
   target(phase){return phase>=2?spurt:bs*SPEED[style-1][phase];},
   acceleration(phase,uphill){return (uphill?.0004:.0006)*Math.sqrt(500*modified.power)*ACCEL[style-1][Math.min(phase,2)]*SURFACE_ACCEL[aptitudes.surface]*DISTANCE_ACCEL[aptitudes.distance];},
   consumption(speed,phase){return 20*(speed-bs+12)**2/144*(course.surface===1?(going>=3?1.02:1):going===3?1.01:going===4?1.02:1)*(phase>=2?1+200/Math.sqrt(600*modified.guts):1);}

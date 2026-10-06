@@ -18,7 +18,6 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
   events.push({id:i.id,index:i.index,x:0,t:0,duration:null});
  }
  const physics=buildPhysics(setup,passive);
- if(physics.fullSpurtUnsupported)return {status:'unsupported',reason:'능력치 보정 후 전개스퍼트 계산 범위 초과'};
  state.hp=state.hpMax=physics.hpMax;
  let velocity=3,currentOffset=0,entry=null,reach=null,legStart=null,staminaFight=false,depletion=null;
  const positions=[0];
@@ -34,7 +33,8 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
    if(!i.preMet||!i.condition.some(b=>branchReady(b,state,i.id)))continue;
    i.done=true;
    used.add(i.id);counts[state.phase]++;if(state.x>=d/2)state.laterCount++;
-   for(const e of i.effects){
+   for(const rawEffect of i.effects){
+    const e=rawEffect.wisdomBoost?{...rawEffect,value:rawEffect.value*physics.wisdomSpeedMultiplier(state.phase)}:rawEffect;
     if(e.kind==='heal'){
      if(e.value>0){state.healCount++;if(failHeals)continue;}
      state.hp=Math.min(state.hpMax,state.hp+state.hpMax*e.value);
@@ -73,7 +73,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false}={
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
     hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,fullSpeedFeasible:depletion===null,
-    events,passive,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel}};
+    events,passive,fullSpurtExcluded:physics.fullSpurtExcluded,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
   }
  }
  throw new Error('단독 비교 계산이 수렴하지 않았습니다.');

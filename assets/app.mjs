@@ -1,27 +1,23 @@
 import {buildCandidates} from './candidates.mjs';
 import {fixedContext} from './activation.mjs';
 import {validateSetup,STAT_KEYS} from './physics.mjs';
-import {skillName,umaName,outfitName,cardName,cardLabel,cardTypes,cardTypeBadge,selectableSupports} from './display.mjs';
+import {skillName,umaName,outfitName,cardLabel,cardTypes,cardTypeBadge,selectableSupports} from './display.mjs';
 import {searchableSelect} from './search-select.mjs';
 import {portraitPath} from './portraits.mjs';
+import {acquisitionPlan} from './acquisition-plan.mjs';
 const root=document.querySelector('#uma-plan'),q=s=>root.querySelector(s),qa=s=>[...root.querySelectorAll(s)];
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tracks={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'고쿠라','10101':'오이','10201':'롱샹','10103':'가와사키','10104':'후나바시','10105':'모리오카','10202':'산타 아니타 파크','10203':'델 마'};
-const kinds={self:'자체 · 각성 MAX',outfit_event:'자체 이벤트',support_hint:'서포트 힌트',support_event:'서포트 이벤트',scenario_event:'시나리오',evolution:'진화',inheritance:'계승 준비'};
 const grades={white:'흰색',gold:'금색',unique:'고유',unique_low_star:'고유',unique_upgraded:'고유',evolution:'진화',inherited:'계승 고유'};
 const objectives={maximum:'표본 중앙의 최대 이득 · 같은 이득이면 낮은 기준 비용',efficient:'최대 추가 이득 90% 이상을 유지하는 효율 조합',safe:'5개 표본 중 가장 불리한 이득을 최대한 커버'};
 let data,candidates,result,records=new Map(),lastRequest=0,busy=true,dirty=false,appliedSetup,focusSkill;
-let visible={speed:30,acceleration:30,factors:10,heal:30};
+let visible={speed:30,acceleration:30,heal:30};
 const worker=new Worker(new URL('./engine-worker.mjs',import.meta.url),{type:'module'});
 const displayName=skillName;
 const option=(id,label)=>`<option value="${esc(id)}">${esc(label)}</option>`;
-const signed=n=>Number.isFinite(n)?`${n<-.005?'−':'+'}${Math.abs(n).toFixed(2)}`:'—';
+const signed=n=>Number.isFinite(n)&&n>.005?`+${n.toFixed(2)}`:'—';
 const number=(n,decimals=2)=>Number.isFinite(n)?n.toFixed(decimals):'—';
-function sources(s){
- if(s.inherited)return (s.inheritance_outfit_ids||[]).map(id=>outfitName(data.outfits[id])).join(' / ')||'계승 준비';
- return [...new Set((s.routes||[]).map(r=>r.owner_type==='support'?cardName(data.supports[r.owner_id])+' ('+data.supports[r.owner_id].rarity+') · '+kinds[r.kind]:kinds[r.kind]||r.kind))].join(' / ')||'인자 준비';
-}
-function lockResults(){qa('[data-skill-id],[data-more],#objective,#restore-auto').forEach(x=>x.disabled=busy||dirty||!result);}
+function lockResults(){qa('[data-skill-id],[data-skill-remove],[data-more],#objective,#restore-auto').forEach(x=>x.disabled=busy||dirty||!result);}
 function send(type,payload){
  busy=true;root.querySelector('.result-shell').setAttribute('aria-busy','true');lockResults();
  q('#input-status').textContent='스킬 조합 비교 중…';q('#show-skills').disabled=true;
@@ -42,24 +38,30 @@ worker.onmessage=({data:message})=>{
 };
 worker.onerror=()=>{busy=false;dirty=true;q('#input-status').textContent='계산 엔진을 불러오지 못했습니다. 새로고침하세요.';q('#input-status').classList.add('error-message');q('#show-skills').disabled=false;lockResults();};
 function renderList(type,scores){
- const selected=new Set(result.selected),sorted=scores.slice().sort((a,b)=>(b.gain?.median??-Infinity)-(a.gain?.median??-Infinity)||displayName(records.get(a.id)).localeCompare(displayName(records.get(b.id)),'ko'));
- const limit=visible[type];q(`#${type}-count`).textContent=`${sorted.length}개`;
+ const selected=new Set(result.selected),sorted=scores.slice();
+ const limit=visible[type]??10;q(`#${type}-count`).textContent=`${sorted.length}개 · 선택 ${sorted.filter(s=>selected.has(s.id)).length}`;
  q(`#${type}-list`).innerHTML=sorted.slice(0,limit).map((entry,index)=>{
-  const s=records.get(entry.id),unsupported=entry.status==='unsupported',inactive=entry.status==='inactive',heal=type==='heal';
-  const status=unsupported?'계산 미지원':inactive?'발동 구간 없음':entry.status==='assumed'?'조건 성공 가정':'';
+  const s=records.get(entry.id),heal=type==='heal';
   const badgeClass=s.rarity==='evolution'?'pink':s.rarity==='gold'?'gold':s.inherited?'blue':'';
-  const value=heal?'회복':entry.gain?signed(entry.gain.median):'—';
+  const value=heal?`${number(entry.hpGain,0)} HP`:signed(entry.gain.median);
   const detail=[...(entry.reasons||[]),entry.assumed?.length?'순위·상대 조건 충족을 가정합니다.':''].filter(Boolean).join(' · ');
-  return `<div class="data-row"><label><input type="checkbox" data-skill-id="${esc(s.id)}" aria-label="${esc(displayName(s))} 선택" ${selected.has(s.id)?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${entry.gain?index+1:'—'}</span><span class="skill-name">${esc(displayName(s))}</span><span class="badge ${badgeClass}">${grades[s.rarity]||'기타'}</span>${s.categories.includes('speed')&&s.categories.includes('acceleration')?'<span class="badge">복합</span>':''}${s.categories.includes('passive')?'<span class="badge green">능력치</span>':''}${s.choice_groups?.length?'<span class="badge">진화 분기</span>':''}${entry.pinned?'<span class="badge">선택 유지</span>':''}</div><div class="skill-meta">${esc(sources(s))}</div>${status?`<p class="skill-state ${unsupported?'unsupported':''}" title="${esc(detail)}">${status}</p>`:''}<details class="skill-details"><summary>스킬 설명</summary><p>${esc(s.description_jp||'원본 설명 없음')}</p>${detail?`<p>${esc(detail)}</p>`:''}</details></div><div class="skill-value"><strong class="${entry.gain?.median<-.005?'negative':''}">${value}</strong>${!heal&&entry.gain?'<span class="sub">마신</span>':''}</div></div>`;
+  return `<div class="data-row"><label><input type="checkbox" data-skill-id="${esc(s.id)}" aria-label="${esc(displayName(s))} 선택" ${selected.has(s.id)?'checked':''}></label><div class="skill-info"><div class="skill-heading"><span class="rank">${index+1}</span><span class="skill-name">${esc(displayName(s))}</span><span class="badge ${badgeClass}">${grades[s.rarity]||'기타'}</span>${s.categories.includes('speed')&&s.categories.includes('acceleration')?'<span class="badge">복합</span>':''}${s.categories.includes('passive')?'<span class="badge green">능력치</span>':''}${entry.status==='assumed'?'<span class="badge" title="순위·상대 조건 성공 가정">조건 가정</span>':''}</div><details class="skill-details"><summary>스킬 설명</summary><p>${esc(s.description_jp||'원본 설명 없음')}</p>${detail?`<p>${esc(detail)}</p>`:''}</details></div><div class="skill-value"><strong>${value}</strong>${!heal?'<span class="sub">마신</span>':''}</div></div>`;
  }).join('')+(sorted.length>limit?`<button class="data-more" data-more="${type}">더 보기</button>`:'');
  if(!sorted.length)q(`#${type}-list`).innerHTML='<p class="empty-list">지원 범위에서 추천할 후보가 없습니다.</p>';
 }
+function renderAcquisition(){
+ const groups=acquisitionPlan(data,records,result.selected);
+ q('#acquisition-list').innerHTML=groups.map(group=>`<section class="route-group" data-route-group="${esc(group.key)}"><h4>${esc(group.label)} <span class="sub">${group.skills.length}개</span></h4>${group.skills.map(s=>`<div class="route-row" data-route-skill="${esc(s.id)}"><div><strong>${esc(s.name)}</strong>${s.detail?`<span class="route-detail">${esc(s.detail)}</span>`:''}</div><button class="route-remove" data-skill-remove="${esc(s.id)}" aria-label="${esc(s.name)} 선택 해제">해제</button></div>`).join('')}</section>`).join('')||'<p class="empty-list">선택한 스킬이 없습니다.</p>';
+ q('#selection-status').textContent=`선택 ${result.selected.length}개 · 계승 ${result.selected.filter(id=>records.get(id).inherited).length}/6`;
+ q('#selection-notice').hidden=!result.notice;q('#selection-notice').textContent=result.notice||'';
+}
 function render(){
- const entries=result.skills;
- renderList('speed',entries.filter(s=>records.get(s.id).categories.some(t=>['speed','passive'].includes(t))));
- renderList('acceleration',entries.filter(s=>records.get(s.id).categories.includes('acceleration')));
- renderList('heal',entries.filter(s=>records.get(s.id).categories.includes('heal')));
- renderList('factors',result.factors);
+ const entries=new Map(result.skills.map(s=>[s.id,s])),rows=ids=>ids.map(id=>entries.get(id));
+ for(const type of ['speed','acceleration']){
+  renderList(type,rows(result.tables[type].ordinary));
+  renderList(type+'-inheritance',rows(result.tables[type].inheritance));
+ }
+ renderList('heal',rows(result.tables.heal));renderAcquisition();
  q('#objective').value=result.objective;q('#objective-note').textContent=result.recommendation.efficiencyFallback?'기준 비용 자료가 부족해 효율 추천을 계산할 수 없습니다.':objectives[result.objective];
  const combo=result.selected.map(id=>records.get(id)).filter(s=>s.categories.includes('acceleration'));
  q('#acceleration-summary').innerHTML=`<div class="combo-label"><strong>${result.auto?'자동 추천':'직접 선택'} 조합</strong><span class="sub">${result.recommendation.search==='exact'?'완전 탐색':'근사 탐색'}</span></div><div>${combo.length?combo.map(s=>esc(displayName(s))).join(' · '):'추가 가속기 없음'}</div><div class="combo-stats"><span>가속 효과 <strong>${signed(result.comparison?.median)} 마신</strong></span><span class="sub">표본 ${signed(result.comparison?.min)} ~ ${signed(result.comparison?.max)}</span></div>${result.recommendation.search==='beam'?'<p>후보가 많아 일부 조합을 탐색했습니다. 전역 최댓값은 보장하지 않습니다.</p>':''}`;
@@ -67,10 +69,10 @@ function render(){
  q('#acceleration-comparison').innerHTML=result.acceleration.map((r,i)=>`<tr class="${i===2?'active':''}"><td>${labels[i]}</td><td>${number(r.entry?.speed)}</td><td>${number(r.entry?.targetGap)}</td><td>${r.reach&&r.entry?number(r.reach.t-r.entry.t,1):'—'}</td><td>${signed(result.comparison?.values[i])}</td></tr>`).join('');
  const hp=result.stamina;
  q('#stamina-summary').classList.toggle('ok',!!hp?.fullSpeedFeasible);
- q('#stamina-summary').innerHTML=hp?`<strong>${hp.fullSpeedFeasible?'최속 스퍼트 유지 가능':'최속 스퍼트 유지에 HP 부족'}</strong><p>중앙 발동 표본 · 결승 잔량 ${number(hp.hpRemaining,0)} HP</p>`:'전개스퍼트 계산 범위 초과';
+ const spurtLabel=result.fullSpurtExcluded?'일반 스퍼트':'최속 스퍼트';
+ q('#stamina-summary').innerHTML=hp?`<strong>${spurtLabel} ${hp.fullSpeedFeasible?'유지 가능':'유지에 HP 부족'}</strong><p>중앙 발동 표본 · 결승 잔량 ${number(hp.hpRemaining,0)} HP${result.fullSpurtExcluded?' · 전개 스퍼트 제외':''}</p>`:'계산 결과 없음';
  q('#stamina-checks').innerHTML=hp?`<div><span>회복 전부 실패</span><strong>${hp.failHealsFeasible?'유지 가능':'HP 부족'} · ${number(hp.failHealsRemaining,0)} HP</strong></div><div><span>HP 고갈 위치</span><strong>${hp.depletion===null?'고갈 없음':number(hp.depletion,0)+'m'}</strong></div><div><span>최대 HP</span><strong>${number(hp.hpMax,0)}</strong></div>`:'';
- q('#selection-status').textContent=`선택 ${result.selected.length}개${result.unsupportedSelected.length?` · 미지원 ${result.unsupportedSelected.length}개 효과 제외`:''}`;
- q('#model-status').textContent=result.blockingReason||'조건 성공 가정 · 5개 위치 표본 · 내리막 모드·몸싸움·디버프 제외';
+ q('#model-status').textContent=result.blockingReason||`조건 성공 가정 · 5개 위치 표본${result.fullSpurtExcluded?' · 전개 스퍼트 제외 추정':''}${result.unsupportedCount?` · 계산 미지원 ${result.unsupportedCount}개 제외`:''}`;
  lockResults();
 }
 function syncBloom(){
@@ -90,7 +92,7 @@ function apply(){
  try{
   appliedSetup=readSetup();candidates=buildCandidates(data,{...appliedSetup,context:fixedContext(appliedSetup)});
   records=new Map([...candidates.learned,...candidates.inheritance,...candidates.factorCandidates].map(s=>[s.id,s]));
-  visible={speed:30,acceleration:30,factors:10,heal:30};dirty=false;q('#input-status').classList.remove('error-message');
+  visible={speed:30,acceleration:30,heal:30};dirty=false;q('#input-status').classList.remove('error-message');
   q('#scenario-note').textContent=appliedSetup.scenarioId?'시나리오 특수 획득 경로·선택 제한은 추가 검증 중입니다.':'';
   q('#result-context').textContent=`${tracks[appliedSetup.course.track_id]||appliedSetup.course.track_id} ${appliedSetup.course.distance}m · ${q('#style option:checked').textContent} · ${umaName(data.outfits[appliedSetup.outfitId])}`;
   send('setup',appliedSetup);
@@ -100,6 +102,7 @@ function activateTab(tab){qa('[role=tab]').forEach(t=>{const active=t===tab;t.se
 root.addEventListener('click',event=>{
  const tab=event.target.closest('[role=tab]');if(tab)activateTab(tab);
  const more=event.target.closest('[data-more]');if(more&&!busy&&!dirty&&result){const type=more.dataset.more;visible[type]+=30;render();q(`[data-more="${type}"]`)?.focus();}
+ const remove=event.target.closest('[data-skill-remove]');if(remove&&!busy&&!dirty&&result)send('toggle',{id:remove.dataset.skillRemove,checked:false,source:'routes'});
 });
 q('[role=tablist]').addEventListener('keydown',event=>{
  if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
