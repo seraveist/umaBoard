@@ -74,6 +74,7 @@ Pages 빌드가 필요한 이미지만 받아 Git blob·크기·형식을 검사
 - `GITHUB_TOKEN`으로 만든 데이터 push가 후속 CI/배포를 자동 실행한다고 가정하지 않습니다. 동기화 workflow에서도 후보·엔진 호환 테스트를 수행한 뒤 commit합니다.
 - Pages는 `workflow_run`으로 동기화 성공을 받아 bot의 데이터 commit도 배포합니다. 동기화가 실패하면 해당 실행은 배포하지 않습니다.
 - 배포 파일은 화면·JS/CSS·활성 데이터 묶음·출처/라이선스만 포함합니다. 이전 데이터 묶음, 수집 원본과 테스트 코드는 제외합니다.
+- 화면·모듈·Worker·CSS는 같은 내용 기반 버전으로 배포해 이전 브라우저 캐시와 새로운 계산 결과 형식이 섞이지 않도록 합니다.
 - 최초 Pages 활성화 전에 배포가 실패했다면, 설정 후 Actions에서 **Deploy GitHub Pages → Run workflow** 또는 실패 실행의 **Re-run failed jobs**를 선택합니다.
 
 ## 데이터 적용 정책
