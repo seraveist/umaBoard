@@ -1,4 +1,5 @@
 import {PreparationEngine} from './engine.mjs';
+import {applyEngineAction} from './engine-actions.mjs';
 let data,engine;
 const baseKey=setup=>JSON.stringify({...setup,supportIds:undefined,scenarioId:undefined});
 self.onmessage=({data:message})=>{
@@ -15,9 +16,8 @@ self.onmessage=({data:message})=>{
     engine.auto=previous.auto;engine.objective=previous.objective;
    }
   }
-  else if(type==='toggle')engine.toggle(payload.id,payload.checked,payload.source);
-  else if(type==='objective'){engine.objective=payload;engine.auto=true;engine.notice='';}
-  else if(type==='auto'){engine.auto=true;engine.notice='';}
+  else if(type==='batch')for(const action of payload)applyEngineAction(engine,action);
+  else applyEngineAction(engine,{type,...(type==='objective'?{value:payload}:payload)});
   self.postMessage({requestId,type:'result',result:engine.analyze()});
  }catch(error){self.postMessage({requestId,type:'error',message:error.message});}
 };

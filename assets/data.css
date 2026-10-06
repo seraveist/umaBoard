@@ -7,7 +7,6 @@
 #uma-plan .data-row .skill-info{min-width:0;flex:1}
 #uma-plan .data-row .skill-name{overflow-wrap:anywhere}
 #uma-plan .data-row .skill-heading{flex-wrap:wrap}
-#uma-plan .data-more{display:block;margin:15px auto 0;border:1px solid var(--line);border-radius:7px;background:var(--panel);padding:8px 18px}
 #uma-plan .empty-list{padding:20px 0;font-size:13px;color:var(--sub)}
 #uma-plan .error-message{color:var(--pink);white-space:normal}
 #uma-plan .page-title{flex-wrap:wrap}
@@ -40,18 +39,28 @@
 #uma-plan .search-option[aria-selected=true]{font-weight:600}
 #uma-plan .search-empty{padding:12px;color:var(--sub);font-size:12px}
 #uma-plan .search-select.opens-up .search-options,#uma-plan .search-select.opens-up .search-empty{top:auto;bottom:calc(100% + 4px)}
-#uma-plan .skill-group{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
-#uma-plan .skill-group>summary{cursor:pointer;font-size:14px;font-weight:600;line-height:1.7}
-#uma-plan .skill-group>summary .sub{font-weight:400;margin-left:8px;font-size:11px}
-#uma-plan .acquisition-plan{border-top:1px solid var(--line);padding:22px 26px}
+#uma-plan .results{container-type:inline-size;container-name:results}
+#uma-plan .skill-columns,#uma-plan .route-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+#uma-plan .skill-frame{min-width:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel)}
+#uma-plan .frame-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--line);min-height:70px;background:var(--soft)}
+#uma-plan .frame-head h3{font-size:13px;line-height:1.5;margin:0}
+#uma-plan .frame-head .sub{font-size:11px}
+#uma-plan .frame-head .small-action{font-size:11px;white-space:nowrap;flex-shrink:0;padding:6px 9px}
+#uma-plan .frame-scroll{height:480px;overflow-y:auto;scrollbar-gutter:stable;padding:0 12px;overscroll-behavior:contain}
+#uma-plan .frame-scroll:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+#uma-plan .frame-scroll .data-row{gap:8px}
+#uma-plan .frame-scroll .data-row .skill-value{min-width:46px;max-width:70px}
+#uma-plan .frame-scroll .skill-heading{gap:5px}
+#uma-plan .frame-scroll .skill-name{font-size:12px}
+#uma-plan .acquisition-plan{padding:20px}
 #uma-plan .acquisition-plan>.section-head{flex-wrap:wrap;gap:8px}
-#uma-plan .route-group{margin-top:18px}
-#uma-plan .route-group h4{font-size:12px;color:var(--green);margin:0 0 6px}
-#uma-plan .route-group h4 .sub{font-weight:400;margin-left:6px}
-#uma-plan .route-group[data-route-group=factor] h4{color:var(--pink)}
-#uma-plan .route-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px}
-#uma-plan .route-row>div{flex:1;min-width:0;overflow-wrap:anywhere}
-#uma-plan .route-detail{display:block;color:var(--sub);font-size:11px;line-height:1.6;margin-top:3px}
-#uma-plan .route-remove{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:5px;padding:5px 8px;flex-shrink:0;font-size:11px}
+#uma-plan .route-scroll{height:360px}
+#uma-plan .route-category h4{font-size:11px;color:var(--green);margin:12px 0 4px}
+#uma-plan .route-row{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--line);font-size:11px;line-height:1.6}
+#uma-plan .route-row .route-name{font-weight:600;max-width:40%;white-space:normal;overflow-wrap:anywhere}
+#uma-plan .route-row .route-detail{flex:1;min-width:0;overflow-wrap:anywhere;color:var(--sub)}
+#uma-plan .route-row .badge{flex-shrink:0}
+#uma-plan .route-remove{border:0;background:none;color:var(--sub);padding:4px;flex-shrink:0;font-size:18px;line-height:1;cursor:pointer}
 #uma-plan #selection-notice{font-size:12px;color:var(--pink);margin-top:10px}
-@media(max-width:600px){#uma-plan .acquisition-plan{padding:18px}#uma-plan .skill-group>summary .sub{display:block;margin-left:15px}}
+@container results (max-width:620px){#uma-plan .skill-columns,#uma-plan .route-columns{grid-template-columns:minmax(0,1fr)}#uma-plan .frame-scroll{height:360px}#uma-plan .route-scroll{height:300px}}
+@media(max-width:600px){#uma-plan .acquisition-plan{padding:16px}}

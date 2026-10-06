@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {compileSkill,fixedContext} from '../assets/activation.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {PreparationEngine} from '../assets/engine.mjs';
+import {applyEngineAction} from '../assets/engine-actions.mjs';
 import {buildPhysics,lengthsBetween,positionAt,uniqueLevel,uniqueMultiplier,validateSetup,wisdomSkillBase} from '../assets/physics.mjs';
 import {acquisitionPlan} from '../assets/acquisition-plan.mjs';
 const manifest=JSON.parse(readFileSync(new URL('../data/manifest.json',import.meta.url)));
@@ -90,10 +91,10 @@ test('white/gold alternatives and duplicate IDs never stack',()=>{
  e.toggle('a',true);e.toggle('b',true);assert.deepEqual([...e.selected],['b']);
  assert.equal(e.simulate(['a','a']).finishTime,e.simulate(['a']).finishTime);
 });
-test('maximum tie chooses the cheaper identical alternative and efficiency uses no displayed SP',()=>{
+test('maximum and safe ties choose the cheaper identical alternative without displayed SP',()=>{
  const a=skill('a'),b=skill('b');const e=new PreparationEngine(fixture([a,b],{a:200,b:100},[{kind:'version_family',from_id:'a',to_id:'b'}]),setup);
  e.objective='maximum';assert.deepEqual(e.recommendation().ids,['b']);
- e.objective='efficient';assert.deepEqual(e.recommendation().ids,['b']);
+ e.objective='safe';assert.deepEqual(e.recommendation().ids,['b']);
 });
 test('an unknown comparison cost is not treated as free',()=>{
  const a=skill('unknown-cost'),b=skill('known-cost');const e=new PreparationEngine(fixture([a,b],{'known-cost':100},[{kind:'version_family',from_id:a.id,to_id:b.id}]),setup);
@@ -207,7 +208,7 @@ test('unavailable ordinary white acceleration enters the main table, optimizer a
  const e=new PreparationEngine(f,setup),r=e.analyze();
  assert.ok(r.tables.acceleration.ordinary.includes(a.id));assert.ok(r.selected.includes(a.id));
  assert.equal(r.skills.find(s=>s.id===a.id).source,'factor');assert.ok(!('factors' in r));
- const plan=acquisitionPlan(f,e.records,r.selected);assert.ok(plan.find(g=>g.key==='factor').skills.some(s=>s.id===a.id));
+ const plan=acquisitionPlan(f,e.records,r.selected);assert.ok(plan[0].skills.some(s=>s.id===a.id&&s.detail==='인자'));
 });
 test('a supported heal remains selectable by HP gain even though its forced-spurt length gain is zero',()=>{
  const heal=skill('heal','heal',550,[[atom('phase','==',1)]],{duration_raw:0});
@@ -222,4 +223,60 @@ test('Kyoto 2200 white descent overlaps late entry and is available as a factor 
  assert.ok(lengthsBetween(simulateSolo(s,[c]),simulateSolo(s,[]))>0);
  const missing=new PreparationEngine(data,s);assert.ok(missing.candidates.factorCandidates.some(s=>s.id==='201342'));
  const available=new PreparationEngine(data,{...s,supportIds:['30023']});assert.ok(available.candidates.learned.some(s=>s.id==='201342'));
+});
+test('central-only individual scoring matches the previous five-sample center',()=>{
+ const random=skill('random','target_speed',3500,[[atom('phase_random','==',1)]]);
+ const e=new PreparationEngine(fixture([random]),setup);
+ const central=e.marginal(random.id),full=e.marginal(random.id,e.selected,[0,.25,.5,.75,1]);
+ assert.equal(central.gain.median,full.gain.median);assert.equal(central.gain.values.length,1);assert.equal(central.gain.min,null);
+ assert.equal(full.gain.values.length,5);assert.ok(full.gain.min<=full.gain.max);
+});
+test('manual acceleration analysis skips optimization but retains five final comparison samples',()=>{
+ const a=skill('a');const e=new PreparationEngine(fixture([a],{a:100}),setup);
+ e.toggle(a.id,true,'acceleration');e.recommendation=()=>{throw new Error('manual selection must not optimize');};
+ const r=e.analyze();assert.equal(r.auto,false);assert.equal(r.recommendation.evaluations,0);
+ assert.equal(r.comparison.values.length,5);assert.equal(r.acceleration.length,5);
+});
+test('a pure heal reuses motion and recommendation scores while still updating HP',()=>{
+ const a=skill('a'),heal=skill('heal','heal',550,[[atom('phase','==',1)]],{duration_raw:0});
+ const e=new PreparationEngine(fixture([a,heal],{a:100}),setup);assert.equal(e.healDependent,false);
+ const before=e.analyze(),count=e.recommendations.size,scoreCount=e.scores.size;
+ e.toggle(heal.id,true,'heal');const after=e.analyze();
+ assert.equal(e.recommendations.size,count);assert.equal(e.scores.size,scoreCount);
+ assert.deepEqual(after.recommendation.ids,before.recommendation.ids);assert.equal(after.comparison.median,before.comparison.median);
+ assert.ok(after.stamina.hpRemaining>before.stamina.hpRemaining);
+});
+test('heal-count dependencies remain active during optimization and scoring',()=>{
+ const a=skill('a','acceleration',4000,[[atom('activate_count_heal','>=',1),atom('phase','>=',2)]]);
+ const heal=skill('heal','heal',550,[[atom('phase','==',1)]],{duration_raw:0});
+ const e=new PreparationEngine(fixture([a,heal],{a:100}),setup);assert.equal(e.healDependent,true);
+ assert.ok(!e.analyze().selected.includes(a.id));e.toggle(heal.id,true,'heal');
+ assert.ok(e.analyze().selected.includes(a.id));
+});
+test('ranked bulk selection preserves existing inherits, skips alternatives and fills only remaining slots',()=>{
+ const inherits=Array.from({length:10},(_,i)=>({...skill('i'+i,'target_speed',1500,[[atom('remain_distance','<=',300)]]),rarity:'inherited',inherited:true,parent_ids:['p'+i]}));
+ const f=fixture(inherits);f.acquisition_routes=[];const e=new PreparationEngine(f,setup);
+ e.toggle('i9',true,'speed');applyEngineAction(e,{type:'selectMany',ids:inherits.map(s=>s.id),source:'speed'});
+ assert.equal(e.selected.size,6);assert.ok(e.selected.has('i9'));assert.ok(!e.selected.has('i5'));
+ const a=skill('a','target_speed',1500),b=skill('b','target_speed',3000);
+ const alternatives=new PreparationEngine(fixture([a,b],{},[{kind:'version_family',from_id:'a',to_id:'b'}]),setup);
+ alternatives.selected.clear();alternatives.selectMany(['b','a']);assert.deepEqual([...alternatives.selected],['b']);
+});
+test('selection batches apply the latest intent before one analysis and reject removed efficiency mode',()=>{
+ const a=skill('a','target_speed',3500);const e=new PreparationEngine(fixture([a]),setup);
+ for(const action of [{type:'toggle',id:'a',checked:false,source:'speed'},{type:'toggle',id:'a',checked:true,source:'speed'}])applyEngineAction(e,action);
+ assert.ok(e.selected.has('a'));assert.equal(e.objective,'maximum');
+ assert.throws(()=>applyEngineAction(e,{type:'objective',value:'efficient'}),/추천 기준/);
+});
+test('unknown costs cannot empty a stronger maximum or safe recommendation',()=>{
+ const strong=skill('unknown','acceleration',8000),weak=skill('known','acceleration',4000);
+ const e=new PreparationEngine(fixture([strong,weak],{known:100},[{kind:'version_family',from_id:'unknown',to_id:'known'}]),setup);
+ for(const objective of ['maximum','safe']){e.objective=objective;assert.deepEqual(e.recommendation().ids,['unknown']);}
+});
+test('recommendation cache accounts for inherited heals consuming an inheritance slot',()=>{
+ const accelerations=Array.from({length:6},(_,i)=>({...skill('i'+i),rarity:'inherited',inherited:true,parent_ids:['p'+i]}));
+ const heal={...skill('h','heal',550,[[atom('phase','==',1)]],{duration_raw:0}),rarity:'inherited',inherited:true,parent_ids:['p-heal']};
+ const f=fixture([...accelerations,heal],Object.fromEntries(accelerations.map(s=>[s.id,100])));f.acquisition_routes=[];
+ const e=new PreparationEngine(f,setup);assert.equal(e.healDependent,false);assert.equal(e.recommendation().ids.length,6);
+ e.toggle('h',true,'heal');assert.equal(e.recommendation().ids.length,5);
 });
