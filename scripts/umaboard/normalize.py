@@ -4,6 +4,7 @@ import re
 from collections import Counter
 
 from .common import DataError, canonical_bytes, identifier, number, rows
+from .planning import purchase_stages
 
 # Classification only. Values and source timing/scaling remain explicit raw fields.
 EFFECT_KINDS = {1:'passive_speed', 2:'passive_stamina', 3:'passive_power', 4:'passive_guts',
@@ -263,6 +264,10 @@ def normalize(raw, curated):
              'scenario_exclusive_groups':curated.get('scenario_exclusive_groups',[]),
              'race_presets':curated.get('race_presets',[]),
              'internal_acceleration_comparison_cost':costs,
+             'purchase_stages':purchase_stages(skills,costs,secondary,relations.values(),evolutions.values()),
+             'support_events':curated.get('planning',{}).get('support_events',{}),
+             'cost_policy':curated.get('planning',{}).get('cost_policy',{}),
+             'purchase_order':curated.get('planning',{}).get('purchase_order',{'status':'unverified','keys':{}}),
              'curation':{'status':curated['review_status'],'pending':curated.get('pending',[])},
              'diagnostics':diagnostics}
     if labels.get('source'):dataset['curation']['korean_names_source']=labels['source']

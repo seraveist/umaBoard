@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "cost_policy": {
+    "version": "standard-v1",
+    "white_hint_level": 5,
+    "other_hint_level": 0,
+    "fast_learner": false
+  },
+  "purchase_order": {
+    "status": "unverified",
+    "keys": {}
+  },
+  "support_events": {
+    "30282": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30282/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30282-chain-final",
+          "name_jp": "そのメイクは誰がために",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "202711",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204031",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "204031",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204041",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30289": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30289/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30289-chain-final",
+          "name_jp": "Dreams are Forever",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "202832",
+                  "hint_level": 5
+                },
+                {
+                  "skill_id": "204192",
+                  "hint_level": 5
+                },
+                {
+                  "skill_id": "202831",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204191",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "201612",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204181",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30275": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30275/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30275-chain-final",
+          "name_jp": "まったり孝行日和",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "204001",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203421",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "204001",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203441",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30311": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30311/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30311-chain-final",
+          "name_jp": "運命のライバル",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "204532",
+                  "hint_level": 5
+                },
+                {
+                  "skill_id": "204701",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204531",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "204701",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204571",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "label": "3번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "203712",
+                  "hint_level": 5
+                },
+                {
+                  "skill_id": "204701",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203711",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30312": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30312/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30312-chain-final",
+          "name_jp": "気分・思うままに",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "202021",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204521",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "202021",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202871",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "label": "3번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "202021",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "202851",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30304": {
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/supports/30304/event",
+      "checked_at": "2026-10-08",
+      "scope": "listed_gold_rewards",
+      "events": [
+        {
+          "id": "30304-chain-final",
+          "name_jp": "覇王と共に歩む道",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "200331",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203651",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "203651",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203641",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "label": "3번 선택지",
+              "rewards": [
+                {
+                  "skill_id": "203651",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204391",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

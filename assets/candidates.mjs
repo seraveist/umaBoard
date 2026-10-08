@@ -36,7 +36,7 @@ export function raceContext(course,style,extra={}){
   return {course_distance:course.distance,distance_type:course.distance_type,ground_type:course.surface,
           track_id:Number(course.track_id),running_style:Number(style),...extra};
 }
-export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom=3,context={}}){
+export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom=3,context={},purchase=false}){
   if(!data.outfits[outfitId])throw new Error('Unknown outfit');
   if(supportIds.some(id=>!data.supports[id]))throw new Error('Unknown support');
   const supports=new Set(supportIds),routeBy=new Map();
@@ -69,6 +69,20 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
     if(!possibleInContext(skill,context))continue;
     learned.push({...skill,routes,choice_groups:choiceGroups.get(id)||[]});
   }
+  if(purchase){
+    // A reached circle family exposes its upgrade as a purchase alternative.
+    for(const rel of data.relations){
+      if(rel.kind!=='version_family')continue;
+      const a=data.skills[rel.from_id],b=data.skills[rel.to_id];
+      if(a?.rarity==='white'&&b?.rarity==='white'&&a.name_jp.replace(/[○◎]/g,'')===b.name_jp.replace(/[○◎]/g,'')&&routeBy.has(a.id)&&!routeBy.has(b.id))
+        add(b.id,{kind:'upgrade',owner_type:'skill',owner_id:a.id,base_id:a.id});
+    }
+    for(const [id,routes]of routeBy){
+      if(learned.some(s=>s.id===id)||replaced.has(id))continue;
+      const skill=data.skills[id];
+      if(skill?.rarity==='white'&&skill.jp_available&&possibleInContext(skill,context))learned.push({...skill,routes,choice_groups:[]});
+    }
+  }
   const reachable=new Set(routeBy.keys());
   // Resolve connected version families; do not suggest another tier of an obtainable skill as an unavailable factor.
   let changed=true;
@@ -92,7 +106,8 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
   // A normal purchasable white skill has a positive base cost. Rarity 1 alone also
   // includes LoH Hero buffs, Carnival bonuses and innate traits, which are not factors.
   // Cost is an admission check here, never a user SP budget or discount calculation.
-  const factorCandidates=Object.values(data.skills).filter(s=>s.rarity==='white'&&!s.inherited&&s.jp_available&&!reachable.has(s.id)
+  const excluded=purchase?new Set(learned.map(s=>s.id)):reachable;
+  const factorCandidates=Object.values(data.skills).filter(s=>s.rarity==='white'&&!s.inherited&&s.jp_available&&!excluded.has(s.id)
     &&data.internal_acceleration_comparison_cost?.[s.id]>0
     &&s.categories.some(t=>['speed','acceleration','heal','passive'].includes(t))
     &&s.invocations.some(i=>i.effects.some(e=>typeof e.value_raw==='number'&&e.value_raw>0))&&possibleInContext(s,context));

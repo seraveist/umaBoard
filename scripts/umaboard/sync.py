@@ -161,6 +161,8 @@ def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=Fals
     curated=json.loads((root/'curated/rules.json').read_text())
     labels_path=root/'curated/names-ko.json'
     if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text())
+    planning_path=root/'curated/planning.json'
+    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text())
     previous_manifest,previous_data=load_active(root)
     fingerprint=adapter_fingerprint(root,config,curated)
     sources=resolve_sources(client,config,previous_manifest,refresh_courses)
