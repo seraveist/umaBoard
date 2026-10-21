@@ -10,6 +10,10 @@
 **2026-10-08 구현 브랜치:** `feat/skill-budget-optimizer`.
 [프로젝트 기획](docs/PROJECT_PLAN.md) · [엔진 계약](docs/MODEL_CONTRACT.md) · [검증 범위](docs/ENGINE_VALIDATION.md).
 
+2026-10-21 통합 검증: main `1d63d70`의 JP 원본 버전으로 구매·이벤트 데이터를 재생성했습니다.
+활성 데이터는 스킬 **2,200**, 의상 **271**, 서포트 **563**, 코스 **138**입니다.
+[변경 범위·회귀 테스트·병합 판단](docs/JP_OPTIMIZER_INTEGRATION.md)을 참고하세요.
+
 예상 총 SP 입력, 단계별 구매 가격, 예산 내 스킬 추천, 고정·추천 제외, 이벤트 선택,
 최종 구매 목록의 텍스트 저장, 보유 SSR·렌탈·타입 제한·고정 카드에 따른 편성 비교를 구현했습니다.
 계산은 Worker에서 버튼으로 실행하며 토글은 선택·비용·경로만 즉시 바꿉니다.
@@ -52,6 +56,14 @@ UmaTools와 umasim 두 저장소의 대상 파일을 매일 확인합니다. alp
 python scripts/sync_data.py --refresh-courses
 ```
 
+브랜치 통합으로 활성 데이터에 구매·이벤트 정보가 빠졌거나 현재 어댑터로 다시 생성해야 할 때는
+다음 명령으로 manifest에 기록된 원본 commit·blob을 유지하며 재생성합니다.
+기존 불변 묶음은 보존하고 검증 성공 후에만 manifest를 교체합니다.
+
+```sh
+python scripts/sync_data.py --rebuild-active
+```
+
 위 명령 또는 Actions의 `refresh_courses` 입력으로 alpha 코스도 최신 자료를 검사할 수 있습니다.
 GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정하거나 한도 초기화 후 실행합니다. 토큰을 저장소에 넣지 않습니다.
 
@@ -69,7 +81,7 @@ GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정�
 UmaTools 최신 commit의 파일을 확인하고 `data/portraits.json`에 이미지 경로와 Git blob을 기록합니다.
 계산 데이터가 그대로인 상태에서 이미지만 추가·수정되어도 다음 동기화에 반영합니다.
 WebP를 우선 사용하고 없으면 같은 소스의 PNG를 사용합니다.
-현재 의상 266종·SSR 311장에 이미지가 있으며, 누락된 의상 4종·SSR 5장은 이미지 없이 이름으로 선택할 수 있습니다.
+2026-10-21 통합 기준 의상 271종·SSR 316장의 이미지가 목록에 있으며 원본 누락 ID는 없습니다.
 GameTora 등 다른 이미지 소스로 보완하지 않습니다.
 Pages 빌드가 필요한 이미지만 받아 Git blob·크기·형식을 검사하고 자체 정적 경로로 배포합니다.
 다운로드 파일은 Actions 캐시에 보관하므로 변경되지 않은 이미지를 매번 다시 받지 않습니다.

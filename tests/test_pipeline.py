@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
-from umaboard.common import DataError,canonical_bytes
+from umaboard.common import DataError,canonical_bytes,digest
 from umaboard.normalize import normalize
 from umaboard.sync import HttpClient,git_blob_sha,publish,raw_inputs,synchronize
 from umaboard.validate import validate_dataset
@@ -38,6 +38,14 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_legacy_bundle_without_planning_contract_cannot_pass_ci_or_pages_validation(self):
+        raw,rules=fixtures();data=normalize(raw,rules)
+        for field in ('purchase_stages','support_events','cost_policy','purchase_order'):
+            with self.subTest(field=field):
+                legacy=copy.deepcopy(data);del legacy[field]
+                with self.assertRaisesRegex(DataError,'missing SP planning contract'):
+                    validate_dataset(legacy,{})
+
     def test_name_overlay_never_changes_jp_skills_titles_or_support_rarity(self):
         raw,rules=fixtures()
         rules['korean_names']={'names':{'テストウマ':'테스트 우마','テストSSR':'테스트 서포트'},
@@ -124,6 +132,72 @@ class PublicationTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory();self.root=Path(self.temp.name)
         raw,rules=fixtures();self.data=normalize(raw,rules);self.validation=validate_dataset(self.data,{})
     def tearDown(self):self.temp.cleanup()
+
+    def seed_legacy_sources(self):
+        raw,rules=fixtures()
+        raw['secondary_skills'] += [
+            {'id':'201012','name':'スキル201012','rarity':'normal','invokes':[],'group':1,'sp':100},
+            {'id':'201011','name':'スキル201011','rarity':'rare','invokes':[],'group':1,'sp':280}]
+        planning={'cost_policy':{'version':'standard-v1','white_hint_level':5,'other_hint_level':0,'fast_learner':False},
+                  'purchase_order':{'status':'unverified','keys':{}},
+                  'support_events':{'30001':{'source':'https://example.com/verified-event','events':[
+                      {'id':'30001-final','choices':[{'id':'1','rewards':[{'skill_id':'201011','hint_level':2}]}]}]}}}
+        (self.root/'curated').mkdir()
+        (self.root/'curated/rules.json').write_bytes(canonical_bytes(rules))
+        (self.root/'curated/planning.json').write_bytes(canonical_bytes(planning))
+        (self.root/'sync-config.json').write_text('{}')
+        cache=self.root/'.cache/raw';cache.mkdir(parents=True)
+        files=[];hashes=[]
+        for key,value in raw.items():
+            content=value.encode() if key=='scenario_memo' else canonical_bytes(value)
+            blob=git_blob_sha(content);(cache/(blob+'.raw')).write_bytes(content)
+            files.append({'key':key,'path':key+'.json','blob_sha':blob,'bytes':len(content)})
+            hashes.append({'key':key,'sha256':digest(content)})
+        sources=[{'source_id':'fixture','repository':'example/repo','commit':'a'*40,'files':files,'mode':'latest'}]
+        legacy=normalize(raw,rules);report=validate_dataset(legacy,{})
+        for field in ('purchase_stages','support_events','cost_policy','purchase_order'):del legacy[field]
+        publish(self.root,legacy,report,sources,hashes,'legacy-adapter')
+        return planning,sources,hashes
+
+    def test_pinned_rebuild_restores_planning_without_resolving_latest_refs_and_is_repeatable(self):
+        planning,sources,hashes=self.seed_legacy_sources()
+        before=json.loads((self.root/'data/manifest.json').read_text())
+        old_bundle=(self.root/before['dataset_path']).read_bytes()
+        class OfflineClient:
+            def get(self,url):raise AssertionError('cached pinned inputs must not download')
+            def json(self,url):raise AssertionError('pinned rebuild must not resolve latest refs')
+        result=synchronize(self.root,client=OfflineClient(),rebuild_active=True)
+        self.assertEqual(result['status'],'updated')
+        manifest=json.loads((self.root/'data/manifest.json').read_text())
+        data=json.loads((self.root/manifest['dataset_path']).read_text())
+        self.assertEqual(manifest['sources'],sources);self.assertEqual(manifest['input_hashes'],hashes)
+        self.assertEqual((self.root/before['dataset_path']).read_bytes(),old_bundle)
+        for field in ('cost_policy','support_events','purchase_order'):self.assertEqual(data[field],planning[field])
+        self.assertEqual(data['purchase_stages']['201011']['prerequisite_id'],'201012')
+        self.assertEqual(data['purchase_stages']['201011']['status'],'verified')
+        self.assertEqual(synchronize(self.root,client=OfflineClient(),rebuild_active=True)['status'],'unchanged')
+        # The regular daily path must retain the same curated planning contract.
+        with patch('umaboard.sync.resolve_sources',return_value=sources):
+            self.assertEqual(synchronize(self.root,client=OfflineClient())['status'],'unchanged')
+
+    def test_failed_pinned_rebuild_keeps_previous_manifest(self):
+        _,sources,_=self.seed_legacy_sources()
+        pointer=self.root/'data/manifest.json';before=pointer.read_bytes()
+        blob=sources[0]['files'][0]['blob_sha']
+        (self.root/'.cache/raw'/(blob+'.raw')).write_bytes(b'corrupt')
+        class OfflineClient:
+            def get(self,url):raise DataError('network failure')
+        with self.assertRaisesRegex(DataError,'network failure'):
+            synchronize(self.root,client=OfflineClient(),rebuild_active=True)
+        self.assertEqual(pointer.read_bytes(),before)
+
+    def test_pinned_rebuild_requires_manifest_and_cannot_refresh_sources(self):
+        (self.root/'curated').mkdir();(self.root/'curated/rules.json').write_text('{}')
+        (self.root/'sync-config.json').write_text('{}')
+        with self.assertRaisesRegex(DataError,'requires an active manifest'):
+            synchronize(self.root,rebuild_active=True)
+        with self.assertRaisesRegex(DataError,'cannot refresh'):
+            synchronize(self.root,rebuild_active=True,refresh_courses=True)
 
     def test_failed_manifest_swap_keeps_old_active_bundle(self):
         publish(self.root,self.data,self.validation,[],[],'first')

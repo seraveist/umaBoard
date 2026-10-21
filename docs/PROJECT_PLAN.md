@@ -2,6 +2,9 @@
 
 기준일: 2026-10-08 / 일본 서버 전용 / 상태: feat/skill-budget-optimizer 브랜치에 1차 구현.
 
+2026-10-21: main `1d63d70` JP 데이터와의 [통합 검증 기록](JP_OPTIMIZER_INTEGRATION.md)을 추가했다.
+기존 구현 브랜치는 보존하며 별도 통합 브랜치에서 최신 원본과 구매·이벤트 데이터를 결합했다.
+
 이 문서는 현재 프로젝트의 제품 기준이다. 과거 수집 설계의 SP 제외·이벤트 선택지 무시 정책보다 우선한다.
 입력·출력의 목표 계약은 [MODEL_CONTRACT.md](MODEL_CONTRACT.md), 현재 엔진의 실제 지원 범위는
 [ENGINE_VALIDATION.md](ENGINE_VALIDATION.md)를 따른다. 이 문서는 구현 브랜치 기준이며 main 공개 페이지 배포와는 별개다.
