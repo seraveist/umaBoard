@@ -1,5 +1,6 @@
 """Validation gates shared by CI and the synchronization publisher."""
 from .common import DataError, identifier, number
+from .planning import validate_planning
 
 
 def validate_dataset(data, config, previous=None, allow_count_decrease=False):
@@ -14,6 +15,10 @@ def validate_dataset(data, config, previous=None, allow_count_decrease=False):
             identifier(sid)
             if row['id']!=sid:raise DataError(f'{key}: key and ID differ')
     skills=data['skills'];warnings=[]
+    for field in ('purchase_stages','support_events','cost_policy','purchase_order'):
+        if not isinstance(data.get(field),dict):
+            raise DataError(f'missing SP planning contract: {field}; run python scripts/sync_data.py --rebuild-active')
+    validate_planning(data)
     for skill in skills.values():
         if skill['calculation_status']!='unvalidated':raise DataError('this adapter cannot declare race calculation validated')
         for pid in skill['parent_ids']:

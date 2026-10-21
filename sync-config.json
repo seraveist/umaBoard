@@ -2,11 +2,42 @@
   "schema_version": 1,
   "server": "JP",
   "sources": [
-    {"id": "umatools", "repository": "daftuyda/UmaTools", "files": {"skills": "public/assets/skills_all.json", "outfits": "public/assets/uma_data.json", "supports": "public/assets/support_hints.json"}},
-    {"id": "umasim", "repository": "mee1080/umasim", "files": {"secondary_skills": "data/skill_data.txt", "scenario_memo": "data/ramen_memo.md"}},
-    {"id": "courses", "repository": "alpha123/uma-skill-tools", "pinned_commit": "bce6c0888e0f19dac10ac0d27d1e9741c6917657", "files": {"courses": "data/course_data.json"}}
+    {
+      "id": "umatools",
+      "repository": "daftuyda/UmaTools",
+      "files": {
+        "skills": "public/assets/skills_all.json",
+        "outfits": "public/assets/uma_data.json",
+        "supports": "public/assets/support_hints.json"
+      }
+    },
+    {
+      "id": "umasim",
+      "repository": "mee1080/umasim",
+      "files": {
+        "secondary_skills": "data/skill_data.txt",
+        "scenario_memo": "data/ramen_memo.md"
+      }
+    },
+    {
+      "id": "courses",
+      "repository": "alpha123/uma-skill-tools",
+      "pinned_commit": "bce6c0888e0f19dac10ac0d27d1e9741c6917657",
+      "files": {
+        "courses": "data/course_data.json"
+      }
+    }
   ],
-  "minimum_records": {"skills": 2000, "outfits": 200, "supports": 400, "courses": 100},
+  "minimum_records": {
+    "skills": 2000,
+    "outfits": 200,
+    "supports": 400,
+    "courses": 100
+  },
   "maximum_count_decrease_ratio": 0.05,
-  "curated_files": ["curated/rules.json", "curated/names-ko.json"]
+  "curated_files": [
+    "curated/rules.json",
+    "curated/names-ko.json",
+    "curated/planning.json"
+  ]
 }

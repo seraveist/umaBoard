@@ -64,3 +64,41 @@
 #uma-plan #selection-notice{font-size:12px;color:var(--pink);margin-top:10px}
 @container results (max-width:620px){#uma-plan .skill-columns,#uma-plan .route-columns{grid-template-columns:minmax(0,1fr)}#uma-plan .frame-scroll{height:360px}#uma-plan .route-scroll{height:300px}}
 @media(max-width:600px){#uma-plan .acquisition-plan{padding:16px}}
+#uma-plan .budget-field{margin:12px 0}
+#uma-plan .budget-toolbar{padding:16px 20px;border-bottom:1px solid var(--line)}
+#uma-plan .budget-summary{font-size:18px;font-weight:700;color:var(--green)}
+#uma-plan .budget-summary.over-budget{color:var(--pink)}
+#uma-plan .optimization-actions{display:flex;align-items:end;flex-wrap:wrap;gap:8px;margin-top:12px}
+#uma-plan .optimization-actions .objective{margin:0;min-width:110px}
+#uma-plan .optimization-actions select{margin-top:4px}
+#uma-plan .skill-cost{display:block;white-space:nowrap;font-size:10px}
+#uma-plan .skill-lock{padding:2px 5px;border:1px solid var(--line);border-radius:4px;color:var(--sub);background:var(--panel);font-size:10px;cursor:pointer;white-space:nowrap}
+#uma-plan .skill-lock[aria-pressed=true]{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+#uma-plan .skill-lock:disabled{opacity:.5;cursor:default}
+#uma-plan .route-row{flex-wrap:wrap}
+#uma-plan .route-cost{white-space:nowrap}
+#uma-plan .event-plan{margin-top:18px;border-top:1px solid var(--line);padding-top:10px}
+#uma-plan .event-plan h4{font-size:12px;margin:0 0 8px}
+#uma-plan .event-row{display:grid;grid-template-columns:150px 150px 1fr;align-items:center;gap:8px;font-size:12px;padding:8px 0}
+#uma-plan .event-row select{min-width:0;font-size:12px}
+#uma-plan .final-plan{padding:20px}
+#uma-plan .purchase-evolution,#uma-plan .purchase-prerequisite{display:block;font-size:10px;line-height:1.6;margin-top:4px}
+#uma-plan .final-plan td{font-size:12px;overflow-wrap:anywhere}
+#uma-plan .final-plan th:last-child,#uma-plan .final-plan td:last-child{text-align:right;white-space:nowrap}
+#uma-plan .check-field,#uma-plan .card-lock-field{display:flex;align-items:center;gap:6px;font-size:12px;margin:8px 0}
+#uma-plan .card-lock-field{font-size:10px;color:var(--sub);margin:4px 0 0}
+#uma-plan .deck-ratios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+#uma-plan .deck-ratios input{width:100%}
+#uma-plan .deck-ratios label{font-size:11px}
+#uma-plan .owned-panel{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+#uma-plan .owned-panel summary{cursor:pointer;font-size:12px;margin-bottom:12px}
+#uma-plan .owned-list{max-height:300px;overflow-y:auto}
+#uma-plan .owned-card{display:flex;gap:7px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+#uma-plan .owned-portrait{width:34px;height:34px;object-fit:cover;border-radius:4px}
+#uma-plan .owned-type{width:22px;height:22px;object-fit:contain}
+#uma-plan .deck-plan{border:1px solid var(--line);border-radius:6px;margin-top:10px;padding:10px;font-size:11px;line-height:1.8}
+#uma-plan .deck-plan p{margin:8px 0 0}
+@container results (max-width:620px){#uma-plan .event-row{grid-template-columns:1fr 130px}#uma-plan .event-row>.sub{grid-column:1/-1}}
+@media(max-width:600px){#uma-plan .budget-toolbar,#uma-plan .final-plan{padding:16px}#uma-plan .budget-summary{font-size:16px}}
+#uma-plan .field input[type=checkbox]{width:14px;height:14px;min-height:0;padding:0;border-radius:3px}
+#uma-plan .card-lock-field{white-space:nowrap}

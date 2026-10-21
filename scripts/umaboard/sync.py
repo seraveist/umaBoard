@@ -155,16 +155,25 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
     return True,version
 
 
-def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=False):
+def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=False,rebuild_active=False):
     client=client or HttpClient(os.environ.get('GITHUB_TOKEN'))
     config=json.loads((root/'sync-config.json').read_text())
     curated=json.loads((root/'curated/rules.json').read_text())
     labels_path=root/'curated/names-ko.json'
     if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text())
+    planning_path=root/'curated/planning.json'
+    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text())
     previous_manifest,previous_data=load_active(root)
     fingerprint=adapter_fingerprint(root,config,curated)
-    sources=resolve_sources(client,config,previous_manifest,refresh_courses)
-    unchanged=previous_manifest and target_signature(sources)==target_signature(previous_manifest['sources']) and fingerprint==previous_manifest['adapter_fingerprint']
+    if rebuild_active:
+        if refresh_courses:raise DataError('rebuild-active cannot refresh course sources')
+        if not previous_manifest:raise DataError('rebuild-active requires an active manifest')
+        # Reapply the current adapter/curation without moving any source ref.
+        # raw_inputs still verifies every cached/downloaded blob and byte count.
+        sources=previous_manifest['sources']
+    else:
+        sources=resolve_sources(client,config,previous_manifest,refresh_courses)
+    unchanged=not rebuild_active and previous_manifest and target_signature(sources)==target_signature(previous_manifest['sources']) and fingerprint==previous_manifest['adapter_fingerprint']
     if unchanged:
         validation=validate_dataset(previous_data,config)
         return {'status':'unchanged','version':previous_manifest['active_version'],'counts':validation['counts']}
@@ -180,12 +189,14 @@ def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=Fals
 def main(argv=None):
     parser=argparse.ArgumentParser(description='Synchronize and normalize Japanese Uma Musume data')
     parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[2])
-    parser.add_argument('--refresh-courses',action='store_true',help='Check the latest alpha course file instead of retaining its fixed snapshot')
+    mode=parser.add_mutually_exclusive_group()
+    mode.add_argument('--refresh-courses',action='store_true',help='Check the latest alpha course file instead of retaining its fixed snapshot')
+    mode.add_argument('--rebuild-active',action='store_true',help='Rebuild the active manifest\'s pinned sources with the current adapter and curation')
     parser.add_argument('--allow-count-decrease',action='store_true',help='Only after reviewing a legitimate bulk deletion')
     args=parser.parse_args(argv);root=args.root.resolve()
     status_path=root/'.cache/sync-status.json';status_path.parent.mkdir(parents=True,exist_ok=True)
     try:
-        result=synchronize(root,refresh_courses=args.refresh_courses,allow_count_decrease=args.allow_count_decrease)
+        result=synchronize(root,refresh_courses=args.refresh_courses,allow_count_decrease=args.allow_count_decrease,rebuild_active=args.rebuild_active)
         result['checked_at']=datetime.now(timezone.utc).isoformat()
         status_path.write_bytes(canonical_bytes(result))
         print(json.dumps(result,ensure_ascii=False))

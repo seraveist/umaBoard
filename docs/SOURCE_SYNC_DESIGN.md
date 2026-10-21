@@ -2,6 +2,10 @@
 
 2026-10-02 구현 기준. 조사 당시의 원문 설계는 DATA_COLLECTION_PLAN.md와 SOURCE_FRESHNESS_CHECK.md에 남긴다.
 
+2026-10-08 제품 개편 기준은 [PROJECT_PLAN.md](PROJECT_PLAN.md)를 따릅니다.
+기존 수집 설명은 역사적 설계입니다. 구현 브랜치는 `curated/planning.json`의 이벤트 묶음·최대 힌트와 교차 검증한 단계별 구매 비용을 정규화합니다. 기본 구매 정렬 키는 미확보입니다.
+소스 조회·불변 묶음·실패 복구·일일 실행 정책은 유지합니다.
+
 ## 정기 소스
 
 - UmaTools: `public/assets/skills_all.json`, `uma_data.json`, `support_hints.json`.
