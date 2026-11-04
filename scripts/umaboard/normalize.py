@@ -228,6 +228,14 @@ def normalize(raw, curated):
     for skill in skills.values():
         if skill['inherited'] and skill['parent_ids'] and not any(skills[pid]['jp_available'] for pid in skill['parent_ids'] if pid in skills):
             skill['jp_available']=False;skill['release_evidence']='inherited_parent_jp_status'
+    scenario_events=curated.get('planning',{}).get('scenario_events',{})
+    for scenario_id, entry in scenario_events.items():
+        for event in entry['events']:
+            for choice in event['choices']:
+                for reward in choice['rewards']:
+                    extra={'event_id':event['id'],'event_choice_id':choice['id']}
+                    if reward.get('requirements'):extra['requirements']=reward['requirements']
+                    add_route(identifier(reward['skill_id']),'scenario',scenario_id,'scenario_event',**extra)
     scenario_ids={r['owner_id'] for r in routes.values() if r['owner_type']=='scenario'} | {r['owner_id'] for r in evolutions.values() if r['owner_type']=='scenario'}
     scenarios={sid:{'id':sid,'name_jp':curated.get('scenario_names',{}).get(sid,f'シナリオ {sid}'),
                     'rules_status':'partial','origin':'observed_acquisition_and_evolution'} for sid in sorted(scenario_ids)}
@@ -266,6 +274,7 @@ def normalize(raw, curated):
              'internal_acceleration_comparison_cost':costs,
              'purchase_stages':purchase_stages(skills,costs,secondary,relations.values(),evolutions.values()),
              'support_events':curated.get('planning',{}).get('support_events',{}),
+             'scenario_events':scenario_events,
              'cost_policy':curated.get('planning',{}).get('cost_policy',{}),
              'purchase_order':curated.get('planning',{}).get('purchase_order',{'status':'unverified','keys':{}}),
              'curation':{'status':curated['review_status'],'pending':curated.get('pending',[])},

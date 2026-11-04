@@ -1,21 +1,60 @@
 {
   "schema_version": 1,
   "review_status": "partial",
-  "scenario_names": {"14": "らっしゃい！トレセン軒！ ～恩返し、始めました～"},
+  "scenario_names": {
+    "14": "らっしゃい！トレセン軒！ ～恩返し、始めました～",
+    "15": "朋、史解き ―午式駿大祭―"
+  },
   "inheritance_links": [
-    {"parent_skill_id": "101351", "inherited_skill_id": "901351"},
-    {"parent_skill_id": "101411", "inherited_skill_id": "901411"},
-    {"parent_skill_id": "111091", "inherited_skill_id": "911091"}
+    {
+      "parent_skill_id": "101351",
+      "inherited_skill_id": "901351"
+    },
+    {
+      "parent_skill_id": "101411",
+      "inherited_skill_id": "901411"
+    },
+    {
+      "parent_skill_id": "111091",
+      "inherited_skill_id": "911091"
+    }
   ],
   "jp_unavailable_skill_ids": [],
   "race_presets": [],
   "scenario_extra_routes": [],
-  "scenario_exclusive_groups": [],
-  "course_exclusions": ["10613"],
-  "course_exclusion_reasons": {"10613": "원본의 마지막 코너가 2400m 결승선을 448m 초과함. 지형 검증 전 선택 제외."},
+  "scenario_exclusive_groups": [
+    {
+      "id": "15-evolution-limit",
+      "scenario_id": "15",
+      "skill_ids": [
+        "415011",
+        "415021",
+        "415031",
+        "415041",
+        "415051",
+        "415061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/837633",
+      "checked_at": "2026-11-04",
+      "assumption": "진화별 보유 스킬·발표회 대성공 조건 충족 가정. 본체 진화는 이 2개 제한에 포함하지 않는다."
+    }
+  ],
+  "course_exclusions": [
+    "10613"
+  ],
+  "course_exclusion_reasons": {
+    "10613": "원본의 마지막 코너가 2400m 결승선을 448m 초과함. 지형 검증 전 선택 제외."
+  },
   "sources": [
     "https://github.com/mee1080/umasim/blob/ca692ed78ccae54304b5c87054d8aa60c99edf56/data/skill_data.txt",
     "https://github.com/daftuyda/UmaTools/blob/cef13e20648952a40c98736387cb50993dba88ed/public/assets/skills_all.json"
   ],
-  "pending": ["official_race_presets", "scenario_special_routes_and_exclusive_evolution_rules", "jp_release_and_unlock_gates", "unique_level_rules", "race_calculation_engine"]
+  "pending": [
+    "official_race_presets",
+    "scenario_special_routes_and_exclusive_evolution_rules",
+    "jp_release_and_unlock_gates",
+    "unique_level_rules",
+    "race_calculation_engine"
+  ]
 }

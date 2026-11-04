@@ -72,7 +72,7 @@ export class SkillOptimizer extends PreparationEngine{
  optimize({evaluationLimit=this.objective==='safe'?450:1100,width=3,maxCandidates=52}={}){
   const required=[...this.fixedIds].sort(),price=this.purchase.selection(required),baseline=[...this.nativeIds].sort();
   if(!price.complete||!price.feasible){
-   this.notice=price.conflict?'고정 스킬의 이벤트 선택지가 충돌합니다.':!price.complete?'고정 스킬의 구매 비용을 확인할 수 없습니다.':'고정 스킬이 SP 예산을 초과합니다.';
+   this.notice=price.conflict?'고정 스킬의 이벤트 선택지 또는 시나리오 진화 제한이 충돌합니다.':!price.complete?'고정 스킬의 구매 비용을 확인할 수 없습니다.':'고정 스킬이 SP 예산을 초과합니다.';
    return {status:'infeasible',search:'none',evaluations:0,candidateCount:0};
   }
   const entries=[...this.records.keys()].filter(id=>!this.userDisabled.has(id)&&!this.fixedIds.has(id)&&supported(this.compiled.get(id)))
@@ -98,7 +98,7 @@ export class SkillOptimizer extends PreparationEngine{
   const samples=this.objective==='safe'?SAMPLES:[.5],evaluated=new Map();
   const evaluate=ids=>{
    ids=[...new Set(ids)].sort();const k=key(ids);if(evaluated.has(k))return evaluated.get(k);
-   if(ids.some((id,i)=>ids.slice(0,i).some(other=>!this.compatible(id,other)))||ids.filter(id=>this.record(id).inherited).length>INHERITANCE_LIMIT)return null;
+   if(!this.rules.withinScenarioLimits(ids)||ids.some((id,i)=>ids.slice(0,i).some(other=>!this.compatible(id,other)))||ids.filter(id=>this.record(id).inherited).length>INHERITANCE_LIMIT)return null;
    const priced=this.purchase.selection(ids);if(!priced.feasible)return null;
    const gain=this.compare(ids,baseline,samples),runs=samples.map(q=>this.simulate(ids,q));if(!gain)return null;
    const hp=Math.min(...runs.map(r=>r.hpRemaining)),feasible=runs.every(r=>r.fullSpeedFeasible);

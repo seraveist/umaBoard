@@ -141,7 +141,10 @@ class PublicationTests(unittest.TestCase):
         planning={'cost_policy':{'version':'standard-v1','white_hint_level':5,'other_hint_level':0,'fast_learner':False},
                   'purchase_order':{'status':'unverified','keys':{}},
                   'support_events':{'30001':{'source':'https://example.com/verified-event','events':[
-                      {'id':'30001-final','choices':[{'id':'1','rewards':[{'skill_id':'201011','hint_level':2}]}]}]}}}
+                      {'id':'30001-final','choices':[{'id':'1','rewards':[{'skill_id':'201011','hint_level':2}]}]}]}},
+                  'scenario_events':{'15':{'source':'https://example.com/scenario-event','events':[
+                      {'id':'15-link','choices':[{'id':'1','rewards':[{'skill_id':'201011','hint_level':2,
+                          'requirements':{'character_link':{'name_jp':'テストウマ','present':True}}}]}]}]}}}
         (self.root/'curated').mkdir()
         (self.root/'curated/rules.json').write_bytes(canonical_bytes(rules))
         (self.root/'curated/planning.json').write_bytes(canonical_bytes(planning))
@@ -172,7 +175,9 @@ class PublicationTests(unittest.TestCase):
         data=json.loads((self.root/manifest['dataset_path']).read_text())
         self.assertEqual(manifest['sources'],sources);self.assertEqual(manifest['input_hashes'],hashes)
         self.assertEqual((self.root/before['dataset_path']).read_bytes(),old_bundle)
-        for field in ('cost_policy','support_events','purchase_order'):self.assertEqual(data[field],planning[field])
+        for field in ('cost_policy','support_events','scenario_events','purchase_order'):self.assertEqual(data[field],planning[field])
+        route=next(r for r in data['acquisition_routes'] if r.get('event_id')=='15-link')
+        self.assertEqual(route['requirements'],{'character_link':{'name_jp':'テストウマ','present':True}})
         self.assertEqual(data['purchase_stages']['201011']['prerequisite_id'],'201012')
         self.assertEqual(data['purchase_stages']['201011']['status'],'verified')
         self.assertEqual(synchronize(self.root,client=OfflineClient(),rebuild_active=True)['status'],'unchanged')

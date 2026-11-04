@@ -1,5 +1,5 @@
 """Purchase stages proven by primary increments and secondary cumulative costs."""
-from .common import DataError, identifier, number
+from .common import DataError, identifier, number, canonical_bytes
 
 
 def purchase_stages(skills, costs, secondary, relations, evolutions):
@@ -40,6 +40,35 @@ def purchase_stages(skills, costs, secondary, relations, evolutions):
 
 def validate_planning(data):
     skills = data['skills']
+    event_routes = {(r['owner_id'], r['skill_id']) for r in data.get('acquisition_routes', [])
+                    if r['owner_type'] == 'support' and r['kind'] == 'support_event'}
+    scenario_routes = {(r['owner_id'], r.get('event_id'), r.get('event_choice_id'), r['skill_id'], canonical_bytes(r.get('requirements', {})))
+                       for r in data.get('acquisition_routes', []) if r['owner_type'] == 'scenario' and r['kind'] == 'scenario_event'}
+
+    def validate_rewards(card_id, rewards, event_id=None, choice_id=None):
+        if not isinstance(rewards, list):
+            raise DataError('event rewards must be an array')
+        seen = set()
+        for reward in rewards:
+            sid, level = reward['skill_id'], reward['hint_level']
+            if sid not in skills or type(level) is not int or not 0 <= level <= 5:
+                raise DataError('invalid event skill or hint level')
+            if sid in seen:
+                raise DataError('duplicate event reward')
+            seen.add(sid)
+            if event_id is not None:
+                requirements = reward.get('requirements', {})
+                if requirements:
+                    if not isinstance(requirements, dict):
+                        raise DataError('unsupported scenario reward requirement')
+                    link = requirements.get('character_link', {})
+                    if not isinstance(link, dict) or set(requirements) != {'character_link'} or set(link) != {'name_jp', 'present'} or not isinstance(link['name_jp'], str) or not link['name_jp'] or type(link['present']) is not bool:
+                        raise DataError('unsupported scenario reward requirement')
+                if (card_id, event_id, choice_id, sid, canonical_bytes(requirements)) not in scenario_routes:
+                    raise DataError('event reward missing scenario acquisition route')
+            elif (card_id, sid) not in event_routes:
+                raise DataError('event reward missing support acquisition route')
+
     for sid, stage in data.get('purchase_stages', {}).items():
         if sid not in skills or number(stage['base_cost'], 'purchase cost') <= 0:
             raise DataError('invalid purchase stage')
@@ -65,7 +94,36 @@ def validate_planning(data):
                 if choice['id'] in choices:
                     raise DataError('duplicate event choice')
                 choices.add(choice['id'])
-                for reward in choice['rewards']:
-                    if reward['skill_id'] not in skills or not isinstance(reward['hint_level'], int) or not 0 <= reward['hint_level'] <= 5:
-                        raise DataError('invalid event skill or hint level')
+                validate_rewards(card_id, choice['rewards'])
+                # Evidence for other outcomes must not silently become extra rewards.
+                outcomes = choice.get('outcomes')
+                if outcomes is not None:
+                    assumed = event.get('assumed_outcome')
+                    if not isinstance(outcomes, dict) or assumed not in outcomes or outcomes[assumed] != choice['rewards']:
+                        raise DataError('event assumed outcome differs from planning rewards')
+                    for rewards in outcomes.values():
+                        validate_rewards(card_id, rewards)
+    event_ids = {event['id'] for card in data.get('support_events', {}).values() for event in card['events']}
+    for scenario_id, entry in data.get('scenario_events', {}).items():
+        if scenario_id not in data.get('scenarios', {}) or not entry.get('source'):
+            raise DataError('invalid scenario event owner or source')
+        for event in entry['events']:
+            if event['id'] in event_ids or not event['choices']:
+                raise DataError('invalid scenario event group')
+            event_ids.add(event['id'])
+            choices = set()
+            for choice in event['choices']:
+                if choice['id'] in choices:
+                    raise DataError('duplicate scenario event choice')
+                choices.add(choice['id'])
+                validate_rewards(scenario_id, choice['rewards'], event['id'], choice['id'])
+    for group in data.get('scenario_exclusive_groups', []):
+        if 'max_count' not in group:
+            continue
+        ids = group['skill_ids']
+        if type(group['max_count']) is not int or not 1 <= group['max_count'] <= len(ids) or len(set(ids)) != len(ids) or not group.get('source'):
+            raise DataError('invalid scenario selection limit')
+        for sid in ids:
+            if not any(r['owner_type'] == 'scenario' and r['owner_id'] == group['scenario_id'] and r['evolved_id'] == sid for r in data.get('evolution_rules', [])):
+                raise DataError('scenario limit skill is not a matching evolution')
     return True

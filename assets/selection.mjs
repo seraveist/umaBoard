@@ -1,4 +1,5 @@
 import {INHERITANCE_LIMIT} from './result-policy.mjs';
+import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 
 // Shared by the worker and the immediate checkbox preview.
 export function selectionRules(data,records){
@@ -20,12 +21,13 @@ export function selectionRules(data,records){
  };
  const normalize=ids=>{
   const result=[];let inherits=0;
-  for(const id of new Set(ids))if(records.has(id)&&result.every(other=>compatible(id,other))&&(!records.get(id).inherited||inherits<INHERITANCE_LIMIT)){
+  for(const id of new Set(ids))if(records.has(id)&&result.every(other=>compatible(id,other))&&scenarioSelectionAllowed(data,[...result,id])&&(!records.get(id).inherited||inherits<INHERITANCE_LIMIT)){
    result.push(id);if(records.get(id).inherited)inherits++;
   }
   return result;
  };
- return {compatible,normalize};
+ const withinScenarioLimits=ids=>scenarioSelectionAllowed(data,ids);
+ return {compatible,normalize,withinScenarioLimits};
 }
 
 export function previewToggle(records,rules,selected,id,checked,locked=new Set()){
@@ -34,6 +36,8 @@ export function previewToggle(records,rules,selected,id,checked,locked=new Set()
  if(checked&&[...locked].some(other=>!rules.compatible(id,other)))
   return {selected:[...selected],notice:'고정 스킬과 함께 배울 수 없는 스킬입니다.'};
  const others=[...selected].filter(other=>rules.compatible(id,other));
+ if(checked&&!rules.withinScenarioLimits([...others,id]))
+  return {selected:[...selected],notice:'시나리오 진화 스킬은 최대 2개까지 선택할 수 있습니다.'};
  if(checked&&records.get(id).inherited&&others.filter(other=>records.get(other).inherited).length>=INHERITANCE_LIMIT)
   return {selected:[...selected],notice:'계승 고유기는 속도·가속 합계 최대 6개까지 선택할 수 있습니다.'};
  return {selected:checked?[...others,id]:[...selected].filter(other=>other!==id),notice:''};

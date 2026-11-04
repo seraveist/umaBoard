@@ -314,6 +314,517 @@
           ]
         }
       ]
+    },
+    "30322": {
+      "source": "https://gamewith.jp/uma-musume/article/show/584253",
+      "sources": [
+        "https://gamewith.jp/uma-musume/article/show/584253",
+        "https://wikiwiki.jp/vip_umamusu/マヤノトップガン【Time of Departure】",
+        "https://umamusumedb.com/cards/mayano_top_gun_30322_ssr/"
+      ],
+      "checked_at": "2026-11-04",
+      "scope": "listed_skill_rewards",
+      "assumption": "이벤트 완주·대성공 가정. outcomes는 검증 기록이며 rewards만 가격 계산에 적용한다. 훈련 힌트 보너스를 이벤트 힌트에 더하지 않는다.",
+      "unverified": [
+        "대성공 확률 및 판정 조건",
+        "체력·스탯·SP·인연 보상은 이번 스킬 검증 범위 밖",
+        "駿大祭 시나리오 링크 보상과 그 배타 조건은 별도 검증 필요"
+      ],
+      "events": [
+        {
+          "id": "30322-chain-second",
+          "name_jp": "みんなに必要なもの",
+          "condition_note": "연속 이벤트 2회차. 두 선택지 모두 마지막 이벤트 보상 경로를 유지한다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지 · 스킬 힌트 없음",
+              "rewards": []
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지 · アオハル点火・賢",
+              "rewards": [
+                {
+                  "skill_id": "210052",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "30322-chain-final",
+          "name_jp": "マヤ、わかっちゃった！",
+          "assumed_outcome": "great_success",
+          "condition_note": "연속 이벤트 3회차. 英俊豪傑과 선택한 금색 1개를 동시 획득하며 세 선택지는 배타적이다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지 · 英俊豪傑 + 機転",
+              "rewards": [
+                {
+                  "skill_id": "203501",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204731",
+                  "hint_level": 2
+                }
+              ],
+              "outcomes": {
+                "great_success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 2
+                  },
+                  {
+                    "skill_id": "204731",
+                    "hint_level": 2
+                  }
+                ],
+                "success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 1
+                  },
+                  {
+                    "skill_id": "204731",
+                    "hint_level": 1
+                  }
+                ]
+              }
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지 · 英俊豪傑 + 希代の才覚",
+              "rewards": [
+                {
+                  "skill_id": "203501",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204741",
+                  "hint_level": 2
+                }
+              ],
+              "outcomes": {
+                "great_success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 2
+                  },
+                  {
+                    "skill_id": "204741",
+                    "hint_level": 2
+                  }
+                ],
+                "success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 1
+                  },
+                  {
+                    "skill_id": "204741",
+                    "hint_level": 1
+                  }
+                ]
+              }
+            },
+            {
+              "id": "3",
+              "label": "3번 선택지 · 英俊豪傑 + アドバンテージ",
+              "rewards": [
+                {
+                  "skill_id": "203501",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204751",
+                  "hint_level": 2
+                }
+              ],
+              "outcomes": {
+                "great_success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 2
+                  },
+                  {
+                    "skill_id": "204751",
+                    "hint_level": 2
+                  }
+                ],
+                "success": [
+                  {
+                    "skill_id": "203501",
+                    "hint_level": 1
+                  },
+                  {
+                    "skill_id": "204751",
+                    "hint_level": 1
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "30322-random-fashion",
+          "name_jp": "マヤノ的ファッション会議！",
+          "condition_note": "랜덤 이벤트. 直線巧者의 훈련 힌트 경로는 이 선택과 독립적이다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지 · 直線巧者",
+              "rewards": [
+                {
+                  "skill_id": "200362",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지 · 스킬 힌트 없음",
+              "rewards": []
+            }
+          ]
+        }
+      ]
+    },
+    "30323": {
+      "source": "https://gamewith.jp/uma-musume/article/show/584254",
+      "sources": [
+        "https://gamewith.jp/uma-musume/article/show/584254",
+        "https://game8.jp/umamusume/836270",
+        "https://kamigame.jp/umamusume/page/445951743780514145.html",
+        "https://wikiwiki.jp/vip_umamusu/吾妻【いとどめでたき、まつりかな】"
+      ],
+      "checked_at": "2026-11-04",
+      "scope": "listed_skill_rewards",
+      "assumption": "외출 해금 및 5회 완주, 정월 이전 외출 해금으로 정월 이벤트가 발생한 육성을 가정한다. 달력·인연·랜덤 발생은 시뮬레이션하지 않는다.",
+      "unverified": [
+        "외출 해금 이벤트의 정확한 발생 확률·인연 임계값",
+        "체력·스탯·SP·인연 보상은 이번 스킬 검증 범위 밖",
+        "駿大祭 시나리오 링크 보상과 그 배타 조건은 별도 검증 필요"
+      ],
+      "events": [
+        {
+          "id": "30323-outing-unlock",
+          "name_jp": "求むるは、新たな書",
+          "condition_note": "두 선택지 모두 외출 해금. 아래 선택지만 弧を描いて 힌트를 준다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "1번 선택지 · 외출 해금, 스킬 힌트 없음",
+              "rewards": []
+            },
+            {
+              "id": "2",
+              "label": "2번 선택지 · 외출 해금 + 弧を描いて",
+              "rewards": [
+                {
+                  "skill_id": "204812",
+                  "hint_level": 5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "30323-outing-2",
+          "name_jp": "流れ、追い難く",
+          "condition_note": "외출 해금 후 2회차. 5회차 보상과 함께 획득 가능하다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "선택지 없음 · 외출 2회차",
+              "rewards": [
+                {
+                  "skill_id": "202552",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "30323-outing-5",
+          "name_jp": "其は泡沫、されど――",
+          "condition_note": "외출 해금 후 5회차 완주. 해금 이벤트 양쪽 선택지에서 도달 가능하다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "선택지 없음 · 외출 5회차",
+              "rewards": [
+                {
+                  "skill_id": "202551",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "30323-new-year",
+          "name_jp": "吾妻との絆・新たなる年に",
+          "condition_note": "클래식 1월 전반에 외출 해금 상태여야 한다. 현재 엔진은 이 시점 이전의 외출 해금을 가정하며 달력·인연 판정을 시뮬레이션하지 않는다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "선택지 없음 · 정월 전 외출 해금 가정",
+              "rewards": [
+                {
+                  "skill_id": "200512",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scenario_events": {
+    "15": {
+      "source": "https://kamigame.jp/umamusume/page/445590736528778652.html",
+      "sources": [
+        "https://kamigame.jp/umamusume/page/445592763535225205.html",
+        "https://game8.jp/umamusume/836569",
+        "https://gamewith.jp/uma-musume/article/show/578834",
+        "https://playershi.com/2026/10/25/goshikisyuntaisai/",
+        "https://wikiwiki.jp/vip_umamusu/朋、史解き―午式駿大祭―"
+      ],
+      "checked_at": "2026-11-04",
+      "scope": "reviewed_skill_rewards_and_link_choices",
+      "assumption": "발표회·午式駿大祭 대성공, 굿 엔딩 및 진화별 보유 스킬 조건 충족 가정 · 시나리오 진화 최대 2개. 훈련·게이지는 예측하지 않는다.",
+      "unverified": [
+        "성공·미완주 등 다른 결과의 보상",
+        "名にし負う夢의 연목 레벨에 따른 가변 효과량은 계산 미지원",
+        "진화별 보유 스킬 수 조건은 충족 가정이며 구매 목록에서 자동 증명하지 않음"
+      ],
+      "source_conflicts": [
+        "일본 위키의 링크 선택 시점(9월 후반)·아즈마 미편성 흰색 표기는 Game8·GameWith·神ゲー攻略의 10월 전반·아즈마 금색 고정 표기와 다르다. 후자의 일치하는 자료를 적용한다.",
+        "神ゲー攻略 엔딩 문단에 이전 시나리오 스킬명 極上の感謝を！가 혼재한다. 엔딩 名にし負う夢 Lv2는 プレ氏·일본 위키에서 별도 확인했다."
+      ],
+      "events": [
+        {
+          "id": "15-classic-presentation",
+          "name_jp": "第2回進捗発表会",
+          "condition_note": "클래식 12월 후반 발표회 대성공 가정.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "대성공 · 全身全霊",
+              "rewards": [
+                {
+                  "skill_id": "200511",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "15-link-skill",
+          "name_jp": "本番前のひと時",
+          "condition_note": "시니어 10월 전반. 여섯 선택 중 하나만 획득. 첫 다섯 캐릭터는 육성 본체 또는 같은 캐릭터 서포트(희귀도·의상 불문) 채용 시 금색, 미채용 시 흰색. 아즈마 선택은 편성과 무관하게 금색.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "ダイワスカーレット",
+              "rewards": [
+                {
+                  "skill_id": "200531",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ダイワスカーレット",
+                      "present": true
+                    }
+                  }
+                },
+                {
+                  "skill_id": "200532",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ダイワスカーレット",
+                      "present": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "マヤノトップガン",
+              "rewards": [
+                {
+                  "skill_id": "204071",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "マヤノトップガン",
+                      "present": true
+                    }
+                  }
+                },
+                {
+                  "skill_id": "204072",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "マヤノトップガン",
+                      "present": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "label": "ユキノビジン",
+              "rewards": [
+                {
+                  "skill_id": "204051",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ユキノビジン",
+                      "present": true
+                    }
+                  }
+                },
+                {
+                  "skill_id": "204052",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ユキノビジン",
+                      "present": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "4",
+              "label": "ノーリーズン",
+              "rewards": [
+                {
+                  "skill_id": "203741",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ノーリーズン",
+                      "present": true
+                    }
+                  }
+                },
+                {
+                  "skill_id": "203742",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ノーリーズン",
+                      "present": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5",
+              "label": "ブラストワンピース",
+              "rewards": [
+                {
+                  "skill_id": "201592",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ブラストワンピース",
+                      "present": true
+                    }
+                  }
+                },
+                {
+                  "skill_id": "201591",
+                  "hint_level": 2,
+                  "requirements": {
+                    "character_link": {
+                      "name_jp": "ブラストワンピース",
+                      "present": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "6",
+              "label": "吾妻 · 螺旋のエキスパート",
+              "rewards": [
+                {
+                  "skill_id": "204811",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "15-festival",
+          "name_jp": "祭りの後に",
+          "condition_note": "시니어 10월 후반 본행사 전 연목 대성공 가정. 세 힌트를 동시 획득한다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "전 연목 대성공",
+              "rewards": [
+                {
+                  "skill_id": "200361",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "202801",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "210402",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "15-ending",
+          "name_jp": "呼び声が生むは、奇跡と愛と、",
+          "condition_note": "굿 엔딩 가정. 연목 합계 30 이상에 따른 효과 증가는 현재 계산 미지원이다.",
+          "choices": [
+            {
+              "id": "1",
+              "label": "굿 엔딩 · 名にし負う夢",
+              "rewards": [
+                {
+                  "skill_id": "210401",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "evolution_conditions": {
+        "415011": "모든 발표회·午式駿大祭 대성공",
+        "415021": "모든 발표회·午式駿大祭 대성공",
+        "415031": "모든 발표회·午式駿大祭 대성공",
+        "415041": "모든 발표회·午式駿大祭 대성공",
+        "415051": "마일 스킬 2개 또는 중거리 스킬 2개 보유 + 午式駿大祭 대성공",
+        "415061": "단거리 스킬 2개 보유 + 午式駿大祭 대성공"
+      },
+      "evolution_source": "https://gamewith.jp/uma-musume/article/show/437872"
     }
   }
 }
