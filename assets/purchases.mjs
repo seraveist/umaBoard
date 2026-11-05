@@ -1,16 +1,17 @@
 // Standard planning prices. White Lv5; verified event maxima; other routes Lv0.
+import {activeAcquisitionRoute,scenarioEventGroups,scenarioSelectionAllowed} from './acquisition-rules.mjs';
 export const nativeUnique=s=>['unique','unique_low_star','unique_upgraded'].includes(s?.rarity);
 export const discountedCost=(base,level)=>Math.floor(base*(100-[0,10,20,30,35,40][Math.min(5,Math.max(0,level))])/100);
 const key=ids=>[...new Set(ids)].sort().join(',');
-const activeRoute=(r,setup)=>!r.requirements&&(
- r.owner_type==='outfit'&&r.owner_id===setup.outfitId||r.owner_type==='support'&&(setup.supportIds||[]).includes(r.owner_id)||r.owner_type==='scenario'&&r.owner_id===setup.scenarioId);
+const groupedRoute=r=>r.kind==='support_event'||r.kind==='scenario_event'&&r.event_id;
+const groupOwnsRoute=(g,r)=>g.card_id?r.owner_type==='support'&&r.owner_id===g.card_id:r.owner_type==='scenario'&&r.owner_id===g.scenario_id&&r.event_id===g.id;
 
 export class PurchaseModel{
  constructor(data,records,setup){
   this.data=data;this.records=records;this.setup=setup;this.cache=new Map();this.stageCache=new Map();this.groups=[];this.warnings=[];
   const policy=data.cost_policy;if(policy&&(policy.white_hint_level!==5||policy.other_hint_level!==0||policy.fast_learner!==false))throw new Error('지원하지 않는 SP 가격 정책입니다.');
   this.policyVersion=policy?.version||'standard-v1';
-  this.routes=new Map();for(const r of data.acquisition_routes)if(activeRoute(r,setup)){
+  this.routes=new Map();for(const r of data.acquisition_routes)if(activeAcquisitionRoute(data,setup,r)){
    if(!this.routes.has(r.skill_id))this.routes.set(r.skill_id,[]);this.routes.get(r.skill_id).push(r);
   }
   for(const cid of setup.supportIds||[]){
@@ -27,6 +28,7 @@ export class PurchaseModel{
      choices:unknown.map(id=>({id,label:data.skills[id].name_jp,rewards:[{skill_id:id,hint_level:0}]}))});
    }
   }
+  this.groups.push(...scenarioEventGroups(data,setup));
   this.states=[{hints:{},choices:{}}];this.truncated=false;
   for(const group of this.groups){
    const pin=setup.eventChoices?.[group.id];
@@ -58,7 +60,7 @@ export class PurchaseModel{
  }
  permitted(id,state){
   const skill=this.data.skills[id];if(skill.rarity!=='gold')return true;
-  if((this.routes.get(id)||[]).some(r=>r.kind!=='support_event'))return true;
+  if((this.routes.get(id)||[]).some(r=>!groupedRoute(r)))return true;
   return this.groups.some(g=>g.choices.find(c=>c.id===state.choices[g.id])?.rewards.some(r=>r.skill_id===id));
  }
  price(id,state){
@@ -68,6 +70,7 @@ export class PurchaseModel{
  }
  selection(ids){
   const cacheKey=key(ids);if(this.cache.has(cacheKey))return this.cache.get(cacheKey);
+  if(!scenarioSelectionAllowed(this.data,ids,this.setup.scenarioId))return {used:null,prices:{},state:null,unknown:[],complete:false,feasible:false,remaining:null,conflict:true};
   const unknown=ids.filter(id=>this.stages(id)===null);let best=null;
   const factors=state=>ids.filter(id=>this.data.skills[id]?.rarity==='white'&&!this.availableRoutes(id,state).length&&!this.stages(id)?.some(s=>this.availableRoutes(s.id,state).length)).length;
   for(const state of this.states){
@@ -87,8 +90,8 @@ export class PurchaseModel{
  cheapest(id){return this.selection([id]).prices[id]??null;}
  availableRoutes(id,state){
   const allowed=(route,rewardId)=>{
-   if(route.kind!=='support_event')return true;
-   const groups=this.groups.filter(g=>g.card_id===route.owner_id&&g.choices.some(c=>c.rewards.some(s=>s.skill_id===rewardId)));
+   if(!groupedRoute(route))return true;
+   const groups=this.groups.filter(g=>groupOwnsRoute(g,route)&&g.choices.some(c=>c.rewards.some(s=>s.skill_id===rewardId)));
    return !groups.length||groups.some(g=>g.choices.find(c=>c.id===state?.choices[g.id])?.rewards.some(s=>s.skill_id===rewardId));
   };
   const routes=(this.routes.get(id)||[]).filter(r=>allowed(r,id));
@@ -113,7 +116,7 @@ export class PurchaseModel{
   const keys=this.data.purchase_order?.keys||{};
   const verified=this.data.purchase_order?.status==='verified'&&rows.every(r=>Number.isFinite(keys[r.id]));
   rows.sort((a,b)=>verified?keys[a.id]-keys[b.id]||a.id.localeCompare(b.id):a.name.localeCompare(b.name,'ja')||a.id.localeCompare(b.id));
-  const events=this.groups.filter(g=>chosen[g.id]&&rows.some(row=>row.routes.some(r=>r.owner_id===g.card_id&&r.kind==='support_event')&&g.choices.find(c=>c.id===chosen[g.id])?.rewards.some(r=>this.stages(r.skill_id)?.some(s=>row.stages.some(stage=>stage.id===s.id))))).map(g=>({id:g.id,card_id:g.card_id,name:g.name_jp,choice:chosen[g.id],label:g.choices.find(c=>c.id===chosen[g.id])?.label,verified:g.verified}));
+  const events=this.groups.filter(g=>chosen[g.id]&&rows.some(row=>row.routes.some(r=>groupedRoute(r)&&groupOwnsRoute(g,r))&&g.choices.find(c=>c.id===chosen[g.id])?.rewards.some(r=>this.stages(r.skill_id)?.some(s=>row.stages.some(stage=>stage.id===s.id))))).map(g=>({id:g.id,card_id:g.card_id,scenario_id:g.scenario_id,name:g.name_jp,choice:chosen[g.id],label:g.choices.find(c=>c.id===chosen[g.id])?.label,verified:g.verified}));
   return {rows,events,sortVerified:verified,sortLabel:verified?'인게임 기본 순서':'스킬명 순 · 기본 순서 검증 중',factorIds:rows.filter(r=>r.factor).map(r=>r.id),warnings:this.warnings};
  }
 }

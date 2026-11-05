@@ -1,3 +1,4 @@
+import copy
 import sys
 import unittest
 from pathlib import Path
@@ -20,4 +21,25 @@ class PlanningTests(unittest.TestCase):
   with self.assertRaises(DataError):validate_planning(d)
   d['purchase_stages']={};d['support_events']={'c':{'source':'https://example.com','events':[{'id':'e','choices':[{'id':'1','rewards':[{'skill_id':'missing','hint_level':2}]}]}]}}
   with self.assertRaises(DataError):validate_planning(d)
+ def event_fixture(self):
+  reward={'skill_id':'1','hint_level':2}
+  return {'skills':{'1':{}},'supports':{'c':{}},'purchase_stages':{},
+   'acquisition_routes':[{'owner_type':'support','owner_id':'c','kind':'support_event','skill_id':'1'}],
+   'support_events':{'c':{'source':'https://example.com','events':[{'id':'e','assumed_outcome':'great_success','choices':[
+    {'id':'1','rewards':[reward],'outcomes':{'great_success':[reward],'success':[{'skill_id':'1','hint_level':1}]}}]}]}}}
+ def test_verified_reward_detached_from_card_blocks_publication(self):
+  d=self.event_fixture();self.assertTrue(validate_planning(d))
+  for field,value in [('owner_id','other'),('kind','support_hint')]:
+   broken=copy.deepcopy(d);broken['acquisition_routes'][0][field]=value
+   with self.subTest(field=field),self.assertRaisesRegex(DataError,'missing support acquisition route'):
+    validate_planning(broken)
+ def test_outcome_evidence_must_be_valid_and_match_the_assumed_rewards(self):
+  for kind in ['unknown_skill','invalid_level','boolean_level','duplicate_reward','wrong_assumption']:
+   d=self.event_fixture();event=d['support_events']['c']['events'][0];choice=event['choices'][0]
+   if kind=='unknown_skill':choice['outcomes']['success'][0]['skill_id']='missing'
+   if kind=='invalid_level':choice['outcomes']['success'][0]['hint_level']=6
+   if kind=='boolean_level':choice['outcomes']['success'][0]['hint_level']=True
+   if kind=='duplicate_reward':choice['outcomes']['success']*=2
+   if kind=='wrong_assumption':event['assumed_outcome']='success'
+   with self.subTest(kind=kind),self.assertRaises(DataError):validate_planning(d)
 if __name__=='__main__':unittest.main()

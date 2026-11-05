@@ -1,7 +1,7 @@
 import {buildCandidates} from './candidates.mjs';
 import {fixedContext} from './activation.mjs';
 import {validateSetup,STAT_KEYS} from './physics.mjs';
-import {skillName,umaName,outfitName,cardLabel,cardTypes,cardTypeBadge,selectableSupports} from './display.mjs';
+import {skillName,umaName,outfitName,cardLabel,cardTypes,cardTypeBadge,selectableSupports,eventOwnerName} from './display.mjs';
 import {searchableSelect} from './search-select.mjs';
 import {portraitPath} from './portraits.mjs';
 import {acquisitionPlan} from './acquisition-plan.mjs';
@@ -177,7 +177,7 @@ function renderEvents(plan){
  const choices=purchaseModel.selection([...draftSelected]).state?.choices||{};
  const html=purchaseModel.groups.map(g=>{
   const chosen=choices[g.id],choice=g.choices.find(c=>c.id===chosen),used=plan.events.some(e=>e.id===g.id);
-  return `<label class="event-row"><span>${esc(cardLabel(data.supports[g.card_id]))}${g.verified?'':' · 미검증'}</span><select data-event-group="${esc(g.id)}"><option value="">자동</option>${g.choices.map(c=>option(c.id,c.label)).join('')}</select><span class="sub">${used?esc((choice?.rewards||[]).map(r=>data.skills[r.skill_id].name_jp+' Lv'+r.hint_level).join(' · ')):'선택 스킬의 이벤트 보상 없음'}</span></label>`;
+  return `<label class="event-row"><span>${esc(eventOwnerName(data,g))}${g.verified?'':' · 미검증'}${g.scenario_id?`<span class="sub">${esc(g.name_jp)}</span>`:''}</span><select data-event-group="${esc(g.id)}"><option value="">자동</option>${g.choices.map(c=>option(c.id,c.label)).join('')}</select><span class="sub">${used?esc((choice?.rewards||[]).map(r=>data.skills[r.skill_id].name_jp+' Lv'+r.hint_level).join(' · ')):'선택 스킬의 이벤트 보상 없음'}</span></label>`;
  }).join('');
  htmlIfChanged(q('#event-list'),html||'<p class="data-note">편성한 카드의 이벤트가 없습니다.</p>');
  qa('[data-event-group]').forEach(el=>el.value=pinnedEvents[el.dataset.eventGroup]||'');
@@ -236,7 +236,7 @@ function apply(){
   records=new Map([...candidates.learned,...candidates.inheritance,...candidates.factorCandidates].map(s=>[s.id,s]));
   rules=selectionRules(data,records);purchaseModel=new PurchaseModel(data,records,appliedSetup);pendingActions=[];setupBusy=true;
   dirty=false;q('#input-status').classList.remove('error-message');
-  q('#scenario-note').textContent=appliedSetup.scenarioId?'시나리오 특수 획득 경로·선택 제한은 추가 검증 중입니다.':'';
+  q('#scenario-note').textContent=data.scenario_events?.[appliedSetup.scenarioId]?.assumption||(appliedSetup.scenarioId?'시나리오 특수 획득 경로·선택 제한은 추가 검증 중입니다.':'');
   q('#result-context').textContent=`${tracks[appliedSetup.course.track_id]||appliedSetup.course.track_id} ${appliedSetup.course.distance}m · ${q('#style option:checked').textContent} · ${umaName(data.outfits[appliedSetup.outfitId])}`;
   send('setup',appliedSetup);
  }catch(error){busy=false;dirty=true;q('#show-skills').disabled=false;q('#input-status').textContent=error.message;q('#input-status').classList.add('error-message');lockResults();}
@@ -320,7 +320,7 @@ function applyDeck(index){
 function exportPlan(){
  if(inFlight||dirty||pendingActions.length||!result)return;
  const plan=result.finalPlan,details=new Map(acquisitionPlan(data,new Map([...records].map(([id,r])=>[id,{...r,routes:plan.rows.find(row=>row.id===id)?.routes||r.routes}])),plan.rows.map(r=>r.id)).flatMap(g=>g.skills).map(r=>[r.id,r.detail]));
- const lines=[q('#result-context').textContent,`총 SP ${result.budget.total} / 사용 ${result.budget.used??'미검증'} / 잔여 ${result.budget.remaining??'미검증'}`,plan.sortLabel,'',...plan.rows.map((row,i)=>`${i+1}. ${row.purchase_name}${row.rarity==='evolution'?' → '+row.name:''} | ${row.price??'미검증'} SP | ${details.get(row.id)||'인자'}`),'','인자 준비: '+plan.factorIds.map(id=>records.get(id).name_jp).join(', '),'계승: '+plan.rows.filter(r=>r.inherited).map(r=>r.name+' ('+details.get(r.id)+')').join(', '),'이벤트:',...plan.events.map(e=>`${cardLabel(data.supports[e.card_id])} | ${e.name} | ${e.label||e.choice}${e.verified?'':' (미검증)'}`),'','흰색 Lv5 / 이벤트 금색 대성공 / 기타 금색·계승 Lv0 / 선행 비용 포함','1인 비교 모델 · 실제 발동·실전 기대 마신을 보장하지 않음'];
+ const lines=[q('#result-context').textContent,`총 SP ${result.budget.total} / 사용 ${result.budget.used??'미검증'} / 잔여 ${result.budget.remaining??'미검증'}`,plan.sortLabel,'',...plan.rows.map((row,i)=>`${i+1}. ${row.purchase_name}${row.rarity==='evolution'?' → '+row.name:''} | ${row.price??'미검증'} SP | ${details.get(row.id)||'인자'}`),'','인자 준비: '+plan.factorIds.map(id=>records.get(id).name_jp).join(', '),'계승: '+plan.rows.filter(r=>r.inherited).map(r=>r.name+' ('+details.get(r.id)+')').join(', '),'이벤트:',...plan.events.map(e=>`${eventOwnerName(data,e)} | ${e.name} | ${e.label||e.choice}${e.verified?'':' (미검증)'}`),'','흰색 Lv5 / 이벤트 금색 대성공 / 기타 금색·계승 Lv0 / 선행 비용 포함','1인 비교 모델 · 실제 발동·실전 기대 마신을 보장하지 않음'];
  const url=URL.createObjectURL(new Blob([lines.join('\n')+'\n'],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='umaboard-skill-plan.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function load(){

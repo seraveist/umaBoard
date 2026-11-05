@@ -1,3 +1,4 @@
+import {activeAcquisitionRoute} from './acquisition-rules.mjs';
 // Candidate discovery only. Unknown race-dependent conditions remain unknown.
 const compare=(left,op,right)=>({ '==':left===right,'!=':left!==right,'>':left>right,'<':left<right,'>=':left>=right,'<=':left<=right })[op] ?? null;
 export function evaluateCondition(dnf,context){
@@ -39,14 +40,10 @@ export function raceContext(course,style,extra={}){
 export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom=3,context={},purchase=false}){
   if(!data.outfits[outfitId])throw new Error('Unknown outfit');
   if(supportIds.some(id=>!data.supports[id]))throw new Error('Unknown support');
-  const supports=new Set(supportIds),routeBy=new Map();
+  const setup={outfitId,supportIds,scenarioId},routeBy=new Map();
   const add=(id,route)=>{if(!routeBy.has(id))routeBy.set(id,[]);routeBy.get(id).push(route);};
   for(const route of data.acquisition_routes){
-    const matches=(route.owner_type==='outfit'&&route.owner_id===outfitId)
-      ||(route.owner_type==='support'&&supports.has(route.owner_id))
-      ||(route.owner_type==='scenario'&&route.owner_id===scenarioId);
-    // Conditional curated paths must be implemented and verified before becoming guaranteed candidates.
-    if(matches&&!route.requirements)add(route.skill_id,route);
+    if(activeAcquisitionRoute(data,setup,route))add(route.skill_id,route);
   }
   const choiceGroups=new Map(),replaced=new Set();
   for(const rule of data.evolution_rules){
@@ -58,7 +55,9 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
     add(rule.evolved_id,{kind:'evolution',owner_type:rule.owner_type,owner_id:rule.owner_id,base_id:rule.base_id});
     if(!choiceGroups.has(rule.evolved_id))choiceGroups.set(rule.evolved_id,[]);
     choiceGroups.get(rule.evolved_id).push(rule.choice_group);
-    replaced.add(rule.base_id);
+    // Limited scenario evolutions are optional: retain the original gold for
+    // skills that do not receive one of the two evolution slots.
+    if(rule.owner_type!=='scenario'||!(data.scenario_exclusive_groups||[]).some(g=>g.scenario_id===scenarioId&&g.skill_ids.includes(rule.evolved_id)))replaced.add(rule.base_id);
   }
   const uniqueRarity=data.outfits[outfitId].base_stars>=3?'unique':Number(bloom)>=3?'unique_upgraded':'unique_low_star';
   const learned=[];
