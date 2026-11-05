@@ -196,6 +196,37 @@ class PublicationTests(unittest.TestCase):
             synchronize(self.root,client=OfflineClient(),rebuild_active=True)
         self.assertEqual(pointer.read_bytes(),before)
 
+    def test_daily_sync_updates_source_metadata_without_losing_curated_bundle(self):
+        planning,sources,_=self.seed_legacy_sources()
+        synchronize(self.root,rebuild_active=True)
+        pointer=self.root/'data/manifest.json'
+        before=json.loads(pointer.read_text())
+        payload=(self.root/before['dataset_path']).read_bytes()
+        updated=copy.deepcopy(sources)
+        updated[0]['commit']='b'*40
+        file=next(f for f in updated[0]['files'] if f['key']=='skills')
+        cache=self.root/'.cache/raw'
+        raw=json.loads((cache/(file['blob_sha']+'.raw')).read_bytes())
+        # An upstream translation can change its blob without changing JP behavior.
+        raw[0]['name_en']='Updated English translation'
+        content=canonical_bytes(raw)
+        file.update(blob_sha=git_blob_sha(content),bytes=len(content))
+        (cache/(file['blob_sha']+'.raw')).write_bytes(content)
+        class OfflineClient:
+            def get(self,url):raise AssertionError('verified cached blobs must not download')
+        with patch('umaboard.sync.resolve_sources',return_value=updated):
+            result=synchronize(self.root,client=OfflineClient())
+            self.assertEqual(result['status'],'updated')
+            after=json.loads(pointer.read_text())
+            self.assertEqual(after['sources'],updated)
+            self.assertNotEqual(after['input_hashes'],before['input_hashes'])
+            self.assertEqual(after['active_version'],before['active_version'])
+            self.assertEqual((self.root/after['dataset_path']).read_bytes(),payload)
+            data=json.loads(payload)
+            for field in ('support_events','scenario_events','cost_policy','purchase_order'):
+                self.assertEqual(data[field],planning[field])
+            self.assertEqual(synchronize(self.root,client=OfflineClient())['status'],'unchanged')
+
     def test_pinned_rebuild_requires_manifest_and_cannot_refresh_sources(self):
         (self.root/'curated').mkdir();(self.root/'curated/rules.json').write_text('{}')
         (self.root/'sync-config.json').write_text('{}')
