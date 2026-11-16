@@ -6,8 +6,9 @@ retained at `legacy.html` for regression/reference, not mixed into this flow.
 
 Korean-speaking JP-server Uma Musume players prepare a character and six-card
 support deck for a CM race, then use one in-game-ordered checklist while entering
-the skills they actually unlocked. This branch implements through first-chart
-generation and acquisition-state recording. Post-training SP optimization is a
+the skills they actually unlocked. First-chart generation and acquisition-state
+recording passed the final completion audit on 2026-11-16; the baseline and
+handoff contract are recorded in `docs/CM_FIRST_CHART_COMPLETION.md`. Post-training SP optimization is a
 later stage and is not represented as working on this surface.
 
 Only initial inputs: owned outfit, running style, CM race conditions, support deck,

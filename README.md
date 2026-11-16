@@ -12,6 +12,7 @@
 육성 전 SP·필요 스태미나는 입력하거나 안내하지 않습니다.
 
 `feat/cm-first-chart`의 계약과 모델 한계는 [CM_FIRST_CHART.md](docs/CM_FIRST_CHART.md)에 있습니다.
+1차 마신표와 획득 체크리스트의 최종 점검 결과 및 후속 개발 기준은 [완료 기록](docs/CM_FIRST_CHART_COMPLETION.md)에 있습니다.
 인게임 정렬의 일부 신규 항목과 스피드 2000 초과 전개 스퍼트는 추가 검증이 필요합니다.
 기존 SP 최적화 계산기는 `legacy.html`에 유지했습니다. 아래의 기존 기획 설명은 해당 화면 기준입니다.
 
