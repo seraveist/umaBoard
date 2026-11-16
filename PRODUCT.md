@@ -1,5 +1,9 @@
 # umaBoard — CM skill workspace
 
+Cumulative implementation status, accepted scope and prioritized follow-up work:
+[`docs/CM_PROGRESS_AND_NEXT_STEPS.md`](docs/CM_PROGRESS_AND_NEXT_STEPS.md),
+2026-11-17, feature baseline `81b4bcc` / CM models v4.
+
 The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
 `docs/CM_POST_TRAINING.md`. They supersede the
 old expected-SP planning workflow for the new root surface. The previous app is
