@@ -1,7 +1,7 @@
 # CM first-chart verification — 2026-11-16
 
 Branch: `feat/cm-first-chart`, based on main `e96b037`.
-Active JP dataset: `d7de1b78dac16a10ac579793134f708928332a4ed30546dba66a91daf73e9a0a`.
+Active JP dataset: `e1b13e942888b9c45d42aebb2566d275b31ea2a11596f1880ee89ec5ba0f1775`.
 
 ![Verified rarity frames and keyboard-accessible skill details](images/cm-skill-details-desktop.png)
 
@@ -9,10 +9,10 @@ Active JP dataset: `d7de1b78dac16a10ac579793134f708928332a4ed30546dba66a91daf73e
 
 | Check | Result |
 | --- | --- |
-| `node --test tests/*.test.mjs` | 144 passed, including 35 first-chart/UI/state checks |
-| `python -X utf8 -m unittest discover -s tests -v` | 39 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
+| `node --test tests/*.test.mjs` | 147 passed, including 38 first-chart/UI/state/icon checks |
+| `python -X utf8 -m unittest discover -s tests -v` | 42 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
 | `python scripts/validate_data.py` | Passed |
-| `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits available |
+| `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits and 128 skill icons available |
 | Strict static UI audit | Zero findings in the configured `assets/` source directory |
 | `npx --yes -p @google/design.md designmd lint DESIGN.md` | Zero errors; six unused-token reference warnings |
 | `git diff --check` | Passed |
@@ -42,7 +42,7 @@ temporary loopback-only server, with production 24-sample/0.01s generation.
 | Cancel and rerun | Cancel returns control immediately; stale worker messages ignored; rerun completes |
 | Export | JSON contains 207 rows and ten inherited IDs, fixed five-stat profile, model version, 24-sample/0.01s settings and the saved acquisition state |
 | Narrow layout | 340px browser viewport; document width and scroll width both 340px; no horizontal overflow |
-| Icon category tabs | Six category tabs, counts 207 / 34 / 123 / 15 / 19 / 16; icon-based classification; arrow/Home navigation; checks retained across tabs |
+| Icon category tabs | Six category tabs, current counts 207 / 34 / 119 / 15 / 19 / 20 after restoring source icons; icon-based classification; arrow/Home navigation; checks retained across tabs |
 | Search with tabs | Dedicated no-results state; clearing restores every matching row in the current category |
 | Inheritance limit | Ten inherited rows total, six recorded allowed, seventh restored to unavailable with explanation; releasing a slot allows a different skill |
 | Strengthened inherits | Export contains 91101411 and no weaker 901411; no pure healing inherit in shortlist |
@@ -53,6 +53,12 @@ temporary loopback-only server, with production 24-sample/0.01s generation.
 | Acquisition chain | Acquiring an evolution acquires each admitted lower stage; marking the lowest unavailable clears the upper; persisted chain restores after reload |
 | Alternative evolution | Nishino Flower outfit 105101: acquiring 105101111 then 105101121 clears the former and keeps the common base acquired; clearing the base clears both evolutions |
 | Narrow tooltip | At 340×850, left12/right328 and top451.30/bottom638.67; popup fully inside viewport; no page errors |
+| Restored skill icons | All 207 checklist images loaded and matched their own source IDs; no placeholders, PNG failures or external requests; 12 formerly affected examples checked, including the new evolution icon20386 |
+| Icon-update compatibility | A pre-update saved hint4 was restored; a newly recorded hint2 also survived reload/regeneration; only the original plan key remained; JSON export retained the actual new data version |
+
+The full icon inventory checks all 2,229 normalized records, beyond this one
+setup's shortlist. See [skill icon verification](SKILL_ICON_QA.md) for the before/
+after totals, image sources and source-identity checks.
 
 Narrow layout testing used a 340×850 browser viewport. Physical touch hardware
 and other browser engines have not been tested.

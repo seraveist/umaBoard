@@ -89,11 +89,16 @@ def decode_primary(row, parent=None):
     if not isinstance(region,list) or not all(isinstance(x,str) for x in region):
         raise DataError(f'{sid}: unreleased must be a regional-code array')
     raw_parents=row.get('parent_skills',[]) or ([parent['id']] if parent else [])
+    # An inherited/evolved skill has its own icon. Never copy the parent's icon
+    # across rarity levels; absent fixture/secondary data stays explicitly null.
+    icon=row.get('iconid')
+    icon=identifier(icon,'skill icon ID') if icon is not None else None
+    if icon=='0':icon=None
     return {'id':sid,'name_jp':row.get('jpname') or (parent or {}).get('jpname') or (parent or {}).get('name_en') or row.get('name_en') or sid,
             'name_ko':row.get('name_ko') or (parent or {}).get('name_ko'),
             'description_jp':row.get('jpdesc') or (parent or {}).get('jpdesc',''),
             'rarity':'inherited' if inherited else RARITIES.get(rarity,'unknown'),
-            'source_rarity':rarity,'inherited':inherited,'parent_ids':[identifier(x) for x in raw_parents],
+            'source_rarity':rarity,'inherited':inherited,'parent_ids':[identifier(x) for x in raw_parents],'icon_id':icon,
             'categories':categories(invocations),'invocations':invocations,
             'activation_raw':row.get('activation'),'flags':row.get('type',(parent or {}).get('type',[])),
             'jp_available':not ({'jp','ja','japan'} & {x.lower() for x in region}),
@@ -121,7 +126,7 @@ def decode_secondary(row):
         raise DataError(f"{row['id']}: unreviewed secondary-only skill kind")
     return {'id':identifier(row['id']),'name_jp':row['name'],'name_ko':None,
             'description_jp':(row.get('info') or [''])[0],'rarity':'inherited','source_rarity':'inherit',
-            'inherited':True,'parent_ids':[],'categories':categories(invocations),'invocations':invocations,
+            'inherited':True,'parent_ids':[],'icon_id':None,'categories':categories(invocations),'invocations':invocations,
             'activation_raw':row.get('activateLot'),'flags':[],'jp_available':True,
             'release_evidence':'secondary_inheritance_supplement','calculation_status':'unvalidated',
             'origin':'umasim','provenance':['umasim'],'unknown_effect_codes':[],
@@ -185,6 +190,9 @@ def normalize(raw, curated):
             old=skills[sid]
             for field in ('invocations','rarity','activation_raw'):
                 if old[field]!=rec[field]:raise DataError(f'{sid}: conflicting duplicate {field}')
+            if old.get('icon_id') and rec.get('icon_id') and old['icon_id']!=rec['icon_id']:
+                raise DataError(f'{sid}: conflicting duplicate icon_id')
+            old['icon_id']=old.get('icon_id') or rec.get('icon_id')
             old['parent_ids']=sorted(set(old['parent_ids']+rec['parent_ids']))
         else:skills[sid]=rec
         for pid in rec['parent_ids']:add_relation('inheritance',pid,sid)

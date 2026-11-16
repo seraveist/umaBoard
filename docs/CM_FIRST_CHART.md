@@ -115,9 +115,21 @@ is count-based. New jobs cancel stale results. Draft/checklist storage is local;
 scope/version prevent unrelated plans from overwriting each other. JSON export
 records the input, model/version, profiles and checklist for the next stage.
 Icons use silver/gold/pink rarity frames with Korean 일반/레어/진화/계승 labels.
+Image identity prefers `data.skills[id].icon_id` from the preserved UmaTools
+`iconid`; only same-ID alpha metadata may provide a compatibility fallback.
+Family/order fallback never supplies the image of a lower rarity. The static
+128-icon pack covers every current normalized record, with seven added alpha
+PNGs and eight additional originals from GameTora; each new file retains source
+and hash evidence. An inventory/identity regression checks the entire active
+catalog rather than only the current outfit/deck shortlist.
 Source descriptions open on icon hover, keyboard focus, or tap, including a named
 lower-skill chain. A single text-only tooltip escapes source content, avoids table
 clipping, is hoverable, and supports Escape, outside interaction and scroll dismissal.
+
+`manifest.checklist_data_sha256` scopes saved checklists using the dataset without
+the display-only `icon_id` field. Its value equals the pre-icon bundle version,
+so this asset update retains existing acquired/hint records. Other data changes
+still change the scope; exports retain the actual full dataset version.
 
 
 ## Course semantics and presentation corrections

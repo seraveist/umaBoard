@@ -5,6 +5,7 @@ import {lengthsBetween,validateSetup,uniqueLevel} from './physics.mjs';
 import {characterIdentity} from './acquisition-rules.mjs';
 import {withCourseMetadata} from './cm-course-metadata.mjs';
 import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
+import {skillIconId} from './cm-icons.mjs';
 
 export const CM_MODEL_VERSION='cm-first-chart-v2';
 export const CM_SAMPLES=24;
@@ -102,8 +103,10 @@ export function sortChartRows(rows,data,display){
  for(const {row,m,root}of entries){
   const groupId=familyMetadata.get(root)?.groupId||`missing-${root}`;
   if(!groups.has(groupId))groups.set(groupId,{id:groupId,rows:[],order:Infinity,icon:Infinity});
-  const group=groups.get(groupId);group.rows.push({...row,groupId,iconId:m?.iconId||null,orderVerified:!!meta[row.id]});
-  if(m){group.order=Math.min(group.order,m.order);group.icon=Math.min(group.icon,Number(String(m.iconId).slice(0,-1)));}
+  const iconId=skillIconId(data.skills?.[row.id]||row,display),group=groups.get(groupId);
+  group.rows.push({...row,groupId,iconId,orderVerified:!!meta[row.id]});
+  if(m)group.order=Math.min(group.order,m.order);
+  if(iconId)group.icon=Math.min(group.icon,Number(iconId.slice(0,-1)));
  }
  const byGroup=[...groups.values()].sort((a,b)=>a.icon-b.icon||a.order-b.order||a.id.localeCompare(b.id));
  const tier=row=>row.inherited?0:row.rarity==='evolution'?2:row.rarity==='gold'?1:0;

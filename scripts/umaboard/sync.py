@@ -138,7 +138,12 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
         if (dest/'validation.json').read_bytes()!=canonical_bytes(validation):
             # Validation report is reproducible for a given payload/config. Keep bundles immutable.
             raise DataError('immutable validation report conflict')
+    # Display-only icon enrichment must not discard previously recorded skills.
+    # For a pre-icon bundle this digest is exactly its original data version.
+    checklist_data={**data,'skills':{sid:{k:v for k,v in skill.items() if k!='icon_id'}
+                                   for sid,skill in data.get('skills',{}).items()}}
     manifest={'schema_version':1,'server':'JP','active_version':version,
+              'checklist_data_sha256':digest(canonical_bytes(checklist_data)),
               'dataset_path':f'data/bundles/{version}/dataset.json','dataset_sha256':version,
               'validation_path':f'data/bundles/{version}/validation.json',
               'counts':validation['counts'],'sources':sources,'input_hashes':input_hashes,

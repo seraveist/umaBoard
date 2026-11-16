@@ -90,7 +90,12 @@ immediate clear button and IME-safe updates. Loading uses a count/progress bar.
 Buttons reserve their size when busy. Native focus-visible uses primary color.
 Global scrollbars use border/muted/mint tokens, with forced-colors fallback.
 Skill icons are buttons framed in silver (normal), gold (rare), or pink
-(evolution), with a visible focus ring and text labels. The runtime owns
+(evolution), with a visible focus ring and text labels.
+The image inside the frame uses the skill's normalized source `icon_id`; a
+same-ID display record is the compatibility fallback. Grouping/order may follow
+a lower stage, but the image never borrows that lower stage's rarity. All 128
+registered PNGs are served locally with pinned provenance and checksum evidence.
+The runtime owns
 `--skill-indent-step` (16px desktop, 8px narrow): each family's evolutions are
 unindented, rare skills step in once, and ordinary skills step in again. Without
 an evolution, rare is the root and ordinary steps in once. Alternative evolutions

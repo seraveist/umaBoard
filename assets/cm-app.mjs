@@ -34,7 +34,7 @@ function ownedProfile(id=outfitId){
  return {bloom:5,uniqueLevel:6};
 }
 function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
-function planKey(input){return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion:manifest.active_version});}
+function planKey(input){return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion:manifest.checklist_data_sha256||manifest.active_version});}
 function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();if(result||rows.length)notice('설정이 바뀌었습니다. 마신표 만들기를 눌러 새 조건을 반영하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;

@@ -29,5 +29,6 @@ Player-facing rarity names are 일반, 레어, 진화 and 계승. Icons have rar
 and open source descriptions through hover, keyboard focus or tap.
 
 Assets: existing UmaTools-only character/support portraits and type badges;
-alpha123 skill display metadata/icons, locally served fonts. No remote runtime
+alpha123 skill display-order metadata and 120 icons, eight additional original
+GameTora skill icons, source-owned skill icon IDs, and locally served fonts. No remote runtime
 requests other than same-origin static assets. No accounts, payments or messaging.
