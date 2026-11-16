@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan} from '../assets/cm-final-plan.mjs';
+import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
 
 const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,turn:1,track_id:'10008',course_set_status:[],corners:[],straights:[{start:0,end:2200}],slopes:[]};
 const stats={speed:1500,stamina:1600,power:1500,guts:1200,wisdom:1200};
@@ -120,4 +121,37 @@ test('Fast Learner changes affordability, persists in the result basis, and defa
  const before=await recommendFinalPlan(data,chart,{other:'5'},budget,quick),after=await recommendFinalPlan(data,chart,{other:'5'},{...budget,fastLearner:true},quick);
  assert.deepEqual(before.purchases,[]);assert.equal(before.setup.fastLearner,false);assert.equal(after.purchases[0].id,'other');assert.equal(after.budget.used,50);assert.equal(after.setup.fastLearner,true);assert.equal(chart.setup.fastLearner,undefined);
  assert.throws(()=>createFinalSetup(chart,{...input,fastLearner:'true'}),/수완가/);
+});
+
+test('exclusive discount traits resolve old saved flags and give explicit new selections precedence',()=>{
+ const {chart}=fixture();
+ assert.deepEqual(Object.values(DISCOUNT_TRAITS).map(row=>row.rate),[0,4,10]);
+ for(const [legacy,expected]of [[{},'none'],[{fastLearner:false},'none'],[{fastLearner:true},'fast-learner']])assert.equal(resolveDiscountTrait(legacy),expected);
+ for(const discountTrait of Object.keys(DISCOUNT_TRAITS)){
+  const setup=createFinalSetup(chart,{...input,discountTrait,fastLearner:true});
+  assert.equal(setup.discountTrait,discountTrait);assert.equal(setup.fastLearner,discountTrait==='fast-learner');
+ }
+ for(const discountTrait of ['',null,0,'constructor','both'])assert.throws(()=>createFinalSetup(chart,{...input,discountTrait}),/할인 특성/);
+});
+
+test('Studious adds four points at every hint, floors each unpaid stage and never charges paid or duplicate stages',()=>{
+ const {data,chart}=fixture();data.purchase_stages.white.base_cost=200;
+ for(const [level,expected]of [192,172,152,132,122,112].entries())assert.equal(new RecordedPurchaseModel(data,chart.rows,{white:String(level)},{discountTrait:'studious'}).selection(['white']).used,expected);
+ data.purchase_stages.white.base_cost=101;
+ const price=new RecordedPurchaseModel(data,chart.rows,{white:'4',gold:'2'},{discountTrait:'studious',fastLearner:true}).selection(['white','gold','a']);
+ assert.deepEqual(price.stages.map(row=>[row.id,row.cost,row.extraDiscount]),[['white',61,4],['gold',114,4]]);assert.equal(price.used,175);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{white:'owned',gold:'2'},{discountTrait:'studious'}).selection(['a']).used,114);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{gold:'owned',a:'5'},{discountTrait:'studious'}).selection(['a']).used,0);
+ data.skills.inherit={...skill('inherit',3000,'inherited'),inherited:true};data.purchase_stages.inherit={status:'verified',base_cost:200};chart.rows.push(data.skills.inherit);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{inherit:'5'},{discountTrait:'studious'}).selection(['inherit']).used,112);
+});
+
+test('Studious changes affordable combinations and records the selected trait without stacking Fast Learner',async()=>{
+ const {data,chart}=fixture(),budget={...input,spBudget:56};
+ const none=await recommendFinalPlan(data,chart,{other:'5'},{...budget,discountTrait:'none'},quick);
+ const study=await recommendFinalPlan(data,chart,{other:'5'},{...budget,discountTrait:'studious',fastLearner:true},quick);
+ const fast=await recommendFinalPlan(data,chart,{other:'5'},{...budget,discountTrait:'fast-learner'},quick);
+ assert.deepEqual(none.purchases,[]);assert.equal(study.purchases[0].id,'other');assert.equal(study.budget.used,56);assert.equal(study.setup.discountTrait,'studious');assert.equal(study.setup.fastLearner,false);
+ assert.equal(fast.budget.used,50);assert.equal(study.purchases[0].stages[0].extraDiscount,4);
+ assert.equal(chart.setup.discountTrait,undefined);assert.equal(input.discountTrait,undefined);
 });

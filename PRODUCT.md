@@ -58,8 +58,10 @@ acquisition routes for the selected setup, with inferred and unknown paths marke
 
 The post-training stage retains paid skills, permits genuine upgrades and charges
 only unpaid purchase stages at recorded hint discounts. It does not assume white
-Lv5 or event maximum hints. Optional Fast Learner adds ten percentage points to
-each stage's hint discount before integer flooring. It compares actual combinations against the acquired
+Lv5 or event maximum hints. A single discount choice selects none0%, Studious4%
+or Fast Learner10%, added to each stage's hint rate before integer flooring.
+Traits cannot stack; old Fast Learner records restore to the corresponding new
+choice. It compares actual combinations against the acquired
 baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
 search is bounded and does not guarantee a global optimum. Recommendations never
 change the checklist. Inputs persist per plan; edited inputs/checks invalidate

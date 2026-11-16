@@ -89,9 +89,15 @@ actual five stats and remaining SP start blank; aptitudes default to A. Inputs
 use native controls and explicit validation with text, aria-invalid and first
 error focus. Remaining SP excludes past purchases. Paid skills remain fixed as
 purchase history, while a genuine upgrade replaces their lower active effect.
-Hints use recorded levels; optional Fast Learner adds ten percentage points to
-each unpaid stage's discount before flooring. Its boolean defaults off for old
-saved inputs and persists within the same plan. Changing it cancels stale work.
+Hints use recorded levels; a native discount select chooses none/Studious/Fast
+Learner and adds0/4/10 percentage points to each unpaid stage before flooring.
+`cm-discounts.mjs` owns trait labels, rates and strict input normalization.
+`postTraining.values.discountTrait` is canonical; saved legacy `fastLearner:true`
+restores Fast Learner, false/missing restores none. New explicit choices take
+precedence. The legacy boolean remains derived for compatibility in saved inputs
+and exports, so it never stacks with Studious. Selection persists per plan and
+cancels stale work on change. UI restoration tolerates malformed legacy drafts;
+calculation input rejects unknown choices.
 
 `cm-final-plan.mjs` owns stage pricing and combination recommendation; the shared
 discount function remains in `purchases.mjs`. `cm-final-ui.mjs` owns the second

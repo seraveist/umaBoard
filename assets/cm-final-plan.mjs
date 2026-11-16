@@ -5,6 +5,7 @@ import {discountedCost,nativeUnique} from './purchases.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {buildAcquisitionHierarchy,relatedAcquisitionIds,checklistSnapshot} from './cm-state.mjs';
+import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 
 export const FINAL_MODEL_VERSION='cm-post-training-v2';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
@@ -17,16 +18,16 @@ export function createFinalSetup(chart,input){
  const setup={...chart.setup,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes}};
  for(const key of STAT_KEYS)if(!Number.isInteger(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('실제 능력치는 1~3000 사이의 정수로 입력하세요.');
  if(!Number.isSafeInteger(input.spBudget)||input.spBudget<0||input.spBudget>100000)throw new Error('보유 SP는 0~100000 사이의 정수로 입력하세요.');
- if(input.fastLearner!==undefined&&typeof input.fastLearner!=='boolean')throw new Error('수완가 선택을 확인하세요.');
- validateSetup(setup);return {...setup,spBudget:input.spBudget,fastLearner:input.fastLearner??false};
+ const discountTrait=resolveDiscountTrait(input);
+ validateSetup(setup);return {...setup,spBudget:input.spBudget,discountTrait,fastLearner:discountTrait==='fast-learner'};
 }
 
 // The post-training budget is remaining SP. Paid prerequisites are sunk costs;
 // recorded hints replace every pre-training route/event price assumption.
 export class RecordedPurchaseModel{
- constructor(data,rows,states,{fastLearner=false}={}){
+ constructor(data,rows,states,discount={}){
   this.data=data;this.rows=new Map(rows.map(row=>[row.id,row]));this.states=states;this.cache=new Map();
-  this.extraDiscount=fastLearner?10:0;
+  this.discountTrait=resolveDiscountTrait(discount);this.extraDiscount=DISCOUNT_TRAITS[this.discountTrait].rate;
   this.owned=new Set(rows.filter(row=>states[row.id]==='owned').map(row=>row.id));
  }
  chain(id,path=new Set()){

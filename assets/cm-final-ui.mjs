@@ -2,20 +2,21 @@ import {el} from './cm-dom.mjs';
 import {STAT_KEYS} from './physics.mjs';
 import {createFinalSetup} from './cm-final-plan.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
+import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
  let chart=null,states={},scope='',worker=null,requestId=0,result=null,busy=false;
- const values=()=>({stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,fastLearner:$('#fast-learner').checked,aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value]))});
+ const values=()=>{const discountTrait=$('#discount-trait').value;return {stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,discountTrait,fastLearner:discountTrait==='fast-learner',aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value]))};};
  const aptitudeSummary=()=>{$('#final-aptitude-summary').textContent=`적성 설정 · ${['distance','surface','style'].map(key=>$('#actual-'+key+'-aptitude').value).join(' / ')}`;};
  const inputSummary=()=>{
   const value=values(),valid=STAT_KEYS.every(key=>/^\d+$/.test(value.stats[key])&&Number(value.stats[key])>=1&&Number(value.stats[key])<=3000)&&/^\d+$/.test(value.spBudget)&&Number(value.spBudget)<=100000;
   const summary=$('#final-input-summary');
   if(!valid){summary.textContent='';return;}
-  const parts=[`보유 ${Number(value.spBudget).toLocaleString('ko-KR')} SP`,...(value.fastLearner?['수완가']:[]),`적성 ${['distance','surface','style'].map(key=>value.aptitudes[key]).join(' / ')}`];
+  const parts=[`보유 ${Number(value.spBudget).toLocaleString('ko-KR')} SP`,...(value.discountTrait!=='none'?[DISCOUNT_TRAITS[value.discountTrait].label]:[]),`적성 ${['distance','surface','style'].map(key=>value.aptitudes[key]).join(' / ')}`];
   summary.replaceChildren(...parts.map((text,index)=>el('span','input-summary-part',`${index?' · ':''}${text}`)));
  };
- const setValues=value=>{for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#fast-learner').checked=value?.fastLearner===true;for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';aptitudeSummary();inputSummary();};
+ const setValues=value=>{for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#discount-trait').value=resolveDiscountTrait({discountTrait:Object.hasOwn(DISCOUNT_TRAITS,value?.discountTrait)?value.discountTrait:undefined,fastLearner:value?.fastLearner===true});for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';aptitudeSummary();inputSummary();};
  const message=(text='')=>{$('#final-status').textContent=text;};
  const stop=()=>{requestId++;worker?.terminate();worker=null;busy=false;$('#final-submit').disabled=!chart;$('#final-submit').textContent='최종 스킬 추천';$('#final-cancel').hidden=true;$('#final-progress').hidden=true;form.setAttribute('aria-busy','false');};
  const stale=()=>{stop();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
@@ -34,7 +35,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    if(display.icons[row.iconId]){const img=el('img','skill-icon');img.src=`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;img.alt='';img.loading='lazy';icon.append(img);}
    skillDetails.attach(icon,row);item.append(icon);
    const copy=el('div','final-purchase-copy'),heading=el('div','final-purchase-heading');heading.append(skillNameLine(row),el('strong','final-price',`${row.cost} SP`));copy.append(heading,el('span','final-purchase-kind',`${source(row)} · ${row.rarity==='evolution'?'원본 레어 기준':row.hintLevel===0?'획득':`할인 Lv${row.hintLevel}`}`));
-   if(row.stages.length){const details=el('details','final-cost-details'),summary=el('summary','','구매 비용 상세');details.append(summary);const list=el('ul');for(const stage of row.stages){const li=el('li');li.append(el('span','',stage.name),el('span','',`${stage.hint===0?'획득':`할인 Lv${stage.hint}`}${stage.extraDiscount?' · 수완가':''} · ${stage.cost} SP`));list.append(li);}details.append(list);copy.append(details);}
+   if(row.stages.length){const details=el('details','final-cost-details'),summary=el('summary','','구매 비용 상세');details.append(summary);const list=el('ul');for(const stage of row.stages){const li=el('li');li.append(el('span','',stage.name),el('span','',`${stage.hint===0?'획득':`할인 Lv${stage.hint}`}${stage.extraDiscount?` · ${DISCOUNT_TRAITS[resolveDiscountTrait(plan.setup)].label}`:''} · ${stage.cost} SP`));list.append(li);}details.append(list);copy.append(details);}
    item.append(copy);return item;
   }));
   $('#final-no-purchases').hidden=plan.purchases.length>0;
@@ -44,7 +45,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-excluded-list').replaceChildren(...plan.excluded.map(row=>el('li','',`${data.skills[row.id].name_jp} · ${row.reason}`)));
   $('#final-export').disabled=false;inputSummary();if(inputs.contains(document.activeElement))$('#final-inputs>summary').focus({preventScroll:true});inputs.open=false;if(onResult()!==false)$('#final-result-title').focus();
  };
- form.addEventListener('input',()=>{clearError();stale();save();});
+ form.addEventListener('input',event=>{if(event.target.tagName!=='SELECT'){clearError();stale();save();}});
  form.addEventListener('change',event=>{if(event.target.tagName==='SELECT'){aptitudeSummary();clearError();stale();save();}});
  form.addEventListener('submit',event=>{
   event.preventDefault();if(!chart||busy)return;clearError();
@@ -52,7 +53,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    const node=$('#actual-'+key),value=node.value.trim(),max=key==='sp'?100000:3000,min=key==='sp'?0:1;
    if(!/^\d+$/.test(value)||Number(value)<min||Number(value)>max){error(key==='sp'?'보유 SP를 0~100000 사이의 정수로 입력하세요.':'실제 능력치 5개를 각각 1~3000 사이의 정수로 입력하세요.',node);return;}
   }
-  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),fastLearner:raw.fastLearner,aptitudes:raw.aptitudes};
+  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes};
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
   stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message();save();
   const job=requestId;

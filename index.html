@@ -54,7 +54,7 @@
               <div class="field"><label for="actual-wisdom">지능</label><input id="actual-wisdom" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-error" placeholder="입력"></div>
               <div class="field final-sp-field"><label for="actual-sp">보유 SP</label><input id="actual-sp" type="number" inputmode="numeric" min="0" max="100000" step="1" required aria-describedby="final-error" placeholder="남은 SP"></div>
             </div>
-            <div class="final-options"><label class="discount-toggle"><input id="fast-learner" type="checkbox"><span>수완가 <small>10% 할인</small></span></label>
+            <div class="final-options"><div class="field discount-field"><label for="discount-trait">할인 특성</label><select id="discount-trait"><option value="none">없음</option><option value="studious">공부가</option><option value="fast-learner">수완가</option></select></div>
             <details class="aptitude-options"><summary id="final-aptitude-summary">적성 설정 · A / A / A</summary><div class="final-aptitudes">
               <div class="field"><label for="actual-distance-aptitude">거리 적성</label><select id="actual-distance-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
               <div class="field"><label for="actual-surface-aptitude">마장 적성</label><select id="actual-surface-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>

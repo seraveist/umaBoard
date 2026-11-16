@@ -143,8 +143,11 @@ to a summary of input completion, remaining budget, discount trait and aptitudes
 Users can reopen the native disclosure at any time. The submit action remains
 outside the disclosure with an explicit native form owner; errors reopen inputs
 before focusing the invalid field. Controls are42px
-high,44px on phones. A native Fast Learner checkbox and collapsed
-aptitude settings sit below; opening aptitudes gives the three selects a full row.
+high,44px on phones. A labeled native discount select offers 없음 / 공부가 / 수완가
+with0/4/10 percent discounts. Its closed control aligns with the aptitude
+disclosure. Expanded desktop aptitudes align the three controls with the discount
+control in one row; phone aptitudes expand beneath it. An open actual-input
+section hides the repeated summary and gives the form16px separation from its title.
 Actual values start blank. Successful recommendations select the mobile result
 view before focusing its heading; re-entering preparation does not force the
 hidden result into focus. Results use a compact SP/gain summary and a source-ordered list with
