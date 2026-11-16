@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "default_scenario_id": "15",
+  "policy": "scenario_base_caps_no_inheritance",
+  "profiles": {
+    "6": {
+      "id": "6",
+      "name_jp": "プロジェクトL'Arc",
+      "name_ko": "프로젝트 L'Arc",
+      "stats": { "speed": 1600, "stamina": 1600, "power": 1500, "guts": 1500, "wisdom": 1300 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/larc_memo.md"
+      }
+    },
+    "7": {
+      "id": "7",
+      "name_jp": "U.A.F.",
+      "name_ko": "U.A.F.",
+      "stats": { "speed": 1700, "stamina": 1500, "power": 1500, "guts": 1500, "wisdom": 1300 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/uaf_memo.md"
+      }
+    },
+    "8": {
+      "id": "8",
+      "name_jp": "収穫ッ！満腹ッ！大豊食祭",
+      "name_ko": "대풍식제",
+      "stats": { "speed": 1750, "stamina": 1000, "power": 1700, "guts": 1700, "wisdom": 1350 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/cook_memo.md"
+      }
+    },
+    "9": {
+      "id": "9",
+      "name_jp": "走れ！メカウマ娘",
+      "name_ko": "메카우마무스메",
+      "stats": { "speed": 1750, "stamina": 1700, "power": 1500, "guts": 1300, "wisdom": 1300 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/mecha_memo.md"
+      }
+    },
+    "10": {
+      "id": "10",
+      "name_jp": "The Twinkle Legends",
+      "name_ko": "더 트윙클 레전드",
+      "stats": { "speed": 1850, "stamina": 1600, "power": 1600, "guts": 1500, "wisdom": 1450 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/twinkle_legends_memo.md"
+      }
+    },
+    "11": {
+      "id": "11",
+      "name_jp": "無人島へようこそ -DESIGN YOUR ISLAND-",
+      "name_ko": "무인도",
+      "stats": { "speed": 1850, "stamina": 1700, "power": 1700, "guts": 1600, "wisdom": 1350 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/mujinto_memo.md"
+      }
+    },
+    "12": {
+      "id": "12",
+      "name_jp": "ごくらく♪ゆこま温泉郷",
+      "name_ko": "온천향",
+      "stats": { "speed": 1900, "stamina": 1800, "power": 1700, "guts": 1700, "wisdom": 1400 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/onsen_memo.md"
+      }
+    },
+    "13": {
+      "id": "13",
+      "name_jp": "Beyond Dreams 共に前へ、共に光を",
+      "name_ko": "비욘드 드림즈",
+      "stats": { "speed": 2100, "stamina": 1700, "power": 1700, "guts": 1700, "wisdom": 1800 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/dreams_memo.md"
+      }
+    },
+    "14": {
+      "id": "14",
+      "name_jp": "らっしゃい！トレセン軒！",
+      "name_ko": "트레센켄",
+      "stats": { "speed": 2150, "stamina": 1800, "power": 1700, "guts": 1700, "wisdom": 1800 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/ramen_memo.md"
+      }
+    },
+    "15": {
+      "id": "15",
+      "name_jp": "朋、史解き ―午式駿大祭―",
+      "name_ko": "오식준대제",
+      "stats": { "speed": 2200, "stamina": 1850, "power": 1800, "guts": 1700, "wisdom": 1800 },
+      "source": {
+        "repository": "mee1080/umasim",
+        "commit": "e5d940ce8f73bbb756ae3cffd0a081c34b8124da",
+        "path": "data/shuntaisai_memo.md"
+      }
+    }
+  }
+}

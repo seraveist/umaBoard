@@ -1,0 +1,11 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["assets"],
+  "locale": "ko-KR",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": ["Table Selection", "Select/Listbox", "Form", "Scrollbar", "Toast"],
+  "ownership": {"Select/Listbox": "native"},
+  "requiredCommands": ["unit", "build"],
+  "commands": {"unit": "node --test tests/cm-*.test.mjs", "build": "python scripts/build_pages.py"},
+  "evidence": {"failurePaths": "tests/cm-ui.test.mjs"}
+}

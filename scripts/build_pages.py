@@ -13,7 +13,8 @@ from umaboard.portraits import stage_portraits
 
 
 def version_app_assets(output):
-    files = sorted([*output.glob('assets/*.mjs'), *output.glob('assets/*.css'), output / 'index.html'])
+    entries = [output / name for name in ('index.html', 'legacy.html')]
+    files = sorted([*output.glob('assets/*.mjs'), *output.glob('assets/*.css'), *entries])
     digest = hashlib.sha256()
     for path in files:
         digest.update(path.relative_to(output).as_posix().encode())
@@ -25,15 +26,16 @@ def version_app_assets(output):
         source = re.sub(r'''(['"])(\./[\w.-]+\.mjs)\1''',
                         lambda match: f'{match[1]}{match[2]}?v={version}{match[1]}', path.read_text())
         path.write_text(source)
-    index = output / 'index.html'
-    index.write_text(re.sub(r'((?:src|href)="assets/[^"?]+\.(?:mjs|css))"',
-                            lambda match: f'{match[1]}?v={version}"', index.read_text()))
+    for index in entries:
+        index.write_text(re.sub(r'((?:src|href)="assets/[^"?]+\.(?:mjs|css))"',
+                                lambda match: f'{match[1]}?v={version}"', index.read_text()))
     return version
 
 
 def main():
     parser = argparse.ArgumentParser(description='Stage the static app for GitHub Pages')
     parser.add_argument('--fetch-portraits', action='store_true', help='Download missing pinned UmaTools images into the build cache')
+    parser.add_argument('--output', default='.cache/pages', help='Relative static output directory')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     manifest, data = load_active(root)
@@ -44,17 +46,21 @@ def main():
     if stored != report:
         raise DataError('Stored validation report differs from current validator')
 
-    output = root / '.cache' / 'pages'
+    output = (root / args.output).resolve()
+    if output not in {root / '.cache' / 'pages', root / 'dist'}:
+        raise DataError('Build output must be .cache/pages or dist')
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)
-    for name in ('index.html', 'LICENSE', 'NOTICE.md', 'data/manifest.json',
+    for name in ('index.html', 'legacy.html', 'LICENSE', 'NOTICE.md', 'data/manifest.json',
                  manifest['dataset_path'], manifest['validation_path']):
         source = root / name
         target = output / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
     shutil.copytree(root / 'assets', output / 'assets')
+    for name in ('cm-scenario-profiles.json', 'cm-skill-display.json'):
+        shutil.copyfile(root / 'curated' / name, output / 'data' / name)
     assets_version = version_app_assets(output)
     portraits = stage_portraits(root, output, fetch=args.fetch_portraits)
     # The prototype is self-contained; its authoring sources are unnecessary.

@@ -97,7 +97,7 @@ export function compileSkill(skill,setup){
    if(extras.additional_activation||extras.additional)reasons.push('추가 효과');
    if(!['umatools_raw','umasim_raw'].includes(e.unit))reasons.push('효과 단위');
    let value=e.value_raw/10000;
-   if(['unique','unique_low_star','unique_upgraded'].includes(skill.rarity))value*=uniqueMultiplier(e.kind,uniqueLevel(setup.bloom));
+   if(['unique','unique_low_star','unique_upgraded'].includes(skill.rarity))value*=uniqueMultiplier(e.kind,setup.uniqueLevel??uniqueLevel(setup.bloom));
    return {kind:e.kind,value,wisdomBoost:['gold','evolution','unique','unique_low_star','unique_upgraded'].includes(skill.rarity)&&['target_speed','speed_with_decel'].includes(e.kind)};
   });
   let duration;
