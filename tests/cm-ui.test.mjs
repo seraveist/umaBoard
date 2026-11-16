@@ -33,7 +33,7 @@ test('post-training owns a separate validated form, scoped draft, cancellable wo
  assert.match(html,/<form id="final-form" novalidate/);assert.match(html,/<fieldset id="final-fields" disabled/);
  for(const key of ['speed','stamina','power','guts','wisdom','sp']){assert.ok(html.includes(`for="actual-${key}"`));assert.ok(html.includes(`id="actual-${key}"`));}
  assert.match(final,/aria-invalid/);assert.match(final,/input\.focus/);assert.match(final,/worker\?\.terminate/);assert.match(final,/reply.requestId!==requestId/);
- assert.match(app,/\.postTraining=value/);assert.match(app,/finalPlanner\?\.invalidate/);assert.match(final,/이전 조건의 결과/);
+ assert.match(app,/\.postTraining=value/);assert.match(app,/finalPlanner\?\.invalidate/);assert.match(final,/재추천 필요/);
  assert.ok(!/\b(?:alert|confirm|prompt)\s*\(/.test(final));
 });
 

@@ -87,7 +87,8 @@ native tabs switch skill records and recommendation results one at a time;
 the actual-input area, submit, cancellation and progress remain common. The table has bounded
 650px desktop/600px phone scrolling; all admitted rows render. The course strip
 and dialog option body own their own scrolling. Forms remain in document flow.
-Errors/progress reserve space. No global fixed-height/overflow-hidden shell.
+Progress and input errors appear with their current operation. Empty informational
+status regions do not reserve blank rows. No global fixed-height/overflow-hidden shell.
 
 ## Elevation & Depth
 
@@ -106,7 +107,7 @@ Outfit/card choice uses an app-owned native dialog with a search field and real
 option buttons, keeping browser focus trapping/Escape and explicit return focus.
 Dialog search and footer stay available while options scroll, including a
 340×520 viewport. Original square SSR frames use contain without cropping;
-owned-profile forms scroll when the viewport is short. Shared notice uses a stable live region; errors stay inline. Search has an
+owned-profile forms scroll when the viewport is short. Shared notice uses a stable live region for actionable state/errors, while routine save/restore/export success stays silent. Search has an
 immediate clear button and IME-safe updates. Loading uses a count/progress bar.
 Buttons reserve their size when busy. Native focus-visible uses primary color.
 Global scrollbars use shared thumb/background tokens, with forced-colors fallback.
@@ -150,9 +151,20 @@ hidden result into focus. Results use a compact SP/gain summary and a source-ord
 expandable stage prices; the checklist retains its single table and scroll area.
 Recommendations never modify acquisition records. A visible stale-result label
 and disabled export prevent old recommendations being presented as current.
-Cost/model detail is collapsed behind one summary. Whole-checklist actions remain
+Purchase-stage costs remain expandable; general model/policy explanations,
+usage prose, repeated subtitles and list-footer instructions are omitted from
+the working UI. Model and provenance remain in project documentation/exports.
+Whole-checklist actions remain
 visible near search/categories, explicitly naming their scope and retaining the
 shared six-slot inherited rule.
+
+The user's quiet-copy decision also removes normal completion, saved-draft and
+restored-draft messages. Keep concise validation/storage/slot-limit/cancellation
+feedback, numeric results and acquisition routes. Stale recommendations show
+`재추천 필요` and the action changes to `다시 추천`. Course distance, track name
+and condition facts share a vertical center; the number's unit retains its
+numeric baseline. Support type icons center with names, style buttons center
+their labels, and each recommended skill's price centers within its name row.
 
 Utility icons share18px geometry and1.7px strokes. Download, search, disclosure
 and navigation icons are supplementary to text. Tabs expose selected state and

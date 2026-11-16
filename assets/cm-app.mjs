@@ -40,13 +40,13 @@ function ownedProfile(id=outfitId){
 }
 function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
 function planKey(input){return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion:manifest.checklist_data_sha256||manifest.active_version});}
-function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정이 바뀌었습니다. 마신표 만들기를 눌러 새 조건을 반영하세요.');}
+function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
  $('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;
  $('#progress-label').textContent='계산을 중지했습니다';$('#export-checklist').disabled=!result;
  workflow.setChartState(result?'ready':'empty');
- if(announce)notice('계산을 중지했습니다. 완료된 행은 그대로 유지됩니다.');
+ if(announce)notice('계산 중지');
 }
 function image(path,alt='',className=''){
  const n=el('img',className);n.src=path;n.alt=alt;n.decoding='async';n.loading='lazy';n.addEventListener('error',()=>n.remove(),{once:true});return n;
@@ -155,8 +155,6 @@ function renderRows(){
  });
  skillDetails.dismissDetached();
  $('#empty-state').hidden=rows.length>0||busy;$('#skill-table-wrap').hidden=visible.length===0;$('#no-results').hidden=!(rows.length>0&&visible.length===0);
- $('#table-footer').hidden=visible.length===0;
- $('#visible-count').textContent=`${visible.length}개 전체 표시`;
  const count=checklistCounts(rows,states);$('#checklist-count').replaceChildren();
  $('#inherited-count').textContent=`계승 ${inheritedCount(rows,states)} / ${INHERITED_LIMIT}`;
  if(rows.length){if(workflow.stage==='prepare')$('#checklist-count').textContent=`${total||rows.length}개 스킬`;else $('#checklist-count').append(document.createTextNode(`전체 ${total||rows.length} · `),el('strong','',`확보 ${count.available}`));}
@@ -165,23 +163,22 @@ function renderRows(){
  for(const id of ['bulk-unavailable','bulk-level5'])$('#'+id).disabled=busy||!result;
 }
 function recordState(id,value){
- if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승기는 최대 6개까지 확보할 수 있습니다. 선택한 계승기를 미획득으로 바꾼 뒤 다시 선택하세요.';return;}
+ if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승은 최대 6개입니다.';return;}
  const next=updateAcquisition(rows,states,id,value,hierarchy);
- const linked=Object.keys(next).filter(key=>key!==id&&next[key]!==acquisitionValue(states[key])).length;
- saveAcquisitionStates(next,linked?`연결된 스킬 ${linked}개의 상태를 함께 변경했습니다. `:'');
+ saveAcquisitionStates(next);
 }
-function saveAcquisitionStates(next,prefix=''){
+function saveAcquisitionStates(next,warning=''){
  states=next;
  if(!draft.plans[currentPlan])draft.plans[currentPlan]={states:{}};
  draft.plans[currentPlan].states=states;draft.plans[currentPlan].savedAt=new Date().toISOString();
  const entries=Object.entries(draft.plans).sort((a,b)=>(b[1].savedAt||'').localeCompare(a[1].savedAt||''));draft.plans=Object.fromEntries(entries.slice(0,12));
- const saved=saveDraft();renderRows();$('#draft-status').textContent=prefix+(saved?'체크 상태가 이 브라우저에 저장되었습니다.':'저장 공간을 사용할 수 없습니다. 목록 저장으로 내려받아 주세요.');
+ const saved=saveDraft();renderRows();$('#draft-status').textContent=saved?warning:'저장 실패 · 목록을 내려받아 주세요.';
  finalPlanner?.setStates(states);
 }
 function recordAll(value){
  if(busy||!result)return;
  const next=bulkAcquisition(rows,states,value),skipped=value==='5'?rows.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
- saveAcquisitionStates(next,value==='unavailable'?`전체 ${rows.length}개를 미획득으로 변경했습니다. `:`전체 목록을 할인 Lv5로 변경했습니다. ${skipped?'계승은 기존 확보를 우선해 6개만 유지했습니다. ':''}`);
+ saveAcquisitionStates(next,skipped?'계승은 6개만 적용했습니다.':'');
 }
 function beginCalculation(event){
  event?.preventDefault();if(!ready||busy)return;
@@ -189,17 +186,17 @@ function beginCalculation(event){
  try{createChartSetup(data,profiles,input);}catch(error){notice(error.message,true);$('#outfit-picker').focus();return;}
  skillSources=createSkillSourceResolver(data,input);
  workflow.setChartState('loading');
- finalPlanner?.invalidate('1차 마신표를 계산하고 있습니다. 완료 후 실제 스탯을 입력할 수 있습니다.');
+ finalPlanner?.invalidate();
  skillDetails.dismiss();draft.setup=input;saveDraft();currentPlan=planKey(input);states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
  busy=true;$('#generate').disabled=true;$('#generate span').textContent='마신표 계산 중';$('#cancel-calculation').hidden=false;$('#export-checklist').disabled=true;
  $('#calculation-progress').hidden=false;$('#progress-label').textContent='계승 후보를 비교하고 있습니다';$('#progress-count').textContent='';$('#progress-bar').value=0;$('#progress-bar').max=1;$('#draft-status').textContent='';
- notice('계승 Top 10을 확정한 뒤 계산된 스킬을 모두 표시합니다.');renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
+ notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
 }
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
   acquisition:checklistSnapshot(result.rows,states,hierarchy),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id)})),inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#draft-status').textContent='계산 기준과 체크 상태를 JSON 파일로 저장했습니다.';
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
  worker=new Worker(new URL('./cm-worker.mjs',import.meta.url),{type:'module'});
@@ -210,10 +207,10 @@ function setupWorker(){
    rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
    result=message.result;rows=result.rows;total=rows.length;states=checklistSnapshot(rows,states,hierarchy);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
-   notice(`${rows.length}개 스킬의 비교를 마쳤습니다. 게임 화면 순서대로 획득 상태를 기록하세요.`);renderRows();
+   notice();renderRows();
    let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
-   renderRows();$('#draft-status').textContent=trimmed?'새 계승 한도에 맞춰 목록 순서의 6개를 유지했습니다. 계승 선택을 확인해 주세요.':Object.values(states).some(s=>s!=='unavailable')?'저장된 체크 상태를 불러왔습니다.':'미획득이 기본값입니다. 실제로 확보한 스킬만 변경하세요.';
+   renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
    finalPlanner?.setChart(result,states,currentPlan);
    workflow.setContext(umaName(data.outfits[result.setup.outfitId]),`${data.outfits[result.setup.outfitId].outfit_name_jp} · ${['','도주','선행','선입','추입'][result.setup.style]} · ${trackLabels[result.setup.course.track_id]} ${result.setup.course.surface===1?'잔디':'더트'} ${result.setup.course.distance.toLocaleString('ko-KR')}m · SSR ${result.setup.supportIds.length}장`);
    workflow.setChartState('ready');
@@ -240,7 +237,7 @@ async function start(){
   $('#scenario').replaceChildren(...Object.values(profiles.profiles).sort((a,b)=>Number(b.id)-Number(a.id)).map(p=>option(p.id,p.name_ko)));$('#scenario').value=profiles.profiles[saved?.scenarioId]?saved.scenarioId:profiles.default_scenario_id;
   if(saved){for(const [id,key]of [['going','going'],['weather','weather'],['season','season'],['race-time','time']])if(saved[key])$('#'+id).value=String(saved[key]);const radio=$(`input[name="style"][value="${Number(saved.style)}"]`);if(radio)radio.checked=true;}
   renderOutfit();renderDeck();renderCaps();renderRace();for(const id of ['track','course','scenario','outfit-picker'])$('#'+id).disabled=false;
-  $('#data-version').textContent=`JP 데이터 · ${manifest.active_version.slice(0,8)}`;setupWorker();
+  setupWorker();
  }catch{notice('데이터를 불러오지 못했습니다. 네트워크를 확인하고 페이지를 새로고침해 주세요.',true);$('#outfit-name').textContent='데이터를 불러오지 못했습니다';$('#outfit-subtitle').textContent='페이지를 새로고침해 주세요.';}
 }
 

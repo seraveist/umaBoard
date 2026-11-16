@@ -26,6 +26,12 @@ fresh chart completes. Reload begins at stage1 and restores the matching saved
 records/actual inputs after regeneration. This changes presentation only;
 candidate, price and physics contracts remain the same.
 
+Working screens use concise labels, data and necessary operation feedback.
+General calculation explanations, repeated instructions and routine save/restore
+success messages are omitted at the user's request. Model assumptions and data
+provenance remain in documentation and exported results. This presentation
+decision does not change costs, acquisition rules or persisted records.
+
 Only initial inputs: owned outfit, running style, CM race conditions, support deck,
 scenario. A persisted owned-outfit record supplies bloom and unique level. Race
 stats use verified scenario base caps, mood is best, aptitudes A. No pre-training

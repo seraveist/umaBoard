@@ -13,6 +13,14 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 | Toast | stable inline cm-notice live region | DESIGN | status / error | browser |
 | Skill details | cm-skill-details.mjs | DESIGN | hover / focus / tap | browser |
 
+Under the user's quiet-copy update, omit general instructions, policy prose,
+list-footer repetition and routine save/restore/export/completion success copy.
+Keep semantic labels, source routes, actual numbers and necessary error,
+progress, cancellation, storage-failure and inherited-limit state. Empty live
+regions occupy no visible row. Exported model/provenance and stored drafts retain
+their existing meaning. Stale results say `재추천 필요`, disable export and expose
+`다시 추천`; data changes do not silently recalculate.
+
 Two native button tabs control preparation and post-training tabpanels. Selected
 state, roving tabindex and Arrow/Home/End navigation remain synchronized. Stage2
 is disabled until a complete first chart exists; setup changes invalidate it.
@@ -74,7 +82,7 @@ have arrow/Home/End keyboard navigation and counts; tab/search changes retain al
 matching rows without a display batch. Source icons determine mixed-effect categories.
 Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
 purchased and Lv0–5 states across every view. A seventh attempt restores the
-previous select value and explains how to free a slot in the live draft status.
+previous select value and reports the six-slot limit in the live draft status.
 
 Post-training inputs remain hidden and disabled until a complete first chart exists. The
 actual five stats and remaining SP start blank; aptitudes default to A. Inputs
