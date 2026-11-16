@@ -6,7 +6,9 @@ const html=read('index.html'),css=read('assets/cm.css'),app=read('assets/cm-app.
 
 test('new entry has one skill checklist and five initial input groups, without initial SP/stamina advice',()=>{
  assert.match(html,/id="setup-form" novalidate/);assert.match(html,/id="skill-table-body"/);
- assert.equal((html.match(/<table /g)||[]).length,1);assert.ok(!html.includes('sp-budget'));assert.ok(!html.includes('stat-speed'));
+ assert.equal((html.match(/<table /g)||[]).length,1);
+ const initialForm=html.slice(html.indexOf('<form id="setup-form"'),html.indexOf('</form></aside>'));
+ assert.ok(!initialForm.includes('actual-sp'));assert.ok(!initialForm.includes('actual-speed'));
  assert.ok(existsSync(new URL('../legacy.html',import.meta.url)));
  for(const id of ['outfit-picker','course','support-deck','scenario','generate','skill-search','export-checklist'])assert.ok(html.includes(`id="${id}"`));
 });
@@ -24,4 +26,13 @@ test('global scrollbars, reduced motion, keyboard focus, local fonts and the ful
  assert.match(css,/@font-face/);assert.ok(!app.includes('filtered.slice('));assert.ok(!html.includes('load-more'));
  assert.match(html,/role="status" aria-live="polite"/);assert.match(html,/for="skill-search"/);
  assert.match(read('DESIGN.md'),/primary: "#126c55"/);assert.match(css,/--primary:#126c55/);
+});
+
+test('post-training owns a separate validated form, scoped draft, cancellable worker and stale-result handling',()=>{
+ const final=read('assets/cm-final-ui.mjs');
+ assert.match(html,/<form id="final-form" novalidate/);assert.match(html,/<fieldset id="final-fields" disabled/);
+ for(const key of ['speed','stamina','power','guts','wisdom','sp']){assert.ok(html.includes(`for="actual-${key}"`));assert.ok(html.includes(`id="actual-${key}"`));}
+ assert.match(final,/aria-invalid/);assert.match(final,/input\.focus/);assert.match(final,/worker\?\.terminate/);assert.match(final,/reply.requestId!==requestId/);
+ assert.match(app,/\.postTraining=value/);assert.match(app,/finalPlanner\?\.invalidate/);assert.match(final,/이전 조건의 결과/);
+ assert.ok(!/\b(?:alert|confirm|prompt)\s*\(/.test(final));
 });

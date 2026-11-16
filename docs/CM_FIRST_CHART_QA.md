@@ -9,7 +9,7 @@ Active JP dataset: `e1b13e942888b9c45d42aebb2566d275b31ea2a11596f1880ee89ec5ba0f
 
 | Check | Result |
 | --- | --- |
-| `node --test tests/*.test.mjs` | 150 passed, including 41 first-chart/UI/state/icon/completion checks |
+| `node --test tests/*.test.mjs` | 163 passed, including 54 CM chart/UI/state/icon/completion/post-training checks |
 | `python -X utf8 -m unittest discover -s tests -v` | 42 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
 | `python scripts/validate_data.py` | Passed |
 | `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits and 128 skill icons available |

@@ -109,6 +109,15 @@ Hover/active/disabled states exist for every action. Reduced motion disables
 transitions. The sole authored reveal is the course strip update; table rows do
 not animate or move while users input.
 
+The post-training panel follows the same bordered work surface, native fields,
+status regions and primary action. It appears below the checklist and becomes
+editable after a completed chart. Six numeric inputs use a three-column desktop
+and two-column phone grid; three aptitude selects share a row. Actual values
+start blank. Results use a compact SP/gain summary and a source-ordered list with
+expandable stage prices; the checklist retains its single table and scroll area.
+Recommendations never modify acquisition records. A visible stale-result label
+and disabled export prevent old recommendations being presented as current.
+
 ## Do's and Don'ts
 
 - Do keep the acquisition checklist in source order while users work.
@@ -118,5 +127,5 @@ not animate or move while users input.
 - Do use one icon-category tab row above the table; filtering preserves source order and all checked states.
 - Do show original square SSR frames, with type badges beside the name.
 - Do draw relative elevation, phase bands and numbered segments from course geometry.
-- Don't turn this tool into a landing page, rankings dashboard or SP optimizer.
+- Don't turn this tool into a landing page or rankings dashboard. SP recommendation belongs only in the separate post-training stage; the initial chart remains SP-free.
 - Don't claim exact game simulation or exact sorting before verification.

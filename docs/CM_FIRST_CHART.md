@@ -3,6 +3,10 @@
 This is the authoritative contract for `feat/cm-first-chart` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
 
+The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING.md).
+It consumes this chart's fixed checklist and adds actual stats/remaining-SP
+recommendation without changing this stage's rows, ordering or acquisition rules.
+
 ## Inputs and basis
 
 - Outfit, running style, CM course/ground/weather/season/time, up to six distinct

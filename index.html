@@ -14,7 +14,7 @@
   <span class="server-label"><span class="status-dot" aria-hidden="true"></span>일본 서버</span>
 </div></header>
 <main id="workspace" class="workspace">
-  <div class="page-heading"><div><h1>챔피언스 미팅 스킬 플래너</h1><p>레이스와 편성을 정하고, 배울 스킬을 한눈에 비교하세요.</p></div><span class="phase-label">육성 전 · 1차 마신표</span></div>
+  <div class="page-heading"><div><h1>챔피언스 미팅 스킬 플래너</h1><p>육성 전 마신 비교부터, 육성 후 최종 스킬 조합까지.</p></div><span class="phase-label">육성 전후 · 스킬 준비</span></div>
   <div id="cm-notice" class="notice" role="status" aria-live="polite"></div>
   <div class="desk-layout">
     <aside class="preparation" aria-label="육성 및 레이스 설정"><form id="setup-form" novalidate>
@@ -44,7 +44,42 @@
         <div id="no-results" class="no-results" hidden>일치하는 스킬이 없습니다. 카테고리나 검색어를 바꿔 주세요.</div>
         <div id="table-footer" class="table-footer" hidden><span id="visible-count"></span><span>아이콘에 마우스를 올리거나 눌러 상세 설명</span></div></div><p id="draft-status" class="draft-status" aria-live="polite"></p>
       </section>
-      <details id="guide" class="guide"><summary>사용 방법과 계산 기준<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary><div><p>육성 전에는 마신을 비교해 편성과 인자를 준비하세요. 육성 후에는 게임 화면을 위에서부터 보며 각 스킬을 <strong>습득 · 미획득 · Lv0~5</strong>로 기록하면 됩니다. 입력한 상태는 이 브라우저에 저장됩니다.</p><p>상위 스킬을 습득하면 연결된 하위 스킬도 자동 습득합니다. 하위를 미획득으로 바꾸면 상위도 자동 미획득으로 바뀝니다. 같은 레어에서 갈라진 진화는 한쪽을 습득하면 다른 쪽이 미획득으로 바뀝니다. 아이콘에 마우스를 올리거나 키보드로 이동하거나 눌러 상세 설명을 확인하세요.</p><p>본체 고유기만 적용한 주행에 스킬 하나를 추가한 평균 비교값입니다. 일반 회복기는 0마신이어도 목록에 남습니다. 계승기는 각질에 맞는 속도·가속 후보 중 평균 마신 상위 10개만 표시하고 순수 회복 계승기는 제외합니다. 스테이 골드·에피파네이아 계승기는 강화형으로 계산합니다. 순위·위치·흥분 등 발동 조건은 충족을 가정하며, 시나리오 기본 상한에는 계승에 따른 추가 상한 상승을 포함하지 않습니다.</p><p>공개 주행 모델의 비교값으로, 실제 승률을 뜻하지 않습니다. 스피드 2000 초과의 전개 스퍼트는 상한식이 미확정인 공개 근사 모델을 사용합니다. 일부 신규 스킬은 정렬 정보가 없어 인게임과 순서가 다를 수 있습니다. 육성 후 SP 최적화는 다음 단계입니다.</p><a href="legacy.html">기존 계산기 열기</a></div></details>
+      <section id="post-training" class="final-panel" aria-labelledby="final-title">
+        <div class="final-heading"><div><span class="final-phase">육성 후</span><h2 id="final-title">최종 스킬 조합</h2><p>실제 능력치와 남은 SP로, 지금 배울 조합을 추천받으세요.</p></div></div>
+        <p id="final-lock-note" class="final-context">먼저 1차 마신표를 완성해 주세요.</p>
+        <form id="final-form" novalidate aria-busy="false">
+          <fieldset id="final-fields" disabled><legend class="sr-only">육성 결과 입력</legend>
+            <div class="final-input-grid">
+              <div class="field"><label for="actual-speed">스피드</label><input id="actual-speed" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-input-help final-error" placeholder="실제 스탯"></div>
+              <div class="field"><label for="actual-stamina">스태미나</label><input id="actual-stamina" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-input-help final-error" placeholder="실제 스탯"></div>
+              <div class="field"><label for="actual-power">파워</label><input id="actual-power" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-input-help final-error" placeholder="실제 스탯"></div>
+              <div class="field"><label for="actual-guts">근성</label><input id="actual-guts" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-input-help final-error" placeholder="실제 스탯"></div>
+              <div class="field"><label for="actual-wisdom">지능</label><input id="actual-wisdom" type="number" inputmode="numeric" min="1" max="3000" step="1" required aria-describedby="final-input-help final-error" placeholder="실제 스탯"></div>
+              <div class="field final-sp-field"><label for="actual-sp">현재 보유 SP</label><input id="actual-sp" type="number" inputmode="numeric" min="0" max="100000" step="1" required aria-describedby="final-input-help final-error" placeholder="남은 SP"></div>
+            </div>
+            <div class="final-aptitudes">
+              <div class="field"><label for="actual-distance-aptitude">거리 적성</label><select id="actual-distance-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+              <div class="field"><label for="actual-surface-aptitude">마장 적성</label><select id="actual-surface-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+              <div class="field"><label for="actual-style-aptitude">각질 적성</label><select id="actual-style-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+            </div>
+          </fieldset>
+          <p id="final-input-help" class="final-help">육성 결과에 표시된 수치를 입력하세요. 습득한 스킬은 추가 비용 없이 유지하고, Lv0~5로 기록한 스킬을 구매 후보로 사용합니다. 컨디션은 최상입니다.</p>
+          <p id="final-error" class="field-error final-error" role="alert"></p>
+          <div class="final-actions"><button id="final-submit" type="submit" class="button primary" disabled>최종 스킬 추천</button><button id="final-cancel" type="button" class="text-button" hidden>추천 중지</button></div>
+          <div id="final-progress" class="final-progress" hidden><span id="final-progress-label" role="status" aria-live="polite">추천 준비 중</span><progress id="final-progress-bar" max="1" value="0" aria-label="최종 추천 진행률"></progress></div>
+        </form>
+        <p id="final-status" class="final-status" role="status" aria-live="polite"></p>
+        <section id="final-result" class="final-result" aria-labelledby="final-result-title" hidden>
+          <div class="final-result-heading"><div><h3 id="final-result-title" tabindex="-1">추천 구매 목록</h3><span id="final-result-state"></span></div><button id="final-export" type="button" class="button subtle" disabled>추천 저장</button></div>
+          <dl class="final-totals"><div><dt>추가 구매 SP</dt><dd><span id="final-used">0</span> <small>/ <span id="final-budget">0</span></small></dd></div><div><dt>남는 SP</dt><dd id="final-remaining">0</dd></div><div><dt>현재 습득 대비 평균 마신</dt><dd><span id="final-gain">0.00</span></dd></div></dl>
+          <p id="final-hp-note" class="final-help"></p><ol id="final-purchase-list" class="final-purchase-list"></ol><p id="final-no-purchases" class="final-help" hidden>추가 구매 없이 현재 습득 스킬을 유지합니다. 다른 스킬을 확보했다면 체크리스트의 Lv0~5를 기록한 뒤 다시 추천해 주세요.</p>
+          <details class="final-owned"><summary id="final-owned-summary"></summary><ul id="final-owned-list"></ul></details>
+          <details id="final-excluded" class="final-owned" hidden><summary id="final-excluded-summary"></summary><ul id="final-excluded-list"></ul></details>
+          <p class="final-help final-policy">각 단계에 기록한 힌트 할인을 적용합니다. 상위 스킬에 필요한 미습득 하위 단계는 Lv0부터 계산하며, 이미 구매한 단계는 다시 청구하지 않습니다. 진화 분기는 하나만 적용합니다. 추가 할인 특성은 미적용입니다.</p>
+          <p class="final-help">회복을 포함해 최속 스퍼트 HP 조건을 만족하는 조합을 우선하고, 그 안에서 평균 마신을 비교합니다. 탐색한 조합 중의 추천으로 모든 조합의 최적해나 실제 승률을 보장하지 않습니다.</p>
+        </section>
+      </section>
+      <details id="guide" class="guide"><summary>사용 방법과 계산 기준<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></summary><div><p>육성 전에는 마신을 비교해 편성과 인자를 준비하세요. 육성 후에는 게임 화면을 위에서부터 보며 각 스킬을 <strong>습득 · 미획득 · Lv0~5</strong>로 기록한 뒤, 실제 능력치와 남은 SP로 최종 조합을 추천받으세요. 입력한 상태는 이 브라우저에 저장됩니다.</p><p>상위 스킬을 습득하면 연결된 하위 스킬도 자동 습득합니다. 하위를 미획득으로 바꾸면 상위도 자동 미획득으로 바뀝니다. 같은 레어에서 갈라진 진화는 한쪽을 습득하면 다른 쪽이 미획득으로 바뀝니다. 아이콘으로 상세 설명을 확인하세요.</p><p>1차 마신표는 본체 고유기에 후보 하나를 추가한 평균값입니다. 최종 추천은 현재 습득 스킬을 기준으로 실제 조합을 다시 비교합니다. 일반 회복기도 후보로 유지하고, 계승은 1차 마신표의 고정 Top10 중 기록한 최대 6개를 사용합니다. 순위·위치·흥분 등 외부 발동 조건은 충족을 가정합니다.</p><p>공개 주행 모델의 비교값으로, 실제 승률을 뜻하지 않습니다. 스피드 2000 초과의 전개 스퍼트는 공개 근사 모델입니다. 일부 신규 스킬의 정확한 인게임 정렬은 검증 중입니다.</p><a href="legacy.html">기존 계산기 열기</a></div></details>
     </div>
   </div>
   <footer class="app-footer"><span>umaBoard · CM 준비를 더 간결하게.</span><span id="data-version">일본 서버 데이터</span></footer>

@@ -5,7 +5,7 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
-| Form | cm-app.mjs setup handlers | CM_FIRST_CHART | race / owned profile | unit + browser |
+| Form | cm-app.mjs / cm-final-ui.mjs | CM_FIRST_CHART / CM_POST_TRAINING | race / owned profile / post-training | unit + browser |
 | Select/Listbox | native select, native dialog option buttons | DESIGN | platform popup / searchable dialog | keyboard + browser |
 | Table Selection | cm-state.mjs | CM_FIRST_CHART | acquisition dropdown only | unit + browser |
 | Scrollbar | cm.css global baseline | DESIGN | bounded table / dialog body | browser |
@@ -48,3 +48,21 @@ matching rows without a display batch. Source icons determine mixed-effect categ
 Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
 purchased and Lv0–5 states across every view. A seventh attempt restores the
 previous select value and explains how to free a slot in the live draft status.
+
+Post-training inputs remain disabled until a complete first chart exists. The
+actual five stats and remaining SP start blank; aptitudes default to A. Inputs
+use native controls and explicit validation with text, aria-invalid and first
+error focus. Remaining SP excludes past purchases. Paid skills remain fixed as
+purchase history, while a genuine upgrade replaces their lower active effect.
+Hints use recorded levels; extra discount traits are not currently modeled.
+
+`cm-final-plan.mjs` owns stage pricing and combination recommendation; the shared
+discount function remains in `purchases.mjs`. `cm-final-ui.mjs` owns the second
+form, scoped draft fields, progress, cancel/error/stale states and result export.
+The first-chart sampler/compiler and solo physics own numerical behavior.
+Recommendations use a separate cancellable worker and never mutate checklist
+states or first-chart rows/gains. Input or acquisition edits cancel stale work
+and disable old exports. Setup edits require regenerating the first chart.
+Reload restores actual inputs with the corresponding plan; recommendations are
+recalculated explicitly. Native unique and acquired effects form the baseline;
+lower prerequisites never stack with their upgrade, nor do sibling evolutions.

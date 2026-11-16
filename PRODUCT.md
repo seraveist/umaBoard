@@ -1,6 +1,7 @@
-# umaBoard — CM first chart
+# umaBoard — CM skill workspace
 
-The current user-approved contract is `docs/CM_FIRST_CHART.md`. It supersedes the
+The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
+`docs/CM_POST_TRAINING.md`. They supersede the
 old expected-SP planning workflow for the new root surface. The previous app is
 retained at `legacy.html` for regression/reference, not mixed into this flow.
 
@@ -8,8 +9,9 @@ Korean-speaking JP-server Uma Musume players prepare a character and six-card
 support deck for a CM race, then use one in-game-ordered checklist while entering
 the skills they actually unlocked. First-chart generation and acquisition-state
 recording passed the final completion audit on 2026-11-16; the baseline and
-handoff contract are recorded in `docs/CM_FIRST_CHART_COMPLETION.md`. Post-training SP optimization is a
-later stage and is not represented as working on this surface.
+handoff contract are recorded in `docs/CM_FIRST_CHART_COMPLETION.md`. The next
+stage accepts actual five-stat values, remaining SP and aptitudes, and recommends
+an affordable skill combination from the recorded checklist.
 
 Only initial inputs: owned outfit, running style, CM race conditions, support deck,
 scenario. A persisted owned-outfit record supplies bloom and unique level. Race
@@ -28,6 +30,15 @@ lower skill unavailable clears all linked uppers. Acquiring an evolution clears
 its sibling evolution alternatives, retaining the shared acquired lower stages.
 Player-facing rarity names are 일반, 레어, 진화 and 계승. Icons have rarity frames
 and open source descriptions through hover, keyboard focus or tap.
+
+The post-training stage retains paid skills, permits genuine upgrades and charges
+only unpaid purchase stages at recorded hint discounts. It does not assume white
+Lv5 or event maximum hints. It compares actual combinations against the acquired
+baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
+search is bounded and does not guarantee a global optimum. Recommendations never
+change the checklist. Inputs persist per plan; edited inputs/checks invalidate
+recommendations, and changed race/deck settings require a fresh first chart.
+Both stages support independent cancellation and JSON export.
 
 Assets: existing UmaTools-only character/support portraits and type badges;
 alpha123 skill display-order metadata and 120 icons, eight additional original

@@ -117,7 +117,7 @@ export function sortChartRows(rows,data,display){
  });
 }
 
-function branchSampler(setup,nativeIds,sample){
+export function branchSampler(setup,nativeIds,sample){
  const nSet=new Set(nativeIds);
  const value=(id,index,dimension)=>{
   const offset=skillHash(id)%19,base=randomPrime[(dimension+(nSet.has(id)?0:1)+index*2)%randomPrime.length];
