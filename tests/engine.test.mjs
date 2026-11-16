@@ -121,7 +121,8 @@ test('real skills use source-specific units, inherited variants and native uniqu
  assert.equal(native.invocations[0].duration,14.4);assert.equal(inherited.invocations[0].duration,8.64);
  assert.ok(native.invocations[0].effects[0].value>inherited.invocations[0].effects[0].value);
  assert.equal(compileSkill(data.skills['901351'],{...s,style:3}).invocations[0].duration,8.64);
- assert.equal(compileSkill(data.skills['901351'],s).invocations[0].duration,2.88);
+ // Its linked acceleration cannot survive the wrong-style first trigger.
+ assert.equal(compileSkill(data.skills['901351'],s).status,'inactive');
 });
 test('high-speed inputs retain their real ordinary speed and label excluded full spurt',()=>{
  const speeds=[1200,2000,2100,2500,3000].map(speed=>({...setup,stats:{...setup.stats,speed}}));

@@ -3,14 +3,18 @@ import {compileSkill,fixedContext,sampleBranches} from './activation.mjs';
 import {simulateSolo} from './solo.mjs';
 import {lengthsBetween,validateSetup,uniqueLevel} from './physics.mjs';
 import {characterIdentity} from './acquisition-rules.mjs';
+import {withCourseMetadata} from './cm-course-metadata.mjs';
+import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v1';
+export const CM_MODEL_VERSION='cm-first-chart-v2';
 export const CM_SAMPLES=24;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
 const supported=skill=>['supported','assumed'].includes(skill?.status);
 const ASSUME=new Set(['hp_per','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
+for(const field of ['running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','is_activate_any_skill','is_activate_heal_skill','succession_skill_count','random_lot','random_lot_shared','temptation_opponent_count_behind'])ASSUME.add(field);
 const randomPrime=[2,3,5,7,11,13,17,19,23,29,31,37];
+ASSUME.add('visiblehorse'); // Nearby/visible opponents are fulfilled triggers too.
 export function radicalInverse(n,base){let x=0,f=1/base;for(;n>0;n=Math.floor(n/base),f/=base)x+=n%base*f;return x;}
 const skillHash=id=>[...String(id)].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,0);
 
@@ -31,7 +35,7 @@ export function createChartSetup(data,catalog,input){
  const bloom=Number(input.bloom??5),level=Number(input.uniqueLevel??uniqueLevel(bloom));
  if(!Number.isInteger(bloom)||bloom<outfit.base_stars||bloom>5||!Number.isInteger(level)||level<1||level>6)throw new Error('보유 육성마의 개화와 고유기 레벨을 확인하세요.');
  const setup={outfitId:outfit.id,bloom,uniqueLevel:level,style:Number(input.style),scenarioId:profile.id,supportIds:supports,
-  course:data.courses[String(input.courseId)],going:Number(input.going??1),weather:Number(input.weather??1),season:Number(input.season??3),time:Number(input.time??2),
+  course:withCourseMetadata(data.courses[String(input.courseId)]),going:Number(input.going??1),weather:Number(input.weather??1),season:Number(input.season??3),time:Number(input.time??2),
   mood:2,stats:{...profile.stats},aptitudes:{distance:'A',surface:'A',style:'A'},chartPolicy:CM_MODEL_VERSION};
  validateSetup(setup);
  if(![1,2,3,4].includes(setup.weather)||![1,2,3,4].includes(setup.season)||![1,2,3].includes(setup.time))throw new Error('CM의 날씨·계절·시간을 확인하세요.');
@@ -58,7 +62,7 @@ export function compileChartSkill(skill,setup){
 }
 
 export function buildChartCandidates(data,setup){
- const candidates=buildCandidates(data,{...setup,purchase:true,context:fixedContext(setup)});
+ const candidates=buildCandidates(data,{...setup,purchase:true,preserveEvolutionBases:true,context:fixedContext(setup)});
  const records=new Map([...candidates.learned,...candidates.factorCandidates,...candidates.inheritance].map(s=>[s.id,s]));
  const add=(id,route)=>{
   const raw=data.skills[id];if(!raw?.jp_available||!possibleInContext(raw,fixedContext(setup)))return;
@@ -68,6 +72,12 @@ export function buildChartCandidates(data,setup){
  // A comparison/checklist retains the gold AND every evolution alternative.
  // Purchase mutual exclusion belongs to the later training-result optimizer.
  for(const rule of data.evolution_rules)if(records.has(rule.evolved_id))add(rule.base_id,{kind:'evolution_base',owner_type:rule.owner_type,owner_id:rule.owner_id});
+ // These verified inherited evolutions replace their weaker version, always.
+ for(const [base,strong] of Object.entries(INHERITED_UPGRADES)){
+  const original=records.get(base),upgraded=records.get(strong);
+  if(original&&!upgraded){add(strong,original.routes?.[0]);if(records.has(strong))records.set(strong,{...records.get(strong),inheritance_outfit_ids:original.inheritance_outfit_ids});}
+  if(records.has(strong))records.delete(base);
+ }
  for(const skill of [...records.values()]){
   let stage=data.purchase_stages?.[skill.id];const seen=new Set();
   while(stage?.prerequisite_id&&!seen.has(stage.prerequisite_id)){
@@ -78,7 +88,7 @@ export function buildChartCandidates(data,setup){
 }
 
 export function sortChartRows(rows,data,display){
- const meta=display.skills||{},parents=new Map();
+ const meta=display.skills||{},parents=new Map(Object.entries(INHERITED_UPGRADES).map(([base,strong])=>[strong,base]));
  for(const rule of data.evolution_rules)parents.set(rule.evolved_id,rule.base_id);
  const resolve=(id,seen=new Set())=>{
   if(meta[id])return meta[id];if(seen.has(id))return null;seen.add(id);
@@ -133,8 +143,8 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  const nativeRecords=[...records.values()].filter(native),nativeSkills=nativeRecords.map(s=>compiled.get(s.id));
  if(nativeSkills.some(s=>s.status==='unsupported'))throw new Error('이 육성마의 고유기는 아직 계산을 지원하지 않습니다. 다른 육성마를 선택하세요.');
  const baseline=nativeSkills.filter(supported),nativeIds=nativeRecords.map(s=>s.id);
- const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&supported(compiled.get(s.id))).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
-  rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],
+ const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&supported(compiled.get(s.id))&&(!s.inherited||inheritedPerformanceSkill(compiled.get(s.id))&&styleRecommendation(s,compiled.get(s.id),setup).eligible)).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
+  rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
  const baselines=new Map(),optionsFor=sample=>({dt,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,nativeIds,sample)});
  const runBaseline=sample=>{if(!baselines.has(sample))baselines.set(sample,simulateSolo(setup,baseline,.5,optionsFor(sample)));return baselines.get(sample);};
@@ -154,18 +164,28 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
 
 export async function generateChart(data,profiles,display,input,{onProgress=()=>{},cancelled=()=>false,batchSize=30,cache=new Map(),...options}={}){
  const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:{...task.setup,supportIds:undefined,scenarioId:undefined},samples:task.samples,dt:task.dt});
- const rows=[];
- for(let index=0;index<task.rows.length;index++){
-  if(cancelled())return null;
-  const row=task.rows[index],key=setupKey+'|'+row.id;
+ const evaluate=row=>{
+  const key=setupKey+'|'+row.id;
   if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples});}
-  rows.push({...row,...cache.get(key)});
-  if((index+1)%batchSize===0||index+1===task.rows.length){
-   onProgress({rows:rows.slice(),completed:index+1,total:task.rows.length,setup:task.setup,modelVersion:CM_MODEL_VERSION});
+  return {...row,...cache.get(key)};
+ };
+ const inherited=task.rows.filter(row=>row.inherited),scored=[];
+ for(let index=0;index<inherited.length;index++){
+  if(cancelled())return null;
+  scored.push(evaluate(inherited[index]));
+  if((index+1)%batchSize===0||index+1===inherited.length){onProgress({rows:[],completed:index+1,total:task.rows.length,stage:'inheritance',setup:task.setup,modelVersion:CM_MODEL_VERSION});await new Promise(resolve=>setTimeout(resolve,0));}
+ }
+ const top=selectInheritedTop(scored),chosen=new Set(top.map(row=>row.id)),ordered=task.rows.filter(row=>!row.inherited||chosen.has(row.id)),rows=[];
+ let completed=inherited.length;
+ for(let index=0;index<ordered.length;index++){
+  if(cancelled())return null;
+  const row=ordered[index];rows.push(evaluate(row));if(!row.inherited)completed++;
+  if((index+1)%batchSize===0||index+1===ordered.length){
+   onProgress({rows:rows.slice(),completed,total:task.rows.length,stage:'checklist',setup:task.setup,modelVersion:CM_MODEL_VERSION});
    await new Promise(resolve=>setTimeout(resolve,0));
   }
  }
  while(cache.size>3000)cache.delete(cache.keys().next().value);
  return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
-  ordering:'skill-icon-and-source-order',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
+  inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-and-source-order',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
 }

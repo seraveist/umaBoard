@@ -37,7 +37,7 @@ export function raceContext(course,style,extra={}){
   return {course_distance:course.distance,distance_type:course.distance_type,ground_type:course.surface,
           track_id:Number(course.track_id),running_style:Number(style),...extra};
 }
-export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom=3,context={},purchase=false}){
+export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom=3,context={},purchase=false,preserveEvolutionBases=false}){
   if(!data.outfits[outfitId])throw new Error('Unknown outfit');
   if(supportIds.some(id=>!data.supports[id]))throw new Error('Unknown support');
   const setup={outfitId,supportIds,scenarioId},routeBy=new Map();
@@ -57,7 +57,7 @@ export function buildCandidates(data,{outfitId,supportIds=[],scenarioId='',bloom
     choiceGroups.get(rule.evolved_id).push(rule.choice_group);
     // Limited scenario evolutions are optional: retain the original gold for
     // skills that do not receive one of the two evolution slots.
-    if(rule.owner_type!=='scenario'||!(data.scenario_exclusive_groups||[]).some(g=>g.scenario_id===scenarioId&&g.skill_ids.includes(rule.evolved_id)))replaced.add(rule.base_id);
+    if(!preserveEvolutionBases&&(rule.owner_type!=='scenario'||!(data.scenario_exclusive_groups||[]).some(g=>g.scenario_id===scenarioId&&g.skill_ids.includes(rule.evolved_id))))replaced.add(rule.base_id);
   }
   const uniqueRarity=data.outfits[outfitId].base_stars>=3?'unique':Number(bloom)>=3?'unique_upgraded':'unique_low_star';
   const learned=[];

@@ -1,5 +1,6 @@
 import {phaseAt,STAT_KEYS,uniqueLevel,uniqueMultiplier} from './physics.mjs';
 import {evaluateCondition} from './candidates.mjs';
+import {cmRanks} from './cm-ranks.mjs';
 const compare=(a,op,b)=>({'==':a===b,'!=':a!==b,'>':a>b,'>=':a>=b,'<':a<b,'<=':a<=b})[op]??false;
 const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','popularity','post_number','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
 const DYNAMIC=new Set(['accumulatetime','hp_per','is_lastspurt','lastspurt','is_activate_other_skill_detail','is_used_skill_id','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
@@ -12,15 +13,16 @@ export function fixedContext(setup){
   ground_condition:setup.going,running_style:setup.style,season:setup.season,weather:setup.weather,time:setup.time,motivation:setup.mood+3,
   grade:100,is_basis_distance:Number(c.distance%400===0),is_abroad:Number(Number(c.track_id)>=10201),
   is_dirtgrade:Number(['10101','10103','10104','10105'].includes(c.track_id)),corner_count:c.corners.length,always:1,
+  ...(c.tight_track===undefined?{}:{is_tight_track:c.tight_track}),
   ...Object.fromEntries(STAT_KEYS.map((key,i)=>[['base_speed','base_stamina','base_power','base_guts','base_wiz'][i],setup.stats[key]]))};
 }
 function courseState(c,x){
  const corners=c.corners,at=corners.findIndex(k=>x>=k.start&&x<k.start+k.length),last=corners.at(-1);
  const straight=c.straights.find(k=>x>=k.start&&x<k.end),finalStraight=c.straights.at(-1);
  const slope=c.slopes.find(k=>x>=k.start&&x<k.start+k.length)?.slope||0;
- return {phase:phaseAt(x,c.distance),distance_rate:x/c.distance*100,remain_distance:Math.floor(c.distance-x),
+ return {phase:phaseAt(x,c.distance),distance_rate:Math.floor(x/c.distance*100),remain_distance:Math.floor(c.distance-x),furlong:Math.floor(x/200),
   corner:at<0?0:((at-corners.length+4)%4+4)%4+1,
-  is_finalcorner:Number(!!last&&x>=last.start),is_finalcorner_laterhalf:Number(!!last&&x>=last.start+last.length/2&&x<last.start+last.length),
+  is_finalcorner:Number(!!last&&x>=last.start),is_finalcorner_laterhalf:Number(!!finalStraight&&x>=finalStraight.start&&x<finalStraight.end||!!last&&x>=last.start+last.length/2&&x<last.start+last.length),
   is_last_straight:Number(!!finalStraight&&x>=finalStraight.start&&x<finalStraight.end),
   straight_front_type:straight?.frontType||0,slope:slope>0?1:slope<0?2:0};
 }
@@ -52,23 +54,22 @@ function boundaries(c,dnf){
  for(const k of c.straights){points.add(k.start);points.add(k.end);}
  for(const k of c.slopes){points.add(k.start);points.add(k.start+k.length);}
  for(const group of dnf||[])for(const a of group){
-  if(['distance_rate','distance_rate_after_random'].includes(a.field))points.add(d*a.value/100);
+  if(['distance_rate','distance_rate_after_random'].includes(a.field)){points.add(d*a.value/100);if(a.field==='distance_rate')points.add(d*(a.value+1)/100);}
+  if(a.field==='furlong'){points.add(200*a.value);points.add(200*(a.value+1));}
   if(a.field==='remain_distance'){points.add(d-a.value);points.add(d-a.value-1);}
   if(a.field.startsWith('phase_')){const b=phaseBounds(d,a.value);if(b){points.add((b[0]+b[1])/2);points.add(b[0]+(b[1]-b[0])/4);}}
  }
  return [...points].filter(x=>x>=0&&x<=d).sort((a,b)=>a-b);
 }
-function feasibleOrder(group){
- return Array.from({length:9},(_,i)=>i+1).some(order=>group.filter(a=>['order','order_rate'].includes(a.field)).every(a=>compare(a.field==='order'?order:Math.round(order/9*100),a.operator,a.value)));
-}
+const feasibleOrder=group=>cmRanks(group).length>0;
 function compileCondition(dnf,setup){
  if(dnf===null)return {unsupported:['조건 구문'],branches:[]};
  const fixed=fixedContext(setup),points=boundaries(setup.course,dnf),branches=[],unsupported=[];
  for(const group of dnf.length?dnf:[[]]){
   if(evaluateCondition([group],fixed)===false||!feasibleOrder(group))continue;
-  const unknown=group.filter(a=>!(a.field in fixed)&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field));
+  const unknown=group.filter(a=>!(a.field in fixed)&&a.field!=='furlong'&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field));
   if(unknown.length){unsupported.push(...unknown.map(a=>a.field));continue;}
-  const spatial=group.filter(a=>SPATIAL.has(a.field)),windows=[];
+  const spatial=group.filter(a=>SPATIAL.has(a.field)||a.field==='furlong'),windows=[];
   for(let k=0;k<points.length-1;k++){
    const lo=points[k],hi=points[k+1],x=(lo+hi)/2,state=courseState(setup.course,x);
    if(spatial.every(a=>compare(spatialValue(a,setup.course,x,state),a.operator,a.value))){
@@ -76,7 +77,7 @@ function compileCondition(dnf,setup){
    }
   }
   if(!windows.length)continue;
-  branches.push({windows,dynamic:group.filter(a=>DYNAMIC.has(a.field)),assumed:group.filter(a=>OPPONENT.has(a.field)).map(a=>a.field),
+  branches.push({windows,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),assumed:group.filter(a=>OPPONENT.has(a.field)).map(a=>a.field),
    random:group.some(a=>a.field.includes('random'))||group.some(a=>OPPONENT.has(a.field)&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
  }
  return {branches,unsupported};
@@ -109,6 +110,15 @@ export function compileSkill(skill,setup){
   invocations.push({index:inv.index,condition:condition.branches,precondition:precondition.branches,effects,duration,passive,
    linked:(inv.condition||[]).flat().some(a=>['is_activate_other_skill_detail','is_used_skill_id'].includes(a.field))});
  }
+ // A physically removed first trigger cannot leave an orphaned linked effect.
+ const reachable=new Set(),canReach=(branches,prior)=>branches.some(b=>b.dynamic.every(a=>
+  a.field==='is_activate_other_skill_detail'?compare(Number(prior),a.operator,a.value):
+  a.field==='is_used_skill_id'&&String(a.value)===skill.id?compare(prior?a.value:0,a.operator,a.value):true));
+ for(let pass=0;pass<invocations.length;pass++)for(const inv of invocations){
+  const prior=invocations.some(other=>other!==inv&&reachable.has(other));
+  if(canReach(inv.condition,prior)&&canReach(inv.precondition,prior))reachable.add(inv);
+ }
+ for(let i=invocations.length-1;i>=0;i--)if(!reachable.has(invocations[i]))invocations.splice(i,1);
  const assumed=[...new Set(invocations.flatMap(i=>[...i.condition,...i.precondition].flatMap(b=>b.assumed)))];
  return {id:skill.id,skill,invocations,reasons:[...new Set(reasons)],assumed,
   status:reasons.length?'unsupported':invocations.length?assumed.length?'assumed':'supported':'inactive'};

@@ -23,3 +23,5 @@ The first-chart frontend bundles 113 game skill icons from `alpha123/uma-tools` 
 Scenario base-stat caps (IDs 6–15) are factual reference values independently recorded from `mee1080/umasim` at commit `e5d940ce8f73bbb756ae3cffd0a081c34b8124da`. Per-profile source paths and the inheritance-cap exclusion policy are retained in `curated/cm-scenario-profiles.json`.
 
 The locally subset Board Sans fonts derive from Noto Sans CJK KR under the SIL Open Font License 1.1. The Race Sans display subset derives from Nimbus Sans Narrow Bold under the GNU Affero General Public License with the font exception. Full license notices are included in `assets/fonts/Noto-CJK-LICENSE.txt` and `assets/fonts/Nimbus-LICENSE.txt`; those licenses, rather than the project code license, apply to these fonts. Reproduction is described by `scripts/prepare_cm_fonts.py`.
+
+Tight-track flags in `assets/cm-course-metadata.mjs` are factual per-course values from mee1080/umasim `race/data/rawData.kt` at `e5d940ce8f73bbb756ae3cffd0a081c34b8124da`, guarded by track/distance/surface/turn identity. No upstream implementation is bundled.

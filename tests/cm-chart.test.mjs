@@ -5,7 +5,11 @@ import {createChartSetup,prepareChart,generateChart,compileChartSkill,buildChart
 import {compileSkill} from '../assets/activation.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {lengthsBetween} from '../assets/physics.mjs';
-import {ACQUISITION_OPTIONS,checklistSnapshot,checklistCounts} from '../assets/cm-state.mjs';
+import {ACQUISITION_OPTIONS,checklistSnapshot,checklistCounts,inheritedCount,canRecordAcquisition} from '../assets/cm-state.mjs';
+import {cmRanks} from '../assets/cm-ranks.mjs';
+import {selectInheritedTop,styleRecommendation} from '../assets/cm-recommendation.mjs';
+import {categoryRows,skillCategory} from '../assets/cm-categories.mjs';
+import {courseSegments,elevationProfile,courseSvg} from '../assets/cm-course.mjs';
 
 const read=path=>JSON.parse(readFileSync(new URL('../'+path,import.meta.url)));
 const manifest=read('data/manifest.json'),actual=read(manifest.dataset_path),actualProfiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
@@ -112,10 +116,87 @@ test('acquisition records have eight states and evolution branch ownership remai
  assert.deepEqual(checklistCounts(rows,states),{total:4,available:3,owned:1});
 });
 
-test('real JP candidates have no Top10 cutoff and supported recovery rows remain in the pool',()=>{
+test('internal JP comparison pool retains ordinary recovery and scores more than ten inheritance candidates',()=>{
  const setup=createChartSetup(actual,actualProfiles,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10808',supportIds:[]});
  const task=prepareChart(actual,actualProfiles,display,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10808',supportIds:[]},{samples:1,dt:.05});
  assert.ok(task.rows.filter(r=>r.inherited).length>10);assert.ok(task.rows.some(r=>r.categories.includes('heal')));
  assert.ok(task.rows.some(r=>r.id==='200561'));assert.ok(task.rows.some(r=>r.id==='101301211'));
  assert.ok(['200331','200332','200361','200362'].every(id=>compileChartSkill(actual.skills[id],setup).status!=='unsupported'));
+});
+
+test('a fixed-inapplicable evolution never hides the obtainable original gold',()=>{
+ for(const [outfitId,courseId,style,id] of [['107701','10611',2,'200154'],['102503','10811',4,'200751']]){
+  const setup=createChartSetup(actual,actualProfiles,{outfitId,courseId,style,scenarioId:'15',supportIds:[]});
+  assert.ok(buildChartCandidates(actual,setup).has(id));
+ }
+});
+
+test('CM rank percentages round the field-size threshold and preserve exact-sixth and wide middle ranges',()=>{
+ const a=(field,operator,value)=>({field,operator,value});
+ assert.deepEqual(cmRanks([a('order_rate','<=',40)]),[1,2,3,4]);
+ assert.deepEqual(cmRanks([a('order_rate','>',50)]),[6,7,8,9]);
+ assert.deepEqual(cmRanks([a('order_rate','>=',65),a('order_rate','<=',70)]),[6]);
+ const setup=createChartSetup(actual,actualProfiles,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10808'});
+ const ana=actual.skills['900271'];assert.equal(styleRecommendation(ana,compileChartSkill(ana,setup),setup).eligible,false);
+ const native=actual.skills['100511'];assert.deepEqual(styleRecommendation(native,compileChartSkill(native,setup),setup).allowedStyles,[2]);
+ assert.equal(styleRecommendation(ana,compileChartSkill(ana,setup),{...setup,style:3}).eligible,true);
+ const middle=actual.skills['202661'];assert.equal(styleRecommendation(middle,compileChartSkill(middle,setup),setup).eligible,true);
+ const heal=actual.skills['200352'];assert.equal(styleRecommendation(heal,compileChartSkill(heal,setup),setup).source,'not-applicable');
+});
+
+test('chart-only external triggers restore passive/counter skills while unknown effects stay excluded',()=>{
+ const setup=createChartSetup(actual,actualProfiles,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10808'});
+ for(const id of ['200271','200281','200291','900171','900551'])assert.ok(['supported','assumed'].includes(compileChartSkill(actual.skills[id],setup).status),id);
+ const tight=createChartSetup(actual,actualProfiles,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10401'});
+ assert.equal(compileChartSkill(actual.skills['202241'],tight).status,'supported');
+});
+
+test('final-corner latter-half includes the final straight, furlong stays spatial and orphan links disappear',()=>{
+ const d=fixture(),setup=createChartSetup(d,profiles,input),a=(field,value)=>({field,operator:'==',value});
+ const half=compileChartSkill(skill('half',[[a('is_finalcorner_laterhalf',1)]]),setup);
+ assert.equal(half.status,'supported');assert.deepEqual(half.invocations[0].condition[0].windows,[[0,2200]]);
+ const furlong=compileChartSkill(skill('furlong',[[a('furlong',3)]]),setup);
+ assert.deepEqual(furlong.invocations[0].condition[0].windows,[[600,800]]);
+ const orphan=skill('orphan',[[a('corner',1)]]);orphan.invocations.push({...orphan.invocations[0],index:2,condition:[[a('is_activate_other_skill_detail',1)]]});
+ assert.equal(compileChartSkill(orphan,setup).status,'inactive');
+});
+
+test('strengthened inheritance replaces normal, respects real style gates and excludes pure healing inherits',()=>{
+ for(const style of [2,3]){
+  const t=prepareChart(actual,actualProfiles,display,{outfitId:'101301',scenarioId:'15',style,courseId:'10808',supportIds:[]},{samples:1,dt:.05});
+  const strong=style===2?'91101411':'91101351',wrong=style===2?'91101351':'91101411';
+  assert.ok(t.rows.some(r=>r.id===strong));assert.ok(!t.rows.some(r=>['901351','901411',wrong].includes(r.id)));
+  assert.ok(t.rows.filter(r=>r.inherited).every(r=>r.categories.some(c=>['speed','acceleration'].includes(c))));
+ }
+});
+
+test('inheritance Top10 uses unrounded positive mean, skips unsuitable and duplicate origins, and publishes only a locked shortlist',async()=>{
+ const ranked=Array.from({length:12},(_,i)=>({id:String(i),inherited:true,gain:1+i/10000,recommendation:{eligible:true}}));
+ ranked.push({id:'bad',inherited:true,gain:99,recommendation:{eligible:false}},{id:'zero',inherited:true,gain:.0001,recommendation:{eligible:true}});
+ assert.deepEqual(selectInheritedTop(ranked).map(r=>r.id),['11','10','9','8','7','6','5','4','3','2']);
+ const d=fixture();for(let i=0;i<12;i++){const id=String(900000+i);d.skills[id]={...skill(id,[[{field:'phase',operator:'==',value:1}]],'target_speed',6000+i*100,'inherited'),inherited:true,parent_ids:['other']};}
+ const progress=[],r=await generateChart(d,profiles,{skills:{}},input,{samples:1,dt:.05,batchSize:3,onProgress:p=>progress.push(p)});
+ assert.equal(r.rows.filter(r=>r.inherited).length,10);assert.equal(r.inheritedTopIds.length,10);
+ for(const p of progress)assert.ok(p.rows.filter(row=>row.inherited).every(row=>r.inheritedTopIds.includes(row.id)));
+ assert.equal(r.rows.find(r=>r.id==='202').gain,0);
+});
+
+test('six inheritance selections count all hint/purchased states across filters, and can be released',()=>{
+ const rows=Array.from({length:10},(_,i)=>({id:String(i),inherited:true})),states={0:'owned',1:'0',2:'1',3:'3',4:'4',5:'5',outside:'owned'};
+ assert.equal(inheritedCount(rows,states),6);assert.equal(canRecordAcquisition(rows,states,'6','0'),false);
+ assert.equal(canRecordAcquisition(rows,states,'0','4'),true);assert.equal(canRecordAcquisition(rows,states,'0','unavailable'),true);
+ states[0]='unavailable';assert.equal(canRecordAcquisition(rows,states,'6','owned'),true);
+});
+
+test('icon categories are disjoint, keep source order and place mixed skills by game icon',()=>{
+ const rows=[{id:'a',iconId:'10011',categories:['passive']},{id:'b',iconId:'20013',categories:['speed','heal']},{id:'c',iconId:'20021',categories:['heal']},{id:'d',iconId:'20041',categories:['acceleration']},{id:'e',iconId:'20141',categories:['speed','heal']},{id:'f',iconId:null,categories:['speed']}];
+ assert.deepEqual(rows.map(skillCategory),['passive','speed','heal','acceleration','other','speed']);
+ assert.deepEqual(categoryRows(rows,'speed').map(r=>r.id),['b','f']);assert.deepEqual(categoryRows(rows,'all'),rows);
+});
+
+test('course diagram retains Nakayama2500 boundaries, unknown initial section and integrated relative elevation',()=>{
+ const c=Object.values(actual.courses).find(c=>c.track_id==='10005'&&c.distance===2500&&c.surface===1),segments=courseSegments(c);
+ assert.equal(segments[0].kind,'unknown');assert.deepEqual(segments.filter(s=>s.kind==='corner').map(s=>s.label),['3코너','4코너','1코너','2코너','3코너','최종 코너']);
+ assert.ok(segments.some(s=>s.start===2190&&s.label==='최종 직선'));assert.match(courseSvg(c),/>1666<\/text>/);
+ assert.deepEqual(elevationProfile({distance:1000,slopes:[{start:100,length:200,slope:100}]}),[[0,0],[100,0],[300,2],[1000,2]]);
 });

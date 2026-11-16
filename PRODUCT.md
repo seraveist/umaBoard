@@ -16,9 +16,9 @@ stats use verified scenario base caps, mood is best, aptitudes A. No pre-trainin
 stamina advice. All supported acquisition/trigger predicates are fulfilled;
 physical timing, course geometry, durations and causal linked effects remain.
 
-All skill categories share one table. Gold candidates come only from the selected
+All skill categories share one table, with an icon-category tab row and name search. Gold candidates come only from the selected
 outfit, scenario and deck. Evolutions and alternatives remain individually visible.
-Ordinary factor-eligible whites and inherited uniques complete the pool. Unknown
+Ordinary factor-eligible whites complete the ordinary pool. Inheritance uses a fixed positive-gain Top10 after style suitability filtering, always using verified strengthened forms and excluding pure healing; users can record at most six of these. Unknown
 calculations are excluded. Thirty rows is a display batch, not a candidate cap.
 The acquisition dropdown has eight states: owned, unavailable, levels zero to five.
 

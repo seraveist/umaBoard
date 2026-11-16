@@ -66,7 +66,7 @@ use tabular numerals. Keep the Japanese source spelling intact.
 
 1440px maximum width. Header, compact title, left preparation form and right
 course/results desk. Desktop left360–400px; narrow screens stack naturally with
-the results below. Only the skill-table surface owns bounded scrolling; forms
+the results below. The course diagram and skill-table surface own bounded scrolling; forms
 remain in document flow. Thirty rows per explicit load batch. Errors/progress
 reserve space. No global fixed-height/overflow-hidden shell.
 
@@ -98,6 +98,9 @@ not animate or move while users input.
 - Do keep the acquisition checklist in source order while users work.
 - Do preserve inputs, scroll and focus during asynchronous progress.
 - Do use actual portraits/icons and actual course coordinates.
-- Don't replace zero-gain recovery with an empty row or another category tab.
+- Do keep ordinary zero-gain recovery in the shared checklist.
+- Do use one icon-category tab row above the table; filtering preserves source order and all checked states.
+- Do show original square SSR frames, with type badges beside the name.
+- Do draw relative elevation, phase bands and numbered segments from course geometry.
 - Don't turn this tool into a landing page, rankings dashboard or SP optimizer.
 - Don't claim exact game simulation or exact sorting before verification.

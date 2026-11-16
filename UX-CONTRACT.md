@@ -28,3 +28,12 @@ Rows preserve identity/focus while progress arrives, and append-only load-more
 keeps the original order. Search clears/clamps displayed count. No unmatched
 query reports a dedicated no-results state. JP names stay JP, all UI copy and
 accessible names Korean. Locale ko-KR, timezone Asia/Seoul for export timestamps.
+
+
+The icon-category tab row is a view of the same canonical checklist. It never
+reruns calculations, changes source order or discards acquisition states. Tabs
+have arrow/Home/End keyboard navigation and counts; tab/search changes reset
+only the visible thirty-row batch. Source icons determine mixed-effect categories.
+Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
+purchased and Lv0–5 states across every view. A seventh attempt restores the
+previous select value and explains how to free a slot in the live draft status.
