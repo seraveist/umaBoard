@@ -49,6 +49,8 @@ test('the workflow has two accessible stage panels and one shared checklist with
  for(const stage of ['prepare','finish']){assert.match(html,new RegExp(`id="stage-${stage}"[^>]*role="tab"`));assert.match(html,new RegExp(`id="${stage}-stage"[^>]*role="tabpanel"`));}
  assert.match(html,/id="stage-finish"[^>]*disabled/);assert.match(html,/id="finish-stage"[^>]*hidden/);
  assert.equal((html.match(/id="checklist"/g)||[]).length,1);assert.match(html,/id="prepare-checklist-slot"/);assert.match(html,/id="finish-checklist-slot"/);
+ assert.match(html,/<details id="final-inputs"[^>]*open/);assert.match(html,/id="final-submit"[^>]*form="final-form"/);
+ for(const view of ['record','result'])assert.match(html,new RegExp(`id="post-view-${view}"[^>]*role="tab"`));
  assert.match(app,/workflow\.setChartState\('ready'\)/);assert.match(app,/workflow\.setChartState\('loading'\)/);
  for(const match of html.matchAll(/<label[^>]*\bfor="([^"]+)"/g))assert.ok(ids.includes(match[1]),match[1]);
 });

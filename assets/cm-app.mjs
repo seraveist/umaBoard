@@ -22,7 +22,7 @@ let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311
 let states={},category='all',pickerKind='',pickerSlot=-1,pickerType='',returnFocus=null,searchComposing=false,pickerComposing=false;
 const tableNodes=new Map();
 const skillDetails=createSkillDetails();
-const workflow=createWorkflow({onChange:()=>{skillDetails.dismiss();if(!$('#cm-notice').classList.contains('is-error'))notice('');if(ready)renderRows();}});
+const workflow=createWorkflow({onChange:()=>{skillDetails.dismiss();if(!$('#cm-notice').classList.contains('is-error'))notice('');if(ready)renderRows();},onViewChange:()=>skillDetails.dismiss()});
 
 function notice(text='',error=false){$('#cm-notice').textContent=text;$('#cm-notice').classList.toggle('is-error',error);}
 function readDraft(){
@@ -231,7 +231,7 @@ async function start(){
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
   data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);
-  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();return saveDraft();}});
+  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;
   if(saved&&Array.isArray(saved.supportIds))deck=saved.supportIds.slice(0,6);

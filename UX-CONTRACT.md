@@ -5,7 +5,7 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
-| Navigation | cm-workflow.mjs | PRODUCT / DESIGN | preparation / post-training stage tabs | keyboard + browser |
+| Navigation | cm-workflow.mjs | PRODUCT / DESIGN | stage tabs / responsive record-result tabs | keyboard + browser |
 | Form | cm-app.mjs / cm-final-ui.mjs | CM_FIRST_CHART / CM_POST_TRAINING | race / owned profile / post-training | unit + browser |
 | Select/Listbox | native select, native dialog option buttons | DESIGN | platform popup / searchable dialog | keyboard + browser |
 | Table Selection | cm-state.mjs | CM_FIRST_CHART | acquisition dropdown / atomic whole-list settings | unit + browser |
@@ -23,6 +23,21 @@ inputs and valid final results survive navigation without calculation. Skill
 details dismiss when the stage changes. Stage1 hides acquisition/bulk controls;
 stage2 exposes them. Reload starts at preparation because charts are explicitly
 regenerated, then restores the corresponding plan's saved records and inputs.
+
+At widths up to860px, native record/result tabs display one existing panel at a
+time. Their selection, roving tabindex and Arrow/Home/End behavior stay in sync.
+Desktop displays both panels and removes the mobile tabpanel roles/labels.
+Resizing recovers focus from a newly hidden panel or tab. Tabs never duplicate
+the checklist, discard search/scroll/records, or trigger calculation. The actual
+input form and submit/cancel/progress/status remain common to both views.
+
+`cm-final-ui.mjs` owns the native actual-input disclosure: expanded for each
+restored/new chart, collapsed after a successful recommendation, manually
+reopenable without invalidation. Invalid inputs reopen it before first-error
+focus. The external submit button explicitly owns `final-form`. Success selects
+the mobile result panel before focusing its title; background completion does
+not focus a hidden stage. Disclosure/view selection is transient UI state;
+the existing plan key and saved input/acquisition schema are unchanged.
 
 Generate validates without native validation bubbles; focus the first relevant
 field on recoverable failure. Same inputs reuse calculation cache. Recalculation

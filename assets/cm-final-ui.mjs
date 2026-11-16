@@ -3,20 +3,27 @@ import {STAT_KEYS} from './physics.mjs';
 import {createFinalSetup} from './cm-final-plan.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
 
-export function createFinalPlanner({data,display,manifest,skillDetails,read,write}){
- const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields');
+export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true}){
+ const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
  let chart=null,states={},scope='',worker=null,requestId=0,result=null,busy=false;
  const values=()=>({stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,fastLearner:$('#fast-learner').checked,aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value]))});
  const aptitudeSummary=()=>{$('#final-aptitude-summary').textContent=`적성 설정 · ${['distance','surface','style'].map(key=>$('#actual-'+key+'-aptitude').value).join(' / ')}`;};
- const setValues=value=>{for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#fast-learner').checked=value?.fastLearner===true;for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';aptitudeSummary();};
+ const inputSummary=()=>{
+  const value=values(),valid=STAT_KEYS.every(key=>/^\d+$/.test(value.stats[key])&&Number(value.stats[key])>=1&&Number(value.stats[key])<=3000)&&/^\d+$/.test(value.spBudget)&&Number(value.spBudget)<=100000;
+  const summary=$('#final-input-summary');
+  if(!valid){summary.textContent='실제 스탯 5종과 보유 SP를 입력하세요.';return;}
+  const parts=['스탯 입력 완료',`보유 ${Number(value.spBudget).toLocaleString('ko-KR')} SP`,...(value.fastLearner?['수완가 적용']:[]),`적성 ${['distance','surface','style'].map(key=>value.aptitudes[key]).join(' / ')}`];
+  summary.replaceChildren(...parts.map((text,index)=>el('span','input-summary-part',`${index?' · ':''}${text}`)));
+ };
+ const setValues=value=>{for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#fast-learner').checked=value?.fastLearner===true;for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';aptitudeSummary();inputSummary();};
  const message=text=>{$('#final-status').textContent=text;};
  const stop=()=>{requestId++;worker?.terminate();worker=null;busy=false;$('#final-submit').disabled=!chart;$('#final-submit').textContent='최종 스킬 추천';$('#final-cancel').hidden=true;$('#final-progress').hidden=true;form.setAttribute('aria-busy','false');};
  const stale=text=>{stop();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='이전 조건의 결과 · 다시 추천해 주세요';}message(text);};
- const error=(text,input)=>{$('#final-error').textContent=text;if(input){input.setAttribute('aria-invalid','true');input.focus();}};
+ const error=(text,input)=>{inputs.open=true;$('#final-error').textContent=text;if(input){input.setAttribute('aria-invalid','true');input.focus();}};
  const clearError=()=>{$('#final-error').textContent='';for(const input of form.querySelectorAll('[aria-invalid]'))input.removeAttribute('aria-invalid');};
- const save=()=>{if(scope&&!write(scope,{values:values()}))message('입력값을 저장하지 못했습니다. 결과를 내려받아 보관해 주세요.');};
+ const save=()=>{inputSummary();if(scope&&!write(scope,{values:values()}))message('입력값을 저장하지 못했습니다. 결과를 내려받아 보관해 주세요.');};
  const render=plan=>{
-  const panel=$('#final-result'),source=createSkillSourceResolver(data,plan.setup);skillDetails.dismiss();panel.hidden=false;panel.classList.remove('is-stale');$('#final-result-state').textContent=`현재 스탯·체크 상태 기준${plan.setup.fastLearner?' · 수완가 적용':''}`;
+  const panel=$('#final-result'),source=createSkillSourceResolver(data,plan.setup);skillDetails.dismiss();$('#final-empty').hidden=true;panel.hidden=false;panel.classList.remove('is-stale');$('#final-result-state').textContent=`현재 스탯·체크 상태 기준${plan.setup.fastLearner?' · 수완가 적용':''}`;
   for(const [id,value]of [['final-used',plan.budget.used],['final-remaining',plan.budget.remaining],['final-budget',plan.budget.total]])$('#'+id).textContent=value.toLocaleString('ko-KR');
   $('#final-gain').textContent=`${plan.gain>0?'+':''}${plan.gain.toFixed(2)}`;
   $('#final-hp-note').textContent=plan.fullSpeedFeasible?'회복을 포함한 조합으로 최속 스퍼트 HP 조건을 충족합니다.':'탐색한 조합에서 최속 스퍼트 HP 조건을 충족하지 못했습니다. 실제 스태미나와 확보한 회복기를 확인해 주세요.';
@@ -36,7 +43,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
   $('#final-excluded').hidden=!plan.excluded.length;$('#final-excluded-summary').textContent=`추천에서 제외된 스킬 ${plan.excluded.length}개`;
   $('#final-excluded-list').replaceChildren(...plan.excluded.map(row=>el('li','',`${data.skills[row.id].name_jp} · ${row.reason}`)));
-  $('#final-export').disabled=false;$('#final-result-title').focus();
+  $('#final-export').disabled=false;inputSummary();if(inputs.contains(document.activeElement))$('#final-inputs>summary').focus({preventScroll:true});inputs.open=false;if(onResult()!==false)$('#final-result-title').focus();
  };
  form.addEventListener('input',()=>{clearError();stale('입력값이 바뀌었습니다. 최종 스킬 추천을 다시 실행해 주세요.');save();});
  form.addEventListener('change',event=>{if(event.target.tagName==='SELECT'){aptitudeSummary();clearError();stale('적성이 바뀌었습니다. 최종 스킬 추천을 다시 실행해 주세요.');save();}});
@@ -48,7 +55,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   }
   const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),fastLearner:raw.fastLearner,aptitudes:raw.aptitudes};
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
-  stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message('현재 습득 상태와 실제 스탯으로 추천을 시작합니다.');save();
+  stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message('현재 습득 상태와 실제 스탯으로 추천을 시작합니다.');save();
   const job=requestId;
   try{worker=new Worker(new URL('./cm-final-worker.mjs',import.meta.url),{type:'module'});}catch{stop();error('추천 계산을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.');return;}
   worker.onmessage=({data:reply})=>{
@@ -66,7 +73,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const blob=new Blob([JSON.stringify({schemaVersion:1,dataVersion:manifest.active_version,createdAt:new Date().toISOString(),...result},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`umaBoard-최종스킬-${result.setup.course.distance}m.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('최종 스킬 추천 결과를 저장했습니다.');
  });
  return {
-  setChart(value,acquisition,key){stop();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;$('#final-result').hidden=true;setValues(read(scope)?.values);$('#final-submit').disabled=false;$('#final-lock-note').textContent=`${chart.rows.length}개 스킬의 획득 기록 연결됨`;message('');},
+  setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;setValues(read(scope)?.values);$('#final-submit').disabled=false;$('#final-lock-note').textContent=`${chart.rows.length}개 스킬의 획득 기록 연결됨`;message('');},
   setStates(value){if(!chart)return;states={...value};stale('획득 상태가 바뀌었습니다. 변경한 힌트와 습득 기록으로 다시 추천해 주세요.');},
   invalidate(text='먼저 현재 설정으로 1차 마신표를 완성해 주세요.'){stale(text);chart=null;fields.disabled=true;$('#final-submit').disabled=true;$('#final-lock-note').textContent=text;}
  };

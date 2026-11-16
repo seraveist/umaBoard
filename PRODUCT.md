@@ -15,8 +15,11 @@ an affordable skill combination from the recorded checklist.
 
 The user chose separate stage screens on2026-11-16. Stage1 groups character,
 race and supports above the first chart; caps and course geometry are expandable.
-After chart completion, stage2 places acquisition records beside actual inputs
-and recommendations (stacked with section links on phones). Moving between
+After chart completion, stage2 keeps actual inputs above acquisition records
+and recommendations. Phones switch between records and results; desktops show
+both side by side. Successful recommendations collapse actual inputs to a summary
+and select the mobile result view. Inputs can always be reopened; submitting or
+cancelling remains available while collapsed. Moving between
 stages retains the same checklist, filters and per-plan values without recalculating.
 The initial stage hides acquisition controls. Setup edits lock stage2 until a
 fresh chart completes. Reload begins at stage1 and restores the matching saved

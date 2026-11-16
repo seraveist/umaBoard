@@ -60,8 +60,10 @@ orange acceleration and green passive icons using existing game assets.
 Self-hosted Board Sans is a Noto Sans CJK KR subset with full Korean/Japanese
 coverage for this app. Self-hosted Race Sans (Nimbus Sans Narrow Bold) is limited
 to the wordmark and measured distance numerals. Body14px, line-height1.6;
-page title25px (21px narrow), section titles17px, labels11px. Japanese skill
-names14px (13px narrow), no italics, no forced letter spacing. Numeric columns
+page title25px (21px narrow), section titles17px, labels11px (actual inputs12px).
+Japanese skill names15px, acquisition sources12px at every width, no italics or
+forced letter spacing. Runtime tokens `--skill-name-size`, `--skill-source-size`
+and `--skill-row-space` own15px/12px/10px vertical row padding. Numeric columns
 use tabular numerals. Keep the Japanese source spelling intact.
 
 ## Layout
@@ -78,9 +80,11 @@ collapsed disclosures. One generate action precedes the full-width first chart;
 after completion the continue action becomes the primary next step. Acquisition
 controls and bulk actions appear only in stage2.
 
-Post-training uses the checklist left and actual inputs/recommendation right,
+Post-training places actual inputs above the checklist and recommendations.
+The checklist sits left and recommendation right,
 with a1.65:1 ratio and340px minimum right column (320px below1100px). At860px
-they stack with links to skill records and actual inputs. The table has bounded
+native tabs switch skill records and recommendation results one at a time;
+the actual-input area, submit, cancellation and progress remain common. The table has bounded
 650px desktop/600px phone scrolling; all admitted rows render. The course strip
 and dialog option body own their own scrolling. Forms remain in document flow.
 Errors/progress reserve space. No global fixed-height/overflow-hidden shell.
@@ -132,11 +136,17 @@ not animate or move while users input.
 
 The post-training panel follows the same bordered work surface, native fields,
 status regions and primary action. It is visible in stage2 after a completed
-chart. Six numeric inputs form two three-column rows in the sidebar and on
-phones, or one six-column row in the wider stacked layout. Controls are42px
+chart. Six numeric inputs share one full-width desktop row and two three-column
+rows on phones. They start expanded, then collapse after successful recommendation
+to a summary of input completion, remaining budget, discount trait and aptitudes.
+Users can reopen the native disclosure at any time. The submit action remains
+outside the disclosure with an explicit native form owner; errors reopen inputs
+before focusing the invalid field. Controls are42px
 high,44px on phones. A native Fast Learner checkbox and collapsed
 aptitude settings sit below; opening aptitudes gives the three selects a full row.
-Actual values start blank. Results use a compact SP/gain summary and a source-ordered list with
+Actual values start blank. Successful recommendations select the mobile result
+view before focusing its heading; re-entering preparation does not force the
+hidden result into focus. Results use a compact SP/gain summary and a source-ordered list with
 expandable stage prices; the checklist retains its single table and scroll area.
 Recommendations never modify acquisition records. A visible stale-result label
 and disabled export prevent old recommendations being presented as current.

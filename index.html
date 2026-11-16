@@ -41,9 +41,8 @@
  </section>
  <section id="finish-stage" role="tabpanel" aria-labelledby="stage-finish" hidden>
   <div class="training-context"><div><strong id="training-context-title"></strong><p id="training-context-detail"></p></div><button id="edit-preparation" type="button" class="button subtle">레이스·편성 수정</button></div>
-  <nav class="post-section-links" aria-label="육성 후 작업 바로가기"><a href="#checklist">스킬 기록</a><a href="#post-training">스탯·SP 입력</a></nav>
-  <div class="finish-grid"><div id="finish-checklist-slot"></div><section id="post-training" class="final-panel" aria-labelledby="final-title" tabindex="-1">
-        <div class="final-heading"><div><h2 id="final-title">실제 육성 결과</h2><p>실제 스탯과 남은 SP로 추가 구매할 조합을 추천합니다.</p></div></div>
+  <section id="post-training" class="final-input-panel" aria-labelledby="final-title" tabindex="-1">
+       <details id="final-inputs" class="final-inputs" open><summary><h2 id="final-title"><span>실제 육성 결과</span><small id="final-input-summary">실제 스탯 5종과 보유 SP를 입력하세요.</small><span class="input-disclosure-action"><span class="when-open">접기</span><span class="when-closed">입력 수정</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></span></h2></summary>
         <p id="final-lock-note" class="final-context">먼저 1차 마신표를 완성해 주세요.</p>
         <form id="final-form" novalidate aria-busy="false">
           <fieldset id="final-fields" disabled><legend class="sr-only">육성 결과 입력</legend>
@@ -64,10 +63,14 @@
           </fieldset>
           <p id="final-input-help" class="final-help">습득 스킬은 유지하고, 획득·할인 Lv1~5를 구매 후보로 사용합니다. 컨디션 최상 기준.</p>
           <p id="final-error" class="field-error final-error" role="alert"></p>
-          <div class="final-actions"><button id="final-submit" type="submit" class="button primary" disabled>최종 스킬 추천</button><button id="final-cancel" type="button" class="text-button" hidden>추천 중지</button></div>
+        </form></details>
+          <div class="final-actions"><button id="final-submit" type="submit" form="final-form" class="button primary" disabled>최종 스킬 추천</button><button id="final-cancel" type="button" class="text-button" hidden>추천 중지</button></div>
           <div id="final-progress" class="final-progress" hidden><span id="final-progress-label" role="status" aria-live="polite">추천 준비 중</span><progress id="final-progress-bar" max="1" value="0" aria-label="최종 추천 진행률"></progress></div>
-        </form>
         <p id="final-status" class="final-status" role="status" aria-live="polite"></p>
+  </section>
+  <nav id="post-view-tabs" class="post-view-tabs" role="tablist" aria-label="육성 후 작업 영역" hidden><button id="post-view-record" type="button" role="tab" aria-selected="true" aria-controls="finish-checklist-slot" tabindex="0">스킬 기록</button><button id="post-view-result" type="button" role="tab" aria-selected="false" aria-controls="post-result-panel" tabindex="-1">추천 결과</button></nav>
+  <div class="finish-grid"><div id="finish-checklist-slot"></div><section id="post-result-panel" class="final-panel" aria-label="최종 스킬 추천 결과">
+        <div id="final-empty" class="final-empty"><h2>추천 구매 목록</h2><p>확보한 스킬과 실제 육성 결과를 입력하고<br>최종 스킬 추천을 실행하세요.</p></div>
         <section id="final-result" class="final-result" aria-labelledby="final-result-title" hidden>
           <div class="final-result-heading"><div><h3 id="final-result-title" tabindex="-1">추천 구매 목록</h3><span id="final-result-state"></span></div><button id="final-export" type="button" class="button subtle" disabled>추천 저장</button></div>
           <dl class="final-totals"><div><dt>추가 구매 SP</dt><dd><span id="final-used">0</span> <small>/ <span id="final-budget">0</span></small></dd></div><div><dt>남는 SP</dt><dd id="final-remaining">0</dd></div><div><dt>현재 습득 대비 평균 마신</dt><dd><span id="final-gain">0.00</span></dd></div></dl>
