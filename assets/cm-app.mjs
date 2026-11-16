@@ -118,6 +118,7 @@ function renderPicker(){
 function newRow(row){
  const tr=el('tr',row.rarity==='evolution'?'evolution-row':'');tr.dataset.skill=row.id;
  const nameCell=el('td'),identity=el('div','skill-identity'),icon=display.icons?.[row.iconId];
+ identity.style.setProperty('--skill-indent-level',String(row.indentLevel||0));
  const iconButton=el('button',`skill-detail-trigger rarity-${row.rarity==='gold'?'rare':row.rarity==='evolution'?'evolution':'normal'}`);iconButton.type='button';
  if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
  else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}

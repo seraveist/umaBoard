@@ -41,6 +41,25 @@ test('gold originals and both evolution branches stay in the comparison pool',()
  d.skills['400']=skill('400',[],'target_speed',9000,'gold');assert.ok(!buildChartCandidates(d,createChartSetup(d,profiles,input)).has('400'));
 });
 
+test('each skill family lists evolution alternatives before its indented rare and ordinary tiers',()=>{
+ const rows=[{id:'white',rarity:'white',name:'white'},{id:'rare',rarity:'gold',name:'rare'},{id:'evoB',rarity:'evolution',name:'B'},{id:'evoA',rarity:'evolution',name:'A'},{id:'standalone',rarity:'white',name:'standalone'}];
+ const display={skills:{white:{groupId:'chain',iconId:'20011',order:1},rare:{groupId:'chain',iconId:'20012',order:2},evoA:{groupId:'chain',iconId:'20016',order:3},evoB:{groupId:'chain',iconId:'20016',order:4},standalone:{groupId:'separate',iconId:'20011',order:5}}};
+ const data={evolution_rules:[]},sorted=sortChartRows(rows,data,display);
+ assert.deepEqual(sorted.map(row=>[row.id,row.indentLevel]),[['evoA',0],['evoB',0],['rare',1],['white',2],['standalone',0]]);
+ const withoutEvolution=sortChartRows(rows.filter(row=>!row.id.startsWith('evo')),data,display);
+ assert.deepEqual(withoutEvolution.map(row=>[row.id,row.indentLevel]),[['rare',0],['white',1],['standalone',0]]);
+});
+
+test('verified purchase chains stay together when newer skills lack display metadata',()=>{
+ const rows=[{id:'ordinary',name:'ordinary',rarity:'white'},{id:'rare',name:'rare',rarity:'gold'}];
+ const data={purchase_stages:{rare:{status:'verified',prerequisite_id:'ordinary'}},evolution_rules:[]};
+ for(const display of [{skills:{}},{skills:{rare:{groupId:'family',iconId:'20012',order:1}}},{skills:{ordinary:{groupId:'family',iconId:'20011',order:2}}}]){
+  const sorted=sortChartRows(rows,data,display);
+  assert.deepEqual(sorted.map(row=>[row.id,row.indentLevel]),[['rare',0],['ordinary',1]]);
+  assert.equal(sorted[0].groupId,sorted[1].groupId);
+ }
+});
+
 test('the chart uses an arithmetic mean, remains SP independent, and retains a zero-length pure heal',async()=>{
  const d=fixture(),task=prepareChart(d,profiles,{skills:{}},input,{samples:24,dt:.02});
  const random=task.evaluate(task.rows.find(r=>r.id==='201')),heal=task.evaluate(task.rows.find(r=>r.id==='202'));

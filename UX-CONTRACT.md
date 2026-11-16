@@ -35,6 +35,11 @@ the internally scrollable table; search and tabs filter the entire pool. No unma
 query reports a dedicated no-results state. JP names stay JP, all UI copy and
 accessible names Korean. Locale ko-KR, timezone Asia/Seoul for export timestamps.
 
+The 2026-11-16 hierarchy layout orders each family evolution → rare → ordinary,
+with one indentation step per present lower tier. Alternative evolutions share
+the top depth. Without an evolution, rare starts at depth0 and ordinary at depth1.
+Category/search filtering preserves these depths; gain/state columns stay aligned.
+
 
 The icon-category tab row is a view of the same canonical checklist. It never
 reruns calculations, changes source order or discards acquisition states. Tabs

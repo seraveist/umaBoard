@@ -91,6 +91,11 @@ Buttons reserve their size when busy. Native focus-visible uses primary color.
 Global scrollbars use border/muted/mint tokens, with forced-colors fallback.
 Skill icons are buttons framed in silver (normal), gold (rare), or pink
 (evolution), with a visible focus ring and text labels. The runtime owns
+`--skill-indent-step` (16px desktop, 8px narrow): each family's evolutions are
+unindented, rare skills step in once, and ordinary skills step in again. Without
+an evolution, rare is the root and ordinary steps in once. Alternative evolutions
+share the root depth. Mean gain and acquisition controls keep aligned columns.
+The runtime also owns
 `--skill-*-frame` and `--skill-*-surface` tokens in cm.css. One body-mounted
 `cm-skill-details.mjs` tooltip uses `--z-skill-details:300`, stays within the
 viewport, and opens on hover, focus or tap. Escape/outside interaction dismisses

@@ -92,7 +92,13 @@ gold ID remains pricing metadata; later optimization still resolves shared costs
 
 One semantic table, Japanese skill names with icons, mean lengths and acquisition
 dropdown. Source icon families, display order and upgrade grouping determine
-order. Original gold and evolutions stay together. Missing metadata uses an
+order between skill families. Within a family, evolutions come first (including
+alternative branches at the same depth), followed by rare and ordinary skills.
+Each present lower rarity tier indents one step: evolution0 → rare1 → ordinary2,
+or rare0 → ordinary1 when no evolution is present. Standalone ordinary and
+inherited skills remain unindented. Search and tabs preserve the full checklist's
+depth and source order. Verified purchase/evolution links also keep families
+together when display metadata is missing. Original gold and evolutions stay together. Missing metadata uses an
 explicitly unverified deterministic fallback; exact in-game equality is not yet
 claimed. No per-row condition/assumption/unsupported tags.
 

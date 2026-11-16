@@ -89,24 +89,29 @@ export function buildChartCandidates(data,setup){
 
 export function sortChartRows(rows,data,display){
  const meta=display.skills||{},parents=new Map(Object.entries(INHERITED_UPGRADES).map(([base,strong])=>[strong,base]));
+ for(const [id,stage]of Object.entries(data.purchase_stages||{}))if(stage.status==='verified'&&stage.prerequisite_id)parents.set(id,stage.prerequisite_id);
  for(const rule of data.evolution_rules)parents.set(rule.evolved_id,rule.base_id);
  const resolve=(id,seen=new Set())=>{
   if(meta[id])return meta[id];if(seen.has(id))return null;seen.add(id);
   return parents.has(id)?resolve(parents.get(id),seen):null;
  };
+ const familyRoot=id=>{const seen=new Set();while(parents.has(id)&&!seen.has(id)){seen.add(id);id=parents.get(id);}return id;};
+ const entries=rows.map(row=>({row,m:resolve(row.id),root:familyRoot(row.id)})),familyMetadata=new Map();
+ for(const {m,root}of entries)if(m&&(!familyMetadata.has(root)||m.order<familyMetadata.get(root).order))familyMetadata.set(root,m);
  const groups=new Map();
- for(const row of rows){
-  const m=resolve(row.id),groupId=m?.groupId||`missing-${row.id}`;
+ for(const {row,m,root}of entries){
+  const groupId=familyMetadata.get(root)?.groupId||`missing-${root}`;
   if(!groups.has(groupId))groups.set(groupId,{id:groupId,rows:[],order:Infinity,icon:Infinity});
   const group=groups.get(groupId);group.rows.push({...row,groupId,iconId:m?.iconId||null,orderVerified:!!meta[row.id]});
   if(m){group.order=Math.min(group.order,m.order);group.icon=Math.min(group.icon,Number(String(m.iconId).slice(0,-1)));}
  }
  const byGroup=[...groups.values()].sort((a,b)=>a.icon-b.icon||a.order-b.order||a.id.localeCompare(b.id));
- return byGroup.flatMap(group=>group.rows.sort((a,b)=>{
-  const aEvo=a.rarity==='evolution',bEvo=b.rarity==='evolution';
-  if(aEvo!==bEvo)return Number(aEvo)-Number(bEvo);
-  return (meta[a.id]?.order??Infinity)-(meta[b.id]?.order??Infinity)||a.name.localeCompare(b.name,'ja')||a.id.localeCompare(b.id);
- }));
+ const tier=row=>row.inherited?0:row.rarity==='evolution'?2:row.rarity==='gold'?1:0;
+ return byGroup.flatMap(group=>{
+  const tiers=[...new Set(group.rows.map(tier))].sort((a,b)=>b-a);
+  return group.rows.sort((a,b)=>tier(b)-tier(a)||(meta[a.id]?.order??Infinity)-(meta[b.id]?.order??Infinity)||a.name.localeCompare(b.name,'ja')||a.id.localeCompare(b.id))
+   .map(row=>({...row,indentLevel:row.inherited?0:tiers.indexOf(tier(row))}));
+ });
 }
 
 function branchSampler(setup,nativeIds,sample){
@@ -187,5 +192,5 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  }
  while(cache.size>3000)cache.delete(cache.keys().next().value);
  return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
-  inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-and-source-order',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
+  inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-family-upper-first',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
 }

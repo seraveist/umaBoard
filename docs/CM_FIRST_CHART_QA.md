@@ -9,7 +9,7 @@ Active JP dataset: `d7de1b78dac16a10ac579793134f708928332a4ed30546dba66a91daf73e
 
 | Check | Result |
 | --- | --- |
-| `node --test tests/*.test.mjs` | 142 passed, including 33 first-chart/UI/state checks |
+| `node --test tests/*.test.mjs` | 144 passed, including 35 first-chart/UI/state checks |
 | `python -X utf8 -m unittest discover -s tests -v` | 39 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
 | `python scripts/validate_data.py` | Passed |
 | `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits available |
@@ -31,6 +31,8 @@ temporary loopback-only server, with production 24-sample/0.01s generation.
 | --- | --- |
 | Default MacQueen, Kyoto turf 2200m, six SSRs, scenario 15 | All 207 admitted candidates rendered, including the locked inherited Top10 |
 | Full list | DOM row count equals the exported full pool; no load-more control; bounded table scrolling |
+| Family hierarchy | Both Nishino Flower evolution alternatives precede their rare base and ordinary lower; desktop indentation0/16/32px and 340px indentation0/8/16px; gain/state columns stay aligned |
+| Metadata fallback | New rare204811 and ordinary204812 remain grouped by their verified purchase relation despite absent display metadata; rare0/ordinary1 depth verified |
 | Acquisition select | Eight choices; Lv3 persisted without recalculating/reordering |
 | Reload and regenerate same setup | Recorded Lv3 restored |
 | Recovery search | `コーナー回復○` retained with `0.00` lengths |
@@ -100,3 +102,7 @@ Browser generation/JSON used the production 24 samples and dt0.01. Narrow testin
 used a 340px Edge viewport; touch hardware and other browser engines remain untested.
 
 ![Narrow-screen description popup](images/cm-skill-details-mobile.png)
+
+![Evolution, rare and ordinary family order](images/cm-hierarchy-desktop.png)
+
+![Narrow-screen family indentation](images/cm-hierarchy-mobile.png)
