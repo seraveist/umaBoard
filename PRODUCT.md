@@ -13,6 +13,16 @@ handoff contract are recorded in `docs/CM_FIRST_CHART_COMPLETION.md`. The next
 stage accepts actual five-stat values, remaining SP and aptitudes, and recommends
 an affordable skill combination from the recorded checklist.
 
+The user chose separate stage screens on2026-11-16. Stage1 groups character,
+race and supports above the first chart; caps and course geometry are expandable.
+After chart completion, stage2 places acquisition records beside actual inputs
+and recommendations (stacked with section links on phones). Moving between
+stages retains the same checklist, filters and per-plan values without recalculating.
+The initial stage hides acquisition controls. Setup edits lock stage2 until a
+fresh chart completes. Reload begins at stage1 and restores the matching saved
+records/actual inputs after regeneration. This changes presentation only;
+candidate, price and physics contracts remain the same.
+
 Only initial inputs: owned outfit, running style, CM race conditions, support deck,
 scenario. A persisted owned-outfit record supplies bloom and unique level. Race
 stats use verified scenario base caps, mood is best, aptitudes A. No pre-training

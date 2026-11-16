@@ -41,5 +41,14 @@ test('compact inputs expose the discount trait, collapsed aptitude settings, who
  assert.match(html,/<input id="fast-learner" type="checkbox"/);assert.match(html,/<details class="aptitude-options">/);
  for(const id of ['bulk-unavailable','bulk-level5'])assert.ok(html.includes(`id="${id}"`));
  assert.match(app,/bulkAcquisition\(rows,states,value\)/);assert.match(app,/skillNameLine\(row\)/);assert.match(app,/skillSources\(row\)/);
- assert.ok(!app.includes("'skill-kind'"));assert.match(css,/\.skill-badge/);assert.match(css,/repeat\(6,minmax\(0,1fr\)\)/);
+ assert.ok(!app.includes("'skill-kind'"));assert.match(css,/\.skill-badge/);assert.match(css,/repeat\(3,minmax\(0,1fr\)\)/);
+});
+
+test('the workflow has two accessible stage panels and one shared checklist with no duplicate input IDs',()=>{
+ const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);assert.equal(new Set(ids).size,ids.length);
+ for(const stage of ['prepare','finish']){assert.match(html,new RegExp(`id="stage-${stage}"[^>]*role="tab"`));assert.match(html,new RegExp(`id="${stage}-stage"[^>]*role="tabpanel"`));}
+ assert.match(html,/id="stage-finish"[^>]*disabled/);assert.match(html,/id="finish-stage"[^>]*hidden/);
+ assert.equal((html.match(/id="checklist"/g)||[]).length,1);assert.match(html,/id="prepare-checklist-slot"/);assert.match(html,/id="finish-checklist-slot"/);
+ assert.match(app,/workflow\.setChartState\('ready'\)/);assert.match(app,/workflow\.setChartState\('loading'\)/);
+ for(const match of html.matchAll(/<label[^>]*\bfor="([^"]+)"/g))assert.ok(ids.includes(match[1]),match[1]);
 });

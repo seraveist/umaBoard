@@ -5,12 +5,24 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
+| Navigation | cm-workflow.mjs | PRODUCT / DESIGN | preparation / post-training stage tabs | keyboard + browser |
 | Form | cm-app.mjs / cm-final-ui.mjs | CM_FIRST_CHART / CM_POST_TRAINING | race / owned profile / post-training | unit + browser |
 | Select/Listbox | native select, native dialog option buttons | DESIGN | platform popup / searchable dialog | keyboard + browser |
 | Table Selection | cm-state.mjs | CM_FIRST_CHART | acquisition dropdown / atomic whole-list settings | unit + browser |
 | Scrollbar | cm.css global baseline | DESIGN | bounded table / dialog body | browser |
 | Toast | stable inline cm-notice live region | DESIGN | status / error | browser |
 | Skill details | cm-skill-details.mjs | DESIGN | hover / focus / tap | browser |
+
+Two native button tabs control preparation and post-training tabpanels. Selected
+state, roving tabindex and Arrow/Home/End navigation remain synchronized. Stage2
+is disabled until a complete first chart exists; setup changes invalidate it.
+Continue and edit-preparation actions restore focus to the relevant stage/input.
+Stage changes move the existing checklist into its visible slot, never clone it
+or create a second draft. Search, category, row identity, recorded states, actual
+inputs and valid final results survive navigation without calculation. Skill
+details dismiss when the stage changes. Stage1 hides acquisition/bulk controls;
+stage2 exposes them. Reload starts at preparation because charts are explicitly
+regenerated, then restores the corresponding plan's saved records and inputs.
 
 Generate validates without native validation bubbles; focus the first relevant
 field on recoverable failure. Same inputs reuse calculation cache. Recalculation
@@ -49,7 +61,7 @@ Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
 purchased and Lv0–5 states across every view. A seventh attempt restores the
 previous select value and explains how to free a slot in the live draft status.
 
-Post-training inputs remain disabled until a complete first chart exists. The
+Post-training inputs remain hidden and disabled until a complete first chart exists. The
 actual five stats and remaining SP start blank; aptitudes default to A. Inputs
 use native controls and explicit validation with text, aria-invalid and first
 error focus. Remaining SP excludes past purchases. Paid skills remain fixed as

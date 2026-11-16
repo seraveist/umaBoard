@@ -11,6 +11,7 @@ import {characterIdentity} from './acquisition-rules.mjs';
 import {createFinalPlanner} from './cm-final-ui.mjs';
 import {el} from './cm-dom.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
+import {createWorkflow} from './cm-workflow.mjs';
 
 const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
@@ -21,6 +22,7 @@ let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311
 let states={},category='all',pickerKind='',pickerSlot=-1,pickerType='',returnFocus=null,searchComposing=false,pickerComposing=false;
 const tableNodes=new Map();
 const skillDetails=createSkillDetails();
+const workflow=createWorkflow({onChange:()=>{skillDetails.dismiss();if(!$('#cm-notice').classList.contains('is-error'))notice('');if(ready)renderRows();}});
 
 function notice(text='',error=false){$('#cm-notice').textContent=text;$('#cm-notice').classList.toggle('is-error',error);}
 function readDraft(){
@@ -38,11 +40,12 @@ function ownedProfile(id=outfitId){
 }
 function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
 function planKey(input){return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion:manifest.checklist_data_sha256||manifest.active_version});}
-function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();if(result||rows.length)notice('설정이 바뀌었습니다. 마신표 만들기를 눌러 새 조건을 반영하세요.');}
+function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정이 바뀌었습니다. 마신표 만들기를 눌러 새 조건을 반영하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
  $('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;
  $('#progress-label').textContent='계산을 중지했습니다';$('#export-checklist').disabled=!result;
+ workflow.setChartState(result?'ready':'empty');
  if(announce)notice('계산을 중지했습니다. 완료된 행은 그대로 유지됩니다.');
 }
 function image(path,alt='',className=''){
@@ -147,6 +150,7 @@ function renderRows(){
   gain.textContent=(value>0?'+':'')+value.toFixed(2);gain.classList.toggle('is-zero',value===0);
   const select=node.querySelector('select'),state=acquisitionValue(states[acquisitionId(row)]);if(select.value!==state)select.value=state;
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
+  node.classList.toggle('is-owned',state==='owned');select.classList.toggle('is-owned',state==='owned');
   if(body.children[index]!==node)body.insertBefore(node,body.children[index]||null);
  });
  skillDetails.dismissDetached();
@@ -155,7 +159,7 @@ function renderRows(){
  $('#visible-count').textContent=`${visible.length}개 전체 표시`;
  const count=checklistCounts(rows,states);$('#checklist-count').replaceChildren();
  $('#inherited-count').textContent=`계승 ${inheritedCount(rows,states)} / ${INHERITED_LIMIT}`;
- if(rows.length){$('#checklist-count').append(document.createTextNode(`전체 ${total||rows.length} · `),el('strong','',`확보 ${count.available}`));}
+ if(rows.length){if(workflow.stage==='prepare')$('#checklist-count').textContent=`${total||rows.length}개 스킬`;else $('#checklist-count').append(document.createTextNode(`전체 ${total||rows.length} · `),el('strong','',`확보 ${count.available}`));}
  else $('#checklist-count').textContent=busy?'계산 준비 중':'목록을 생성해 주세요';
  $('#clear-skill-search').hidden=!$('#skill-search').value;
  for(const id of ['bulk-unavailable','bulk-level5'])$('#'+id).disabled=busy||!result;
@@ -184,6 +188,7 @@ function beginCalculation(event){
  const input=setupInput();
  try{createChartSetup(data,profiles,input);}catch(error){notice(error.message,true);$('#outfit-picker').focus();return;}
  skillSources=createSkillSourceResolver(data,input);
+ workflow.setChartState('loading');
  finalPlanner?.invalidate('1차 마신표를 계산하고 있습니다. 완료 후 실제 스탯을 입력할 수 있습니다.');
  skillDetails.dismiss();draft.setup=input;saveDraft();currentPlan=planKey(input);states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
  busy=true;$('#generate').disabled=true;$('#generate span').textContent='마신표 계산 중';$('#cancel-calculation').hidden=false;$('#export-checklist').disabled=true;
@@ -210,8 +215,11 @@ function setupWorker(){
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
    renderRows();$('#draft-status').textContent=trimmed?'새 계승 한도에 맞춰 목록 순서의 6개를 유지했습니다. 계승 선택을 확인해 주세요.':Object.values(states).some(s=>s!=='unavailable')?'저장된 체크 상태를 불러왔습니다.':'미획득이 기본값입니다. 실제로 확보한 스킬만 변경하세요.';
    finalPlanner?.setChart(result,states,currentPlan);
+   workflow.setContext(umaName(data.outfits[result.setup.outfitId]),`${data.outfits[result.setup.outfitId].outfit_name_jp} · ${['','도주','선행','선입','추입'][result.setup.style]} · ${trackLabels[result.setup.course.track_id]} ${result.setup.course.surface===1?'잔디':'더트'} ${result.setup.course.distance.toLocaleString('ko-KR')}m · SSR ${result.setup.supportIds.length}장`);
+   workflow.setChartState('ready');
+   if(workflow.stage==='prepare'){$('#checklist-title').focus({preventScroll:true});$('#checklist').scrollIntoView({block:'start'});}
   }else if(message.type==='error'){
-   busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;$('#calculation-progress').hidden=true;notice(message.message,true);renderRows();
+   busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;$('#calculation-progress').hidden=true;workflow.setChartState('empty');notice(message.message,true);renderRows();
   }
  };
  worker.onerror=()=>{stopCalculation(false);notice('계산 작업을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.',true);};

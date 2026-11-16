@@ -1,17 +1,17 @@
 ---
 version: alpha
 name: "umaBoard CM workspace"
-description: "A bright race-preparation desk and an in-game-ordered skill checklist."
+description: "A two-stage race-preparation and post-training skill workspace."
 colors:
   primary: "#126c55"
-  ink: "#182c2b"
-  muted: "#5b6d6a"
-  background: "#f3f6f5"
+  ink: "#202d35"
+  muted: "#586771"
+  background: "#f5f7f8"
   surface: "#ffffff"
-  border: "#dce5e1"
-  mint: "#e6f3ec"
-  danger: "#b03c35"
-  accent: "#e8b953"
+  border: "#dce3e6"
+  mint: "#edf6f2"
+  danger: "#a83138"
+  accent: "#c18b26"
 typography:
   sans:
     fontFamily: '"Board Sans", "Noto Sans CJK KR", sans-serif'
@@ -49,8 +49,9 @@ this document mirrors them. Controls/table/dialog consume the same variables.
 
 ## Colors
 
-White work surfaces on cool pale gray-green; deep racing green is the single
-action color. Ink and muted text stay legible. Gold appears only for rare-skill
+White work surfaces on cool pale gray; deep racing green marks the primary
+action, current stage and purchased skills. Available hints tint their select,
+without filling every candidate row. Ink and muted text stay legible. Gold appears only for rare-skill
 identity or finish-line accents. Pink identifies evolution, blue recovery,
 orange acceleration and green passive icons using existing game assets.
 
@@ -58,17 +59,31 @@ orange acceleration and green passive icons using existing game assets.
 
 Self-hosted Board Sans is a Noto Sans CJK KR subset with full Korean/Japanese
 coverage for this app. Self-hosted Race Sans (Nimbus Sans Narrow Bold) is limited
-to the wordmark and measured distance numerals. Body 14–16px, line-height1.6;
-Japanese skill names16px, no italics, no forced letter spacing. Numeric columns
+to the wordmark and measured distance numerals. Body14px, line-height1.6;
+page title25px (21px narrow), section titles17px, labels11px. Japanese skill
+names14px (13px narrow), no italics, no forced letter spacing. Numeric columns
 use tabular numerals. Keep the Japanese source spelling intact.
 
 ## Layout
 
-1440px maximum width. Header, compact title, left preparation form and right
-course/results desk. Desktop left360–400px; narrow screens stack naturally with
-the results below. The course diagram and skill-table surface own bounded scrolling; forms
-remain in document flow. All admitted rows render inside the bounded table. Errors/progress
-reserve space. No global fixed-height/overflow-hidden shell.
+1440px maximum width,64px header,32px desktop/16px phone horizontal padding.
+Two numbered stage tabs express the user-approved sequence: preparation, then
+post-training recommendation. Stage2 unlocks only after a complete first chart.
+Changing stages preserves one shared checklist, filters and actual inputs.
+
+Preparation uses three adjacent groups: character/style/scenario, race, and six
+supports. At1100px it becomes two columns with a full-width deck; at600px one
+column with a3×2 deck. Scenario caps and the actual course diagram are native
+collapsed disclosures. One generate action precedes the full-width first chart;
+after completion the continue action becomes the primary next step. Acquisition
+controls and bulk actions appear only in stage2.
+
+Post-training uses the checklist left and actual inputs/recommendation right,
+with a1.65:1 ratio and340px minimum right column (320px below1100px). At860px
+they stack with links to skill records and actual inputs. The table has bounded
+650px desktop/600px phone scrolling; all admitted rows render. The course strip
+and dialog option body own their own scrolling. Forms remain in document flow.
+Errors/progress reserve space. No global fixed-height/overflow-hidden shell.
 
 ## Elevation & Depth
 
@@ -85,10 +100,12 @@ statuses. The course strip uses measured rectangular segments, not a fake map.
 Native selects own popup geometry for small enumerations and acquisition states.
 Outfit/card choice uses an app-owned native dialog with a search field and real
 option buttons, keeping browser focus trapping/Escape and explicit return focus.
-Shared notice uses a stable live region; errors stay inline. Search has an
+Dialog search and footer stay available while options scroll, including a
+340×520 viewport. Original square SSR frames use contain without cropping;
+owned-profile forms scroll when the viewport is short. Shared notice uses a stable live region; errors stay inline. Search has an
 immediate clear button and IME-safe updates. Loading uses a count/progress bar.
 Buttons reserve their size when busy. Native focus-visible uses primary color.
-Global scrollbars use border/muted/mint tokens, with forced-colors fallback.
+Global scrollbars use shared thumb/background tokens, with forced-colors fallback.
 Skill icons are buttons framed in silver (normal), gold (rare), or pink
 (evolution), with a visible focus ring. Only rare/evolution get a small bordered
 badge immediately after the skill name; normal/inherited omit the rarity badge.
@@ -114,9 +131,10 @@ transitions. The sole authored reveal is the course strip update; table rows do
 not animate or move while users input.
 
 The post-training panel follows the same bordered work surface, native fields,
-status regions and primary action. It appears below the checklist and becomes
-editable after a completed chart. Six numeric inputs share one desktop row and
-two three-column phone/tablet rows. A native Fast Learner checkbox and collapsed
+status regions and primary action. It is visible in stage2 after a completed
+chart. Six numeric inputs form two three-column rows in the sidebar and on
+phones, or one six-column row in the wider stacked layout. Controls are42px
+high,44px on phones. A native Fast Learner checkbox and collapsed
 aptitude settings sit below; opening aptitudes gives the three selects a full row.
 Actual values start blank. Results use a compact SP/gain summary and a source-ordered list with
 expandable stage prices; the checklist retains its single table and scroll area.
@@ -125,6 +143,13 @@ and disabled export prevent old recommendations being presented as current.
 Cost/model detail is collapsed behind one summary. Whole-checklist actions remain
 visible near search/categories, explicitly naming their scope and retaining the
 shared six-slot inherited rule.
+
+Utility icons share18px geometry and1.7px strokes. Download, search, disclosure
+and navigation icons are supplementary to text. Tabs expose selected state and
+Arrow/Home/End keys. Focus-visible rings, inline errors, cancellation, stale
+result labels, disabled exports and reduced-motion/forced-colors behavior remain.
+Measured representative small text contrast is5.44:1 or better; this is browser
+sampling, not a claim of complete accessibility certification.
 
 ## Do's and Don'ts
 

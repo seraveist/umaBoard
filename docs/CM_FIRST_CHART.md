@@ -7,6 +7,13 @@ The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING
 It consumes this chart's fixed checklist and adds actual stats/remaining-SP
 recommendation without changing this stage's rows, ordering or acquisition rules.
 
+The root uses two stage screens. Preparation groups character, race and deck
+above the chart, with optional caps/course disclosures. Acquisition inputs are
+shown in stage2 after chart completion. Both stages share one checklist and
+saved plan; moving between them does not recalculate or change the records.
+Setup edits require regenerating the chart before stage2 becomes available again.
+See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
+
 ## Inputs and basis
 
 - Outfit, running style, CM course/ground/weather/season/time, up to six distinct
