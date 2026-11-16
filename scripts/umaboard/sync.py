@@ -165,6 +165,18 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
             compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
             compatible.discard(manifest['checklist_data_sha256'])
             if compatible:manifest['checklist_compatible_versions']=sorted(compatible)
+        def record_identity(dataset):
+            return {'skills':{sid:{key:row.get(key) for key in ('rarity','inherited','parent_ids')}
+                              for sid,row in dataset['skills'].items()},
+                    **{key:dataset.get(key) for key in ('outfits','supports','courses','relations','evolution_rules')}}
+        # Corrected effect mathematics and newly proven prices do not undo real
+        # purchases. Reuse only the records/inputs; the chart and result are fresh.
+        if record_identity(previous_data)==record_identity(data):
+            compatible=set(previous_manifest.get('checklist_record_versions',[]))
+            compatible.update(previous_manifest.get('checklist_compatible_versions',[]))
+            compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
+            compatible.discard(manifest['checklist_data_sha256'])
+            if compatible:manifest['checklist_record_versions']=sorted(compatible)
     pointer=root/'data/manifest.json';new=canonical_bytes(manifest)
     if pointer.exists() and pointer.read_bytes()==new:return False,version
     fd,tmp=tempfile.mkstemp(prefix='.manifest-',dir=pointer.parent)

@@ -7,7 +7,7 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {buildAcquisitionHierarchy,relatedAcquisitionIds,checklistSnapshot} from './cm-state.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v3';
+export const FINAL_MODEL_VERSION='cm-post-training-v4';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -176,5 +176,5 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  });
  return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:states,nativeIds:[...chart.nativeIds],ownedIds:owned,activeIds:best.ids,purchases,
   budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,
-  candidateCount:candidates.length,excluded,search:{method,evaluations,shortlisted:pool.length,searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
+  candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,shortlisted:pool.length,searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }

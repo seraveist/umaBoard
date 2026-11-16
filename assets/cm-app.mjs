@@ -12,7 +12,7 @@ import {createFinalPlanner} from './cm-final-ui.mjs';
 import {el} from './cm-dom.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
 import {createWorkflow} from './cm-workflow.mjs';
-import {restoreChecklistPlan} from './cm-plan-storage.mjs';
+import {restoreChecklistPlan,trimChecklistPlans} from './cm-plan-storage.mjs';
 
 const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
@@ -171,7 +171,7 @@ function saveAcquisitionStates(next,warning=''){
  states=next;
  if(!draft.plans[currentPlan])draft.plans[currentPlan]={states:{}};
  draft.plans[currentPlan].states=states;draft.plans[currentPlan].savedAt=new Date().toISOString();
- const entries=Object.entries(draft.plans).sort((a,b)=>(b[1].savedAt||'').localeCompare(a[1].savedAt||''));draft.plans=Object.fromEntries(entries.slice(0,12));
+ draft.plans=trimChecklistPlans(draft.plans);
  const saved=saveDraft();renderRows();$('#draft-status').textContent=saved?warning:'저장 실패 · 목록을 내려받아 주세요.';
  finalPlanner?.setStates(states);
 }
@@ -198,7 +198,7 @@ function beginCalculation(event){
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:checklistSnapshot(result.rows,states,hierarchy),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id)})),inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  acquisition:checklistSnapshot(result.rows,states,hierarchy),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){

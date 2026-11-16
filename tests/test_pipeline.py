@@ -38,6 +38,17 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_effect_corrections_preserve_real_records_only_for_unchanged_skill_identities(self):
+        raw,rules=fixtures();data=normalize(raw,rules)
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);publish(root,data,validate_dataset(data,{}),[],[],'before')
+            old=json.loads((root/'data/manifest.json').read_text(encoding='utf8'))
+            corrected=copy.deepcopy(data);corrected['skills']['201011']['invocations'][0]['effects'][0]['value_raw']+=100
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'effect')
+            new=json.loads((root/'data/manifest.json').read_text(encoding='utf8'))
+            self.assertIn(old['checklist_data_sha256'],new['checklist_record_versions']);self.assertNotIn('checklist_compatible_versions',new)
+            corrected['skills']['201011']['rarity']='white';publish(root,corrected,validate_dataset(corrected,{}),[],[],'identity')
+            self.assertNotIn('checklist_record_versions',json.loads((root/'data/manifest.json').read_text(encoding='utf8')))
     def test_candidate_route_corrections_migrate_records_only_with_identical_skill_mechanics(self):
         raw,rules=fixtures();data=normalize(raw,rules)
         with tempfile.TemporaryDirectory() as temporary:

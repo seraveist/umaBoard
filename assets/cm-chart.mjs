@@ -6,8 +6,9 @@ import {characterIdentity} from './acquisition-rules.mjs';
 import {withCourseMetadata} from './cm-course-metadata.mjs';
 import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
 import {skillIconId} from './cm-icons.mjs';
+import {selfEffectSkill} from './cm-effect-policy.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v3';
+export const CM_MODEL_VERSION='cm-first-chart-v4';
 export const CM_SAMPLES=24;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -44,18 +45,27 @@ export function createChartSetup(data,catalog,input){
 }
 
 export function compileChartSkill(skill,setup){
+ skill=selfEffectSkill(skill);
  // The chart compares the skill's effect after its acquisition/trigger predicates
  // succeed. Real temporal/spatial constraints and same-skill linked effects remain.
- const assume=dnf=>dnf===null?null:dnf.map(group=>group.filter(a=>!ASSUME.has(a.field)&&!(a.field==='is_used_skill_id'&&String(a.value)!==skill.id)));
+ const assume=dnf=>dnf===null?null:dnf.map(group=>group.filter(a=>!ASSUME.has(a.field)&&!(['is_used_skill_id','is_used_skill_id_with_detail_one'].includes(a.field)&&String(a.value)!==skill.id)));
  const policies=new Map();
  const adjusted={...skill,invocations:skill.invocations.map(inv=>{
   const atoms=(inv.condition||[]).flat();
   const policy=atoms.some(a=>a.field==='all_corner_random')?'corners':atoms.some(a=>a.field==='straight_random')?'straight':null;
-  // Only these two repeat policies have verified source window semantics.
-  if(policy)policies.set(inv.index,{policy,cooldown:(inv.cooldown_raw||0)/10000*setup.course.distance/1000});
+  // Corner/straight areas need their own draw; other random repeats use one
+  // cached ten-metre window. Trigger predicates remain fulfilled as specified.
+  if(policy||inv.cooldown_raw>0)policies.set(inv.index,{policy,cooldown:(inv.cooldown_raw||0)/10000*setup.course.distance/1000});
   return {...inv,condition:assume(inv.condition),precondition:assume(inv.precondition),cooldown_raw:policies.has(inv.index)?null:inv.cooldown_raw};
  })};
  const compiled=compileSkill(adjusted,setup);
+ compiled.calculationNotes=skill.calculationNotes;
+ compiled.stochastic=compiled.invocations.some(i=>i.effects.some(e=>[8,9].includes(e.scale)||['invoke_rare','invoke_unique'].includes(e.kind))||i.condition.some(b=>b.dynamic.some(a=>a.field==='run_at_full_speed_random')));
+ if(adjusted.invocations.length){
+  const first=adjusted.invocations[0],forced=compileSkill({...adjusted,invocations:[{...first,condition:[],precondition:[],cooldown_raw:null}]},setup);
+  if(forced.status!=='unsupported')compiled.forcedInvocation={...forced.invocations[0],cooldownSeconds:policies.get(first.index)?.cooldown||0};
+ }
+ if(compiled.status==='supported'&&skill.calculationNotes.length)compiled.status='assumed';
  for(const inv of compiled.invocations){
   const p=policies.get(inv.index);if(p){inv.chartRandomPolicy=p.policy;inv.cooldownSeconds=p.cooldown;}
  }
@@ -130,7 +140,8 @@ export function branchSampler(setup,nativeIds,sample){
    const areas=inv.chartRandomPolicy==='corners'?setup.course.corners.map(c=>[c.start,c.start+c.length]):setup.course.straights.map(s=>[s.start,s.end]);
    const count=inv.chartRandomPolicy==='corners'?2:1,windows=[];
    for(let k=0;k<count;k++){
-    const selected=areas[Math.min(areas.length-1,Math.floor(value(id,inv.chartRandomPolicy,k*2)*areas.length))];
+    const areaIndex=Math.min(areas.length-1,Math.floor(value(id,inv.chartRandomPolicy,k*2)*areas.length));
+    const selected=inv.chartRandomPolicy==='corners'?areas.splice(areaIndex,1)[0]:areas[areaIndex];
     if(!selected)continue;
     const start=inv.chartRandomPolicy==='corners'
      ?selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*Math.max(0,selected[1]-selected[0]-10)
@@ -144,7 +155,14 @@ export function branchSampler(setup,nativeIds,sample){
   }
   // The source caches each random condition per skill, across its invocation
   // alternatives. A weaker fallback must not roll ahead of its stronger form.
-  return branches.map((branch,index)=>sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0]);
+  return branches.map((branch,index)=>{
+   const sampled=sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0];
+   if(inv.cooldownSeconds&&branch.randomKey){
+    const area=branch.windows.find(([lo,hi])=>sampled.at>=lo&&sampled.at<hi);
+    if(area){sampled.at=Math.max(area[0],Math.min(sampled.at,area[1]-2));sampled.windows=[[sampled.at,Math.min(area[1],sampled.at+10)]];}
+   }
+   return {...sampled,fullSpurtQ:value(id,'full_spurt',0),choiceQ:value(id,'effect_value',0)};
+  });
  };
 }
 
@@ -155,15 +173,15 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  if(nativeSkills.some(s=>s.status==='unsupported'))throw new Error('이 육성마의 고유기는 아직 계산을 지원하지 않습니다. 다른 육성마를 선택하세요.');
  const baseline=nativeSkills.filter(supported),nativeIds=nativeRecords.map(s=>s.id);
  const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&supported(compiled.get(s.id))&&(!s.inherited||inheritedPerformanceSkill(compiled.get(s.id))&&styleRecommendation(s,compiled.get(s.id),setup).eligible)).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
-  rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],recommendation:styleRecommendation(s,compiled.get(s.id),setup),
+  rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
  const baselines=new Map(),optionsFor=sample=>({dt,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,nativeIds,sample)});
  const runBaseline=sample=>{if(!baselines.has(sample))baselines.set(sample,simulateSolo(setup,baseline,.5,optionsFor(sample)));return baselines.get(sample);};
- const baselineRandom=baseline.some(s=>s.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)));
+ const baselineRandom=baseline.some(s=>s.stochastic||s.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)));
  return {setup,rows,nativeIds,modelVersion:CM_MODEL_VERSION,samples,dt,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&!supported(s)).map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
-   const skill=compiled.get(row.id),random=baselineRandom||skill.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)),count=random?samples:1;
+   const skill=compiled.get(row.id),random=baselineRandom||skill.stochastic||skill.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)),count=random?samples:1;
    let gain=0,timeGain=0,hpGain=0;
    for(let sample=0;sample<count;sample++){
     const before=runBaseline(sample),after=simulateSolo(setup,[...baseline,skill],.5,optionsFor(sample));

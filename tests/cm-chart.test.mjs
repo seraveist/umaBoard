@@ -95,13 +95,13 @@ test('owned unique level changes the native coefficient without modifying the da
  assert.equal(d.skills['100'].invocations[0].effects[0].value_raw,2000);
 });
 
-test('known repeat policies preserve distance-scaled cooldown; unknown repeat policies remain excluded',()=>{
+test('spatial and fulfilled-trigger repeats preserve distance-scaled cooldown',()=>{
  const d=fixture(),setup=createChartSetup(d,profiles,input);
  setup.course={...setup.course,corners:[{start:100,length:400},{start:1500,length:400}]};
  const corner=skill('corner',[[{field:'all_corner_random',operator:'==',value:1}]]);corner.invocations[0].cooldown_raw=300000;
  const c=compileChartSkill(corner,setup);assert.equal(c.status,'supported');assert.equal(c.invocations[0].cooldownSeconds,66);assert.equal(c.invocations[0].chartRandomPolicy,'corners');
  const arbitrary=skill('arbitrary',[[{field:'phase',operator:'==',value:1}]]);arbitrary.invocations[0].cooldown_raw=300000;
- assert.equal(compileChartSkill(arbitrary,setup).status,'unsupported');
+ const a=compileChartSkill(arbitrary,setup);assert.equal(a.status,'supported');assert.equal(a.invocations[0].cooldownSeconds,66);
 });
 
 test('repeat activations reuse cached windows and wait until strictly after cooldown',()=>{

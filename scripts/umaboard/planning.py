@@ -2,7 +2,7 @@
 from .common import DataError, identifier, number, canonical_bytes
 
 
-def purchase_stages(skills, costs, secondary, relations, evolutions):
+def purchase_stages(skills, costs, secondary, relations, evolutions, reviewed=None):
     groups = {}
     for row in secondary:
         sid = identifier(row['id'])
@@ -35,6 +35,37 @@ def purchase_stages(skills, costs, secondary, relations, evolutions):
         elif base:
             stages[sid] = {'base_cost': base, 'prerequisite_id': None,
                            'status': 'unverified', 'evidence': 'prerequisite_unresolved'}
+    # The secondary solo catalog omits some vision/debuff golds, but includes
+    # their evolved forms with the same cumulative purchase price. Prove the
+    # missing gold via its unique white relation and the evolved total.
+    secondary_by={identifier(row['id']):row for row in secondary}
+    for sid,stage in list(stages.items()):
+        if stage['status']=='verified' or skills[sid]['rarity']!='gold':continue
+        totals={secondary_by[r['evolved_id']]['sp'] for r in evolutions
+                if r['base_id']==sid and r['evolved_id'] in secondary_by
+                and isinstance(secondary_by[r['evolved_id']].get('sp'),(int,float))}
+        lowers={r['to_id'] if r['from_id']==sid else r['from_id'] for r in relations
+                if r['kind']=='version_family' and sid in (r['from_id'],r['to_id'])}
+        lowers={low for low in lowers if skills[low]['rarity']=='white'}
+        if len(totals)!=1 or len(lowers)!=1:continue
+        low=next(iter(lowers));chain=stages.get(low);total=stage['base_cost'];seen={sid}
+        while chain and chain['status']=='verified' and low not in seen:
+            seen.add(low);total+=chain['base_cost'];low=chain['prerequisite_id']
+            if low is None:break
+            chain=stages.get(low)
+        else:continue
+        if totals=={total}:
+            stages[sid]={**stage,'prerequisite_id':next(iter(lowers)),'status':'verified',
+                         'evidence':'umatools_relation_and_increment_umasim_evolution_total'}
+    for sid,review in (reviewed or {}).items():
+        low=review.get('prerequisite_id');base=review.get('base_cost')
+        if sid not in skills or skills[sid]['rarity']!='gold' or low not in stages or stages[low]['status']!='verified' or stages[low]['prerequisite_id'] is not None or not review.get('source') or base!=costs.get(sid) or base+stages[low]['base_cost']!=review.get('total_cost'):
+            raise DataError('reviewed purchase proof differs from source costs')
+        if not any(r['kind']=='version_family' and {r['from_id'],r['to_id']}=={sid,low} for r in relations):
+            raise DataError('reviewed purchase proof missing source relation')
+        stages[sid]={'base_cost':base,'prerequisite_id':low,'status':'verified',
+                     'evidence':'reviewed_primary_increment_and_independent_skill_page',
+                     'source':review['source'],'checked_at':review.get('checked_at')}
     return stages
 
 

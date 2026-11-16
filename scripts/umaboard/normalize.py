@@ -13,7 +13,8 @@ EFFECT_KINDS = {1:'passive_speed', 2:'passive_stamina', 3:'passive_power', 4:'pa
                 22:'speed_with_decel', 27:'target_speed', 28:'lane_change_speed',
                 29:'temptation_rate', 31:'acceleration', 32:'passive_all',
                 35:'lane_position', 37:'invoke_rare', 38:'full_spurt_acceleration',
-                41:'invoke_group', 42:'evolution_duration', 49:'invoke_unique', 50:'ignore_popularity'}
+                41:'invoke_group', 42:'evolution_duration', 48:'full_spurt_acceleration',
+                49:'invoke_unique', 50:'ignore_popularity'}
 MEE_KINDS = {'targetSpeed':'target_speed','acceleration':'acceleration','speedWithDecel':'speed_with_decel',
              'currentSpeed':'current_speed','heal':'heal','passiveSpeed':'passive_speed',
              'passiveStamina':'passive_stamina','passivePower':'passive_power','passiveGuts':'passive_guts',
@@ -288,7 +289,7 @@ def normalize(raw, curated):
              'scenario_exclusive_groups':curated.get('scenario_exclusive_groups',[]),
              'race_presets':curated.get('race_presets',[]),
              'internal_acceleration_comparison_cost':costs,
-             'purchase_stages':purchase_stages(skills,costs,secondary,relations.values(),evolutions.values()),
+             'purchase_stages':purchase_stages(skills,costs,secondary,relations.values(),evolutions.values(),curated.get('purchase_stage_reviews')),
              'support_events':curated.get('planning',{}).get('support_events',{}),
              'scenario_events':scenario_events,
              'cost_policy':curated.get('planning',{}).get('cost_policy',{}),

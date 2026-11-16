@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
   "review_status": "partial",
+  "purchase_stage_reviews": {
+    "201501": {
+      "base_cost": 110,
+      "prerequisite_id": "201502",
+      "total_cost": 220,
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/skills/201501",
+      "checked_at": "2026-11-17"
+    }
+  },
   "scenario_names": {
     "14": "らっしゃい！トレセン軒！ ～恩返し、始めました～",
     "15": "朋、史解き ―午式駿大祭―",

@@ -81,6 +81,11 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
+Current model `cm-first-chart-v4` supports the reviewed self-performance effects,
+including full-spurt acceleration, variable magnitudes/durations and repeats.
+Opponent debuffs are excluded per user scope; neutral vision/lane components
+retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
+
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
 - Mean is an arithmetic mean of paired trajectory differences. Default 24
   deterministic low-discrepancy samples, dt=0.01s. Fixed-position rows are computed
@@ -96,10 +101,11 @@ order, retaining at most six; remaining inherited rows stay unavailable.
   are assumed successful, including same-style counts and popularity matching.
   Unknown effect mathematics still stay excluded. Real distance/style/weather and
   temporal/spatial predicates are never erased.
-- Only the two verified repeat-window types are enabled: two cached 10m corner
-  windows for all_corner_random and one cached straight window for
-  straight_random. Cooldown starts at activation, scales with distance, and must
-  strictly elapse. No reroll after cooldown. Other repeat policies stay excluded.
+- Repeat triggers share the distance-scaled cooldown and require it to strictly
+  elapse. all_corner_random draws two different cached10m corner windows;
+  straight_random draws one cached10m window. Other spatial random repeats use
+  one cached10m window; non-random triggers may repeat while their specified
+  temporal/spatial conditions hold. There is no reroll after cooldown.
 - Above speed2000 the optional public-umasim full-spurt approximation is enabled:
   extra acceleration = .068 * base acceleration / (distance/1000)^1.5, separate
   from the ordinary speed trajectory. The source's unknown ceiling is unbounded.

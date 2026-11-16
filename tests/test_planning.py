@@ -7,6 +7,21 @@ from umaboard.planning import purchase_stages,validate_planning
 from umaboard.common import DataError
 
 class PlanningTests(unittest.TestCase):
+ def test_missing_gold_is_proven_from_unique_white_increment_and_evolved_cumulative_price(self):
+  skills={s:{'rarity':r,'inherited':False,'name_jp':s} for s,r in [('1','white'),('2','gold'),('3','evolution')]}
+  links=[{'kind':'version_family','from_id':'2','to_id':'1'}];evo=[{'base_id':'2','evolved_id':'3'}]
+  stages=purchase_stages(skills,{'1':110,'2':110},[{'id':'3','group':1,'sp':220}],links,evo)
+  self.assertEqual(stages['2']['status'],'verified');self.assertEqual(stages['2']['prerequisite_id'],'1')
+  for total in [110,219,221]:
+   self.assertEqual(purchase_stages(skills,{'1':110,'2':110},[{'id':'3','group':1,'sp':total}],links,evo)['2']['status'],'unverified')
+  self.assertEqual(purchase_stages(skills,{'1':110,'2':110},[{'id':'3','group':1,'sp':220}],[],evo)['2']['status'],'unverified')
+ def test_explicit_independent_purchase_review_cannot_override_changed_costs_or_relations(self):
+  skills={s:{'rarity':r,'inherited':False,'name_jp':s} for s,r in [('1','white'),('2','gold')]}
+  links=[{'kind':'version_family','from_id':'2','to_id':'1'}]
+  review={'2':{'base_cost':110,'prerequisite_id':'1','total_cost':220,'source':'https://example.com/independent'}}
+  self.assertEqual(purchase_stages(skills,{'1':110,'2':110},[],links,[],review)['2']['status'],'verified')
+  for costs,relations in [({'1':110,'2':111},links),({'1':111,'2':110},links),({'1':110,'2':110},[])]:
+   with self.assertRaises(DataError):purchase_stages(skills,costs,[],relations,[],review)
  def test_proven_circle_gold_stage_chain(self):
   skills={s:{'rarity':r,'inherited':False,'name_jp':n} for s,r,n in [('1','white','角○'),('2','white','角◎'),('3','gold','金')]}
   stages=purchase_stages(skills,{'1':100,'2':110,'3':150},[{'id':s,'group':1,'sp':v} for s,v in [('1',100),('2',210),('3',360)]],[{'kind':'version_family','from_id':a,'to_id':b} for a,b in [('1','2'),('2','3')]],[])
