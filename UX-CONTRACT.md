@@ -7,7 +7,7 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 |---|---|---|---|---|
 | Form | cm-app.mjs / cm-final-ui.mjs | CM_FIRST_CHART / CM_POST_TRAINING | race / owned profile / post-training | unit + browser |
 | Select/Listbox | native select, native dialog option buttons | DESIGN | platform popup / searchable dialog | keyboard + browser |
-| Table Selection | cm-state.mjs | CM_FIRST_CHART | acquisition dropdown only | unit + browser |
+| Table Selection | cm-state.mjs | CM_FIRST_CHART | acquisition dropdown / atomic whole-list settings | unit + browser |
 | Scrollbar | cm.css global baseline | DESIGN | bounded table / dialog body | browser |
 | Toast | stable inline cm-notice live region | DESIGN | status / error | browser |
 | Skill details | cm-skill-details.mjs | DESIGN | hover / focus / tap | browser |
@@ -54,7 +54,9 @@ actual five stats and remaining SP start blank; aptitudes default to A. Inputs
 use native controls and explicit validation with text, aria-invalid and first
 error focus. Remaining SP excludes past purchases. Paid skills remain fixed as
 purchase history, while a genuine upgrade replaces their lower active effect.
-Hints use recorded levels; extra discount traits are not currently modeled.
+Hints use recorded levels; optional Fast Learner adds ten percentage points to
+each unpaid stage's discount before flooring. Its boolean defaults off for old
+saved inputs and persists within the same plan. Changing it cancels stale work.
 
 `cm-final-plan.mjs` owns stage pricing and combination recommendation; the shared
 discount function remains in `purchases.mjs`. `cm-final-ui.mjs` owns the second
@@ -66,3 +68,19 @@ and disable old exports. Setup edits require regenerating the first chart.
 Reload restores actual inputs with the corresponding plan; recommendations are
 recalculated explicitly. Native unique and acquired effects form the baseline;
 lower prerequisites never stack with their upgrade, nor do sibling evolutions.
+
+Whole-list unavailable/Lv5 actions ignore search/category filters. They replace
+each current row's value atomically, drop stale IDs and invalidate final results.
+Lv5 is availability, not purchase, so competing evolution hints may coexist.
+Inherited availability keeps previously secured choices first, fills remaining
+slots in chart order and stops at six; skipped choices stay unavailable with a
+visible explanation. Bulk actions are disabled until a complete chart exists.
+The labels change without migrating stored values: owned/unavailable/0–5 remain
+the contract. Visible0 is 획득, and1–5 are 할인 Lv1–5.
+
+`cm-skill-presentation.mjs` owns rare/evolution name badges and setup-specific
+route subtitles in both checklist and final recommendation. Normal/inherited
+badges are omitted. Source evidence filters by selected owners and reviewed
+requirements; verified prerequisite-derived paths and factor candidates are
+marked inferred, and other missing paths are unknown. Display sources never
+become acquisition edges or pricing rules.

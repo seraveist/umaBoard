@@ -3,16 +3,19 @@
 Branch: `feat/cm-first-chart`. Dataset remains
 `e1b13e942888b9c45d42aebb2566d275b31ea2a11596f1880ee89ec5ba0f1775`.
 The first-chart model remains `cm-first-chart-v2`; final recommendation uses
-`cm-post-training-v1`.
+`cm-post-training-v2`. The no-trait example below retains its original prices;
+Fast Learner, bulk settings and badge/source verification are recorded in
+[the follow-up QA](CM_CHECKLIST_POLISH_QA.md).
 
 ## Automated checks
 
-- All163 Node tests and42 Python tests passed.
-- Twelve final-plan regressions cover stage-specific hints, shared and paid
+- All172 Node tests and42 Python tests passed.
+- Fourteen final-plan regressions cover stage-specific hints, shared and paid
   prerequisites, actual stats/aptitudes, upgrades, free evolution, alternative
   locks, unavailable/unknown-price exclusions, combination search, zero SP,
   cancellation, hint-dependent affordability, recovery, scenario/inherited limits,
-  real JP costs and complete affordable packs under bounded search.
+  real JP costs, complete affordable packs under bounded search, additive
+  Fast Learner discounts and the resulting affordability change.
 - UI contracts cover separate pre/post forms, labels and explicit invalid state,
   cancellation/stale replies, scoped drafts and no native alert/validation bubbles.
 - Active-data validation, production build, script syntax and strict static UI
@@ -71,8 +74,8 @@ passed the HP check. It completed254 combination evaluations, shortlisted38
 targets and took about1.02s on this host. This is a smoke/performance observation,
 not proof of the global optimum or a performance guarantee on other devices.
 
-Touch hardware and other browser engines were not tested. Extra discount traits
-remain excluded; the UI explicitly states this. Other numerical assumptions and
+Touch hardware and other browser engines were not tested. Fast Learner is now
+supported with a persistent native checkbox. Other numerical assumptions and
 the bounded-search limit are retained in [the contract](CM_POST_TRAINING.md).
 
 ![Actual stats, remaining SP and recommendation with per-stage cost details](images/cm-post-training-desktop.png)

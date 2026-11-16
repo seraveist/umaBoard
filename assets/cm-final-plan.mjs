@@ -6,7 +6,7 @@ import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {buildAcquisitionHierarchy,relatedAcquisitionIds,checklistSnapshot} from './cm-state.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v1';
+export const FINAL_MODEL_VERSION='cm-post-training-v2';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -17,14 +17,16 @@ export function createFinalSetup(chart,input){
  const setup={...chart.setup,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes}};
  for(const key of STAT_KEYS)if(!Number.isInteger(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('실제 능력치는 1~3000 사이의 정수로 입력하세요.');
  if(!Number.isSafeInteger(input.spBudget)||input.spBudget<0||input.spBudget>100000)throw new Error('보유 SP는 0~100000 사이의 정수로 입력하세요.');
- validateSetup(setup);return {...setup,spBudget:input.spBudget};
+ if(input.fastLearner!==undefined&&typeof input.fastLearner!=='boolean')throw new Error('수완가 선택을 확인하세요.');
+ validateSetup(setup);return {...setup,spBudget:input.spBudget,fastLearner:input.fastLearner??false};
 }
 
 // The post-training budget is remaining SP. Paid prerequisites are sunk costs;
 // recorded hints replace every pre-training route/event price assumption.
 export class RecordedPurchaseModel{
- constructor(data,rows,states){
+ constructor(data,rows,states,{fastLearner=false}={}){
   this.data=data;this.rows=new Map(rows.map(row=>[row.id,row]));this.states=states;this.cache=new Map();
+  this.extraDiscount=fastLearner?10:0;
   this.owned=new Set(rows.filter(row=>states[row.id]==='owned').map(row=>row.id));
  }
  chain(id,path=new Set()){
@@ -53,7 +55,7 @@ export class RecordedPurchaseModel{
     // otherwise the selected evolution's recorded hint supplies that stage.
     const level=hint(this.states[stage.id])??(this.data.skills[id]?.rarity==='evolution'&&stage.id===chain.at(-1)?.id?hint(this.states[id]):null)??0;
     const existing=stages.get(stage.id);
-    if(!existing||level>existing.hint)stages.set(stage.id,{...stage,hint:level,cost:discountedCost(stage.base,level)});
+    if(!existing||level>existing.hint)stages.set(stage.id,{...stage,hint:level,extraDiscount:this.extraDiscount,cost:discountedCost(stage.base,level,this.extraDiscount)});
    }
   }
   return {complete:true,used:[...stages.values()].reduce((sum,stage)=>sum+stage.cost,0),stages:[...stages.values()]};
@@ -66,7 +68,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  if([...records.values()].some(skill=>!skill))throw new Error('체크리스트의 스킬 데이터를 확인할 수 없습니다. 1차 마신표를 다시 만들어 주세요.');
  if(chart.rows.filter(row=>row.inherited&&states[row.id]!=='unavailable').length>6)throw new Error('계승 스킬 확보는 최대 6개입니다. 체크리스트를 확인하세요.');
  for(const id of chart.nativeIds){if(!nativeUnique(data.skills[id]))throw new Error('본체 고유기 정보를 확인하세요.');records.set(id,data.skills[id]);}
- const rules=selectionRules(data,records),purchase=new RecordedPurchaseModel(data,chart.rows,states);
+ const rules=selectionRules(data,records),purchase=new RecordedPurchaseModel(data,chart.rows,states,setup);
  const lower=new Map([...records.keys()].map(id=>[id,new Set(relatedAcquisitionIds(hierarchy,id))]));
  const active=ids=>[...new Set(ids)].filter(id=>!ids.some(high=>high!==id&&lower.get(high)?.has(id))).sort();
  const owned=[...purchase.owned],required=active([...chart.nativeIds,...owned]);

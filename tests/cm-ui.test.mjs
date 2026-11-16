@@ -36,3 +36,10 @@ test('post-training owns a separate validated form, scoped draft, cancellable wo
  assert.match(app,/\.postTraining=value/);assert.match(app,/finalPlanner\?\.invalidate/);assert.match(final,/이전 조건의 결과/);
  assert.ok(!/\b(?:alert|confirm|prompt)\s*\(/.test(final));
 });
+
+test('compact inputs expose the discount trait, collapsed aptitude settings, whole-list actions and shared name badges',()=>{
+ assert.match(html,/<input id="fast-learner" type="checkbox"/);assert.match(html,/<details class="aptitude-options">/);
+ for(const id of ['bulk-unavailable','bulk-level5'])assert.ok(html.includes(`id="${id}"`));
+ assert.match(app,/bulkAcquisition\(rows,states,value\)/);assert.match(app,/skillNameLine\(row\)/);assert.match(app,/skillSources\(row\)/);
+ assert.ok(!app.includes("'skill-kind'"));assert.match(css,/\.skill-badge/);assert.match(css,/repeat\(6,minmax\(0,1fr\)\)/);
+});

@@ -2,7 +2,7 @@
 import {INHERITED_LIMIT} from './cm-recommendation.mjs';
 export const ACQUISITION_OPTIONS=Object.freeze([
  {value:'owned',label:'습득'}, {value:'unavailable',label:'미획득'},
- ...Array.from({length:6},(_,level)=>({value:String(level),label:`Lv${level}`}))
+ {value:'0',label:'획득'},...Array.from({length:5},(_,index)=>({value:String(index+1),label:`할인 Lv${index+1}`}))
 ]);
 export const validAcquisition=value=>ACQUISITION_OPTIONS.some(option=>option.value===String(value));
 export const acquisitionValue=value=>validAcquisition(value)?String(value):'unavailable';
@@ -70,4 +70,16 @@ export function canRecordAcquisition(rows,states,id,value){
  const row=rows.find(row=>row.id===id);
  if(!row)return false;
  return !row.inherited||acquisitionValue(value)==='unavailable'||acquisitionValue(states[id])!=='unavailable'||inheritedCount(rows,states)<INHERITED_LIMIT;
+}
+
+// One atomic whole-checklist change, independent of the current search/tab.
+// Keep previously secured inherited choices first, then fill unused slots in
+// chart order. Hints do not buy either side of an evolution branch.
+export function bulkAcquisition(rows,states,value){
+ if(!['unavailable','5'].includes(value))throw new Error('지원하지 않는 일괄 설정입니다.');
+ const inherits=rows.filter(row=>row.inherited),selected=new Set([
+  ...inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable'),
+  ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable')
+ ].slice(0,INHERITED_LIMIT).map(row=>row.id));
+ return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
 }

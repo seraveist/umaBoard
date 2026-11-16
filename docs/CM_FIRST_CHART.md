@@ -65,6 +65,13 @@ Old independent drafts normalize on restore: first acquired alternative in table
 order wins, its lower chain is restored, and stale IDs are removed. The original
 gold ID remains pricing metadata; later optimization still resolves shared costs.
 
+Visible dropdown names are 습득 / 미획득 / 획득 / 할인 Lv1–5, while stored
+owned/unavailable/0–5 values remain unchanged. Whole-list unavailable and Lv5
+actions ignore the current search/tab, replace all row states atomically and
+invalidate final recommendations. Lv5 hints do not purchase competing branches.
+Inherited bulk selection prioritizes already secured choices and then chart
+order, retaining at most six; remaining inherited rows stay unavailable.
+
 ## Numerical/model policy
 
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
@@ -118,7 +125,12 @@ scores inherited candidates first, locks Top10, then publishes ordered batches. 
 is count-based. New jobs cancel stale results. Draft/checklist storage is local;
 scope/version prevent unrelated plans from overwriting each other. JSON export
 records the input, model/version, profiles and checklist for the next stage.
-Icons use silver/gold/pink rarity frames with Korean 일반/레어/진화/계승 labels.
+Icons use silver/gold/pink rarity frames. Only rare/evolution show a Korean badge
+after the skill name; normal/inherited have no visible rarity badge. The subtitle
+shows possible acquisition paths for the current outfit/deck/scenario. Direct
+routes follow the master acquisition records and reviewed requirements. Derived
+purchase-stage routes and factor candidates are visibly inferred; absent evidence
+is unknown. This does not identify which event the player actually received.
 Image identity prefers `data.skills[id].icon_id` from the preserved UmaTools
 `iconid`; only same-ID alpha metadata may provide a compatibility fallback.
 Family/order fallback never supplies the image of a lower rarity. The static

@@ -9,7 +9,7 @@ Active JP dataset: `e1b13e942888b9c45d42aebb2566d275b31ea2a11596f1880ee89ec5ba0f
 
 | Check | Result |
 | --- | --- |
-| `node --test tests/*.test.mjs` | 163 passed, including 54 CM chart/UI/state/icon/completion/post-training checks |
+| `node --test tests/*.test.mjs` | 172 passed, including 63 CM chart/UI/state/icon/completion/post-training/presentation checks |
 | `python -X utf8 -m unittest discover -s tests -v` | 42 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
 | `python scripts/validate_data.py` | Passed |
 | `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits and 128 skill icons available |
@@ -49,7 +49,7 @@ temporary loopback-only server, with production 24-sample/0.01s generation.
 | Portraits | All six selected support frames loaded at 48×48 with contain; type icons beside names |
 | Narrow diagram/tabs | At 340px, the document has no horizontal overflow; component scroll areas remain operable |
 | Skill details | Hover, moving into the tooltip, keyboard focus, click/tap-style activation, Escape and close-on-second-click exercised; source description and lower-skill names shown |
-| Rarity | 일반/레어/진화 labels and three distinct frame colors verified; no 금딱 label in rows |
+| Rarity | Rare/evolution badges follow names; normal/inherited have no badge. Setup-specific acquisition routes replace the previous rarity subtitle; all three icon-frame colors remain |
 | Acquisition chain | Acquiring an evolution acquires each admitted lower stage; marking the lowest unavailable clears the upper; persisted chain restores after reload |
 | Alternative evolution | Nishino Flower outfit 105101: acquiring 105101111 then 105101121 clears the former and keeps the common base acquired; clearing the base clears both evolutions |
 | Narrow tooltip | At 340×850, left12/right328 and top451.30/bottom638.67; popup fully inside viewport; no page errors |

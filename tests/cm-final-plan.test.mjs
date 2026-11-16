@@ -102,3 +102,22 @@ test('a bounded search starts with complete affordable packs even when singleton
  const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1});
  assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'bounded');
 });
+
+test('Fast Learner adds ten percentage points to every recorded hint discount before one integer floor',()=>{
+ const {data,chart}=fixture();data.purchase_stages.white.base_cost=200;
+ for(const [level,expected]of [180,160,140,120,110,100].entries())assert.equal(new RecordedPurchaseModel(data,chart.rows,{white:String(level)},{fastLearner:true}).selection(['white']).used,expected);
+ data.purchase_stages.white.base_cost=101;
+ const stages=new RecordedPurchaseModel(data,chart.rows,{white:'4',gold:'2'},{fastLearner:true}).selection(['gold']).stages;
+ assert.deepEqual(stages.map(stage=>[stage.id,stage.cost,stage.extraDiscount]),[['white',55,10],['gold',105,10]]);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{white:'owned',gold:'2'},{fastLearner:true}).selection(['gold']).used,105);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{gold:'owned',b:'5'},{fastLearner:true}).selection(['b']).used,0);
+ data.skills.inherit={...skill('inherit',3000,'inherited'),inherited:true};data.purchase_stages.inherit={status:'verified',base_cost:200};chart.rows.push(data.skills.inherit);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{inherit:'5'},{fastLearner:true}).selection(['inherit']).used,100);
+});
+
+test('Fast Learner changes affordability, persists in the result basis, and defaults off for old input',async()=>{
+ const {data,chart}=fixture(),budget={...input,spBudget:50};
+ const before=await recommendFinalPlan(data,chart,{other:'5'},budget,quick),after=await recommendFinalPlan(data,chart,{other:'5'},{...budget,fastLearner:true},quick);
+ assert.deepEqual(before.purchases,[]);assert.equal(before.setup.fastLearner,false);assert.equal(after.purchases[0].id,'other');assert.equal(after.budget.used,50);assert.equal(after.setup.fastLearner,true);assert.equal(chart.setup.fastLearner,undefined);
+ assert.throws(()=>createFinalSetup(chart,{...input,fastLearner:'true'}),/수완가/);
+});

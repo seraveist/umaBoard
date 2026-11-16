@@ -1,7 +1,7 @@
 // Standard planning prices. White Lv5; verified event maxima; other routes Lv0.
 import {activeAcquisitionRoute,scenarioEventGroups,scenarioSelectionAllowed} from './acquisition-rules.mjs';
 export const nativeUnique=s=>['unique','unique_low_star','unique_upgraded'].includes(s?.rarity);
-export const discountedCost=(base,level)=>Math.floor(base*(100-[0,10,20,30,35,40][Math.min(5,Math.max(0,level))])/100);
+export const discountedCost=(base,level,extraDiscount=0)=>Math.floor(base*(100-[0,10,20,30,35,40][Math.min(5,Math.max(0,level))]-extraDiscount)/100);
 const key=ids=>[...new Set(ids)].sort().join(',');
 const groupedRoute=r=>r.kind==='support_event'||r.kind==='scenario_event'&&r.event_id;
 const groupOwnsRoute=(g,r)=>g.card_id?r.owner_type==='support'&&r.owner_id===g.card_id:r.owner_type==='scenario'&&r.owner_id===g.scenario_id&&r.event_id===g.id;

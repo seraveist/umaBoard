@@ -90,7 +90,11 @@ immediate clear button and IME-safe updates. Loading uses a count/progress bar.
 Buttons reserve their size when busy. Native focus-visible uses primary color.
 Global scrollbars use border/muted/mint tokens, with forced-colors fallback.
 Skill icons are buttons framed in silver (normal), gold (rare), or pink
-(evolution), with a visible focus ring and text labels.
+(evolution), with a visible focus ring. Only rare/evolution get a small bordered
+badge immediately after the skill name; normal/inherited omit the rarity badge.
+Names and badges flow inline so long phone-sized names keep their text width.
+The subtitle shows setup-specific possible acquisition routes; derived/factor
+paths are explicitly inferred, and absent evidence is labeled unknown.
 The image inside the frame uses the skill's normalized source `icon_id`; a
 same-ID display record is the compatibility fallback. Grouping/order may follow
 a lower stage, but the image never borrows that lower stage's rarity. All 128
@@ -111,12 +115,16 @@ not animate or move while users input.
 
 The post-training panel follows the same bordered work surface, native fields,
 status regions and primary action. It appears below the checklist and becomes
-editable after a completed chart. Six numeric inputs use a three-column desktop
-and two-column phone grid; three aptitude selects share a row. Actual values
-start blank. Results use a compact SP/gain summary and a source-ordered list with
+editable after a completed chart. Six numeric inputs share one desktop row and
+two three-column phone/tablet rows. A native Fast Learner checkbox and collapsed
+aptitude settings sit below; opening aptitudes gives the three selects a full row.
+Actual values start blank. Results use a compact SP/gain summary and a source-ordered list with
 expandable stage prices; the checklist retains its single table and scroll area.
 Recommendations never modify acquisition records. A visible stale-result label
 and disabled export prevent old recommendations being presented as current.
+Cost/model detail is collapsed behind one summary. Whole-checklist actions remain
+visible near search/categories, explicitly naming their scope and retaining the
+shared six-slot inherited rule.
 
 ## Do's and Don'ts
 

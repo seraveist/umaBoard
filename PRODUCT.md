@@ -24,16 +24,23 @@ outfit, scenario and deck. Evolutions and alternatives remain individually visib
 Ordinary factor-eligible whites complete the ordinary pool. Inheritance uses a fixed positive-gain Top10 after style suitability filtering, always using verified strengthened forms and excluding pure healing; users can record at most six of these. Unknown
 calculations are excluded. Every admitted row is displayed inside the bounded
 scrollable table, without a display limit or a load-more action.
-The acquisition dropdown has eight states: owned, unavailable, levels zero to five.
+The acquisition dropdown retains eight stored states: owned, unavailable, levels
+zero to five. Visible names are 습득, 미획득, 획득, 할인 Lv1–5; 획득 means
+available but unpurchased with no hint discount. Atomic whole-list buttons reset
+to unavailable or discount Lv5, keeping the six-inherited limit and existing
+inherited choices first. Search/category filters do not narrow a bulk action.
 Acquiring an upper skill records all verified lower stages as acquired. Marking a
 lower skill unavailable clears all linked uppers. Acquiring an evolution clears
 its sibling evolution alternatives, retaining the shared acquired lower stages.
 Player-facing rarity names are 일반, 레어, 진화 and 계승. Icons have rarity frames
 and open source descriptions through hover, keyboard focus or tap.
+Only rare/evolution have visible name-line badges. The subtitle shows possible
+acquisition routes for the selected setup, with inferred and unknown paths marked.
 
 The post-training stage retains paid skills, permits genuine upgrades and charges
 only unpaid purchase stages at recorded hint discounts. It does not assume white
-Lv5 or event maximum hints. It compares actual combinations against the acquired
+Lv5 or event maximum hints. Optional Fast Learner adds ten percentage points to
+each stage's hint discount before integer flooring. It compares actual combinations against the acquired
 baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
 search is bounded and does not guarantee a global optimum. Recommendations never
 change the checklist. Inputs persist per plan; edited inputs/checks invalidate
