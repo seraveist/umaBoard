@@ -101,7 +101,7 @@ def raw_inputs(client,sources,cache):
 def load_active(root):
     path=root/'data/manifest.json'
     if not path.exists():return None,None
-    manifest=json.loads(path.read_text())
+    manifest=json.loads(path.read_text(encoding='utf-8'))
     relative=manifest['dataset_path']
     if not re.fullmatch(r'data/bundles/[a-f0-9]{64}/dataset.json',relative):raise DataError('invalid active bundle path')
     content=(root/relative).read_bytes()
@@ -157,12 +157,12 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
 
 def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=False,rebuild_active=False):
     client=client or HttpClient(os.environ.get('GITHUB_TOKEN'))
-    config=json.loads((root/'sync-config.json').read_text())
-    curated=json.loads((root/'curated/rules.json').read_text())
+    config=json.loads((root/'sync-config.json').read_text(encoding='utf-8'))
+    curated=json.loads((root/'curated/rules.json').read_text(encoding='utf-8'))
     labels_path=root/'curated/names-ko.json'
-    if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text())
+    if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text(encoding='utf-8'))
     planning_path=root/'curated/planning.json'
-    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text())
+    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text(encoding='utf-8'))
     previous_manifest,previous_data=load_active(root)
     fingerprint=adapter_fingerprint(root,config,curated)
     if rebuild_active:
@@ -202,7 +202,7 @@ def main(argv=None):
         print(json.dumps(result,ensure_ascii=False))
         summary=os.environ.get('GITHUB_STEP_SUMMARY')
         if summary:
-            with open(summary,'a') as stream:stream.write(f'## JP data sync: {result["status"]}\n\nVersion: `{result["version"]}`\n\nCounts: `{result["counts"]}`\n\nRace calculation: unvalidated.\n')
+            with open(summary,'a',encoding='utf-8') as stream:stream.write(f'## JP data sync: {result["status"]}\n\nVersion: `{result["version"]}`\n\nCounts: `{result["counts"]}`\n\nRace calculation: unvalidated.\n')
         return 0
     except (DataError,OSError,KeyError,TypeError,ValueError) as exc:
         result={'status':'failed','checked_at':datetime.now(timezone.utc).isoformat(),'error':str(exc),'previous_bundle_retained':True}

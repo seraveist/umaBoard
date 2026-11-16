@@ -13,9 +13,9 @@ target = root / 'assets/fonts'
 target.mkdir(parents=True, exist_ok=True)
 texts = []
 for pattern in ('assets/*.mjs', 'index.html', 'curated/*.json'):
-    texts.extend(p.read_text() for p in root.glob(pattern))
-manifest = json.loads((root / 'data/manifest.json').read_text())
-texts.append((root / manifest['dataset_path']).read_text())
+    texts.extend(p.read_text(encoding='utf-8') for p in root.glob(pattern))
+manifest = json.loads((root / 'data/manifest.json').read_text(encoding='utf-8'))
+texts.append((root / manifest['dataset_path']).read_text(encoding='utf-8'))
 repertoire = ''.join(texts) + ''.join(chr(i) for i in range(32, 127))
 font = TTFont('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', fontNumber=1)
 options = subset.Options()
@@ -40,5 +40,5 @@ font.flavor = 'woff'
 font.save(target / 'race-sans.woff')
 for source, name in [('/usr/share/doc/fonts-noto-cjk/copyright', 'Noto-CJK-LICENSE.txt'),
                      ('/usr/share/doc/fonts-urw-base35/copyright', 'Nimbus-LICENSE.txt')]:
-    (target / name).write_text(Path(source).read_text())
+    (target / name).write_text(Path(source).read_text(encoding='utf-8'), encoding='utf-8')
 print({p.name: p.stat().st_size for p in target.iterdir()})

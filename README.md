@@ -19,6 +19,19 @@ sites-preview start .
 일반 로컬 환경에서는 빌드 후 `python -m http.server 8000 --directory dist`로도 실행할 수 있습니다.
 개발 호스팅 환경에서는 해당 환경의 관리형 미리보기를 사용합니다.
 
+Windows PowerShell에서는 Python UTF-8 모드를 지정해 실행할 수 있습니다.
+Python 3.12 이상이면 되며, 3.13에서도 같은 명령을 사용합니다.
+
+```powershell
+py -X utf8 scripts/build_pages.py --output dist --fetch-portraits
+py -X utf8 -m http.server 8000 --directory dist
+```
+
+브라우저에서 `http://localhost:8000/`을 엽니다. 소스 파일을 직접 더블클릭하지 않고
+HTTP 서버를 통해 접속해야 데이터와 계산 Worker가 로드됩니다.
+ZIP으로 받았다면 업데이트 시 같은 브랜치의 최신 ZIP을 다시 받아야 합니다.
+Git으로 복제했다면 해당 브랜치에서 `git pull --ff-only` 후 다시 빌드합니다.
+
 ## 기존 계산기 참고
 
 일본 서버의 **육성 목표와 사용자가 입력한 예상 스탯·획득 SP에 따른 스킬 최적화 시뮬레이터**입니다.

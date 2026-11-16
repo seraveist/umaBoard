@@ -24,11 +24,11 @@ def version_app_assets(output):
     # modules from an earlier deployment cannot mix with a changed result schema.
     for path in output.glob('assets/*.mjs'):
         source = re.sub(r'''(['"])(\./[\w.-]+\.mjs)\1''',
-                        lambda match: f'{match[1]}{match[2]}?v={version}{match[1]}', path.read_text())
-        path.write_text(source)
+                        lambda match: f'{match[1]}{match[2]}?v={version}{match[1]}', path.read_text(encoding='utf-8'))
+        path.write_text(source, encoding='utf-8')
     for index in entries:
         index.write_text(re.sub(r'((?:src|href)="assets/[^"?]+\.(?:mjs|css))"',
-                                lambda match: f'{match[1]}?v={version}"', index.read_text()))
+                                lambda match: f'{match[1]}?v={version}"', index.read_text(encoding='utf-8')), encoding='utf-8')
     return version
 
 
@@ -41,8 +41,8 @@ def main():
     manifest, data = load_active(root)
     if data is None:
         raise DataError('No active dataset: run python scripts/sync_data.py first')
-    report = validate_dataset(data, json.loads((root / 'sync-config.json').read_text()))
-    stored = json.loads((root / manifest['validation_path']).read_text())
+    report = validate_dataset(data, json.loads((root / 'sync-config.json').read_text(encoding='utf-8')))
+    stored = json.loads((root / manifest['validation_path']).read_text(encoding='utf-8'))
     if stored != report:
         raise DataError('Stored validation report differs from current validator')
 

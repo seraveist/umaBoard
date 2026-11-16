@@ -10,7 +10,7 @@ Active JP dataset: `d7de1b78dac16a10ac579793134f708928332a4ed30546dba66a91daf73e
 | Check | Result |
 | --- | --- |
 | `node --test tests/*.test.mjs` | 124 passed, including 15 first-chart/UI checks |
-| `python -m unittest discover -s tests -v` | 37 passed |
+| `python -m unittest discover -s tests -v` | 39 passed, including two CP949-default UTF-8 regressions |
 | `python scripts/validate_data.py` | Passed |
 | `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits available |
 | Strict static UI audit | Zero findings in the configured `assets/` source directory |
@@ -43,6 +43,14 @@ The staged site was exercised through the managed preview in Chromium.
 
 Narrow layout testing used browser zoom, not a mobile-device emulator. Touch
 hardware and other browser engines have not been tested.
+
+The Windows local-build failure was reproduced by modeling CP949 as the default
+for text file reads/writes. The full staging path and validation CLI are now
+tested with Korean, Japanese and emoji content in UTF-8 manifests, reports,
+modules, HTML and portrait metadata. This is a locale simulation on the test
+host; it does not claim a native Windows test run. Text encodings are explicit
+in the build/data utilities, and README includes the UTF-8-mode command that
+also works with an older downloaded ZIP.
 
 ## Model limits retained deliberately
 
