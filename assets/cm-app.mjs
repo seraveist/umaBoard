@@ -1,5 +1,6 @@
 import {createChartSetup,CM_MODEL_VERSION} from './cm-chart.mjs';
-import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition} from './cm-state.mjs';
+import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition,buildAcquisitionHierarchy,relatedAcquisitionIds,updateAcquisition} from './cm-state.mjs';
+import {createSkillDetails,skillRarityLabel} from './cm-skill-details.mjs';
 import {INHERITED_LIMIT} from './cm-recommendation.mjs';
 import {SKILL_CATEGORIES,categoryRows} from './cm-categories.mjs';
 import {courseSvg} from './cm-course.mjs';
@@ -12,10 +13,11 @@ const $=selector=>document.querySelector(selector),el=(tag,className,text)=>{con
 const STORAGE='umaboard-cm-workspace-v1';
 const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹'};
 const statLabels={speed:'스피드',stamina:'스태미나',power:'파워',guts:'근성',wisdom:'지능'};
-let data,profiles,display,portraits,manifest,worker,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,limit=30,total=0;
+let data,profiles,display,portraits,manifest,worker,hierarchy,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,total=0;
 let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311','30300','30322','30289','30323'];
 let states={},category='all',pickerKind='',pickerSlot=-1,pickerType='',returnFocus=null,searchComposing=false,pickerComposing=false;
 const tableNodes=new Map();
+const skillDetails=createSkillDetails();
 
 function notice(text='',error=false){$('#cm-notice').textContent=text;$('#cm-notice').classList.toggle('is-error',error);}
 function readDraft(){
@@ -81,6 +83,7 @@ function renderRace(){
 }
 
 function openPicker(kind,slot=-1,trigger=null){
+ skillDetails.dismiss();
  pickerKind=kind;pickerSlot=slot;pickerType='';returnFocus=trigger||document.activeElement;
  $('#picker-title').textContent=kind==='outfit'?'육성 우마무스메 선택':`${slot+1}번 서포트 선택`;
  $('#picker-description').textContent=kind==='outfit'?'의상을 확인하고 선택해 주세요.':'SSR 카드만 표시합니다. 같은 캐릭터는 중복 편성할 수 없습니다.';
@@ -115,17 +118,19 @@ function renderPicker(){
 function newRow(row){
  const tr=el('tr',row.rarity==='evolution'?'evolution-row':'');tr.dataset.skill=row.id;
  const nameCell=el('td'),identity=el('div','skill-identity'),icon=display.icons?.[row.iconId];
- if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;identity.append(image(path,'','skill-icon'));}
- else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';identity.append(fallback);}
+ const iconButton=el('button',`skill-detail-trigger rarity-${row.rarity==='gold'?'rare':row.rarity==='evolution'?'evolution':'normal'}`);iconButton.type='button';
+ if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
+ else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}
+ skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)});identity.append(iconButton);
  const copy=el('div','skill-copy'),name=el('span','skill-name',row.name);name.lang='ja';copy.append(name);
- const kind=row.rarity==='evolution'?'진화':row.inherited?'계승':row.rarity==='gold'?'금딱':'';
+ const kind=skillRarityLabel(row);
  if(kind)copy.append(el('span',`skill-kind ${row.inherited?'inherited':row.rarity}`,kind));
  identity.append(copy);nameCell.append(identity);const gain=el('td','gain-cell');gain.dataset.gain='';
  const state=el('td','state-cell'),select=el('select','hint-select');select.dataset.skillId=acquisitionId(row);select.setAttribute('aria-label',`${row.name} 획득 상태 및 힌트 레벨`);
  select.append(...ACQUISITION_OPTIONS.map(item=>option(item.value,item.label)));state.append(select);tr.append(nameCell,gain,state);return tr;
 }
 function renderRows(){
- const query=searchKey($('#skill-search').value),filtered=categoryRows(rows,category).filter(row=>searchKey(row.name).includes(query)),visible=filtered.slice(0,limit),body=$('#skill-table-body');
+ const query=searchKey($('#skill-search').value),visible=categoryRows(rows,category).filter(row=>searchKey(row.name).includes(query)),body=$('#skill-table-body');
  for(const item of SKILL_CATEGORIES){
   const tab=$(`#category-${item.id}`),count=categoryRows(rows,item.id).length;
   tab.setAttribute('aria-selected',String(category===item.id));tab.tabIndex=category===item.id?0:-1;tab.querySelector('.category-count').textContent=String(count);
@@ -142,9 +147,10 @@ function renderRows(){
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
   if(body.children[index]!==node)body.insertBefore(node,body.children[index]||null);
  });
- $('#empty-state').hidden=rows.length>0||busy;$('#skill-table-wrap').hidden=visible.length===0;$('#no-results').hidden=!(rows.length>0&&filtered.length===0);
- $('#table-footer').hidden=rows.length===0||filtered.length===0;$('#load-more').hidden=visible.length>=filtered.length;
- $('#visible-count').textContent=`${visible.length} / ${filtered.length}개 표시`;
+ skillDetails.dismissDetached();
+ $('#empty-state').hidden=rows.length>0||busy;$('#skill-table-wrap').hidden=visible.length===0;$('#no-results').hidden=!(rows.length>0&&visible.length===0);
+ $('#table-footer').hidden=visible.length===0;
+ $('#visible-count').textContent=`${visible.length}개 전체 표시`;
  const count=checklistCounts(rows,states);$('#checklist-count').replaceChildren();
  $('#inherited-count').textContent=`계승 ${inheritedCount(rows,states)} / ${INHERITED_LIMIT}`;
  if(rows.length){$('#checklist-count').append(document.createTextNode(`전체 ${total||rows.length} · `),el('strong','',`확보 ${count.available}`));}
@@ -153,25 +159,26 @@ function renderRows(){
 }
 function recordState(id,value){
  if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승기는 최대 6개까지 확보할 수 있습니다. 선택한 계승기를 미획득으로 바꾼 뒤 다시 선택하세요.';return;}
- states[id]=acquisitionValue(value);
+ const before=states;states=updateAcquisition(rows,states,id,value,hierarchy);
+ const linked=Object.keys(states).filter(key=>key!==id&&states[key]!==acquisitionValue(before[key])).length;
  if(!draft.plans[currentPlan])draft.plans[currentPlan]={states:{}};
  draft.plans[currentPlan].states=states;draft.plans[currentPlan].savedAt=new Date().toISOString();
  const entries=Object.entries(draft.plans).sort((a,b)=>(b[1].savedAt||'').localeCompare(a[1].savedAt||''));draft.plans=Object.fromEntries(entries.slice(0,12));
- const saved=saveDraft();renderRows();$('#draft-status').textContent=saved?'체크 상태가 이 브라우저에 저장되었습니다.':'저장 공간을 사용할 수 없습니다. 목록 저장으로 내려받아 주세요.';
+ const saved=saveDraft();renderRows();$('#draft-status').textContent=(linked?`연결된 스킬 ${linked}개의 상태를 함께 변경했습니다. `:'')+(saved?'체크 상태가 이 브라우저에 저장되었습니다.':'저장 공간을 사용할 수 없습니다. 목록 저장으로 내려받아 주세요.');
 }
 function beginCalculation(event){
  event?.preventDefault();if(!ready||busy)return;
  const input=setupInput();
  try{createChartSetup(data,profiles,input);}catch(error){notice(error.message,true);$('#outfit-picker').focus();return;}
- draft.setup=input;saveDraft();currentPlan=planKey(input);states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;limit=30;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
+ skillDetails.dismiss();draft.setup=input;saveDraft();currentPlan=planKey(input);states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
  busy=true;$('#generate').disabled=true;$('#generate span').textContent='마신표 계산 중';$('#cancel-calculation').hidden=false;$('#export-checklist').disabled=true;
  $('#calculation-progress').hidden=false;$('#progress-label').textContent='계승 후보를 비교하고 있습니다';$('#progress-count').textContent='';$('#progress-bar').value=0;$('#progress-bar').max=1;$('#draft-status').textContent='';
- notice('계승 Top 10을 확정한 뒤 첫 30개부터 순서대로 표시합니다.');renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
+ notice('계승 Top 10을 확정한 뒤 계산된 스킬을 모두 표시합니다.');renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
 }
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:checklistSnapshot(result.rows,states),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId})),inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  acquisition:checklistSnapshot(result.rows,states,hierarchy),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id)})),inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#draft-status').textContent='계산 기준과 체크 상태를 JSON 파일로 저장했습니다.';
 }
 function setupWorker(){
@@ -180,9 +187,9 @@ function setupWorker(){
   if(message.type==='loaded'){ready=true;$('#generate').disabled=false;return;}
   if(message.requestId!==requestId)return;
   if(message.type==='progress'){
-   rows=message.progress.rows;total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
+   rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
-   result=message.result;rows=result.rows;total=rows.length;states=checklistSnapshot(rows,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
+   result=message.result;rows=result.rows;total=rows.length;states=checklistSnapshot(rows,states,hierarchy);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
    notice(`${rows.length}개 스킬의 비교를 마쳤습니다. 게임 화면 순서대로 획득 상태를 기록하세요.`);renderRows();
    let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
@@ -199,7 +206,7 @@ async function start(){
  readDraft();
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
-  data=await loadJson(manifest.dataset_path);const saved=draft.setup;
+  data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;
   if(saved&&Array.isArray(saved.supportIds))deck=saved.supportIds.slice(0,6);
   const course=selectableCourses().find(c=>c.id===(saved?.courseId||'10808'))||selectableCourses()[0];
@@ -220,9 +227,9 @@ $('#picker-dialog').addEventListener('keydown',event=>{if(event.key==='Escape'&&
 $('#picker-search').addEventListener('compositionstart',()=>pickerComposing=true);$('#picker-search').addEventListener('compositionend',()=>{pickerComposing=false;renderPicker();});$('#picker-search').addEventListener('input',()=>{if(!pickerComposing)renderPicker();});
 $('#clear-picker-search').addEventListener('click',()=>{$('#picker-search').value='';renderPicker();$('#picker-search').focus();});
 $('#remove-support').addEventListener('click',()=>{stopCalculation(false);deck[pickerSlot]=null;renderDeck();closePicker();persistSetup();});
-$('#skill-search').addEventListener('compositionstart',()=>searchComposing=true);$('#skill-search').addEventListener('compositionend',()=>{searchComposing=false;limit=30;renderRows();});$('#skill-search').addEventListener('input',()=>{if(!searchComposing){limit=30;renderRows();}});
-$('#clear-skill-search').addEventListener('click',()=>{$('#skill-search').value='';limit=30;renderRows();$('#skill-search').focus();});
-$('#load-more').addEventListener('click',()=>{limit+=30;renderRows();});$('#skill-table-body').addEventListener('change',event=>{if(event.target.matches('select[data-skill-id]'))recordState(event.target.dataset.skillId,event.target.value);});$('#export-checklist').addEventListener('click',exportChecklist);
+$('#skill-search').addEventListener('compositionstart',()=>searchComposing=true);$('#skill-search').addEventListener('compositionend',()=>{searchComposing=false;renderRows();});$('#skill-search').addEventListener('input',()=>{if(!searchComposing)renderRows();});
+$('#clear-skill-search').addEventListener('click',()=>{$('#skill-search').value='';renderRows();$('#skill-search').focus();});
+$('#skill-table-body').addEventListener('change',event=>{if(event.target.matches('select[data-skill-id]'))recordState(event.target.dataset.skillId,event.target.value);});$('#export-checklist').addEventListener('click',exportChecklist);
 $('#edit-owned').addEventListener('click',()=>{
  if(!ready)return;returnFocus=$('#edit-owned');$('#owned-name').textContent=umaName(data.outfits[outfitId]);$('#owned-bloom').replaceChildren(...Array.from({length:6-data.outfits[outfitId].base_stars},(_,i)=>option(i+data.outfits[outfitId].base_stars,`★${i+data.outfits[outfitId].base_stars}`)));
  $('#owned-bloom').value=String(ownedProfile().bloom);$('#owned-unique').value=String(ownedProfile().uniqueLevel);$('#owned-error').textContent='';$('#owned-dialog').showModal();
@@ -233,7 +240,7 @@ for(const item of SKILL_CATEGORIES){
  const tab=el('button','category-tab');tab.type='button';tab.id=`category-${item.id}`;tab.dataset.category=item.id;tab.setAttribute('role','tab');tab.setAttribute('aria-controls','category-panel');tab.setAttribute('aria-selected',String(item.id==='all'));tab.tabIndex=item.id==='all'?0:-1;
  if(item.icon)tab.append(image(`assets/skill-icons/utx_ico_skill_${item.icon}.png`,'','category-icon'));
  tab.append(el('span','',item.label),el('span','category-count','0'));
- tab.addEventListener('click',()=>{category=item.id;limit=30;renderRows();$('#skill-table-wrap').scrollTop=0;});$('#skill-categories').append(tab);
+ tab.addEventListener('click',()=>{category=item.id;renderRows();$('#skill-table-wrap').scrollTop=0;});$('#skill-categories').append(tab);
 }
 $('#skill-categories').addEventListener('keydown',event=>{
  const tabs=[...$('#skill-categories').children],index=tabs.indexOf(event.target);if(index<0)return;

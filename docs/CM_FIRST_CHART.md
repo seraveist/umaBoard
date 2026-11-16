@@ -49,11 +49,17 @@ admission policy before merging into the same checklist:
 
 Acquisition state is separate from simulation selection. `owned` is already
 purchased, `unavailable` cannot be purchased, `0`–`5` is an available unpurchased
-hint level. Input does not rerun the chart, reorder rows, or resolve evolution
-alternatives. Each evolution branch keeps its own acquired/hint state; recording
-one branch as purchased never marks its alternatives as purchased. The original
-gold ID is retained as separate pricing metadata. Later joint optimization owns
-legal purchase/evolution decisions and resolves shared base costs.
+hint level. Input does not rerun the chart or reorder rows. Per the user's
+2026-11-16 update, recording an upper as purchased marks every verified lower
+purchase/evolution prerequisite as purchased. Setting a lower to unavailable
+clears all reachable uppers, even across tabs/search. Returning a purchased lower
+to Lv0–5 also clears any acquired uppers; hints alone do not acquire lower stages.
+Acquiring an evolution clears sibling evolutions of the same base, while keeping
+their common lower stages acquired. Only verified purchase-stage prerequisites
+and evolution rules form this hierarchy, never shared names/icons/version groups.
+Old independent drafts normalize on restore: first acquired alternative in table
+order wins, its lower chain is restored, and stale IDs are removed. The original
+gold ID remains pricing metadata; later optimization still resolves shared costs.
 
 ## Numerical/model policy
 
@@ -94,13 +100,18 @@ One category tab row follows display-icon types: all, passive, speed, recovery,
 acceleration, mixed/other. A composite follows its source icon, with a semantic
 fallback only when metadata is missing. Tabs have counts, arrow/Home/End keyboard
 navigation, and combine with name search. Filtering preserves order/checks and
-restarts the visible batch at thirty. Ordinary recovery stays in the same table.
+shows all matching rows. Ordinary recovery stays in the same table.
 
-Thirty rows initially, add thirty on demand; full admitted pool retained. Worker
+All admitted rows render without a display limit or load-more control. The table
+retains its own bounded scrollbar. Worker
 scores inherited candidates first, locks Top10, then publishes ordered batches. Inputs are stable while receiving batches and progress
 is count-based. New jobs cancel stale results. Draft/checklist storage is local;
 scope/version prevent unrelated plans from overwriting each other. JSON export
 records the input, model/version, profiles and checklist for the next stage.
+Icons use silver/gold/pink rarity frames with Korean 일반/레어/진화/계승 labels.
+Source descriptions open on icon hover, keyboard focus, or tap, including a named
+lower-skill chain. A single text-only tooltip escapes source content, avoids table
+clipping, is hoverable, and supports Escape, outside interaction and scroll dismissal.
 
 
 ## Course semantics and presentation corrections

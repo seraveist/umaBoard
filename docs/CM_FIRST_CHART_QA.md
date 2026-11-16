@@ -3,14 +3,14 @@
 Branch: `feat/cm-first-chart`, based on main `e96b037`.
 Active JP dataset: `d7de1b78dac16a10ac579793134f708928332a4ed30546dba66a91daf73e9a0a`.
 
-![Verified first-chart workspace](images/cm-first-chart-desktop.jpg)
+![Verified rarity frames and keyboard-accessible skill details](images/cm-skill-details-desktop.png)
 
 ## Automated checks
 
 | Check | Result |
 | --- | --- |
-| `node --test tests/*.test.mjs` | 133 passed, including 24 first-chart/UI checks |
-| `python -m unittest discover -s tests -v` | 39 passed, including two CP949-default UTF-8 regressions |
+| `node --test tests/*.test.mjs` | 142 passed, including 33 first-chart/UI/state checks |
+| `python -X utf8 -m unittest discover -s tests -v` | 39 passed on native Windows, including two CP949-default UTF-8 regressions; canonical fixtures explicitly retain LF bytes |
 | `python scripts/validate_data.py` | Passed |
 | `python scripts/build_pages.py --output dist --fetch-portraits` | Passed; all 273 outfit and 319 SSR portraits available |
 | Strict static UI audit | Zero findings in the configured `assets/` source directory |
@@ -24,12 +24,13 @@ audit alone is not claimed as a full accessibility audit.
 
 ## Browser checks
 
-The staged site was exercised through the managed preview in Chromium.
+The staged site was exercised in headless Microsoft Edge on Windows through a
+temporary loopback-only server, with production 24-sample/0.01s generation.
 
 | Flow | Observed result |
 | --- | --- |
-| Default MacQueen, Kyoto turf 2200m, six SSRs, scenario 15 | 207 admitted candidates including a locked inherited Top10; first 30 shown |
-| Load more | 60 rows, original order and recorded hint preserved |
+| Default MacQueen, Kyoto turf 2200m, six SSRs, scenario 15 | All 207 admitted candidates rendered, including the locked inherited Top10 |
+| Full list | DOM row count equals the exported full pool; no load-more control; bounded table scrolling |
 | Acquisition select | Eight choices; Lv3 persisted without recalculating/reordering |
 | Reload and regenerate same setup | Recorded Lv3 restored |
 | Recovery search | `コーナー回復○` retained with `0.00` lengths |
@@ -38,22 +39,27 @@ The staged site was exercised through the managed preview in Chromium.
 | Owned profile | Unique level 5 saved and reflected, then restored to 6 |
 | Cancel and rerun | Cancel returns control immediately; stale worker messages ignored; rerun completes |
 | Export | JSON contains 207 rows and ten inherited IDs, fixed five-stat profile, model version, 24-sample/0.01s settings and the saved acquisition state |
-| Narrow layout | At 340 CSS px via browser zoom, document width 338px and table width about 302px; no horizontal overflow |
+| Narrow layout | 340px browser viewport; document width and scroll width both 340px; no horizontal overflow |
 | Icon category tabs | Six category tabs, counts 207 / 34 / 123 / 15 / 19 / 16; icon-based classification; arrow/Home navigation; checks retained across tabs |
-| Search with tabs | Dedicated no-results state; clearing restores the current category and a thirty-row batch |
+| Search with tabs | Dedicated no-results state; clearing restores every matching row in the current category |
 | Inheritance limit | Ten inherited rows total, six recorded allowed, seventh restored to unavailable with explanation; releasing a slot allows a different skill |
 | Strengthened inherits | Export contains 91101411 and no weaker 901411; no pure healing inherit in shortlist |
 | Portraits | All six selected support frames loaded at 48×48 with contain; type icons beside names |
-| Narrow diagram/tabs | At 340 CSS px document width338, table302, diagram viewport266/content680; only component scrolling |
+| Narrow diagram/tabs | At 340px, the document has no horizontal overflow; component scroll areas remain operable |
+| Skill details | Hover, moving into the tooltip, keyboard focus, click/tap-style activation, Escape and close-on-second-click exercised; source description and lower-skill names shown |
+| Rarity | 일반/레어/진화 labels and three distinct frame colors verified; no 금딱 label in rows |
+| Acquisition chain | Acquiring an evolution acquires each admitted lower stage; marking the lowest unavailable clears the upper; persisted chain restores after reload |
+| Alternative evolution | Nishino Flower outfit 105101: acquiring 105101111 then 105101121 clears the former and keeps the common base acquired; clearing the base clears both evolutions |
+| Narrow tooltip | At 340×850, left12/right328 and top451.30/bottom638.67; popup fully inside viewport; no page errors |
 
-Narrow layout testing used browser zoom, not a mobile-device emulator. Touch
-hardware and other browser engines have not been tested.
+Narrow layout testing used a 340×850 browser viewport. Physical touch hardware
+and other browser engines have not been tested.
 
 The Windows local-build failure was reproduced by modeling CP949 as the default
 for text file reads/writes. The full staging path and validation CLI are now
 tested with Korean, Japanese and emoji content in UTF-8 manifests, reports,
 modules, HTML and portrait metadata. This is a locale simulation on the test
-host; it does not claim a native Windows test run. Text encodings are explicit
+host and has now also passed on native Windows. Text encodings are explicit
 in the build/data utilities, and README includes the UTF-8-mode command that
 also works with an older downloaded ZIP.
 
@@ -91,4 +97,6 @@ The legacy test that expected a wrong-style orphan acceleration was corrected to
 expect inactivity; the full suite passes with the physical-link correction.
 
 Browser generation/JSON used the production 24 samples and dt0.01. Narrow testing
-used Chromium400% zoom; touch hardware and other browser engines remain untested.
+used a 340px Edge viewport; touch hardware and other browser engines remain untested.
+
+![Narrow-screen description popup](images/cm-skill-details-mobile.png)

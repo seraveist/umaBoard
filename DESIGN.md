@@ -67,7 +67,7 @@ use tabular numerals. Keep the Japanese source spelling intact.
 1440px maximum width. Header, compact title, left preparation form and right
 course/results desk. Desktop left360–400px; narrow screens stack naturally with
 the results below. The course diagram and skill-table surface own bounded scrolling; forms
-remain in document flow. Thirty rows per explicit load batch. Errors/progress
+remain in document flow. All admitted rows render inside the bounded table. Errors/progress
 reserve space. No global fixed-height/overflow-hidden shell.
 
 ## Elevation & Depth
@@ -89,6 +89,12 @@ Shared notice uses a stable live region; errors stay inline. Search has an
 immediate clear button and IME-safe updates. Loading uses a count/progress bar.
 Buttons reserve their size when busy. Native focus-visible uses primary color.
 Global scrollbars use border/muted/mint tokens, with forced-colors fallback.
+Skill icons are buttons framed in silver (normal), gold (rare), or pink
+(evolution), with a visible focus ring and text labels. The runtime owns
+`--skill-*-frame` and `--skill-*-surface` tokens in cm.css. One body-mounted
+`cm-skill-details.mjs` tooltip uses `--z-skill-details:300`, stays within the
+viewport, and opens on hover, focus or tap. Escape/outside interaction dismisses
+it; moving the pointer into the explanation keeps it available for reading.
 Hover/active/disabled states exist for every action. Reduced motion disables
 transitions. The sole authored reveal is the course strip update; table rows do
 not animate or move while users input.

@@ -70,7 +70,8 @@ class BuildEncodingTests(unittest.TestCase):
     def write(self, name, text):
         path = self.root / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding='utf-8')
+        # Canonical fixtures must retain LF bytes on Windows as well as Unix.
+        path.write_text(text, encoding='utf-8', newline='\n')
 
     def write_json(self, name, value):
         self.write(name, json.dumps(value, ensure_ascii=False))
