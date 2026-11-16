@@ -7,7 +7,7 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {buildAcquisitionHierarchy,relatedAcquisitionIds,checklistSnapshot} from './cm-state.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v2';
+export const FINAL_MODEL_VERSION='cm-post-training-v3';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');

@@ -7,7 +7,7 @@ import {withCourseMetadata} from './cm-course-metadata.mjs';
 import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
 import {skillIconId} from './cm-icons.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v2';
+export const CM_MODEL_VERSION='cm-first-chart-v3';
 export const CM_SAMPLES=24;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -120,7 +120,8 @@ export function sortChartRows(rows,data,display){
 export function branchSampler(setup,nativeIds,sample){
  const nSet=new Set(nativeIds);
  const value=(id,index,dimension)=>{
-  const offset=skillHash(id)%19,base=randomPrime[(dimension+(nSet.has(id)?0:1)+index*2)%randomPrime.length];
+  const shared=typeof index==='string',key=shared?skillHash(index):index;
+  const offset=skillHash(id)%19+(shared?key%97:0),base=randomPrime[(dimension+(nSet.has(id)?0:1)+(key%randomPrime.length)*2)%randomPrime.length];
   return radicalInverse(sample+1+offset,base);
  };
  return (branches,id,inv,pre)=>{
@@ -129,11 +130,11 @@ export function branchSampler(setup,nativeIds,sample){
    const areas=inv.chartRandomPolicy==='corners'?setup.course.corners.map(c=>[c.start,c.start+c.length]):setup.course.straights.map(s=>[s.start,s.end]);
    const count=inv.chartRandomPolicy==='corners'?2:1,windows=[];
    for(let k=0;k<count;k++){
-    const selected=areas[Math.min(areas.length-1,Math.floor(value(id,inv.index,k*2)*areas.length))];
+    const selected=areas[Math.min(areas.length-1,Math.floor(value(id,inv.chartRandomPolicy,k*2)*areas.length))];
     if(!selected)continue;
     const start=inv.chartRandomPolicy==='corners'
-     ?selected[0]+value(id,inv.index,k*2+1)*Math.max(0,selected[1]-selected[0]-10)
-     :Math.min(selected[0]+value(id,inv.index,k*2+1)*(selected[1]-selected[0]),selected[1]-2);
+     ?selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*Math.max(0,selected[1]-selected[0]-10)
+     :Math.min(selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*(selected[1]-selected[0]),selected[1]-2);
     windows.push([start,Math.min(selected[1],start+10)]);
    }
    return branches.flatMap(branch=>{
@@ -141,7 +142,9 @@ export function branchSampler(setup,nativeIds,sample){
     return clipped.length?[{...branch,random:false,windows:clipped,at:clipped[0][0]}]:[];
    });
   }
-  return branches.map((branch,index)=>sampleBranches([branch],value(id,inv.index,index))[0]);
+  // The source caches each random condition per skill, across its invocation
+  // alternatives. A weaker fallback must not roll ahead of its stronger form.
+  return branches.map((branch,index)=>sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0]);
  };
 }
 

@@ -87,6 +87,10 @@ order, retaining at most six; remaining inherited rows stay unavailable.
   once only if the native baseline is also deterministic.
 - Random dimensions distinguish the native and candidate skill. The same native
   sample is reused in both trajectories. Baselines are cached per sample.
+- As of `cm-first-chart-v3`, invocation alternatives with the same spatial
+  random-condition key share the sample. A stronger stat-dependent form and its
+  fallback cannot independently race to activate. Explicitly linked effects
+  retain their own conditions and follow-up timing.
 - Counter, HP, possession and start predicates are fulfilled in this chart only;
   real spatial/temporal predicates and same-skill links remain. Rank, position, temptation, counters, other-runner and skill-possession triggers
   are assumed successful, including same-style counts and popularity matching.

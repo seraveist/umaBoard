@@ -77,7 +77,8 @@ function compileCondition(dnf,setup){
    }
   }
   if(!windows.length)continue;
-  branches.push({windows,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),assumed:group.filter(a=>OPPONENT.has(a.field)).map(a=>a.field),
+  const randomKey=spatial.filter(a=>a.field.includes('random')).map(a=>`${a.field}:${a.operator}:${a.value}`).sort().join('|');
+  branches.push({windows,randomKey,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),assumed:group.filter(a=>OPPONENT.has(a.field)).map(a=>a.field),
    random:group.some(a=>a.field.includes('random'))||group.some(a=>OPPONENT.has(a.field)&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
  }
  return {branches,unsupported};

@@ -38,6 +38,21 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_candidate_route_corrections_migrate_records_only_with_identical_skill_mechanics(self):
+        raw,rules=fixtures();data=normalize(raw,rules)
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            publish(root,data,validate_dataset(data,{}),[],[],'before')
+            old=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            corrected=copy.deepcopy(data)
+            corrected['acquisition_routes'].append({'skill_id':'201012','owner_type':'outfit','owner_id':'100101','kind':'outfit_event','event_conditions_affect_candidates':False})
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'routes')
+            new=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            self.assertIn(old['checklist_data_sha256'],new['checklist_compatible_versions'])
+            self.assertNotEqual(old['checklist_data_sha256'],new['checklist_data_sha256'])
+            corrected['purchase_stages']['201012']['base_cost']+=1
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'cost')
+            self.assertNotIn('checklist_compatible_versions',json.loads((root/'data/manifest.json').read_text(encoding='utf-8')))
     def test_icon_only_publication_preserves_old_checklist_scope_but_mechanics_changes_do_not(self):
         raw,rules=fixtures();legacy=normalize(raw,rules)
         for skill in legacy['skills'].values():skill.pop('icon_id',None)

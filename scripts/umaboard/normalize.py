@@ -167,6 +167,8 @@ def normalize(raw, curated):
                        'search_aliases_ko':aliases.get(character_name,[]),'rarity':row['SupportRarity'],
                        'type':row['SupportType'],'origin':'umatools'}
     skills={};routes={};relations={};evolutions={};costs={}
+    reviewed_scenario_routes={(identifier(r['scenario_id']),identifier(r['skill_id']))
+                              for r in curated.get('scenario_extra_routes',[])}
     def add_route(sid,owner_type,owner_id,kind,**extra):
         r={'skill_id':sid,'owner_type':owner_type,'owner_id':identifier(owner_id),
            'kind':kind,'event_conditions_affect_candidates':False,**extra}
@@ -197,7 +199,11 @@ def normalize(raw, curated):
         else:skills[sid]=rec
         for pid in rec['parent_ids']:add_relation('inheritance',pid,sid)
         for key,owner_type,kind in [('char','outfit','self'),('char_e','outfit','outfit_event'),('sup_hint','support','support_hint'),('sup_e','support','support_event'),('sce_e','scenario','scenario_event')]:
-            for oid in flat_ids(row.get(key,[])):add_route(sid,owner_type,oid,kind)
+            for oid in flat_ids(row.get(key,[])):
+                # An unconditional source tag must not bypass a reviewed link
+                # requirement for the same scenario reward.
+                if owner_type=='scenario' and (oid,sid) in reviewed_scenario_routes:continue
+                add_route(sid,owner_type,oid,kind)
         # "versions" is a family relation, not an inferred lower-skill ordering.
         for other in row.get('versions',[]):add_relation('version_family',sid,other)
         pre=row.get('pre_evo')
@@ -244,11 +250,13 @@ def normalize(raw, curated):
                     extra={'event_id':event['id'],'event_choice_id':choice['id']}
                     if reward.get('requirements'):extra['requirements']=reward['requirements']
                     add_route(identifier(reward['skill_id']),'scenario',scenario_id,'scenario_event',**extra)
+    for rule in curated.get('scenario_extra_routes',[]):
+        add_route(identifier(rule['skill_id']),'scenario',rule['scenario_id'],'scenario_curated',
+                  requirements=rule.get('requirements',{}),source=rule.get('source'),
+                  checked_at=rule.get('checked_at'),assumption=rule.get('assumption'))
     scenario_ids={r['owner_id'] for r in routes.values() if r['owner_type']=='scenario'} | {r['owner_id'] for r in evolutions.values() if r['owner_type']=='scenario'}
     scenarios={sid:{'id':sid,'name_jp':curated.get('scenario_names',{}).get(sid,f'シナリオ {sid}'),
                     'rules_status':'partial','origin':'observed_acquisition_and_evolution'} for sid in sorted(scenario_ids)}
-    for rule in curated.get('scenario_extra_routes',[]):
-        add_route(identifier(rule['skill_id']),'scenario',rule['scenario_id'],'scenario_curated',requirements=rule.get('requirements',{}))
     courses={}
     if not isinstance(raw['courses'],dict) or not raw['courses']:raise DataError('courses: expected nonempty dictionary')
     for sid,c in raw['courses'].items():

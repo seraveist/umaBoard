@@ -12,6 +12,7 @@ import {createFinalPlanner} from './cm-final-ui.mjs';
 import {el} from './cm-dom.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
 import {createWorkflow} from './cm-workflow.mjs';
+import {restoreChecklistPlan} from './cm-plan-storage.mjs';
 
 const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
@@ -39,7 +40,6 @@ function ownedProfile(id=outfitId){
  return {bloom:5,uniqueLevel:6};
 }
 function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
-function planKey(input){return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion:manifest.checklist_data_sha256||manifest.active_version});}
 function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
@@ -187,7 +187,10 @@ function beginCalculation(event){
  skillSources=createSkillSourceResolver(data,input);
  workflow.setChartState('loading');
  finalPlanner?.invalidate();
- skillDetails.dismiss();draft.setup=input;saveDraft();currentPlan=planKey(input);states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
+ skillDetails.dismiss();draft.setup=input;
+ const restored=restoreChecklistPlan(draft.plans,input,manifest);currentPlan=restored.key;
+ if(restored.plan)draft.plans[currentPlan]=restored.plan;
+ saveDraft();states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
  busy=true;$('#generate').disabled=true;$('#generate span').textContent='마신표 계산 중';$('#cancel-calculation').hidden=false;$('#export-checklist').disabled=true;
  $('#calculation-progress').hidden=false;$('#progress-label').textContent='계승 후보를 비교하고 있습니다';$('#progress-count').textContent='';$('#progress-bar').value=0;$('#progress-bar').max=1;$('#draft-status').textContent='';
  notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});

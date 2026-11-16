@@ -2,10 +2,12 @@
 export const characterIdentity=name=>(name||'').replace(/\s+\((SSR|SR|R)\)$/,'');
 export function requirementsMet(data,setup,requirements){
  if(!requirements||Object.keys(requirements).length===0)return true;
- if(Object.keys(requirements).length!==1||!requirements.character_link)return false;
- const link=requirements.character_link;
+ const kinds=Object.keys(requirements);
+ if(kinds.length!==1||!['character_link','support_link'].includes(kinds[0]))return false;
+ const link=requirements[kinds[0]];
+ if(!link||typeof link!=='object'||Array.isArray(link))return false;
  if(Object.keys(link).length!==2||!link.name_jp||typeof link.present!=='boolean')return false;
- const names=[data.outfits[setup.outfitId]?.name_jp,...(setup.supportIds||[]).map(id=>characterIdentity(data.supports[id]?.name_jp))];
+ const names=[...(kinds[0]==='character_link'?[data.outfits[setup.outfitId]?.name_jp]:[]),...(setup.supportIds||[]).map(id=>characterIdentity(data.supports[id]?.name_jp))];
  return names.includes(link.name_jp)===link.present;
 }
 export function activeAcquisitionRoute(data,setup,route){

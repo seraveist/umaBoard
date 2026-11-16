@@ -149,6 +149,22 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
               'counts':validation['counts'],'sources':sources,'input_hashes':input_hashes,
               'adapter_fingerprint':fingerprint,'game_build':None,
               'calculation_status':'unvalidated','curation_status':data['curation']['status']}
+    previous_manifest,previous_data=load_active(root)
+    if previous_data:
+        # Candidate-route/limit corrections require a fresh chart, but recorded
+        # purchases and actual inputs can be reused when skill mechanics and
+        # purchase chains are byte-for-byte equivalent (apart from icons).
+        def record_contract(dataset):
+            return {key:({sid:{k:v for k,v in skill.items() if k!='icon_id'}
+                          for sid,skill in value.items()} if key=='skills' else value)
+                    for key,value in dataset.items() if key in {
+                        'schema_version','server','skills','outfits','supports','courses',
+                        'relations','evolution_rules','purchase_stages','internal_acceleration_comparison_cost'}}
+        if record_contract(previous_data)==record_contract(data):
+            compatible=set(previous_manifest.get('checklist_compatible_versions',[]))
+            compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
+            compatible.discard(manifest['checklist_data_sha256'])
+            if compatible:manifest['checklist_compatible_versions']=sorted(compatible)
     pointer=root/'data/manifest.json';new=canonical_bytes(manifest)
     if pointer.exists() and pointer.read_bytes()==new:return False,version
     fd,tmp=tempfile.mkstemp(prefix='.manifest-',dir=pointer.parent)

@@ -40,6 +40,20 @@ def purchase_stages(skills, costs, secondary, relations, evolutions):
 
 def validate_planning(data):
     skills = data['skills']
+    def validate_requirements(requirements):
+        if not isinstance(requirements, dict):
+            raise DataError('unsupported scenario reward requirement')
+        if requirements:
+            kinds = set(requirements)
+            link = requirements.get(next(iter(kinds)), {})
+            if len(kinds)!=1 or not kinds <= {'character_link','support_link'} or not isinstance(link, dict) or set(link) != {'name_jp', 'present'} or not isinstance(link['name_jp'], str) or not link['name_jp'] or type(link['present']) is not bool:
+                raise DataError('unsupported scenario reward requirement')
+
+    for route in data.get('acquisition_routes', []):
+        if route['kind']=='scenario_curated':
+            if route['owner_type']!='scenario' or not route.get('source'):
+                raise DataError('reviewed scenario route missing owner or source')
+            validate_requirements(route.get('requirements', {}))
     event_routes = {(r['owner_id'], r['skill_id']) for r in data.get('acquisition_routes', [])
                     if r['owner_type'] == 'support' and r['kind'] == 'support_event'}
     scenario_routes = {(r['owner_id'], r.get('event_id'), r.get('event_choice_id'), r['skill_id'], canonical_bytes(r.get('requirements', {})))
@@ -58,12 +72,7 @@ def validate_planning(data):
             seen.add(sid)
             if event_id is not None:
                 requirements = reward.get('requirements', {})
-                if requirements:
-                    if not isinstance(requirements, dict):
-                        raise DataError('unsupported scenario reward requirement')
-                    link = requirements.get('character_link', {})
-                    if not isinstance(link, dict) or set(requirements) != {'character_link'} or set(link) != {'name_jp', 'present'} or not isinstance(link['name_jp'], str) or not link['name_jp'] or type(link['present']) is not bool:
-                        raise DataError('unsupported scenario reward requirement')
+                validate_requirements(requirements)
                 if (card_id, event_id, choice_id, sid, canonical_bytes(requirements)) not in scenario_routes:
                     raise DataError('event reward missing scenario acquisition route')
             elif (card_id, sid) not in event_routes:
