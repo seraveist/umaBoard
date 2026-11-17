@@ -1,6 +1,6 @@
 # CM first-chart contract (2026-11-17)
 
-This is the authoritative contract for `feat/cm-first-chart` and the redesigned
+This is the authoritative contract for `main` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
 
 The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING.md).
@@ -46,7 +46,8 @@ admission policy before merging into the same checklist:
   product recommendation, not game eligibility or measured activation probability.
 - Rank by unrounded arithmetic mean, keep at most ten with gain >=0.005 lengths
   (so a displayed 0.00 is not admitted), with stable skill-ID tie breaks. The final
-  table remains icon/source ordered. The target-acceleration extension may append recommended inherited skills with an explicit target label; other outside-Top10 acquired exceptions remain unsupported.
+  table remains icon/source ordered. The worker appends target inherited skills
+  and preserves recorded inherited skills outside the new Top10 with explicit labels.
 - Lock Top10 before publishing checklist rows. Hint changes never rerank/recompute.
   At most six inherited rows may be marked purchased or Lv0–5 across all tabs and
   search results. Setting one to unavailable frees a slot. Hidden stale IDs never
@@ -72,14 +73,15 @@ gold ID remains pricing metadata; later optimization still resolves shared costs
 
 Visible dropdown names are 습득 / 미획득 / 획득 / 할인 Lv1–5, while stored
 owned/unavailable/0–5 values remain unchanged. Whole-list unavailable and Lv5
-actions ignore the current search/tab, replace all row states atomically and
-invalidate final recommendations. Lv5 hints do not purchase competing branches.
+actions ignore the current search/tab and invalidate final recommendations.
+The Lv5 action preserves paid/owned history (including hidden owned evolutions);
+only the explicit unavailable reset clears all records. Lv5 hints do not purchase competing branches.
 Inherited bulk selection prioritizes already secured choices and then chart
 order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v5` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v6` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
@@ -87,18 +89,20 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
 - Mean is an arithmetic mean of paired trajectory differences. Default 24
   deterministic low-discrepancy samples, dt=0.01s. Fixed-position rows are computed
-  once only if the native baseline is also deterministic.
+  once per distinct rank mask only if the native baseline is also deterministic.
 - Random dimensions distinguish the native and candidate skill. The same native
   sample is reused in both trajectories. Baselines are cached per sample.
 - As of `cm-first-chart-v3`, invocation alternatives with the same spatial
   random-condition key share the sample. A stronger stat-dependent form and its
   fallback cannot independently race to activate. Explicitly linked effects
   retain their own conditions and follow-up timing.
-- Counter, HP, possession and start predicates are fulfilled in this chart only;
-  real spatial/temporal predicates and same-skill links remain. Rank, position, temptation, counters, other-runner and skill-possession triggers
-  are assumed successful, including same-style counts and popularity matching.
-  Unknown effect mathematics still stay excluded. Real distance/style/weather and
-  temporal/spatial predicates are never erased.
+- HP predicates remain dynamic and use the simulated current HP. Counter, possession
+  and start predicates retain the documented fulfilled-trigger assumption. Real
+  spatial/temporal predicates and same-skill links remain. The chart, target and
+  final purchase all use the same fixed-rank sensitivity mean (CM9 ranks by style),
+  not measured placement probabilities or rank movement. Other opponent, temptation,
+  same-style-count and popularity predicates remain explicit assumptions.
+  Unknown effect mathematics stay excluded.
 - Repeat triggers share the distance-scaled cooldown and require it to strictly
   elapse. all_corner_random draws two different cached10m corner windows;
   straight_random draws one cached10m window. Other spatial random repeats use
@@ -178,3 +182,12 @@ are course distances in meters, not absolute elevation. Horizontal scroll is
 bounded to the diagram on narrow screens. Niigata/Fukushima track labels and
 straight-course orientation are corrected. Existing SSR thumbnails preserve their
 complete square game frame; support-type badges are beside the name.
+
+## Strategic acquisition protection
+
+See [workflow fixes](CM_WORKFLOW_FIXES_20261117.md). PDM release is a separate
+acquisition objective in the reviewed turf2200m+ non-runner policy. Its direct
+speed margin stays in the table; no fabricated PDM margin is added. Recorded
+qualifying skills are protected by default in the final plan, with an explicit
+release control. Setup changes never erase paid inheritance merely because its
+new rank falls outside Top10.

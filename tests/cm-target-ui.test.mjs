@@ -32,6 +32,21 @@ test('the target frame belongs to preparation and its optional lock reaches the 
  assert.ok(ui.includes('value?.maintainTargetAcceleration!==false'));
 });
 
+test('the preparation frame shows PDM protection and scenario rare choice before the final stage',()=>{
+ const ids=new Map([...html.matchAll(/\bid="([^\"]+)"/g)].map(m=>['#'+m[1],new Element('div')]));
+ globalThis.document={querySelector:selector=>ids.get(selector),createElement:tag=>new Element(tag)};
+ try{
+  const data={skills:{pdm:{id:'pdm',name_jp:'ウマ好み',rarity:'white'},gold:{id:'gold',name_jp:'レア',rarity:'gold'}},supports:{}};
+  const panel=createAccelerationPanel({data,display:{icons:{}},skillDetails:{attach(){}}});
+  const plan={skills:[],gain:0,cost:0,scenarioEvolutionCount:0,sacrificedGain:0,search:{method:'bounded'},rewards:[],strategyGoals:[{id:'pdm-release',preferredId:'pdm',skillIds:['pdm'],label:'PDM 해제',note:'우선 확보',comparisonNote:'직접 마신과 구분',sources:['https://umamusumelabo.com/'],scenarioFallbacks:[{eventName:'選択',label:'5',skillId:'pdm'}]}],scenarioRewards:[{scenarioId:'15',eventName:'選択',selectionLabel:'6',ids:['gold'],targetIds:[],reason:'gain',alternatives:[]}]};
+  panel.render(plan);
+  assert.equal(ids.get('#target-strategy').hidden,false);assert.equal(ids.get('#target-strategy-list').children.length,1);
+  assert.equal(ids.get('#target-scenario-rewards').hidden,false);assert.equal(ids.get('#target-scenario-reward-list').children[0].children[0].children[0].textContent,'選択');
+  const copy=ids.get('#target-strategy-list').children[0].children[1];assert.ok(copy.children.some(n=>n.textContent.includes('同時')||n.textContent.includes('동시 선택')));
+  panel.render({...plan,strategyGoals:[],scenarioRewards:[]});assert.equal(ids.get('#target-strategy').hidden,true);assert.equal(ids.get('#target-scenario-rewards').hidden,true);
+ }finally{delete globalThis.document;}
+});
+
 test('target rows show signed contribution values in descending order without mutating the plan',()=>{
  const ids=new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>['#'+m[1],new Element('div')]));
  globalThis.document={querySelector:selector=>ids.get(selector),createElement:tag=>new Element(tag)};

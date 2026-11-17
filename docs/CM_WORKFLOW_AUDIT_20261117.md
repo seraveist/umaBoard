@@ -1,5 +1,7 @@
 # 인게임 육성·챔피언스 미팅 기준 전체 흐름 점검
 
+> 아래는 수정 전 점검 기록이다. 5개 항목의 구현·수정 후 검증은 [보완 결과](CM_WORKFLOW_FIXES_20261117.md)를 따른다. 기존 반례와 수치는 당시 증거로 보존한다.
+
 점검일: 2026-11-17 (Asia/Seoul). 기능 기준: main `79fd514`, 데이터 `59fd2b3c2fd1…`.
 대상: 공개 CM 화면과 `cm-first-chart-v5` → `cm-target-acceleration-v3` → `cm-post-training-v8`.
 

@@ -1,6 +1,7 @@
-import {compileChartSkill,branchSampler,CM_DT,CM_SAMPLES} from './cm-chart.mjs';
-import {STAT_KEYS,validateSetup,lengthsBetween} from './physics.mjs';
-import {simulateSolo} from './solo.mjs';
+import {compileChartSkill,CM_DT,CM_SAMPLES} from './cm-chart.mjs';
+import {STAT_KEYS,validateSetup} from './physics.mjs';
+import {createPositionComparison} from './cm-position-comparison.mjs';
+import {strategyGoals,strategySkillIds} from './cm-strategy.mjs';
 import {discountedCost,nativeUnique} from './purchases.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
@@ -10,7 +11,7 @@ import {evolutionOptions,evolutionGroups,finalAcquisitionSnapshot} from './cm-ev
 import {inheritedOrigin} from './cm-recommendation.mjs';
 
 import {EventConstraints} from './cm-event-constraints.mjs';
-export const FINAL_MODEL_VERSION='cm-post-training-v8';
+export const FINAL_MODEL_VERSION='cm-post-training-v9';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -24,7 +25,8 @@ export function createFinalSetup(chart,input){
  const discountTrait=resolveDiscountTrait(input);
  if(input.excludedEvolutionIds!==undefined&&(!Array.isArray(input.excludedEvolutionIds)||input.excludedEvolutionIds.some(id=>typeof id!=='string')))throw new Error('진화 후보 제외 설정을 확인하세요.');
  if(input.maintainTargetAcceleration!==undefined&&typeof input.maintainTargetAcceleration!=='boolean')throw new Error('목표 가속 유지 설정을 확인하세요.');
- validateSetup(setup);return {...setup,spBudget:input.spBudget,discountTrait,fastLearner:discountTrait==='fast-learner',excludedEvolutionIds:[...new Set(input.excludedEvolutionIds||[])],maintainTargetAcceleration:input.maintainTargetAcceleration!==false};
+ if(input.maintainStrategicSkills!==undefined&&typeof input.maintainStrategicSkills!=='boolean')throw new Error('전략 핵심 스킬 유지 설정을 확인하세요.');
+ validateSetup(setup);return {...setup,spBudget:input.spBudget,discountTrait,fastLearner:discountTrait==='fast-learner',excludedEvolutionIds:[...new Set(input.excludedEvolutionIds||[])],maintainTargetAcceleration:input.maintainTargetAcceleration!==false,maintainStrategicSkills:input.maintainStrategicSkills!==false};
 }
 
 // The post-training budget is remaining SP. Paid prerequisites are sunk costs;
@@ -97,38 +99,33 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const targetIds=setup.maintainTargetAcceleration?(chart.accelerationPlan?.ids||[]):[];
  const targetAvailable=id=>(states[id]==='owned'||hint(states[id])!==null)&&supported(compiled.get(id));
  const maintainedTargetIds=targetIds.filter(targetAvailable),unavailableTargetIds=targetIds.filter(id=>!targetAvailable(id));
- const required=active([...baselineIds,...maintainedTargetIds]);
  const legal=ids=>events.selection([...ids,...owned])!==null&&ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>data.skills[id].inherited).length<=6;
+ const goals=strategyGoals(data,setup).map(goal=>({...goal,skillIds:strategySkillIds(goal,compiled,setup)}));
+ const strategyTargets=[],unavailableStrategyGoals=[];
+ if(setup.maintainStrategicSkills)for(const goal of goals){
+  // An available upper makes its purchasable lower stage available too, even
+  // without a separate lower hint. Charge that lower at recorded Lv0, never Lv5.
+  const available=goal.skillIds.filter(id=>targetAvailable(id)||planningRows.some(row=>targetAvailable(row.id)&&lower.get(row.id)?.has(id))).filter(id=>{const ids=active([...baselineIds,...maintainedTargetIds,id]);return legal(ids)&&goal.skillIds.some(candidate=>ids.includes(candidate));}).map(id=>({id,price:purchase.selection([...baselineIds,...maintainedTargetIds,id])})).filter(row=>row.price.complete).sort((a,b)=>a.price.used-b.price.used||Number(owned.includes(b.id))-Number(owned.includes(a.id))||a.id.localeCompare(b.id));
+  if(available.length)strategyTargets.push({...goal,selectedId:available[0].id});else unavailableStrategyGoals.push(goal);
+ }
+ const maintainedStrategyIds=strategyTargets.map(goal=>goal.selectedId);
+ const required=active([...baselineIds,...maintainedTargetIds,...maintainedStrategyIds]);
  if(!legal(required))throw new Error('이미 습득한 스킬의 이벤트 선택지·진화 제한 또는 중복 관계가 충돌합니다. 체크리스트를 확인해 주세요.');
  const requiredPrice=purchase.selection(required);
- if(!requiredPrice.complete||requiredPrice.used>setup.spBudget)throw new Error('목표 가속 유지에 필요한 SP가 부족하거나 비용을 확인할 수 없습니다. 목표 가속 유지를 해제해 다시 비교하세요.');
- const retained=ids=>required.every(id=>ids.includes(id)||ids.some(high=>lower.get(high)?.has(id)));
+ if(!requiredPrice.complete||requiredPrice.used>setup.spBudget)throw new Error('목표 가속 유지 또는 전략 핵심 스킬 유지에 필요한 SP가 부족하거나 비용을 확인할 수 없습니다. 유지 설정을 해제해 다시 비교하세요.');
+ const retained=ids=>required.every(id=>ids.includes(id)||ids.some(high=>lower.get(high)?.has(id)))&&strategyTargets.every(goal=>goal.skillIds.some(id=>ids.includes(id)));
  const excluded=[];
  const candidates=planningRows.filter(row=>hint(states[row.id])!==null&&!owned.includes(row.id)).filter(row=>{
   if(!supported(compiled.get(row.id))){excluded.push({id:row.id,reason:'현재 능력치·조건에서 계산할 수 없음'});return false;}
   if(!purchase.selection([row.id]).complete){excluded.push({id:row.id,reason:'구매 비용 확인 필요'});return false;}
   const ids=active([...required,row.id]);return retained(ids)&&legal(ids)&&!required.includes(row.id);
  });
- const runs=new Map();let evaluations=0;
- const simulate=(ids,sample,step)=>{
-  const key=idKey(ids)+'|'+sample+'|'+step;
-  if(!runs.has(key)){
-   const run=simulateSolo(setup,ids.map(id=>compiled.get(id)).filter(supported),.5,{dt:step,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,chart.nativeIds,sample)});
-   runs.set(key,{finishTime:run.finishTime,hp:run.hpRemaining,feasible:run.fullSpeedFeasible,run});
-   // Keep only compact summaries after comparison; traces never accumulate.
-   while(runs.size>100)runs.delete(runs.keys().next().value);
-  }
-  return runs.get(key);
- };
+ const comparison=createPositionComparison(setup,compiled,chart.nativeIds,{baselineIds});let evaluations=0;
  const evaluate=(ids,count,step)=>{
   ids=active(ids);if(!retained(ids)||!legal(ids))return null;
   const priced=purchase.selection(ids);if(!priced.complete||priced.used>setup.spBudget)return null;
-  let gain=0,timeGain=0,hp=Infinity,depletion=Infinity,feasible=true;
-  for(let sample=0;sample<count;sample++){
-   const before=simulate(baselineIds,sample,step),after=simulate(ids,sample,step);
-   gain+=lengthsBetween(after.run,before.run);timeGain+=before.finishTime-after.finishTime;hp=Math.min(hp,after.hp);feasible&&=after.feasible;depletion=Math.min(depletion,after.run.minHpDepletion??setup.course.distance);
-  }
-  evaluations++;return {ids,cost:priced.used,gain:gain/count,timeGain:timeGain/count,hp,depletion,feasible};
+  const score=comparison.compare(ids,count,step);
+  evaluations++;return {ids,cost:priced.used,...score};
  };
  const order=(a,b)=>Number(b.feasible)-Number(a.feasible)||(!a.feasible&&!b.feasible?b.depletion-a.depletion:0)||(Math.abs(b.gain-a.gain)>1e-7?b.gain-a.gain:0)||a.cost-b.cost||idKey(a.ids).localeCompare(idKey(b.ids));
  const evaluated=new Map();
@@ -278,11 +275,11 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const purchases=planningRows.filter(row=>purchaseIds.has(row.id)&&row.rarity!=='evolution').map(row=>{
   const stageIds=new Set((purchase.chain(row.id)||[]).map(stage=>stage.id));
   const stages=priced.stages.filter(stage=>stageIds.has(stage.id)&&!allocated.has(stage.id));stages.forEach(stage=>allocated.add(stage.id));
-  return {...row,cost:stages.reduce((sum,stage)=>sum+stage.cost,0),stages:stages.map(stage=>({...stage,name:data.skills[stage.id].name_jp})),hintLevel:hint(states[row.id])};
+  return {...row,cost:stages.reduce((sum,stage)=>sum+stage.cost,0),stages:stages.map(stage=>({...stage,name:data.skills[stage.id].name_jp})),hintLevel:hint(states[row.id])??0};
  });
  const finalSkills=best.ids.map(id=>{const row=planningRows.find(row=>row.id===id)||{...data.skills[id],name:data.skills[id].name_jp,description:data.skills[id].description_jp};return {...row,origin:chart.nativeIds.includes(id)?'native':owned.includes(id)?'owned':data.skills[id].rarity==='evolution'?'evolution':'purchase'};});
  const scenarioEvolutionCount=best.ids.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length;
- return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,maintainedTargetIds,unavailableTargetIds,activeIds:best.ids,purchases,eventChoices:events.selection(best.ids),unverifiedEventCards:events.unverified,evolutions:groups,scenarioEvolutionCount,finalSkills,
+ return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,maintainedTargetIds,unavailableTargetIds,maintainedStrategyIds:strategyTargets.flatMap(goal=>best.ids.filter(id=>goal.skillIds.includes(id))),inferredAvailableIds:maintainedStrategyIds.filter(id=>!targetAvailable(id)),unavailableStrategyGoals,strategyGoals:goals,rankComparison:comparison.policy,gainByRank:best.byRank,activeIds:best.ids,purchases,eventChoices:events.selection(best.ids),unverifiedEventCards:events.unverified,evolutions:groups,scenarioEvolutionCount,finalSkills,
   budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,
   candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureChecks,refinementLimited,refinementEvaluations,globalOptimal:false,searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }

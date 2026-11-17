@@ -17,18 +17,19 @@ test('acquisition labels distinguish already purchased, available without discou
  assert.deepEqual(ACQUISITION_OPTIONS.map(option=>option.value),['owned','unavailable','0','1','2','3','4','5']);
 });
 
-test('whole-checklist bulk changes clear purchased branches atomically and exclude hidden stale IDs',()=>{
+test('bulk Lv5 preserves paid history while an explicit whole reset clears records and excludes stale IDs',()=>{
  const {rows,hierarchy}=fixture(),old={white:'owned',rare:'owned',evoA:'owned',other:'4',stale:'owned'};
  const cleared=bulkAcquisition(rows,old,'unavailable');assert.ok(Object.values(cleared).every(value=>value==='unavailable'));assert.ok(!('stale' in cleared));assert.equal(old.evoA,'owned');
- const hinted=bulkAcquisition(rows,old,'5');assert.ok(Object.values(hinted).every(value=>value==='5'));assert.deepEqual(checklistSnapshot(rows,hinted,hierarchy),hinted);
+ const hinted=bulkAcquisition(rows,old,'5');assert.equal(hinted.white,'owned');assert.equal(hinted.rare,'owned');assert.equal(hinted.evoA,'owned');assert.equal(hinted.other,'5');assert.ok(!('stale' in hinted));
+ const restored=checklistSnapshot(rows,hinted,hierarchy);assert.equal(restored.evoA,'owned');assert.equal(restored.evoB,'unavailable');assert.equal(restored.white,'owned');
  assert.throws(()=>bulkAcquisition(rows,old,'owned'));
 });
 
 test('bulk discount Lv5 retains secured inherits first and fills only the shared six slots',()=>{
  const rows=Array.from({length:10},(_,i)=>({id:String(i),inherited:true}));rows.unshift({id:'ordinary'});
  const states={'8':'owned','9':'0'},next=bulkAcquisition(rows,states,'5');
- assert.equal(next.ordinary,'5');assert.equal(next['8'],'5');assert.equal(next['9'],'5');assert.equal(inheritedCount(rows,next),6);
- assert.deepEqual(rows.filter(row=>row.inherited&&next[row.id]==='5').map(row=>row.id),['0','1','2','3','8','9']);
+ assert.equal(next.ordinary,'5');assert.equal(next['8'],'owned');assert.equal(next['9'],'5');assert.equal(inheritedCount(rows,next),6);
+ assert.deepEqual(rows.filter(row=>row.inherited&&next[row.id]!=='unavailable').map(row=>row.id),['0','1','2','3','8','9']);
  assert.equal(inheritedCount(rows,bulkAcquisition(rows,states,'unavailable')),0);
 });
 

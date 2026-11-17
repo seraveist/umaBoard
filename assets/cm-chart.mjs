@@ -1,24 +1,24 @@
 import {buildCandidates,possibleInContext} from './candidates.mjs';
-import {compileSkill,fixedContext,sampleBranches} from './activation.mjs';
-import {simulateSolo} from './solo.mjs';
-import {lengthsBetween,validateSetup,uniqueLevel} from './physics.mjs';
+import {compileSkill,fixedContext} from './activation.mjs';
+import {validateSetup,uniqueLevel} from './physics.mjs';
 import {characterIdentity,activeAcquisitionRoute} from './acquisition-rules.mjs';
 import {withCourseMetadata} from './cm-course-metadata.mjs';
 import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
 import {skillIconId} from './cm-icons.mjs';
 import {selfEffectSkill} from './cm-effect-policy.mjs';
+import {branchSampler} from './cm-sampling.mjs';
+import {createPositionComparison} from './cm-position-comparison.mjs';
+import {strategyGoals,strategySkillIds} from './cm-strategy.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v5';
+export const CM_MODEL_VERSION='cm-first-chart-v6';
 export const CM_SAMPLES=24;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
 const supported=skill=>['supported','assumed'].includes(skill?.status);
-const ASSUME=new Set(['hp_per','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
+const ASSUME=new Set(['is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
 for(const field of ['running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','is_activate_any_skill','is_activate_heal_skill','succession_skill_count','random_lot','random_lot_shared','temptation_opponent_count_behind'])ASSUME.add(field);
-const randomPrime=[2,3,5,7,11,13,17,19,23,29,31,37];
 ASSUME.add('visiblehorse'); // Nearby/visible opponents are fulfilled triggers too.
-export function radicalInverse(n,base){let x=0,f=1/base;for(;n>0;n=Math.floor(n/base),f/=base)x+=n%base*f;return x;}
-const skillHash=id=>[...String(id)].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,0);
+export {branchSampler,radicalInverse} from './cm-sampling.mjs';
 
 export function createChartSetup(data,catalog,input){
  const profile=catalog.profiles[String(input.scenarioId)];
@@ -140,44 +140,6 @@ export function sortChartRows(rows,data,display){
  });
 }
 
-export function branchSampler(setup,nativeIds,sample){
- const nSet=new Set(nativeIds);
- const value=(id,index,dimension)=>{
-  const shared=typeof index==='string',key=shared?skillHash(index):index;
-  const offset=skillHash(id)%19+(shared?key%97:0),base=randomPrime[(dimension+(nSet.has(id)?0:1)+(key%randomPrime.length)*2)%randomPrime.length];
-  return radicalInverse(sample+1+offset,base);
- };
- return (branches,id,inv,pre)=>{
-  if(pre)return sampleBranches(branches,.5,true);
-  if(inv.chartRandomPolicy){
-   const areas=inv.chartRandomPolicy==='corners'?setup.course.corners.map(c=>[c.start,c.start+c.length]):setup.course.straights.map(s=>[s.start,s.end]);
-   const count=inv.chartRandomPolicy==='corners'?2:1,windows=[];
-   for(let k=0;k<count;k++){
-    const areaIndex=Math.min(areas.length-1,Math.floor(value(id,inv.chartRandomPolicy,k*2)*areas.length));
-    const selected=inv.chartRandomPolicy==='corners'?areas.splice(areaIndex,1)[0]:areas[areaIndex];
-    if(!selected)continue;
-    const start=inv.chartRandomPolicy==='corners'
-     ?selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*Math.max(0,selected[1]-selected[0]-10)
-     :Math.min(selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*(selected[1]-selected[0]),selected[1]-2);
-    windows.push([start,Math.min(selected[1],start+10)]);
-   }
-   return branches.flatMap(branch=>{
-    const clipped=windows.flatMap(([lo,hi])=>branch.windows.map(([a,b])=>[Math.max(lo,a),Math.min(hi,b)]).filter(([a,b])=>a<b)).sort((a,b)=>a[0]-b[0]);
-    return clipped.length?[{...branch,random:false,windows:clipped,at:clipped[0][0]}]:[];
-   });
-  }
-  // The source caches each random condition per skill, across its invocation
-  // alternatives. A weaker fallback must not roll ahead of its stronger form.
-  return branches.map((branch,index)=>{
-   const sampled=sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0];
-   if(inv.cooldownSeconds&&branch.randomKey){
-    const area=branch.windows.find(([lo,hi])=>sampled.at>=lo&&sampled.at<hi);
-    if(area){sampled.at=Math.max(area[0],Math.min(sampled.at,area[1]-2));sampled.windows=[[sampled.at,Math.min(area[1],sampled.at+10)]];}
-   }
-   return {...sampled,fullSpurtQ:value(id,'full_spurt',0),choiceQ:value(id,'effect_value',0)};
-  });
- };
-}
 
 export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=CM_DT}={}){
  if(!Number.isInteger(samples)||samples<1||samples>256||!(dt>0&&dt<=.1))throw new Error('계산 표본 설정이 올바르지 않습니다.');
@@ -190,20 +152,14 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
   rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   calculationState:compiled.get(s.id).status,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
- const baselines=new Map(),optionsFor=sample=>({dt,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,nativeIds,sample)});
- const runBaseline=sample=>{if(!baselines.has(sample))baselines.set(sample,simulateSolo(setup,baseline,.5,optionsFor(sample)));return baselines.get(sample);};
- const baselineRandom=baseline.some(s=>s.stochastic||s.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)));
- return {setup,rows,nativeIds,modelVersion:CM_MODEL_VERSION,samples,dt,
+ const comparison=createPositionComparison(setup,compiled,nativeIds);
+ const goals=strategyGoals(data,setup).map(goal=>({...goal,skillIds:strategySkillIds(goal,compiled,setup)}));
+ return {setup,rows,nativeIds,modelVersion:CM_MODEL_VERSION,samples,dt,strategyGoals:goals,rankComparison:comparison.policy,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&!supported(s)).map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
    if(compiled.get(row.id).status==='unsupported')return {...row,gain:null,timeGain:null,hpGain:null,samples:0};
-   const skill=compiled.get(row.id),random=baselineRandom||skill.stochastic||skill.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)),count=random?samples:1;
-   let gain=0,timeGain=0,hpGain=0;
-   for(let sample=0;sample<count;sample++){
-    const before=runBaseline(sample),after=simulateSolo(setup,[...baseline,skill],.5,optionsFor(sample));
-    gain+=lengthsBetween(after,before);timeGain+=before.finishTime-after.finishTime;hpGain+=after.hpRemaining-before.hpRemaining;
-   }
-   return {...row,gain:gain/count,timeGain:timeGain/count,hpGain:hpGain/count,samples:count};
+   const score=comparison.compare([row.id],samples,dt);
+   return {...row,gain:score.gain,timeGain:score.timeGain,hpGain:score.hpGain,samples,strategicGoals:goals.filter(g=>g.skillIds.includes(row.id)).map(g=>g.id)};
   }};
 }
 
@@ -212,7 +168,7 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  const evaluate=row=>{
   const key=setupKey+'|'+row.id;
   if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples});}
-  return {...row,...cache.get(key)};
+  return {...row,...cache.get(key),strategicGoals:task.strategyGoals.filter(g=>g.skillIds.includes(row.id)).map(g=>g.id)};
  };
  const inherited=task.rows.filter(row=>row.inherited),scored=[];
  for(let index=0;index<inherited.length;index++){
@@ -234,5 +190,5 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  }
  while(cache.size>3000)cache.delete(cache.keys().next().value);
  return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,evolutionOptions,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
-  inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-family-upper-first',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
+  strategyGoals:task.strategyGoals,rankComparison:task.rankComparison,inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-family-upper-first',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
 }

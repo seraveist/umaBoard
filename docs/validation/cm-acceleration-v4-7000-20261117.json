@@ -1,0 +1,6909 @@
+{
+  "checkedAt": "2026-11-17",
+  "dataVersion": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "sourceHashes": {
+    "assets/cm-acceleration-plan.mjs": "02a740585e0d2357544d943a1149ebc4463a3b63e6adf061eb61abb3ffdc8a33",
+    "assets/cm-position-comparison.mjs": "1dcc1eb7654878e7c21c5cfd5ffa8de3e80484457b5f81a3f566877cee22864c",
+    "assets/cm-final-plan.mjs": "02eb371e3d842171607bfef08b41452b3fed191bc871d0aed9275935b6f22861",
+    "assets/cm-state.mjs": "a686d010b02a59358095ddec518ab3b2dc9fdcf52024afd95b64067ddd1b59c7",
+    "assets/cm-chart.mjs": "284041cc278a25e870811e3683212604f9a8b1e4c0354eb731b38423bf11e517",
+    "assets/cm-sampling.mjs": "f4f46e74661872bb6733832538408a79a85354186b7d7593e4e8f170bd4331f8",
+    "assets/cm-strategy.mjs": "0b0e67a04bd9b5ea90feebc224b7dde0cfd0da3ac136f5f39becb01715734c3a",
+    "assets/cm-effect-policy.mjs": "ecae9c5065722642d95248923c085c09367ba9fe6aa42fa03e988b7008ae1210"
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10808",
+    "style": 2,
+    "outfitId": "101301",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ]
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "spBudget": 7000,
+    "discountTrait": "none",
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "S"
+    },
+    "maintainTargetAcceleration": true
+  },
+  "recordedEventChoices": {
+    "30275-chain-final": "2",
+    "30311-chain-final": "1",
+    "30300-rare-sets": "1",
+    "30322-chain-final": "1",
+    "30289-chain-final": "2",
+    "30323-outing-5": "1",
+    "15-link-skill": "2"
+  },
+  "chartRowCount": 231,
+  "target": {
+    "modelVersion": "cm-target-acceleration-v4",
+    "ids": [
+      "200492",
+      "200732",
+      "201342",
+      "203441",
+      "204222",
+      "204262",
+      "210072",
+      "900011",
+      "900381",
+      "910221",
+      "910271",
+      "910681",
+      "91101411"
+    ],
+    "skills": [
+      {
+        "id": "91101411",
+        "name": "光れ！弾けろ！超新星爆発！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半に速度を少し上げ続ける2000m以上のレースならその後ラストスパートの最中に短い間加速力が少し上がる＜逃げ/先行＞",
+        "baseId": "91101411",
+        "baseName": "光れ！弾けろ！超新星爆発！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "114101"
+        ],
+        "marginalGain": 1.2850520096415714
+      },
+      {
+        "id": "201342",
+        "name": "直滑降",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "いずれかの下り坂のどこかで加速力がわずかに上がる＜作戦・先行＞",
+        "baseId": "201342",
+        "baseName": "直滑降",
+        "cost": 72,
+        "routes": [],
+        "providers": [],
+        "marginalGain": 0.6920927822385128
+      },
+      {
+        "id": "204262",
+        "name": "星の煌き",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+        "baseId": "204262",
+        "baseName": "星の煌き",
+        "cost": 120,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "self",
+            "owner_id": "101301",
+            "owner_type": "outfit",
+            "skill_id": "204262"
+          }
+        ],
+        "providers": [],
+        "marginalGain": 0.6127103763634025
+      },
+      {
+        "id": "910271",
+        "name": "あなたに捧げるフリーポア",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤目前の下り坂で2番手以降かつ先頭から4バ身以内だと少しの間速度が上がる、さらに中距離レースなら加速力がちょっと上がる",
+        "baseId": "910271",
+        "baseName": "あなたに捧げるフリーポア",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102702"
+        ],
+        "marginalGain": 0.6043302102304668
+      },
+      {
+        "id": "203441",
+        "name": "夢の舞台へ",
+        "rarity": "gold",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めの早めのどこかで前方だと加速力が上がる＜先行・中距離＞",
+        "baseId": "203441",
+        "baseName": "夢の舞台へ",
+        "cost": 204,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_event",
+            "owner_id": "30275",
+            "owner_type": "support",
+            "skill_id": "203441"
+          }
+        ],
+        "providers": [],
+        "marginalGain": 0.5516602143547136
+      },
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "200492"
+          }
+        ],
+        "providers": [],
+        "marginalGain": 0.5062012014036217
+      },
+      {
+        "id": "900011",
+        "name": "シューティングスター",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+        "baseId": "900011",
+        "baseName": "シューティングスター",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "100101"
+        ],
+        "marginalGain": 0.43562541954319656
+      },
+      {
+        "id": "204222",
+        "name": "もう一踏ん張り",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかでわずかに伸びを見せる＜中距離＞",
+        "baseId": "204222",
+        "baseName": "もう一踏ん張り",
+        "cost": 108,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "204222"
+          }
+        ],
+        "providers": [],
+        "marginalGain": 0.3874032942589203
+      },
+      {
+        "id": "200732",
+        "name": "食い下がり",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終コーナー以降に詰め寄られると速度がわずかに上がり、加速力がほんのちょっと上がる＜中距離＞",
+        "baseId": "200732",
+        "baseName": "食い下がり",
+        "cost": 96,
+        "routes": [],
+        "providers": [],
+        "marginalGain": 0.3300737648798773
+      },
+      {
+        "id": "910221",
+        "name": "Best day ever",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤以降かつ最終コーナー以降に好位置だと速度が上がるさらにゴールまで遠いなら最高の走りで加速力がちょっと上がる",
+        "baseId": "910221",
+        "baseName": "Best day ever",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102202"
+        ],
+        "marginalGain": 0.2908993746748827
+      },
+      {
+        "id": "900381",
+        "name": "#LookatCurren",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース中間付近で追い抜いて好位置につけると速度と加速力が少し上がる",
+        "baseId": "900381",
+        "baseName": "#LookatCurren",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "103801"
+        ],
+        "marginalGain": 0.27968501712092575
+      },
+      {
+        "id": "910681",
+        "name": "あっぱれ大盤振る舞い！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤以降のコーナーで3番手以内にいるときゴールまで遠いと少しの間前に出て加速力がちょっと上がる",
+        "baseId": "910681",
+        "baseName": "あっぱれ大盤振る舞い！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "106802"
+        ],
+        "marginalGain": 0.26266998726473645
+      },
+      {
+        "id": "210072",
+        "name": "夢の途中",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半のどこかで中団以前だと速度がわずかに上がり加速力がほんのわずかに上がるファンが多いほど効果が増える",
+        "baseId": "210072",
+        "baseName": "夢の途中",
+        "cost": 120,
+        "routes": [],
+        "providers": [],
+        "marginalGain": 0.20125558638807917
+      }
+    ],
+    "skillGainPolicy": "remove-one-from-target",
+    "gain": 9.317276881291747,
+    "min": 7.637965985759001,
+    "max": 10.797769225517367,
+    "cost": 1530,
+    "maximumGain": 9.43449607185679,
+    "sacrificedGain": 0.11721919056504326,
+    "allowedLoss": null,
+    "score": 7.022276881291747,
+    "efficiencyPolicy": {
+      "minGainPer100Sp": 0.15,
+      "scoreTolerance": 0.01,
+      "source": "preparation-policy-not-measured"
+    },
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "2",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30322-chain-final": "1",
+      "30289-chain-final": "2",
+      "30323-outing-5": "1",
+      "15-link-skill": "2"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "eventName": "まったり孝行日和",
+        "selectionLabel": "2번 선택지",
+        "groupId": "30275-chain-final",
+        "setId": "2",
+        "ids": [
+          "204001",
+          "203441"
+        ],
+        "targetIds": [
+          "203441"
+        ],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203421"
+            ]
+          }
+        ],
+        "reason": "target",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "eventName": "運命のライバル",
+        "selectionLabel": "1번 선택지",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "eventName": "レアスキルセット",
+        "selectionLabel": "레어 세트 1",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "eventName": "マヤ、わかっちゃった！",
+        "selectionLabel": "1번 선택지 · 英俊豪傑 + 機転",
+        "groupId": "30322-chain-final",
+        "setId": "1",
+        "ids": [
+          "203501",
+          "204731"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204741"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204751"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "eventName": "Dreams are Forever",
+        "selectionLabel": "2번 선택지",
+        "groupId": "30289-chain-final",
+        "setId": "2",
+        "ids": [
+          "201612",
+          "204181"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "202831",
+              "204191"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "eventName": "其は泡沫、されど――",
+        "selectionLabel": "선택지 없음 · 외출 5회차",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "scenarioRewards": [
+      {
+        "scenarioId": "15",
+        "eventName": "本番前のひと時",
+        "selectionLabel": "マヤノトップガン",
+        "groupId": "15-link-skill",
+        "setId": "2",
+        "ids": [
+          "204071"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": []
+          },
+          {
+            "ids": []
+          },
+          {
+            "ids": []
+          },
+          {
+            "ids": []
+          },
+          {
+            "ids": [
+              "204811"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      }
+    ],
+    "strategyGoals": [
+      {
+        "id": "pdm-release",
+        "label": "PDM 해제",
+        "priority": "core",
+        "preferredId": "201591",
+        "skillIds": [
+          "201591"
+        ],
+        "note": "초반 위치 하락을 줄이기 위한 우선 확보 목표입니다. 근처 우마무스메 조건은 실제 전개에 따라 달라집니다.",
+        "comparisonNote": "표의 마신은 직접 속도 효과입니다. PDM 해제의 추가 마신을 임의로 더하지 않습니다.",
+        "sources": [
+          "https://umamusumelabo.com/ikusei/chanmi-senkouikusei-202610",
+          "https://umamusumelabo.com/event/champions-meeting/chanmi-tokyo2400-202606",
+          "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+          "https://umamusumelabo.com/ikusei/gaisenmon-senkouikusei-202609"
+        ],
+        "scope": "turf-2200-plus-non-runner",
+        "policyVersion": "cm-strategy-v1",
+        "scenarioFallbacks": [
+          {
+            "eventName": "本番前のひと時",
+            "label": "ブラストワンピース",
+            "skillId": "201591"
+          }
+        ]
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "rankComparison": {
+      "version": "cm9-fixed-rank-sensitivity-v2",
+      "ranks": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "aggregation": "equal-weight-sensitivity-mean",
+      "probabilities": false,
+      "rankChanges": false
+    },
+    "gainByRank": [
+      {
+        "rank": 2,
+        "gain": 9.67618268088817,
+        "entryGain": 0.7662994830649797,
+        "min": 8.591999698098515,
+        "max": 10.797769225517367,
+        "hp": 391.55134007707136,
+        "depletion": 2200,
+        "feasible": true
+      },
+      {
+        "rank": 3,
+        "gain": 9.67618268088817,
+        "entryGain": 0.7662994830649797,
+        "min": 8.591999698098515,
+        "max": 10.797769225517367,
+        "hp": 391.55134007707136,
+        "depletion": 2200,
+        "feasible": true
+      },
+      {
+        "rank": 4,
+        "gain": 9.1508427063587,
+        "entryGain": 0.7603529830649638,
+        "min": 8.008207519228382,
+        "max": 10.31810126730852,
+        "hp": 395.58984137134263,
+        "depletion": 2200,
+        "feasible": true
+      },
+      {
+        "rank": 5,
+        "gain": 8.765899457031946,
+        "entryGain": 0.7603529830649638,
+        "min": 7.637965985759001,
+        "max": 9.918903223410235,
+        "hp": 399.5502856336487,
+        "depletion": 2200,
+        "feasible": true
+      }
+    ],
+    "excludedCandidates": [],
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 44,
+      "shortlisted": 13,
+      "evaluations": 377,
+      "contributionEvaluations": 0,
+      "refinementEvaluations": 43,
+      "refinementLimit": 96,
+      "refinementLimited": false,
+      "closureComplete": true,
+      "exchangeMethod": "coarse-screened-12-in-6-out-8-score-8-cost",
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "prefer-mid-position-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "acquisition": {
+    "200011": "5",
+    "200012": "5",
+    "200061": "5",
+    "200062": "5",
+    "200141": "5",
+    "200142": "5",
+    "200151": "5",
+    "200152": "5",
+    "200191": "5",
+    "200192": "5",
+    "200221": "5",
+    "200222": "5",
+    "200251": "5",
+    "200252": "5",
+    "200261": "5",
+    "200262": "5",
+    "200271": "5",
+    "200272": "5",
+    "200281": "5",
+    "200282": "5",
+    "200291": "5",
+    "200292": "5",
+    "200301": "5",
+    "200302": "5",
+    "200332": "5",
+    "200342": "5",
+    "200352": "5",
+    "200361": "5",
+    "200362": "5",
+    "200372": "5",
+    "200382": "5",
+    "200442": "5",
+    "200462": "5",
+    "200472": "5",
+    "200482": "5",
+    "200492": "5",
+    "200511": "5",
+    "200512": "5",
+    "200561": "5",
+    "200562": "5",
+    "200572": "5",
+    "200582": "5",
+    "200712": "5",
+    "200722": "5",
+    "200732": "5",
+    "201101": "5",
+    "201102": "5",
+    "201111": "5",
+    "201112": "5",
+    "201132": "5",
+    "201142": "5",
+    "201311": "5",
+    "201312": "5",
+    "201321": "5",
+    "201322": "5",
+    "201332": "5",
+    "201342": "5",
+    "201352": "5",
+    "201362": "5",
+    "201531": "5",
+    "201532": "5",
+    "201562": "5",
+    "201571": "5",
+    "201581": "5",
+    "201591": "5",
+    "201601": "5",
+    "201611": "5",
+    "201612": "5",
+    "201621": "5",
+    "201631": "5",
+    "201641": "5",
+    "201651": "5",
+    "201661": "5",
+    "201702": "5",
+    "201902": "5",
+    "202032": "5",
+    "202082": "5",
+    "202092": "5",
+    "202102": "5",
+    "202132": "5",
+    "202161": "5",
+    "202172": "5",
+    "202372": "5",
+    "202412": "5",
+    "202432": "5",
+    "202442": "5",
+    "202472": "5",
+    "202522": "5",
+    "202532": "5",
+    "202551": "5",
+    "202552": "5",
+    "202602": "5",
+    "202652": "5",
+    "202662": "5",
+    "202692": "5",
+    "202702": "5",
+    "202712": "5",
+    "202722": "5",
+    "202742": "5",
+    "202762": "5",
+    "202792": "5",
+    "202801": "5",
+    "202802": "5",
+    "202982": "5",
+    "203032": "5",
+    "203052": "5",
+    "203112": "5",
+    "203121": "5",
+    "203122": "5",
+    "203132": "5",
+    "203142": "5",
+    "203172": "5",
+    "203222": "5",
+    "203232": "5",
+    "203242": "5",
+    "203252": "5",
+    "203312": "5",
+    "203362": "5",
+    "203372": "5",
+    "203421": "unavailable",
+    "203422": "5",
+    "203432": "5",
+    "203441": "5",
+    "203442": "5",
+    "203472": "5",
+    "203501": "5",
+    "203502": "5",
+    "203512": "5",
+    "203572": "5",
+    "203632": "5",
+    "203642": "5",
+    "203652": "5",
+    "203662": "5",
+    "203711": "unavailable",
+    "203712": "5",
+    "203792": "5",
+    "203802": "5",
+    "203842": "5",
+    "203852": "5",
+    "203862": "5",
+    "203952": "5",
+    "203992": "5",
+    "204001": "5",
+    "204002": "5",
+    "204012": "5",
+    "204032": "5",
+    "204042": "5",
+    "204052": "5",
+    "204071": "5",
+    "204072": "5",
+    "204082": "5",
+    "204112": "5",
+    "204122": "5",
+    "204142": "5",
+    "204152": "5",
+    "204162": "5",
+    "204181": "5",
+    "204182": "5",
+    "204202": "5",
+    "204212": "5",
+    "204222": "5",
+    "204262": "5",
+    "204302": "5",
+    "204322": "5",
+    "204331": "5",
+    "204332": "5",
+    "204362": "5",
+    "204372": "5",
+    "204392": "5",
+    "204412": "5",
+    "204453": "5",
+    "204472": "5",
+    "204502": "5",
+    "204512": "5",
+    "204531": "5",
+    "204532": "5",
+    "204571": "unavailable",
+    "204572": "5",
+    "204622": "5",
+    "204692": "5",
+    "204701": "5",
+    "204702": "5",
+    "204722": "5",
+    "204731": "5",
+    "204732": "5",
+    "204751": "unavailable",
+    "204752": "5",
+    "204792": "5",
+    "204811": "unavailable",
+    "204812": "5",
+    "210012": "5",
+    "210022": "5",
+    "210032": "5",
+    "210042": "5",
+    "210052": "5",
+    "210062": "5",
+    "210072": "5",
+    "210082": "5",
+    "210091": "5",
+    "210101": "5",
+    "210111": "5",
+    "210121": "5",
+    "210131": "5",
+    "210141": "5",
+    "210262": "5",
+    "210272": "5",
+    "210282": "5",
+    "210292": "5",
+    "210302": "5",
+    "210311": "5",
+    "210342": "5",
+    "210352": "5",
+    "210362": "5",
+    "210372": "5",
+    "210382": "5",
+    "210392": "5",
+    "210401": "5",
+    "210402": "5",
+    "900011": "5",
+    "900041": "unavailable",
+    "900061": "unavailable",
+    "900381": "5",
+    "910221": "5",
+    "910271": "5",
+    "910321": "unavailable",
+    "910681": "5",
+    "910771": "unavailable",
+    "911271": "unavailable",
+    "920171": "unavailable",
+    "920181": "unavailable",
+    "91101411": "5"
+  },
+  "inheritedCount": 6,
+  "inheritedIds": [
+    "900011",
+    "900381",
+    "910221",
+    "910271",
+    "910681",
+    "91101411"
+  ],
+  "modelVersion": "cm-post-training-v9",
+  "chartModelVersion": "cm-first-chart-v6",
+  "setup": {
+    "outfitId": "101301",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 2,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 200,
+          "start": 400
+        },
+        {
+          "length": 200,
+          "start": 600
+        },
+        {
+          "length": 250,
+          "start": 1300
+        },
+        {
+          "length": 247,
+          "start": 1550
+        }
+      ],
+      "course_set_status": [
+        1
+      ],
+      "course_variant": 3,
+      "distance": 2200,
+      "distance_type": 3,
+      "geometry_review_reason": null,
+      "id": "10808",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 100,
+          "slope": 20000,
+          "start": 1050
+        },
+        {
+          "length": 225,
+          "slope": 10000,
+          "start": 1150
+        },
+        {
+          "length": 150,
+          "slope": -20000,
+          "start": 1375
+        }
+      ],
+      "straights": [
+        {
+          "end": 400,
+          "frontType": 1,
+          "start": 0
+        },
+        {
+          "end": 1300,
+          "frontType": 2,
+          "start": 800
+        },
+        {
+          "end": 2200,
+          "frontType": 1,
+          "start": 1797
+        }
+      ],
+      "surface": 1,
+      "track_id": "10008",
+      "turn": 1,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "S"
+    },
+    "chartPolicy": "cm-first-chart-v6",
+    "spBudget": 7000,
+    "discountTrait": "none",
+    "fastLearner": false,
+    "excludedEvolutionIds": [],
+    "maintainTargetAcceleration": true,
+    "maintainStrategicSkills": true
+  },
+  "nativeIds": [
+    "100131"
+  ],
+  "ownedIds": [],
+  "maintainedTargetIds": [
+    "200492",
+    "200732",
+    "201342",
+    "203441",
+    "204222",
+    "204262",
+    "210072",
+    "900011",
+    "900381",
+    "910221",
+    "910271",
+    "910681",
+    "91101411"
+  ],
+  "unavailableTargetIds": [],
+  "maintainedStrategyIds": [
+    "201591"
+  ],
+  "inferredAvailableIds": [],
+  "unavailableStrategyGoals": [],
+  "strategyGoals": [
+    {
+      "id": "pdm-release",
+      "label": "PDM 해제",
+      "priority": "core",
+      "preferredId": "201591",
+      "skillIds": [
+        "201591"
+      ],
+      "note": "초반 위치 하락을 줄이기 위한 우선 확보 목표입니다. 근처 우마무스메 조건은 실제 전개에 따라 달라집니다.",
+      "comparisonNote": "표의 마신은 직접 속도 효과입니다. PDM 해제의 추가 마신을 임의로 더하지 않습니다.",
+      "sources": [
+        "https://umamusumelabo.com/ikusei/chanmi-senkouikusei-202610",
+        "https://umamusumelabo.com/event/champions-meeting/chanmi-tokyo2400-202606",
+        "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+        "https://umamusumelabo.com/ikusei/gaisenmon-senkouikusei-202609"
+      ],
+      "scope": "turf-2200-plus-non-runner",
+      "policyVersion": "cm-strategy-v1"
+    }
+  ],
+  "rankComparison": {
+    "version": "cm9-fixed-rank-sensitivity-v2",
+    "ranks": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "aggregation": "equal-weight-sensitivity-mean",
+    "probabilities": false,
+    "rankChanges": false
+  },
+  "gainByRank": [
+    {
+      "rank": 2,
+      "gain": 41.770161787044906,
+      "entryGain": 20.931410508475373,
+      "min": 40.11306134965671,
+      "max": 44.63096254797783,
+      "hp": 20.08918221913676,
+      "depletion": 2200,
+      "feasible": true
+    },
+    {
+      "rank": 3,
+      "gain": 41.770161787044906,
+      "entryGain": 20.931410508475373,
+      "min": 40.11306134965671,
+      "max": 44.63096254797783,
+      "hp": 20.08918221913676,
+      "depletion": 2200,
+      "feasible": true
+    },
+    {
+      "rank": 4,
+      "gain": 41.26768201013556,
+      "entryGain": 20.7380909293088,
+      "min": 39.505873941149545,
+      "max": 44.16166129505673,
+      "hp": 25.253851957298036,
+      "depletion": 2200,
+      "feasible": true
+    },
+    {
+      "rank": 5,
+      "gain": 40.89479653530353,
+      "entryGain": 20.7380909293088,
+      "min": 39.18120254763053,
+      "max": 43.778285896977465,
+      "hp": 28.85253376008757,
+      "depletion": 2200,
+      "feasible": true
+    }
+  ],
+  "activeIds": [
+    "100131",
+    "200011",
+    "200191",
+    "200261",
+    "200271",
+    "200301",
+    "200361",
+    "200492",
+    "200732",
+    "201101",
+    "201111",
+    "201312",
+    "201321",
+    "201342",
+    "201562",
+    "201591",
+    "201601",
+    "201611",
+    "201631",
+    "201641",
+    "201651",
+    "201661",
+    "202032",
+    "202442",
+    "202692",
+    "202702",
+    "203121",
+    "203222",
+    "203441",
+    "203862",
+    "204001",
+    "204012",
+    "204042",
+    "204071",
+    "204082",
+    "204181",
+    "204222",
+    "204262",
+    "204322",
+    "204331",
+    "204362",
+    "204472",
+    "204531",
+    "204622",
+    "204692",
+    "204701",
+    "204731",
+    "210072",
+    "210091",
+    "415011",
+    "415021",
+    "900011",
+    "900381",
+    "910221",
+    "910271",
+    "910681",
+    "91101411"
+  ],
+  "purchases": [
+    {
+      "id": "200011",
+      "name": "右回り◎",
+      "description": "右回りコースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [
+        {
+          "kind": "upgrade",
+          "owner_type": "skill",
+          "owner_id": "200012",
+          "base_id": "200012"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20001",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200012",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "右回り○"
+        },
+        {
+          "id": "200011",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "右回り◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200191",
+      "name": "秋ウマ娘◎",
+      "description": "秋のレースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20019",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200192",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "秋ウマ娘○"
+        },
+        {
+          "id": "200191",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "秋ウマ娘◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200261",
+      "name": "外枠得意◎",
+      "description": "枠番が6～8のレースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20026",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200262",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "外枠得意○"
+        },
+        {
+          "id": "200261",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "外枠得意◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200271",
+      "name": "おひとり様◎",
+      "description": "自分と同じ作戦のウマ娘がいないとスピードがすごく上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20027",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6207648198604525,
+      "timeGain": 0.06124086579421236,
+      "hpGain": -6.05985196092804,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200272",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "おひとり様○"
+        },
+        {
+          "id": "200271",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "おひとり様◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200301",
+      "name": "伏兵◎",
+      "description": "4番人気以下のレースでスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20030",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200302",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "伏兵○"
+        },
+        {
+          "id": "200301",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "伏兵◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201631",
+      "name": "シンパシー",
+      "description": "「シンパシー」を持つウマ娘が5人以上いるとスピードが少し上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20163",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 42,
+      "stages": [
+        {
+          "id": "201631",
+          "base": 70,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 42,
+          "name": "シンパシー"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201641",
+      "name": "一匹狼",
+      "description": "自分だけが「一匹狼」を持つレースだとスピードが少し上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20164",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 42,
+      "stages": [
+        {
+          "id": "201641",
+          "base": 70,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 42,
+          "name": "一匹狼"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "202442",
+      "name": "やまっけ",
+      "description": "レースでごくまれにさらなる力を発揮しスピード、パワー、根性が少し上がる4番人気以下だと力を発揮しやすくなる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20244",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6542147094084687,
+      "timeGain": 0.06454085150318178,
+      "hpGain": -2.3854669319641104,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "202442",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "やまっけ"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "202702",
+      "name": "探求心",
+      "description": "スピードが十二分に高いとスピードがわずかに上がる、賢さも十二分なら少し上がる＜先行・中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20270",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "202702",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "探求心"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201562",
+      "name": "ラッキーセブン",
+      "description": "枠番が7の時にスピードとスタミナとパワーが少し上がる場合がある",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20156",
+      "iconId": "10061",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6323602075995193,
+      "timeGain": 0.06238479073708447,
+      "hpGain": 22.99827674955873,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 66,
+      "stages": [
+        {
+          "id": "201562",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "ラッキーセブン"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "900011",
+      "name": "シューティングスター",
+      "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "100101"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "90001",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5206904820478181,
+      "timeGain": 0.051368127793672023,
+      "hpGain": -4.914140154581278,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "900011",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "シューティングスター"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "900381",
+      "name": "#LookatCurren",
+      "description": "レース中間付近で追い抜いて好位置につけると速度と加速力が少し上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "103801"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "90038",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.49670498126929497,
+      "timeGain": 0.049002294616952824,
+      "hpGain": -3.4279739742932755,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "900381",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "#LookatCurren"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "91101411",
+      "name": "光れ！弾けろ！超新星爆発！",
+      "description": "レース後半に速度を少し上げ続ける2000m以上のレースならその後ラストスパートの最中に短い間加速力が少し上がる＜逃げ/先行＞",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "114101"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "90141",
+      "iconId": "20016",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.325003773512026,
+      "timeGain": 0.22937891152266765,
+      "hpGain": -16.302080395225556,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "901411",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "光れ！弾けろ！超新星爆発！"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "910221",
+      "name": "Best day ever",
+      "description": "終盤以降かつ最終コーナー以降に好位置だと速度が上がるさらにゴールまで遠いなら最高の走りで加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "102202"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91022",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.31276044413963866,
+      "timeGain": 0.030854879808978275,
+      "hpGain": -2.8417402902362436,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910221",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "Best day ever"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "910271",
+      "name": "あなたに捧げるフリーポア",
+      "description": "終盤目前の下り坂で2番手以降かつ先頭から4バ身以内だと少しの間速度が上がる、さらに中距離レースなら加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "102702"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91027",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2208271198406464,
+      "timeGain": 0.12044082036645243,
+      "hpGain": -8.9170982178254,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910271",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "あなたに捧げるフリーポア"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "910681",
+      "name": "あっぱれ大盤振る舞い！",
+      "description": "終盤以降のコーナーで3番手以内にいるときゴールまで遠いと少しの間前に出て加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "106802"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91068",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6522189132035389,
+      "timeGain": 0.06434482868743945,
+      "hpGain": -5.158429531347227,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910681",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "あっぱれ大盤振る舞い！"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200361",
+      "name": "ハヤテ一文字",
+      "description": "いずれかの直線のどこかで速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "1",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-festival",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "skill_id": "200361"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20036",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2347611123860436,
+      "timeGain": 0.1218157537819593,
+      "hpGain": -7.465599860207891,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 204,
+      "stages": [
+        {
+          "id": "200362",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "直線巧者"
+        },
+        {
+          "id": "200361",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "ハヤテ一文字"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200732",
+      "name": "食い下がり",
+      "description": "最終コーナー以降に詰め寄られると速度がわずかに上がり、加速力がほんのちょっと上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20073",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.32554674521081783,
+      "timeGain": 0.03211625218833566,
+      "hpGain": -3.180886113693686,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 96,
+      "stages": [
+        {
+          "id": "200732",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "食い下がり"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201101",
+      "name": "中距離直線◎",
+      "description": "いずれかの直線のどこかで速度が少し上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20110",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7494967899331035,
+      "timeGain": 0.0739410381342515,
+      "hpGain": -4.5136794775784095,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 126,
+      "stages": [
+        {
+          "id": "201102",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "中距離直線○"
+        },
+        {
+          "id": "201101",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "中距離直線◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201111",
+      "name": "中距離コーナー◎",
+      "description": "いずれかのコーナーのどこかで速度が少し上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20111",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7655971528832047,
+      "timeGain": 0.07552959563340167,
+      "hpGain": -3.4195194784042826,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 126,
+      "stages": [
+        {
+          "id": "201112",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "中距離コーナー○"
+        },
+        {
+          "id": "201111",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "中距離コーナー◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201312",
+      "name": "先行直線○",
+      "description": "いずれかの直線のどこかで速度がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "kind": "prerequisite",
+          "owner_type": "skill",
+          "owner_id": "201311"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20131",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.44534811145833064,
+      "timeGain": 0.04393517205679013,
+      "hpGain": -2.678099292487692,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 78,
+      "stages": [
+        {
+          "id": "201312",
+          "base": 130,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 78,
+          "name": "先行直線○"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201321",
+      "name": "先行コーナー◎",
+      "description": "いずれかのコーナーのどこかで速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "kind": "upgrade",
+          "owner_type": "skill",
+          "owner_id": "201322",
+          "base_id": "201322"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20132",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.8653584211810464,
+      "timeGain": 0.08537146229054511,
+      "hpGain": -4.3028295925745565,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 162,
+      "stages": [
+        {
+          "id": "201322",
+          "base": 130,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 78,
+          "name": "先行コーナー○"
+        },
+        {
+          "id": "201321",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "先行コーナー◎"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201591",
+      "name": "ウマ好み",
+      "description": "近くにウマ娘が3人以上いると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "5",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-link-skill",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "requirements": {
+            "character_link": {
+              "name_jp": "ブラストワンピース",
+              "present": false
+            }
+          },
+          "skill_id": "201591"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20159",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5149943708404331,
+      "timeGain": 0.05080617677335297,
+      "hpGain": -2.9839795178704214,
+      "samples": 24,
+      "strategicGoals": [
+        "pdm-release"
+      ],
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201591",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "ウマ好み"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201611",
+      "name": "尻尾上がり",
+      "description": "レース中盤にスキルを3回発動すると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201611"
+        },
+        {
+          "kind": "prerequisite",
+          "owner_type": "skill",
+          "owner_id": "201612"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20161",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 1,
+      "gain": 0.16848361909301277,
+      "timeGain": 0.01662140010288778,
+      "hpGain": -0.7789134499577841,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 60,
+      "stages": [
+        {
+          "id": "201611",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "尻尾上がり"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201651",
+      "name": "スリップストリーム",
+      "description": "すぐ前にウマ娘が長くいると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20165",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5694829033076606,
+      "timeGain": 0.05618171640186809,
+      "hpGain": -3.6330917721425187,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201651",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "スリップストリーム"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201661",
+      "name": "遊びはおしまいっ！",
+      "description": "すぐ後ろにウマ娘が長くいると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201661"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20166",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.555596062304403,
+      "timeGain": 0.0548116948220058,
+      "hpGain": -3.461600397799342,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201661",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "遊びはおしまいっ！"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "202032",
+      "name": "あやしげな作戦",
+      "description": "レース後半のどこかで速度が少し上がるが持久力をすごく使ってしまうことがある",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20203",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3675209099885024,
+      "timeGain": 0.0362575192699263,
+      "hpGain": -41.84915979776944,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "202032",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "あやしげな作戦"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "202551",
+      "name": "神速",
+      "description": "レース後半のどこかで前に出て持久力をわずかに回復する",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30323",
+          "owner_type": "support",
+          "skill_id": "202551"
+        },
+        {
+          "kind": "evolution_base",
+          "owner_type": "scenario",
+          "owner_id": "15"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20255",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.1600805594650256,
+      "timeGain": 0.11444805064380977,
+      "hpGain": 40.23839462130773,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 240,
+      "stages": [
+        {
+          "id": "202552",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "快速"
+        },
+        {
+          "id": "202551",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "神速"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "203121",
+      "name": "強者の証",
+      "description": "レース中盤のどこかで前方だと速度が上がる＜先行・中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "203121"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20312",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.5550522112784544,
+      "timeGain": 0.15341516440360436,
+      "hpGain": -7.827827403657278,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 204,
+      "stages": [
+        {
+          "id": "203122",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "さらなる高みへ"
+        },
+        {
+          "id": "203121",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "強者の証"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "203222",
+      "name": "アグレッシブ",
+      "description": "レース中盤のどこかで持久力を少し使って速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20322",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7013817372758163,
+      "timeGain": 0.06919419271745575,
+      "hpGain": -69.88409845978879,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 96,
+      "stages": [
+        {
+          "id": "203222",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "アグレッシブ"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "203501",
+      "name": "英俊豪傑",
+      "description": "レース中盤のどこかで前に出る",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30322",
+          "owner_type": "support",
+          "skill_id": "203501"
+        },
+        {
+          "kind": "evolution_base",
+          "owner_type": "scenario",
+          "owner_id": "15"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20350",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.6592025431137243,
+      "timeGain": 0.16369043575606193,
+      "hpGain": -8.32757131983252,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 240,
+      "stages": [
+        {
+          "id": "203502",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "比類なき"
+        },
+        {
+          "id": "203501",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "英俊豪傑"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "203862",
+      "name": "気ままな足取り",
+      "description": "レース序盤または中盤に追い抜かれるか競り合うとわずかに前に出る＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "203862"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "203862"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20386",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5188100194858255,
+      "timeGain": 0.051182503586883143,
+      "hpGain": -2.2710124142689594,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "203862",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "気ままな足取り"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204001",
+      "name": "迸る気迫",
+      "description": "レース序盤または中盤に追い抜かれるか競り合うと前に出る＜作戦・先行＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "204001"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20400",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.4929330346241916,
+      "timeGain": 0.14728637557791183,
+      "hpGain": -6.736444378709439,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204002",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "意地っ張り"
+        },
+        {
+          "id": "204001",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "迸る気迫"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204012",
+      "name": "力業",
+      "description": "レース中盤のどこかで速度がわずかに上がる、先頭から4バ身以上離れていると速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204012"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204012"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20401",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.9083517873965471,
+      "timeGain": 0.0896131292361743,
+      "hpGain": -4.413390849100487,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 114,
+      "stages": [
+        {
+          "id": "204012",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "力業"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204082",
+      "name": "余勢を駆って",
+      "description": "いずれかの上り坂のどこかで速度がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204082"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20408",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4278527955439888,
+      "timeGain": 0.04220919368571607,
+      "hpGain": -1.9789146666782902,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "204082",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "余勢を駆って"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204042",
+      "name": "華麗な足取り",
+      "description": "追い抜くとわずかに前に出る＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20404",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4110543356073397,
+      "timeGain": 0.04055196091725577,
+      "hpGain": -2.39995926305348,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "204042",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "華麗な足取り"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204071",
+      "name": "順風満帆",
+      "description": "レース終盤が迫ったどこかで前方だと速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "2",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-link-skill",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "requirements": {
+            "character_link": {
+              "name_jp": "マヤノトップガン",
+              "present": true
+            }
+          },
+          "skill_id": "204071"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20407",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2831346372862222,
+      "timeGain": 0.1265884251100727,
+      "hpGain": -6.62506361284571,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204072",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "気持ちを乗せて"
+        },
+        {
+          "id": "204071",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "順風満帆"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204181",
+      "name": "前人未到",
+      "description": "レース中盤に追い抜くか先頭だと速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "204181"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20418",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.1830161421198604,
+      "timeGain": 0.11671076572259349,
+      "hpGain": -5.62746144815133,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204182",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "巨歩"
+        },
+        {
+          "id": "204181",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "前人未到"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204322",
+      "name": "阿吽の呼吸",
+      "description": "レース中盤のどこかで速度がわずかに上がる、「阿吽の呼吸」を持つウマ娘が2人以上いるレースだと少し上がる＜マイル/中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20432",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7268972082159886,
+      "timeGain": 0.07171141303466537,
+      "hpGain": -3.551845888111032,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204322",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "阿吽の呼吸"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204362",
+      "name": "大立ち回り",
+      "description": "レース中盤のどこかで持久力を少し使って速度が少し上がる＜先行/差し＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20436",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7009544252467927,
+      "timeGain": 0.06915203563779808,
+      "hpGain": -69.8820683589474,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204362",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "大立ち回り"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204331",
+      "name": "継続は力なり",
+      "description": "レース中盤のどこかで速度が上がる＜作戦・先行＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204331"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20433",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.9106737733278806,
+      "timeGain": 0.08984236700958566,
+      "hpGain": -4.498173969048319,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 168,
+      "stages": [
+        {
+          "id": "204332",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "実直な走り"
+        },
+        {
+          "id": "204331",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "継続は力なり"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204472",
+      "name": "奮い立つ心",
+      "description": "最終コーナー前の第3コーナーのどこかで前方だとわずかに前に出る＜中距離/長距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20447",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.663616535960038,
+      "timeGain": 0.06546849322150727,
+      "hpGain": -4.45971642650606,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204472",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "奮い立つ心"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204531",
+      "name": "清麗高雅",
+      "description": "レース中盤のどこかで前に出る＜中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204531"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20453",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.650123920133683,
+      "timeGain": 0.16279504633773337,
+      "hpGain": -8.232942613124058,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 228,
+      "stages": [
+        {
+          "id": "204532",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "華麗な踏み込み"
+        },
+        {
+          "id": "204531",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "清麗高雅"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204701",
+      "name": "素質の証明",
+      "description": "レース中盤のどこかでしばらくの間少し前に出る",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204701"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20470",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.4765853486979574,
+      "timeGain": 0.14567356398623824,
+      "hpGain": -7.268822022591955,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 240,
+      "stages": [
+        {
+          "id": "204702",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "突き抜ける走り"
+        },
+        {
+          "id": "204701",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "素質の証明"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204692",
+      "name": "立ち合い",
+      "description": "レース中盤に前方で競り合うとわずかに前に出る＜マイル/中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20469",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.47061226084031965,
+      "timeGain": 0.046427628926801745,
+      "hpGain": -2.311272360000347,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204692",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "立ち合い"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204622",
+      "name": "連綿",
+      "description": "レース中盤のどこかで速度がわずかに上がる継承スキルを3つ以上持っていると効果が増える",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20462",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7423269830182789,
+      "timeGain": 0.07323373039681691,
+      "hpGain": -3.656434320636855,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "204622",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "連綿"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204731",
+      "name": "機転",
+      "description": "レース後半に追い抜こうとするか近寄られるとしばらくの間速度が少し上がる＜中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30322",
+          "owner_type": "support",
+          "skill_id": "204731"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "missing-204732",
+      "iconId": "20012",
+      "orderVerified": false,
+      "indentLevel": 0,
+      "gain": 1.251532367227924,
+      "timeGain": 0.1234711871436159,
+      "hpGain": -8.01898666494195,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204732",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "如才なし"
+        },
+        {
+          "id": "204731",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "機転"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "200492",
+      "name": "垂れウマ回避",
+      "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "200492"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [
+        "시야·레인 효과는 단독 직진 주행에서 직접 마신0으로 계산"
+      ],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20049",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.8792030886639546,
+      "timeGain": 0.18539927194176187,
+      "hpGain": -15.628983472066778,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 90,
+      "stages": [
+        {
+          "id": "200492",
+          "base": 150,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 90,
+          "name": "垂れウマ回避"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201342",
+      "name": "直滑降",
+      "description": "いずれかの下り坂のどこかで加速力がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20134",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.431703157822282,
+      "timeGain": 0.2399062665503949,
+      "hpGain": -20.29675029732292,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "201342",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "直滑降"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "201601",
+      "name": "地固め",
+      "description": "レース序盤にスキルを3回発動すると加速力がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201601"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30322",
+          "owner_type": "support",
+          "skill_id": "201601"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20160",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5831701532584778,
+      "timeGain": 0.05753194768707104,
+      "hpGain": -2.2810644665424036,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 60,
+      "stages": [
+        {
+          "id": "201601",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "地固め"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "202692",
+      "name": "一番乗り",
+      "description": "スタート時に加速力がわずかに上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20269",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5823742196826743,
+      "timeGain": 0.05745342481212153,
+      "hpGain": -2.2787495853783164,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 72,
+      "stages": [
+        {
+          "id": "202692",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "一番乗り"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "203441",
+      "name": "夢の舞台へ",
+      "description": "レース終盤始めの早めのどこかで前方だと加速力が上がる＜先行・中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "203441"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20344",
+      "iconId": "20042",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.259934051859735,
+      "timeGain": 0.22295969461123022,
+      "hpGain": -19.128479516047157,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 204,
+      "stages": [
+        {
+          "id": "203442",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "憧れを越えて"
+        },
+        {
+          "id": "203441",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "夢の舞台へ"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "210072",
+      "name": "夢の途中",
+      "description": "レース後半のどこかで中団以前だと速度がわずかに上がり加速力がほんのわずかに上がるファンが多いほど効果が増える",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [
+        "외부 효과량 조건 12: 공개 시뮬레이터의 충족 가정"
+      ],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "21007",
+      "iconId": "20151",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.28064264637930597,
+      "timeGain": 0.02768633232985529,
+      "hpGain": -2.31571131310222,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "210072",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "夢の途中"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "210091",
+      "name": "レースの真髄・速",
+      "description": "レース終盤が迫ったどこかで速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "21009",
+      "iconId": "20161",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.40562123166043107,
+      "timeGain": 0.0400159915341162,
+      "hpGain": -2.108713386952251,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 90,
+      "stages": [
+        {
+          "id": "210091",
+          "base": 150,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 90,
+          "name": "レースの真髄・速"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204222",
+      "name": "もう一踏ん張り",
+      "description": "全開スパート中どこかでわずかに伸びを見せる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "204222"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20422",
+      "iconId": "20351",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.308539701013774,
+      "timeGain": 0.030438549731202375,
+      "hpGain": -3.001025143821662,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204222",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "もう一踏ん張り"
+        }
+      ],
+      "hintLevel": 5
+    },
+    {
+      "id": "204262",
+      "name": "星の煌き",
+      "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "self",
+          "owner_id": "101301",
+          "owner_type": "outfit",
+          "skill_id": "204262"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20426",
+      "iconId": "2010011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5656014010213388,
+      "timeGain": 0.05579880132662455,
+      "hpGain": -5.557417479740141,
+      "samples": 24,
+      "strategicGoals": [],
+      "cost": 120,
+      "stages": [
+        {
+          "id": "204262",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "星の煌き"
+        }
+      ],
+      "hintLevel": 5
+    }
+  ],
+  "eventChoices": {
+    "15-festival": "1",
+    "30300-rare-sets": "1",
+    "30275-chain-final": "2",
+    "15-link-skill": "2",
+    "30289-chain-final": "2",
+    "30311-chain-final": "1",
+    "30322-chain-final": "1",
+    "30323-outing-5": "1"
+  },
+  "unverifiedEventCards": [],
+  "evolutions": {
+    "outfit": [],
+    "scenario": [
+      {
+        "id": "415011",
+        "name": "急之舞",
+        "description": "レース後半のどこかですごく前に出て持久力をわずかに回復する",
+        "rarity": "evolution",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "heal"
+        ],
+        "routes": [
+          {
+            "kind": "evolution",
+            "owner_type": "scenario",
+            "owner_id": "15",
+            "base_id": "202551"
+          }
+        ],
+        "providers": [],
+        "calculationNotes": [],
+        "recommendation": {
+          "policy": "cm9-phase-rank-v1",
+          "source": "phase-rank",
+          "allowedStyles": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "eligible": true
+        },
+        "calculationState": "supported",
+        "evolutionBaseId": "202551",
+        "groupId": "20255",
+        "iconId": "20386",
+        "orderVerified": false,
+        "indentLevel": 0,
+        "baseId": "202551",
+        "baseName": "神速",
+        "additionalSp": 0
+      },
+      {
+        "id": "415021",
+        "name": "吉兆の駆け手",
+        "description": "レース中盤のどこかでしばらくの間前に出る",
+        "rarity": "evolution",
+        "inherited": false,
+        "categories": [
+          "speed"
+        ],
+        "routes": [
+          {
+            "kind": "evolution",
+            "owner_type": "scenario",
+            "owner_id": "15",
+            "base_id": "203501"
+          }
+        ],
+        "providers": [],
+        "calculationNotes": [],
+        "recommendation": {
+          "policy": "cm9-phase-rank-v1",
+          "source": "phase-rank",
+          "allowedStyles": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "eligible": true
+        },
+        "calculationState": "supported",
+        "evolutionBaseId": "203501",
+        "groupId": "20350",
+        "iconId": "20386",
+        "orderVerified": false,
+        "indentLevel": 0,
+        "baseId": "203501",
+        "baseName": "英俊豪傑",
+        "additionalSp": 0
+      }
+    ]
+  },
+  "scenarioEvolutionCount": 2,
+  "finalSkills": [
+    {
+      "activation_raw": 0,
+      "calculation_status": "unvalidated",
+      "categories": [
+        "speed"
+      ],
+      "description_jp": "最終コーナーで隊列内前方だと速度が上がる、長距離で余力十分なら隊列によらずすごく上がる",
+      "flags": [
+        "f_c",
+        "cor",
+        "lng",
+        "nac"
+      ],
+      "icon_id": "20013",
+      "id": "100131",
+      "inherited": false,
+      "invocations": [
+        {
+          "condition": [
+            [
+              {
+                "field": "is_finalcorner",
+                "operator": "==",
+                "value": 1
+              },
+              {
+                "field": "corner",
+                "operator": "!=",
+                "value": 0
+              },
+              {
+                "field": "distance_type",
+                "operator": "==",
+                "value": 4
+              },
+              {
+                "field": "lastspurt",
+                "operator": "==",
+                "value": 2
+              }
+            ]
+          ],
+          "condition_raw": "is_finalcorner==1&corner!=0&distance_type==4&lastspurt==2",
+          "cooldown_raw": null,
+          "duration_raw": 50000,
+          "duration_unit": "umatools_base_time",
+          "effects": [
+            {
+              "extras_raw": {},
+              "kind": "target_speed",
+              "source_type": 27,
+              "unit": "umatools_raw",
+              "value_raw": 4500
+            }
+          ],
+          "extras_raw": {},
+          "index": 1,
+          "precondition": [],
+          "precondition_raw": "",
+          "time_scale_raw": null
+        },
+        {
+          "condition": [
+            [
+              {
+                "field": "is_finalcorner",
+                "operator": "==",
+                "value": 1
+              },
+              {
+                "field": "corner",
+                "operator": "!=",
+                "value": 0
+              },
+              {
+                "field": "distance_diff_rate",
+                "operator": "<=",
+                "value": 30
+              }
+            ]
+          ],
+          "condition_raw": "is_finalcorner==1&corner!=0&distance_diff_rate<=30",
+          "cooldown_raw": null,
+          "duration_raw": 50000,
+          "duration_unit": "umatools_base_time",
+          "effects": [
+            {
+              "extras_raw": {},
+              "kind": "target_speed",
+              "source_type": 27,
+              "unit": "umatools_raw",
+              "value_raw": 3500
+            }
+          ],
+          "extras_raw": {},
+          "index": 2,
+          "precondition": [],
+          "precondition_raw": "",
+          "time_scale_raw": null
+        }
+      ],
+      "jp_available": true,
+      "name_jp": "貴顕の使命を果たすべく",
+      "name_ko": "존귀한 사명을 완수하기 위하여",
+      "origin": "native",
+      "parent_ids": [],
+      "provenance": [
+        "umatools"
+      ],
+      "rarity": "unique",
+      "release_evidence": "source_regional_status",
+      "source_rarity": 5,
+      "unknown_effect_codes": [],
+      "unparsed_condition": false,
+      "name": "貴顕の使命を果たすべく",
+      "description": "最終コーナーで隊列内前方だと速度が上がる、長距離で余力十分なら隊列によらずすごく上がる"
+    },
+    {
+      "id": "200011",
+      "name": "右回り◎",
+      "description": "右回りコースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [
+        {
+          "kind": "upgrade",
+          "owner_type": "skill",
+          "owner_id": "200012",
+          "base_id": "200012"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20001",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200191",
+      "name": "秋ウマ娘◎",
+      "description": "秋のレースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20019",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200261",
+      "name": "外枠得意◎",
+      "description": "枠番が6～8のレースならスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20026",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200271",
+      "name": "おひとり様◎",
+      "description": "自分と同じ作戦のウマ娘がいないとスピードがすごく上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20027",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6207648198604525,
+      "timeGain": 0.06124086579421236,
+      "hpGain": -6.05985196092804,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200301",
+      "name": "伏兵◎",
+      "description": "4番人気以下のレースでスピードが上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20030",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4677536223384929,
+      "timeGain": 0.04614556550030476,
+      "hpGain": -4.5622974876445825,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200361",
+      "name": "ハヤテ一文字",
+      "description": "いずれかの直線のどこかで速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "1",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-festival",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "skill_id": "200361"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20036",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2347611123860436,
+      "timeGain": 0.1218157537819593,
+      "hpGain": -7.465599860207891,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200492",
+      "name": "垂れウマ回避",
+      "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "200492"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [
+        "시야·레인 효과는 단독 직진 주행에서 직접 마신0으로 계산"
+      ],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20049",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.8792030886639546,
+      "timeGain": 0.18539927194176187,
+      "hpGain": -15.628983472066778,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "200732",
+      "name": "食い下がり",
+      "description": "最終コーナー以降に詰め寄られると速度がわずかに上がり、加速力がほんのちょっと上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20073",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.32554674521081783,
+      "timeGain": 0.03211625218833566,
+      "hpGain": -3.180886113693686,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201101",
+      "name": "中距離直線◎",
+      "description": "いずれかの直線のどこかで速度が少し上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20110",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7494967899331035,
+      "timeGain": 0.0739410381342515,
+      "hpGain": -4.5136794775784095,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201111",
+      "name": "中距離コーナー◎",
+      "description": "いずれかのコーナーのどこかで速度が少し上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20111",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7655971528832047,
+      "timeGain": 0.07552959563340167,
+      "hpGain": -3.4195194784042826,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201312",
+      "name": "先行直線○",
+      "description": "いずれかの直線のどこかで速度がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "201312"
+        },
+        {
+          "kind": "prerequisite",
+          "owner_type": "skill",
+          "owner_id": "201311"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20131",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.44534811145833064,
+      "timeGain": 0.04393517205679013,
+      "hpGain": -2.678099292487692,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201321",
+      "name": "先行コーナー◎",
+      "description": "いずれかのコーナーのどこかで速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "kind": "upgrade",
+          "owner_type": "skill",
+          "owner_id": "201322",
+          "base_id": "201322"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20132",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.8653584211810464,
+      "timeGain": 0.08537146229054511,
+      "hpGain": -4.3028295925745565,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201342",
+      "name": "直滑降",
+      "description": "いずれかの下り坂のどこかで加速力がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20134",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.431703157822282,
+      "timeGain": 0.2399062665503949,
+      "hpGain": -20.29675029732292,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201562",
+      "name": "ラッキーセブン",
+      "description": "枠番が7の時にスピードとスタミナとパワーが少し上がる場合がある",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20156",
+      "iconId": "10061",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6323602075995193,
+      "timeGain": 0.06238479073708447,
+      "hpGain": 22.99827674955873,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201591",
+      "name": "ウマ好み",
+      "description": "近くにウマ娘が3人以上いると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "5",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-link-skill",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "requirements": {
+            "character_link": {
+              "name_jp": "ブラストワンピース",
+              "present": false
+            }
+          },
+          "skill_id": "201591"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20159",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5149943708404331,
+      "timeGain": 0.05080617677335297,
+      "hpGain": -2.9839795178704214,
+      "samples": 24,
+      "strategicGoals": [
+        "pdm-release"
+      ],
+      "origin": "purchase"
+    },
+    {
+      "id": "201601",
+      "name": "地固め",
+      "description": "レース序盤にスキルを3回発動すると加速力がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201601"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30322",
+          "owner_type": "support",
+          "skill_id": "201601"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20160",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5831701532584778,
+      "timeGain": 0.05753194768707104,
+      "hpGain": -2.2810644665424036,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201611",
+      "name": "尻尾上がり",
+      "description": "レース中盤にスキルを3回発動すると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201611"
+        },
+        {
+          "kind": "prerequisite",
+          "owner_type": "skill",
+          "owner_id": "201612"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20161",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 1,
+      "gain": 0.16848361909301277,
+      "timeGain": 0.01662140010288778,
+      "hpGain": -0.7789134499577841,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201631",
+      "name": "シンパシー",
+      "description": "「シンパシー」を持つウマ娘が5人以上いるとスピードが少し上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20163",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201641",
+      "name": "一匹狼",
+      "description": "自分だけが「一匹狼」を持つレースだとスピードが少し上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20164",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201651",
+      "name": "スリップストリーム",
+      "description": "すぐ前にウマ娘が長くいると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20165",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5694829033076606,
+      "timeGain": 0.05618171640186809,
+      "hpGain": -3.6330917721425187,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "201661",
+      "name": "遊びはおしまいっ！",
+      "description": "すぐ後ろにウマ娘が長くいると速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "201661"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20166",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.555596062304403,
+      "timeGain": 0.0548116948220058,
+      "hpGain": -3.461600397799342,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "202032",
+      "name": "あやしげな作戦",
+      "description": "レース後半のどこかで速度が少し上がるが持久力をすごく使ってしまうことがある",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20203",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3675209099885024,
+      "timeGain": 0.0362575192699263,
+      "hpGain": -41.84915979776944,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "202442",
+      "name": "やまっけ",
+      "description": "レースでごくまれにさらなる力を発揮しスピード、パワー、根性が少し上がる4番人気以下だと力を発揮しやすくなる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20244",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6542147094084687,
+      "timeGain": 0.06454085150318178,
+      "hpGain": -2.3854669319641104,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "202692",
+      "name": "一番乗り",
+      "description": "スタート時に加速力がわずかに上がる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20269",
+      "iconId": "20041",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5823742196826743,
+      "timeGain": 0.05745342481212153,
+      "hpGain": -2.2787495853783164,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "202702",
+      "name": "探求心",
+      "description": "スピードが十二分に高いとスピードがわずかに上がる、賢さも十二分なら少し上がる＜先行・中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "passive"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20270",
+      "iconId": "10011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.3135023201778115,
+      "timeGain": 0.030928020783165994,
+      "hpGain": -3.0551834721479785,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "203121",
+      "name": "強者の証",
+      "description": "レース中盤のどこかで前方だと速度が上がる＜先行・中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "203121"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20312",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.5550522112784544,
+      "timeGain": 0.15341516440360436,
+      "hpGain": -7.827827403657278,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "203222",
+      "name": "アグレッシブ",
+      "description": "レース中盤のどこかで持久力を少し使って速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20322",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7013817372758163,
+      "timeGain": 0.06919419271745575,
+      "hpGain": -69.88409845978879,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "203441",
+      "name": "夢の舞台へ",
+      "description": "レース終盤始めの早めのどこかで前方だと加速力が上がる＜先行・中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "203441"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20344",
+      "iconId": "20042",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.259934051859735,
+      "timeGain": 0.22295969461123022,
+      "hpGain": -19.128479516047157,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "203862",
+      "name": "気ままな足取り",
+      "description": "レース序盤または中盤に追い抜かれるか競り合うとわずかに前に出る＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "203862"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "203862"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20386",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5188100194858255,
+      "timeGain": 0.051182503586883143,
+      "hpGain": -2.2710124142689594,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204001",
+      "name": "迸る気迫",
+      "description": "レース序盤または中盤に追い抜かれるか競り合うと前に出る＜作戦・先行＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30275",
+          "owner_type": "support",
+          "skill_id": "204001"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20400",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.4929330346241916,
+      "timeGain": 0.14728637557791183,
+      "hpGain": -6.736444378709439,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204012",
+      "name": "力業",
+      "description": "レース中盤のどこかで速度がわずかに上がる、先頭から4バ身以上離れていると速度が少し上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204012"
+        },
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204012"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20401",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.9083517873965471,
+      "timeGain": 0.0896131292361743,
+      "hpGain": -4.413390849100487,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204042",
+      "name": "華麗な足取り",
+      "description": "追い抜くとわずかに前に出る＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20404",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4110543356073397,
+      "timeGain": 0.04055196091725577,
+      "hpGain": -2.39995926305348,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204071",
+      "name": "順風満帆",
+      "description": "レース終盤が迫ったどこかで前方だと速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_choice_id": "2",
+          "event_conditions_affect_candidates": false,
+          "event_id": "15-link-skill",
+          "kind": "scenario_event",
+          "owner_id": "15",
+          "owner_type": "scenario",
+          "requirements": {
+            "character_link": {
+              "name_jp": "マヤノトップガン",
+              "present": true
+            }
+          },
+          "skill_id": "204071"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20407",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2831346372862222,
+      "timeGain": 0.1265884251100727,
+      "hpGain": -6.62506361284571,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204082",
+      "name": "余勢を駆って",
+      "description": "いずれかの上り坂のどこかで速度がわずかに上がる＜作戦・先行＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204082"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20408",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.4278527955439888,
+      "timeGain": 0.04220919368571607,
+      "hpGain": -1.9789146666782902,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204181",
+      "name": "前人未到",
+      "description": "レース中盤に追い抜くか先頭だと速度が上がる",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "204181"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20418",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.1830161421198604,
+      "timeGain": 0.11671076572259349,
+      "hpGain": -5.62746144815133,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204222",
+      "name": "もう一踏ん張り",
+      "description": "全開スパート中どこかでわずかに伸びを見せる＜中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_hint",
+          "owner_id": "30289",
+          "owner_type": "support",
+          "skill_id": "204222"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "not-applicable",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20422",
+      "iconId": "20351",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.308539701013774,
+      "timeGain": 0.030438549731202375,
+      "hpGain": -3.001025143821662,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204262",
+      "name": "星の煌き",
+      "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "self",
+          "owner_id": "101301",
+          "owner_type": "outfit",
+          "skill_id": "204262"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20426",
+      "iconId": "2010011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5656014010213388,
+      "timeGain": 0.05579880132662455,
+      "hpGain": -5.557417479740141,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204322",
+      "name": "阿吽の呼吸",
+      "description": "レース中盤のどこかで速度がわずかに上がる、「阿吽の呼吸」を持つウマ娘が2人以上いるレースだと少し上がる＜マイル/中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20432",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7268972082159886,
+      "timeGain": 0.07171141303466537,
+      "hpGain": -3.551845888111032,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204331",
+      "name": "継続は力なり",
+      "description": "レース中盤のどこかで速度が上がる＜作戦・先行＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30300",
+          "owner_type": "support",
+          "skill_id": "204331"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20433",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.9106737733278806,
+      "timeGain": 0.08984236700958566,
+      "hpGain": -4.498173969048319,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204362",
+      "name": "大立ち回り",
+      "description": "レース中盤のどこかで持久力を少し使って速度が少し上がる＜先行/差し＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20436",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7009544252467927,
+      "timeGain": 0.06915203563779808,
+      "hpGain": -69.8820683589474,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204472",
+      "name": "奮い立つ心",
+      "description": "最終コーナー前の第3コーナーのどこかで前方だとわずかに前に出る＜中距離/長距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20447",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.663616535960038,
+      "timeGain": 0.06546849322150727,
+      "hpGain": -4.45971642650606,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204531",
+      "name": "清麗高雅",
+      "description": "レース中盤のどこかで前に出る＜中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204531"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20453",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.650123920133683,
+      "timeGain": 0.16279504633773337,
+      "hpGain": -8.232942613124058,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204622",
+      "name": "連綿",
+      "description": "レース中盤のどこかで速度がわずかに上がる継承スキルを3つ以上持っていると効果が増える",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20462",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.7423269830182789,
+      "timeGain": 0.07323373039681691,
+      "hpGain": -3.656434320636855,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204692",
+      "name": "立ち合い",
+      "description": "レース中盤に前方で競り合うとわずかに前に出る＜マイル/中距離＞",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "20469",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.47061226084031965,
+      "timeGain": 0.046427628926801745,
+      "hpGain": -2.311272360000347,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204701",
+      "name": "素質の証明",
+      "description": "レース中盤のどこかでしばらくの間少し前に出る",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30311",
+          "owner_type": "support",
+          "skill_id": "204701"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "20470",
+      "iconId": "20012",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.4765853486979574,
+      "timeGain": 0.14567356398623824,
+      "hpGain": -7.268822022591955,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "204731",
+      "name": "機転",
+      "description": "レース後半に追い抜こうとするか近寄られるとしばらくの間速度が少し上がる＜中距離＞",
+      "rarity": "gold",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "event_conditions_affect_candidates": false,
+          "kind": "support_event",
+          "owner_id": "30322",
+          "owner_type": "support",
+          "skill_id": "204731"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "missing-204732",
+      "iconId": "20012",
+      "orderVerified": false,
+      "indentLevel": 0,
+      "gain": 1.251532367227924,
+      "timeGain": 0.1234711871436159,
+      "hpGain": -8.01898666494195,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "210072",
+      "name": "夢の途中",
+      "description": "レース後半のどこかで中団以前だと速度がわずかに上がり加速力がほんのわずかに上がるファンが多いほど効果が増える",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [
+        "외부 효과량 조건 12: 공개 시뮬레이터의 충족 가정"
+      ],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "21007",
+      "iconId": "20151",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.28064264637930597,
+      "timeGain": 0.02768633232985529,
+      "hpGain": -2.31571131310222,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "210091",
+      "name": "レースの真髄・速",
+      "description": "レース終盤が迫ったどこかで速度がわずかに上がる",
+      "rarity": "white",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "21009",
+      "iconId": "20161",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.40562123166043107,
+      "timeGain": 0.0400159915341162,
+      "hpGain": -2.108713386952251,
+      "samples": 24,
+      "strategicGoals": [],
+      "origin": "purchase"
+    },
+    {
+      "id": "415011",
+      "name": "急之舞",
+      "description": "レース後半のどこかですごく前に出て持久力をわずかに回復する",
+      "rarity": "evolution",
+      "inherited": false,
+      "categories": [
+        "speed",
+        "heal"
+      ],
+      "routes": [
+        {
+          "kind": "evolution",
+          "owner_type": "scenario",
+          "owner_id": "15",
+          "base_id": "202551"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": "202551",
+      "groupId": "20255",
+      "iconId": "20386",
+      "orderVerified": false,
+      "indentLevel": 0,
+      "origin": "evolution"
+    },
+    {
+      "id": "415021",
+      "name": "吉兆の駆け手",
+      "description": "レース中盤のどこかでしばらくの間前に出る",
+      "rarity": "evolution",
+      "inherited": false,
+      "categories": [
+        "speed"
+      ],
+      "routes": [
+        {
+          "kind": "evolution",
+          "owner_type": "scenario",
+          "owner_id": "15",
+          "base_id": "203501"
+        }
+      ],
+      "providers": [],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": "203501",
+      "groupId": "20350",
+      "iconId": "20386",
+      "orderVerified": false,
+      "indentLevel": 0,
+      "origin": "evolution"
+    },
+    {
+      "id": "900011",
+      "name": "シューティングスター",
+      "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "100101"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "90001",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.5206904820478181,
+      "timeGain": 0.051368127793672023,
+      "hpGain": -4.914140154581278,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    },
+    {
+      "id": "900381",
+      "name": "#LookatCurren",
+      "description": "レース中間付近で追い抜いて好位置につけると速度と加速力が少し上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "103801"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "90038",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.49670498126929497,
+      "timeGain": 0.049002294616952824,
+      "hpGain": -3.4279739742932755,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    },
+    {
+      "id": "910221",
+      "name": "Best day ever",
+      "description": "終盤以降かつ最終コーナー以降に好位置だと速度が上がるさらにゴールまで遠いなら最高の走りで加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "102202"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91022",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.31276044413963866,
+      "timeGain": 0.030854879808978275,
+      "hpGain": -2.8417402902362436,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    },
+    {
+      "id": "910271",
+      "name": "あなたに捧げるフリーポア",
+      "description": "終盤目前の下り坂で2番手以降かつ先頭から4バ身以内だと少しの間速度が上がる、さらに中距離レースなら加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "102702"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91027",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 1.2208271198406464,
+      "timeGain": 0.12044082036645243,
+      "hpGain": -8.9170982178254,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    },
+    {
+      "id": "910681",
+      "name": "あっぱれ大盤振る舞い！",
+      "description": "終盤以降のコーナーで3番手以内にいるときゴールまで遠いと少しの間前に出て加速力がちょっと上がる",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "106802"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "assumed",
+      "evolutionBaseId": null,
+      "groupId": "91068",
+      "iconId": "20011",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 0.6522189132035389,
+      "timeGain": 0.06434482868743945,
+      "hpGain": -5.158429531347227,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    },
+    {
+      "id": "91101411",
+      "name": "光れ！弾けろ！超新星爆発！",
+      "description": "レース後半に速度を少し上げ続ける2000m以上のレースならその後ラストスパートの最中に短い間加速力が少し上がる＜逃げ/先行＞",
+      "rarity": "inherited",
+      "inherited": true,
+      "categories": [
+        "speed",
+        "acceleration"
+      ],
+      "routes": [
+        {
+          "kind": "inheritance",
+          "owner_type": "outfit",
+          "owner_id": null
+        }
+      ],
+      "providers": [
+        "114101"
+      ],
+      "calculationNotes": [],
+      "recommendation": {
+        "policy": "cm9-phase-rank-v1",
+        "source": "phase-rank",
+        "allowedStyles": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "eligible": true
+      },
+      "calculationState": "supported",
+      "evolutionBaseId": null,
+      "groupId": "90141",
+      "iconId": "20016",
+      "orderVerified": true,
+      "indentLevel": 0,
+      "gain": 2.325003773512026,
+      "timeGain": 0.22937891152266765,
+      "hpGain": -16.302080395225556,
+      "samples": 24,
+      "strategicGoals": [],
+      "targetInheritance": true,
+      "origin": "purchase"
+    }
+  ],
+  "budget": {
+    "total": 7000,
+    "used": 6996,
+    "remaining": 4
+  },
+  "gain": 41.42570052988222,
+  "timeGain": 4.090385396493845,
+  "hpRemaining": 20.08918221913676,
+  "fullSpeedFeasible": true,
+  "candidateCount": 209,
+  "excluded": [],
+  "calculationNotes": [
+    "시야·레인 효과는 단독 직진 주행에서 직접 마신0으로 계산",
+    "외부 효과량 조건 12: 공개 시뮬레이터의 충족 가정"
+  ],
+  "effectPolicy": "self-performance-only",
+  "search": {
+    "method": "bounded",
+    "evaluations": 2563,
+    "shortlisted": 126,
+    "scenarioPacks": 7,
+    "closureComplete": true,
+    "closureChecks": 50,
+    "refinementLimited": false,
+    "refinementEvaluations": 50,
+    "globalOptimal": false,
+    "searchSamples": 2,
+    "searchDt": 0.05,
+    "samples": 24,
+    "dt": 0.01
+  },
+  "fullSpurtPolicy": "umasim-public-unbounded-approximation"
+}

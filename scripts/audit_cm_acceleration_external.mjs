@@ -16,7 +16,7 @@ import {RecordedPurchaseModel} from '../assets/cm-final-plan.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
-const sourceFiles=['assets/cm-acceleration-plan.mjs','assets/cm-position-comparison.mjs','assets/cm-final-plan.mjs','assets/cm-state.mjs'];
+const sourceFiles=['assets/cm-acceleration-plan.mjs','assets/cm-position-comparison.mjs','assets/cm-final-plan.mjs','assets/cm-state.mjs','assets/cm-chart.mjs','assets/cm-sampling.mjs','assets/cm-strategy.mjs','assets/cm-effect-policy.mjs'];
 const sourceHashes=Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex')]));
 const codeBaseCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
 const costBridge=process.argv.includes('--cost-bridge');

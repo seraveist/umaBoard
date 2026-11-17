@@ -5,8 +5,9 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {styleRecommendation} from './cm-recommendation.mjs';
 import {RecordedPurchaseModel} from './cm-final-plan.mjs';
 import {EventConstraints} from './cm-event-constraints.mjs';
+import {strategyGoals,strategySkillIds} from './cm-strategy.mjs';
 
-export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v3';
+export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v4';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const native=s=>['unique','unique_low_star','unique_upgraded'].includes(s.rarity);
 const key=ids=>[...new Set(ids)].sort().join(',');
@@ -17,6 +18,7 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
  if(!Number.isFinite(minGainPer100Sp)||minGainPer100Sp<0)throw new Error('가속 SP 효율 기준을 확인하세요.');
  const setup=chart.setup,records=buildChartCandidates(data,setup),rules=selectionRules(data,records),events=new EventConstraints(data,setup);
  const compiled=new Map([...records].map(([id,s])=>[id,compileChartSkill(s,setup)]));
+ const strategicGoals=strategyGoals(data,setup).map(goal=>({...goal,skillIds:strategySkillIds(goal,compiled,setup),scenarioFallbacks:events.groups.filter(g=>g.scenario_id).flatMap(g=>g.choices.flatMap(c=>c.rewards.filter(r=>goal.skillIds.includes(r.skill_id)).map(r=>({eventName:g.name_jp,label:c.label,skillId:r.skill_id}))))}));
  const nativeIds=chart.nativeIds,states=Object.fromEntries([...records.keys()].map(id=>[id,'5']));
  const planningRows=[...records.values()].map(s=>({...s,evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&(r.owner_id===setup.outfitId||r.owner_id===setup.scenarioId))?.base_id}));
  const prices=new RecordedPurchaseModel(data,planningRows,states),evaluated=new Map(),comparison=createPositionComparison(setup,compiled,nativeIds),excludedCandidates=[];
@@ -157,13 +159,13 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
  const contributionEvaluations=checks-contributionStart;
  // Compare whole rare bundles with the same target. Hints are possibilities,
  // never purchases or mutations of the training-result checklist.
- const goldGroups=events.groups.map(g=>({...g,choices:g.choices.map(c=>({...c,rewards:c.rewards.filter(r=>data.skills[r.skill_id]?.rarity==='gold')}))})).filter(g=>g.card_id&&g.choices.some(c=>c.rewards.length));
+ const goldGroups=events.groups.map(g=>({...g,choices:g.choices.map(c=>({...c,rewards:c.rewards.filter(r=>data.skills[r.skill_id]?.rarity==='gold')}))})).filter(g=>(g.card_id||g.scenario_id&&g.choices.length>1)&&g.choices.some(c=>c.rewards.length));
  const positionSensitive=setup.style<=2&&[...nativeIds,...required].some(id=>data.skills[id].invocations.some(i=>(i.condition||[]).flat().some(a=>['order','order_rate','distance_diff_top','bashin_diff_infront'].includes(a.field)&&['<','<=','=='].includes(a.operator))));
  const keepsTarget=ids=>required.every(id=>ids.includes(id));
  const rewardPlan=(current,available,pins)=>{
   let ids=[...current];
   for(const id of available){
-   if(!supported(compiled.get(id))||!styleRecommendation(records.get(id),compiled.get(id),setup).eligible)continue;
+   if(!supported(compiled.get(id))||!styleRecommendation(records.get(id),compiled.get(id),setup).eligible||!prices.selection([id]).complete)continue;
    if(required.some(target=>!rules.compatible(id,target)))continue;
    const next=extend(ids,id);if(keepsTarget(next)&&legal([...nativeIds,...next],pins))ids=next;
   }
@@ -204,8 +206,8 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   const forced=needed.length>0&&group.choices.filter(c=>legal([...nativeIds,...required],{...assignment.pins,[group.id]:c.id})).length===1;
   const near=assignments.filter(a=>a!==assignment&&a.pins[group.id]!==selected.id&&Math.abs(a.score.gain-assignment.score.gain)<=.01);
   const positionPreferred=positionSensitive&&near.length&&assignment.score.entryGain>Math.max(...near.map(a=>a.score.entryGain))+.005;
-  return {cardId:group.card_id,groupId:group.id,setId:selected.id,ids:rareIds,targetIds:needed,alternatives,reason:forced?'target':group.choices.length===1?'fixed':near.length?positionPreferred?'position':'cost':'gain',verified:group.choices.length===1||!events.unverified.includes(group.card_id)};
+  return {cardId:group.card_id,scenarioId:group.scenario_id,eventName:group.name_jp,selectionLabel:selected.label,groupId:group.id,setId:selected.id,ids:rareIds,targetIds:needed,alternatives,reason:forced?'target':group.choices.length===1?'fixed':near.length?positionPreferred?'position':'cost':'gain',verified:group.choices.length===1||!events.unverified.includes(group.card_id)};
  }).filter(Boolean);
  return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills,skillGainPolicy:'remove-one-from-target',gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss:null,score:chosen.score,efficiencyPolicy:{minGainPer100Sp,scoreTolerance,source:'preparation-policy-not-measured'},scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
-  eventChoices:assignment.pins,rewards,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,contributionEvaluations,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
+  eventChoices:assignment.pins,rewards:rewards.filter(r=>r.cardId),scenarioRewards:rewards.filter(r=>r.scenarioId),strategyGoals:strategicGoals,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,contributionEvaluations,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
 }

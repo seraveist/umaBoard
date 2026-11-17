@@ -131,7 +131,7 @@ function newRow(row){
  if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
  else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}
  skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)});identity.append(iconButton);
- const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)+(row.targetInheritance?' · 목표 가속 계승':'')));
+ const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)+(row.targetInheritance?' · 목표 가속 계승':row.recordedInheritance?' · 확보한 계승 기록':'')+(row.strategicGoals?.includes('pdm-release')?' · PDM 해제 확보 목표':'')));
  identity.append(copy);nameCell.append(identity);const gain=el('td','gain-cell');gain.dataset.gain='';
  const state=el('td','state-cell'),select=el('select','hint-select');select.dataset.skillId=acquisitionId(row);select.setAttribute('aria-label',`${row.name} 획득 상태 및 할인 레벨`);
  select.append(...ACQUISITION_OPTIONS.map(item=>option(item.value,item.label)));state.append(select);tr.append(nameCell,gain,state);return tr;
@@ -180,7 +180,8 @@ function saveAcquisitionStates(next,warning=''){
 }
 function recordAll(value){
  if(busy||!result)return;
- const next=bulkAcquisition(rows,states,value),skipped=value==='5'?rows.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
+ const history=(result.evolutionOptions||[]).filter(row=>states[row.id]==='owned'&&!rows.some(r=>r.id===row.id));
+ const next=bulkAcquisition([...rows,...history],states,value),skipped=value==='5'?rows.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
  saveAcquisitionStates(next,skipped?'계승은 6개만 적용했습니다.':'');
 }
 function beginCalculation(event){
@@ -196,12 +197,12 @@ function beginCalculation(event){
  saveDraft();states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
  busy=true;$('#generate').disabled=true;$('#generate span').textContent='마신표 계산 중';$('#cancel-calculation').hidden=false;$('#export-checklist').disabled=true;
  $('#calculation-progress').hidden=false;$('#progress-label').textContent='계승 후보를 비교하고 있습니다';$('#progress-count').textContent='';$('#progress-bar').value=0;$('#progress-bar').max=1;$('#draft-status').textContent='';
- notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
+ notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:{...input,acquisition:states}});
 }
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  accelerationPlan:result.accelerationPlan,acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  accelerationPlan:result.accelerationPlan,rankComparison:result.rankComparison,strategyGoals:result.strategyGoals,acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,strategicGoals:row.strategicGoals,recordedInheritance:row.recordedInheritance,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){

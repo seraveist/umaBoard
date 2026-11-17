@@ -66,6 +66,12 @@ export function checklistCounts(rows,states={}){
  return {total:rows.length,available:values.filter(v=>v!=='unavailable').length,owned:values.filter(v=>v==='owned').length};
 }
 export const inheritedCount=(rows,states={})=>rows.filter(row=>row.inherited&&acquisitionValue(states[row.id])!=='unavailable').length;
+// A changed ranking must not erase actual purchases or recorded hints merely
+// because an inherited skill falls outside the new display Top10.
+export function retainedInheritanceCandidates(candidates,shown,states={}){
+ const visible=new Set(shown.map(row=>row.id));
+ return candidates.filter(row=>row.inherited&&!visible.has(row.id)&&acquisitionValue(states[row.id]??states[inheritedOrigin(row.id)])!=='unavailable');
+}
 export function canRecordAcquisition(rows,states,id,value){
  const row=rows.find(row=>row.id===id);
  if(!row)return false;
@@ -81,5 +87,5 @@ export function bulkAcquisition(rows,states,value){
   ...inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable'),
   ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable').sort((a,b)=>Number(!!b.targetInheritance)-Number(!!a.targetInheritance))
  ].slice(0,INHERITED_LIMIT).map(row=>row.id));
- return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
+ return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&states[row.id]==='owned'?'owned':value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
 }
