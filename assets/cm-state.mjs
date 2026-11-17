@@ -1,5 +1,5 @@
 // Acquisition is deliberately independent from the simulation's selected skills.
-import {INHERITED_LIMIT} from './cm-recommendation.mjs';
+import {INHERITED_LIMIT,inheritedOrigin} from './cm-recommendation.mjs';
 export const ACQUISITION_OPTIONS=Object.freeze([
  {value:'owned',label:'습득'}, {value:'unavailable',label:'미획득'},
  {value:'0',label:'획득'},...Array.from({length:5},(_,index)=>({value:String(index+1),label:`할인 Lv${index+1}`}))
@@ -53,7 +53,7 @@ export function updateAcquisition(rows,states,id,value,hierarchy){
  return next;
 }
 export function checklistSnapshot(rows,states={},hierarchy){
- let result=Object.fromEntries(rows.map(row=>[row.id,acquisitionValue(states[acquisitionId(row)])]));
+ let result=Object.fromEntries(rows.map(row=>[row.id,acquisitionValue(states[acquisitionId(row)]??(row.inherited?states[inheritedOrigin(row.id)]:undefined))]));
  if(hierarchy){
   // Migrate old independent drafts deterministically. The first acquired
   // alternative in table order wins; no hidden/stale ID enters the snapshot.

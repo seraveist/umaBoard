@@ -163,6 +163,7 @@ function renderRows(){
  else $('#checklist-count').textContent=busy?'계산 준비 중':'목록을 생성해 주세요';
  $('#clear-skill-search').hidden=!$('#skill-search').value;
  for(const id of ['bulk-unavailable','bulk-level5'])$('#'+id).disabled=busy||!result;
+ accelerationPanel?.updateAcquisition(rows,states);
 }
 function recordState(id,value){
  if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승은 최대 6개입니다.';return;}
@@ -216,7 +217,7 @@ function setupWorker(){
    let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
    renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
-   accelerationPanel?.render(result.accelerationPlan);finalPlanner?.setChart(result,states,currentPlan);
+   accelerationPanel?.render(result.accelerationPlan);accelerationPanel?.updateAcquisition(rows,states);finalPlanner?.setChart(result,states,currentPlan);
    workflow.setContext(umaName(data.outfits[result.setup.outfitId]),`${data.outfits[result.setup.outfitId].outfit_name_jp} · ${['','도주','선행','선입','추입'][result.setup.style]} · ${trackLabels[result.setup.course.track_id]} ${result.setup.course.surface===1?'잔디':'더트'} ${result.setup.course.distance.toLocaleString('ko-KR')}m · SSR ${result.setup.supportIds.length}장`);
    workflow.setChartState('ready');
    if(workflow.stage==='prepare'){$('#checklist-title').focus({preventScroll:true});$('#checklist').scrollIntoView({block:'start'});}
@@ -232,7 +233,7 @@ async function start(){
  readDraft();
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
-  data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);accelerationPanel=createAccelerationPanel({data,display,skillDetails});
+  data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);accelerationPanel=createAccelerationPanel({data,display,portraits,skillDetails});
   finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;

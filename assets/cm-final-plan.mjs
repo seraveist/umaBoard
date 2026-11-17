@@ -7,9 +7,10 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {buildAcquisitionHierarchy,relatedAcquisitionIds} from './cm-state.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 import {evolutionOptions,evolutionGroups,finalAcquisitionSnapshot} from './cm-evolution.mjs';
+import {inheritedOrigin} from './cm-recommendation.mjs';
 
 import {EventConstraints} from './cm-event-constraints.mjs';
-export const FINAL_MODEL_VERSION='cm-post-training-v7';
+export const FINAL_MODEL_VERSION='cm-post-training-v8';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -40,7 +41,12 @@ export class RecordedPurchaseModel{
   const skill=this.data.skills[id];if(!skill)return null;
   if(this.owned.has(id)||nativeUnique(skill))return [];
   path=new Set([...path,id]);let chain;
-  if(skill.rarity==='evolution'){
+  const inheritedBase=skill.inherited?inheritedOrigin(id):id;
+  if(inheritedBase!==id){
+   // An inherited evolution uses the original inherited skill's paid stage;
+   // it is not a second purchase or a normal awakening evolution.
+   chain=this.states[inheritedBase]==='owned'?[]:this.chain(inheritedBase,path);
+  }else if(skill.rarity==='evolution'){
    const base=this.rows.get(id)?.evolutionBaseId||this.data.evolution_rules.find(rule=>rule.evolved_id===id)?.base_id;
    chain=base?this.chain(base,path):null;
   }else{
@@ -58,7 +64,8 @@ export class RecordedPurchaseModel{
    for(const stage of chain){
     // Evolution and rare share a purchase stage. An explicit rare hint wins;
     // otherwise the selected evolution's recorded hint supplies that stage.
-    const level=hint(this.states[stage.id])??(this.data.skills[id]?.rarity==='evolution'&&stage.id===chain.at(-1)?.id?hint(this.states[id]):null)??0;
+    const inheritedBase=this.data.skills[id]?.inherited?inheritedOrigin(id):id;
+    const level=(inheritedBase!==id&&stage.id===inheritedBase?hint(this.states[id]):null)??hint(this.states[stage.id])??(this.data.skills[id]?.rarity==='evolution'&&stage.id===chain.at(-1)?.id?hint(this.states[id]):null)??0;
     const existing=stages.get(stage.id);
     if(!existing||level>existing.hint)stages.set(stage.id,{...stage,hint:level,extraDiscount:this.extraDiscount,cost:discountedCost(stage.base,level,this.extraDiscount)});
    }

@@ -1,0 +1,713 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 2.349,
+  "case": {
+    "id": "tokyo1600-betweener",
+    "label": "도쿄 잔디 1600m 선입",
+    "courseId": "10602",
+    "style": 3,
+    "outfitId": "108501",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ],
+    "source": "https://umamusumelabo.com/event/champions-meeting/chanmi-mile-202306",
+    "guideDate": "2023-06",
+    "scope": "historical guide validates geometry/role only, not 2026 ranking; native activation aid may replace Anabolic",
+    "expected": [
+      {
+        "name": "전광석화 계열",
+        "ids": [
+          "202401",
+          "202402"
+        ]
+      }
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10602",
+    "style": 3,
+    "outfitId": "108501",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "108501",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 3,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 275,
+          "start": 550
+        },
+        {
+          "length": 250,
+          "start": 825
+        }
+      ],
+      "course_set_status": [
+        2,
+        4
+      ],
+      "course_variant": 1,
+      "distance": 1600,
+      "distance_type": 2,
+      "geometry_review_reason": null,
+      "id": "10602",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 75,
+          "slope": 20000,
+          "start": 325
+        },
+        {
+          "length": 250,
+          "slope": -15000,
+          "start": 450
+        },
+        {
+          "length": 150,
+          "slope": 15000,
+          "start": 1150
+        }
+      ],
+      "straights": [
+        {
+          "end": 550,
+          "frontType": 2,
+          "start": 0
+        },
+        {
+          "end": 1600,
+          "frontType": 1,
+          "start": 1075
+        }
+      ],
+      "surface": 1,
+      "track_id": "10006",
+      "turn": 2,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "100851",
+      "name": "至上であれ"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v1",
+    "ids": [
+      "200492",
+      "200602",
+      "204432",
+      "900141",
+      "900271",
+      "910611"
+    ],
+    "skills": [
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "200602",
+        "name": "差し切り体勢",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで中団以降だと加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "200602",
+        "baseName": "差し切り体勢",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204432",
+        "name": "影より速く",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "直線でラストスパートの最中なら加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "204432",
+        "baseName": "影より速く",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "900141",
+        "name": "熱血☆アミーゴ",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終直線で余力を持って2番手以内だと速度と加速力がわずかに上がる",
+        "baseId": "900141",
+        "baseName": "熱血☆アミーゴ",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "101401"
+        ]
+      },
+      {
+        "id": "900271",
+        "name": "燃えろ筋肉！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤以降のコーナーで中団だと前の位置につこうとして加速力が少し上がる",
+        "baseId": "900271",
+        "baseName": "燃えろ筋肉！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102701"
+        ]
+      },
+      {
+        "id": "910611",
+        "name": "轟！トレセン応援団！！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース前半に掛からず最後方付近をキープすると、最終直線で気合を爆発させて加速力が上がる",
+        "baseId": "910611",
+        "baseName": "轟！トレセン応援団！！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "106102"
+        ]
+      }
+    ],
+    "gain": 6.919464953913799,
+    "min": 6.041437207065428,
+    "max": 7.537595637288632,
+    "cost": 666,
+    "maximumGain": 6.919464953913799,
+    "sacrificedGain": 0,
+    "allowedLoss": 0.1,
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "1",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30322-chain-final": "3",
+      "30268-rare-sets": "1",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "groupId": "30275-chain-final",
+        "setId": "1",
+        "ids": [
+          "204001",
+          "203421"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203441"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "groupId": "30322-chain-final",
+        "setId": "3",
+        "ids": [
+          "203501",
+          "204751"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204731"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204741"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30268",
+        "groupId": "30268-rare-sets",
+        "setId": "1",
+        "ids": [
+          "201453",
+          "202401"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "201453",
+              "203761"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 34,
+      "shortlisted": 14,
+      "evaluations": 267,
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "cost-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "전광석화 계열",
+      "ids": [
+        "202401",
+        "202402"
+      ],
+      "matched": [],
+      "available": [
+        "108501211",
+        "202401",
+        "202402"
+      ],
+      "candidates": [
+        {
+          "id": "108501211",
+          "name": "常に最たる輝きを",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 216,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              },
+              {
+                "id": "202401",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.7331209248730867
+        },
+        {
+          "id": "202401",
+          "name": "電光石火",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 216,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              },
+              {
+                "id": "202401",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.7380715011336405
+        },
+        {
+          "id": "202402",
+          "name": "一足飛び",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 108,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.4513114804749534
+        }
+      ],
+      "counterfactual": {
+        "ids": [
+          "200492",
+          "200602",
+          "204432",
+          "900141",
+          "900271",
+          "910611",
+          "202401"
+        ],
+        "gain": 6.9917739229930085,
+        "cost": 882,
+        "eventExamples": [
+          {
+            "id": "100851",
+            "index": 1,
+            "x": 1056.0493285072769,
+            "t": 53.28,
+            "duration": 8
+          },
+          {
+            "id": "900271",
+            "index": 1,
+            "x": 1066.8030507072815,
+            "t": 53.800000000000004,
+            "duration": 3.84
+          },
+          {
+            "id": "200602",
+            "index": 1,
+            "x": 1067.216840488284,
+            "t": 53.82,
+            "duration": 2.88
+          },
+          {
+            "id": "204432",
+            "index": 1,
+            "x": 1075.163617108289,
+            "t": 54.2,
+            "duration": 1.44
+          },
+          {
+            "id": "900141",
+            "index": 1,
+            "x": 1075.163617108289,
+            "t": 54.2,
+            "duration": 4.8
+          },
+          {
+            "id": "910611",
+            "index": 1,
+            "x": 1075.163617108289,
+            "t": 54.2,
+            "duration": 3.84
+          },
+          {
+            "id": "200492",
+            "index": 1,
+            "x": 1208.1886051077663,
+            "t": 59.6,
+            "duration": 4.8
+          },
+          {
+            "id": "202401",
+            "index": 1,
+            "x": 1295.4761641266318,
+            "t": 62.95,
+            "duration": 3.2
+          }
+        ]
+      },
+      "bestOneSwap": {
+        "removed": "200602",
+        "result": {
+          "ids": [
+            "200492",
+            "204432",
+            "900141",
+            "900271",
+            "910611",
+            "202401"
+          ],
+          "gain": 6.718084583662076,
+          "cost": 774,
+          "eventExamples": [
+            {
+              "id": "100851",
+              "index": 1,
+              "x": 1056.0493285072769,
+              "t": 53.28,
+              "duration": 8
+            },
+            {
+              "id": "900271",
+              "index": 1,
+              "x": 1066.8030507072815,
+              "t": 53.800000000000004,
+              "duration": 3.84
+            },
+            {
+              "id": "204432",
+              "index": 1,
+              "x": 1075.149177108289,
+              "t": 54.2,
+              "duration": 1.44
+            },
+            {
+              "id": "900141",
+              "index": 1,
+              "x": 1075.149177108289,
+              "t": 54.2,
+              "duration": 4.8
+            },
+            {
+              "id": "910611",
+              "index": 1,
+              "x": 1075.149177108289,
+              "t": 54.2,
+              "duration": 3.84
+            },
+            {
+              "id": "200492",
+              "index": 1,
+              "x": 1208.289057242507,
+              "t": 59.68,
+              "duration": 4.8
+            },
+            {
+              "id": "202401",
+              "index": 1,
+              "x": 1295.2495195769006,
+              "t": 63.02,
+              "duration": 3.2
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "negatives": [],
+  "firstSampleEvents": [
+    {
+      "id": "100851",
+      "index": 1,
+      "x": 1056.0493285072769,
+      "t": 53.28,
+      "duration": 8
+    },
+    {
+      "id": "900271",
+      "index": 1,
+      "x": 1066.8030507072815,
+      "t": 53.800000000000004,
+      "duration": 3.84
+    },
+    {
+      "id": "200602",
+      "index": 1,
+      "x": 1067.216840488284,
+      "t": 53.82,
+      "duration": 2.88
+    },
+    {
+      "id": "204432",
+      "index": 1,
+      "x": 1075.163617108289,
+      "t": 54.2,
+      "duration": 1.44
+    },
+    {
+      "id": "900141",
+      "index": 1,
+      "x": 1075.163617108289,
+      "t": 54.2,
+      "duration": 4.8
+    },
+    {
+      "id": "910611",
+      "index": 1,
+      "x": 1075.163617108289,
+      "t": 54.2,
+      "duration": 3.84
+    },
+    {
+      "id": "200492",
+      "index": 1,
+      "x": 1208.1886051077663,
+      "t": 59.6,
+      "duration": 4.8
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 3,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": false
+}

@@ -36,6 +36,34 @@ test('recorded Lv0–5 discounts apply to each stage, shared stages once, and pa
  assert.equal(new RecordedPurchaseModel(data,chart.rows,{}).selection(['unknown']).complete,false);
 });
 
+test('inherited evolution pays its original stage once and uses the displayed acquired hint',async()=>{
+ const {data,chart}=fixture();
+ const base={...skill('901411',1500,'inherited'),inherited:true,parent_ids:['other-native']},strong={...skill('91101411',3500,'inherited'),inherited:true,parent_ids:['other-native']};
+ data.skills[base.id]=base;data.skills[strong.id]=strong;data.purchase_stages[base.id]={status:'verified',base_cost:200};
+ chart.rows=[{...strong,name:strong.name_jp}];
+ for(const [level,expected]of [200,180,160,140,130,120].entries()){
+  const price=new RecordedPurchaseModel(data,chart.rows,{[strong.id]:String(level)}).selection([strong.id]);
+  assert.equal(price.complete,true);assert.equal(price.used,expected);assert.equal(price.stages[0].id,base.id);
+ }
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[base.id]:'0',[strong.id]:'5'}).selection([base.id,strong.id]).used,120);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[strong.id]:'owned'}).selection([strong.id]).used,0);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[base.id]:'owned'}).selection([strong.id]).used,0);
+ const plan=await recommendFinalPlan(data,chart,{[strong.id]:'5'},{...input,spBudget:120},quick);
+ assert.ok(plan.activeIds.includes(strong.id));assert.equal(plan.budget.used,120);assert.equal(plan.purchases[0].id,strong.id);assert.equal(plan.purchases[0].stages[0].id,base.id);
+ const restored=await recommendFinalPlan(data,chart,{[base.id]:'owned'},{...input,spBudget:0},quick);
+ assert.ok(restored.ownedIds.includes(strong.id));assert.equal(restored.budget.used,0);
+});
+
+test('five owned speed inherits and a new accelerator consume the same six final slots',async()=>{
+ const {data,chart}=fixture(),list=Array.from({length:6},(_,i)=>({...skill('inherited'+i,i===5?4000:1500,'inherited',i===5?'acceleration':'target_speed'),inherited:true,parent_ids:['parent'+i]}));
+ for(const s of list){data.skills[s.id]=s;data.purchase_stages[s.id]={status:'verified',base_cost:100};}
+ chart.rows=list.map(s=>({...s,name:s.name_jp}));chart.accelerationPlan={ids:['inherited5']};
+ const states=Object.fromEntries(list.map((s,i)=>[s.id,i<5?'owned':'0'])),plan=await recommendFinalPlan(data,chart,states,{...input,spBudget:100},quick);
+ assert.equal(plan.activeIds.filter(id=>data.skills[id].inherited).length,6);assert.ok(plan.activeIds.includes('inherited5'));
+ const seventh={...list[0],id:'seventh'};data.skills.seventh=seventh;chart.rows.push({...seventh,name:seventh.name_jp});data.purchase_stages.seventh={status:'verified',base_cost:1};
+ await assert.rejects(recommendFinalPlan(data,chart,{...states,seventh:'owned'},input,quick),/계승.*6개/);
+});
+
 test('actual stats, remaining SP and aptitudes override only the post-training setup',()=>{
  const {chart}=fixture(),setup=createFinalSetup(chart,{...input,spBudget:0,aptitudes:{distance:'S',surface:'A',style:'B'}});
  assert.equal(setup.stats.speed,1500);assert.equal(chart.setup.stats.speed,2200);assert.equal(setup.aptitudes.distance,'S');assert.equal(setup.spBudget,0);

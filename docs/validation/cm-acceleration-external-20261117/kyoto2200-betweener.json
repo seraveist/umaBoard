@@ -1,0 +1,743 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 4.969,
+  "case": {
+    "id": "kyoto2200-betweener",
+    "label": "교토 2200m 선입",
+    "courseId": "10808",
+    "style": 3,
+    "outfitId": "111101",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "source": "https://umamusumelabo.com/ikusei/chanmi-sasioikomi-202610",
+    "guideDate": "2026-10",
+    "scope": "current-skill course guidance; scenario/stats normalized",
+    "expected": [
+      {
+        "name": "스테이 골드 강화 계승",
+        "ids": [
+          "91101351"
+        ]
+      },
+      {
+        "name": "駆け降り",
+        "ids": [
+          "203322"
+        ]
+      }
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10808",
+    "style": 3,
+    "outfitId": "111101",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "111101",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 3,
+    "scenarioId": "15",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 200,
+          "start": 400
+        },
+        {
+          "length": 200,
+          "start": 600
+        },
+        {
+          "length": 250,
+          "start": 1300
+        },
+        {
+          "length": 247,
+          "start": 1550
+        }
+      ],
+      "course_set_status": [
+        1
+      ],
+      "course_variant": 3,
+      "distance": 2200,
+      "distance_type": 3,
+      "geometry_review_reason": null,
+      "id": "10808",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 100,
+          "slope": 20000,
+          "start": 1050
+        },
+        {
+          "length": 225,
+          "slope": 10000,
+          "start": 1150
+        },
+        {
+          "length": 150,
+          "slope": -20000,
+          "start": 1375
+        }
+      ],
+      "straights": [
+        {
+          "end": 400,
+          "frontType": 1,
+          "start": 0
+        },
+        {
+          "end": 1300,
+          "frontType": 2,
+          "start": 800
+        },
+        {
+          "end": 2200,
+          "frontType": 1,
+          "start": 1797
+        }
+      ],
+      "surface": 1,
+      "track_id": "10008",
+      "turn": 1,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "101111",
+      "name": "辿る血脈、芽吹く未来"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v1",
+    "ids": [
+      "203322",
+      "900271",
+      "900591",
+      "910121",
+      "910271",
+      "910681"
+    ],
+    "skills": [
+      {
+        "id": "203322",
+        "name": "駆け降り",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "いずれかの下り坂のどこかで加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "203322",
+        "baseName": "駆け降り",
+        "cost": 72,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "self",
+            "owner_id": "111101",
+            "owner_type": "outfit",
+            "skill_id": "203322"
+          },
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30317",
+            "owner_type": "support",
+            "skill_id": "203322"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "900271",
+        "name": "燃えろ筋肉！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤以降のコーナーで中団だと前の位置につこうとして加速力が少し上がる",
+        "baseId": "900271",
+        "baseName": "燃えろ筋肉！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102701"
+        ]
+      },
+      {
+        "id": "900591",
+        "name": "彼方、その先へ…",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "掛からなければ中盤の最終コーナーか終盤以降の最終コーナーではないコーナーで中団にいるとき奮い立ち加速力が上がる",
+        "baseId": "900591",
+        "baseName": "彼方、その先へ…",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105901"
+        ]
+      },
+      {
+        "id": "910121",
+        "name": "大盛り！ファーストバイト！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース中盤に3回以上追い抜いた場合終盤目前の下り坂で後方だと少しの間速度が上がり加速力がちょっと上がる",
+        "baseId": "910121",
+        "baseName": "大盛り！ファーストバイト！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "101202"
+        ]
+      },
+      {
+        "id": "910271",
+        "name": "あなたに捧げるフリーポア",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤目前の下り坂で2番手以降かつ先頭から4バ身以内だと少しの間速度が上がる、さらに中距離レースなら加速力がちょっと上がる",
+        "baseId": "910271",
+        "baseName": "あなたに捧げるフリーポア",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102702"
+        ]
+      },
+      {
+        "id": "910681",
+        "name": "あっぱれ大盤振る舞い！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤以降のコーナーで3番手以内にいるときゴールまで遠いと少しの間前に出て加速力がちょっと上がる",
+        "baseId": "910681",
+        "baseName": "あっぱれ大盤振る舞い！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "106802"
+        ]
+      }
+    ],
+    "gain": 7.257493381423516,
+    "min": 6.85610882239107,
+    "max": 7.531785509014844,
+    "cost": 672,
+    "maximumGain": 7.257493381423516,
+    "sacrificedGain": 0,
+    "allowedLoss": 0.1,
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30317-rare-sets": "1",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30322-chain-final": "3",
+      "30289-chain-final": "2",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30317",
+        "groupId": "30317-rare-sets",
+        "setId": "1",
+        "ids": [
+          "202621",
+          "204711"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "groupId": "30322-chain-final",
+        "setId": "3",
+        "ids": [
+          "203501",
+          "204751"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204731"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204741"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "groupId": "30289-chain-final",
+        "setId": "2",
+        "ids": [
+          "201612",
+          "204181"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "202831",
+              "204191"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 43,
+      "shortlisted": 13,
+      "evaluations": 279,
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "cost-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "스테이 골드 강화 계승",
+      "ids": [
+        "91101351"
+      ],
+      "matched": [],
+      "available": [
+        "91101351"
+      ],
+      "candidates": [
+        {
+          "id": "91101351",
+          "name": "黄金を訪ねて",
+          "status": "supported",
+          "price": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          },
+          "solo": 2.3438985983601013
+        }
+      ],
+      "counterfactual": {
+        "ids": [
+          "203322",
+          "900271",
+          "900591",
+          "910121",
+          "910271",
+          "910681",
+          "91101351"
+        ],
+        "gain": 8.462363659371764,
+        "cost": null,
+        "eventExamples": [
+          {
+            "id": "101111",
+            "index": 1,
+            "x": 1078.1281080229621,
+            "t": 56.27,
+            "duration": 13.2
+          },
+          {
+            "id": "91101351",
+            "index": 1,
+            "x": 1100.194147752397,
+            "t": 57.39,
+            "duration": 7.92
+          },
+          {
+            "id": "910121",
+            "index": 1,
+            "x": 1375.0717006536752,
+            "t": 71.06,
+            "duration": 5.28
+          },
+          {
+            "id": "910271",
+            "index": 1,
+            "x": 1405.0696705753244,
+            "t": 72.57000000000001,
+            "duration": 5.28
+          },
+          {
+            "id": "900271",
+            "index": 1,
+            "x": 1466.8378379713515,
+            "t": 75.65,
+            "duration": 5.28
+          },
+          {
+            "id": "900591",
+            "index": 1,
+            "x": 1466.8378379713515,
+            "t": 75.65,
+            "duration": 5.28
+          },
+          {
+            "id": "910681",
+            "index": 1,
+            "x": 1466.8378379713515,
+            "t": 75.65,
+            "duration": 5.28
+          },
+          {
+            "id": "91101351",
+            "index": 2,
+            "x": 1466.8378379713515,
+            "t": 75.65,
+            "duration": 2.64
+          },
+          {
+            "id": "203322",
+            "index": 1,
+            "x": 1468.2563004569909,
+            "t": 75.72,
+            "duration": 6.6
+          }
+        ]
+      },
+      "bestOneSwap": {
+        "removed": "203322",
+        "result": {
+          "ids": [
+            "900271",
+            "900591",
+            "910121",
+            "910271",
+            "910681",
+            "91101351"
+          ],
+          "gain": 7.997766781234517,
+          "cost": null,
+          "eventExamples": [
+            {
+              "id": "101111",
+              "index": 1,
+              "x": 1078.1281080229621,
+              "t": 56.27,
+              "duration": 13.2
+            },
+            {
+              "id": "91101351",
+              "index": 1,
+              "x": 1100.194147752397,
+              "t": 57.39,
+              "duration": 7.92
+            },
+            {
+              "id": "910121",
+              "index": 1,
+              "x": 1375.0717006536752,
+              "t": 71.06,
+              "duration": 5.28
+            },
+            {
+              "id": "910271",
+              "index": 1,
+              "x": 1405.0696705753244,
+              "t": 72.57000000000001,
+              "duration": 5.28
+            },
+            {
+              "id": "900271",
+              "index": 1,
+              "x": 1466.8378379713515,
+              "t": 75.65,
+              "duration": 5.28
+            },
+            {
+              "id": "900591",
+              "index": 1,
+              "x": 1466.8378379713515,
+              "t": 75.65,
+              "duration": 5.28
+            },
+            {
+              "id": "910681",
+              "index": 1,
+              "x": 1466.8378379713515,
+              "t": 75.65,
+              "duration": 5.28
+            },
+            {
+              "id": "91101351",
+              "index": 2,
+              "x": 1466.8378379713515,
+              "t": 75.65,
+              "duration": 2.64
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "駆け降り",
+      "ids": [
+        "203322"
+      ],
+      "matched": [
+        "203322"
+      ],
+      "available": [
+        "203322"
+      ],
+      "candidates": [
+        {
+          "id": "203322",
+          "name": "駆け降り",
+          "status": "supported",
+          "price": {
+            "complete": true,
+            "used": 72,
+            "stages": [
+              {
+                "id": "203322",
+                "base": 120,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 72
+              }
+            ]
+          },
+          "solo": 2.057143947211671
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    }
+  ],
+  "negatives": [],
+  "firstSampleEvents": [
+    {
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "id": "910121",
+      "index": 1,
+      "x": 1375.104884568276,
+      "t": 71.12,
+      "duration": 5.28
+    },
+    {
+      "id": "910271",
+      "index": 1,
+      "x": 1405.1028544899252,
+      "t": 72.63,
+      "duration": 5.28
+    },
+    {
+      "id": "900271",
+      "index": 1,
+      "x": 1466.6704178859522,
+      "t": 75.7,
+      "duration": 5.28
+    },
+    {
+      "id": "900591",
+      "index": 1,
+      "x": 1466.6704178859522,
+      "t": 75.7,
+      "duration": 5.28
+    },
+    {
+      "id": "910681",
+      "index": 1,
+      "x": 1466.6704178859522,
+      "t": 75.7,
+      "duration": 5.28
+    },
+    {
+      "id": "203322",
+      "index": 1,
+      "x": 1468.291487581481,
+      "t": 75.78,
+      "duration": 6.6
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 5,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": false
+}

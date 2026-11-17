@@ -1,55 +1,45 @@
-import {buildChartCandidates,compileChartSkill,branchSampler,CM_SAMPLES,CM_DT} from './cm-chart.mjs';
-import {simulateSolo} from './solo.mjs';
-import {lengthsBetween,positionAt} from './physics.mjs';
+import {buildChartCandidates,compileChartSkill,CM_SAMPLES,CM_DT} from './cm-chart.mjs';
+import {createPositionComparison} from './cm-position-comparison.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {styleRecommendation} from './cm-recommendation.mjs';
 import {RecordedPurchaseModel} from './cm-final-plan.mjs';
 import {EventConstraints} from './cm-event-constraints.mjs';
 
-export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v1';
+export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v2';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const native=s=>['unique','unique_low_star','unique_upgraded'].includes(s.rarity);
 const key=ids=>[...new Set(ids)].sort().join(',');
 const pause=()=>new Promise(resolve=>setTimeout(resolve,0));
 
 // A target is a preparation plan, independent of the actual hint/owned records.
-export async function recommendTargetAcceleration(data,chart,{cancelled=()=>false,onProgress=()=>{},samples=CM_SAMPLES,dt=CM_DT,searchSamples=3,searchDt=.05,evaluationLimit=360,maxCandidates=24,width=4}={}){
+export async function recommendTargetAcceleration(data,chart,{cancelled=()=>false,onProgress=()=>{},samples=CM_SAMPLES,dt=CM_DT,searchSamples=3,searchDt=.05,evaluationLimit=360,maxCandidates=24,width=4,refinementLimit=96,minGainPer100Sp=.15}={}){
+ if(!Number.isFinite(minGainPer100Sp)||minGainPer100Sp<0)throw new Error('가속 SP 효율 기준을 확인하세요.');
  const setup=chart.setup,records=buildChartCandidates(data,setup),rules=selectionRules(data,records),events=new EventConstraints(data,setup);
  const compiled=new Map([...records].map(([id,s])=>[id,compileChartSkill(s,setup)]));
  const nativeIds=chart.nativeIds,states=Object.fromEntries([...records.keys()].map(id=>[id,'5']));
  const planningRows=[...records.values()].map(s=>({...s,evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&(r.owner_id===setup.outfitId||r.owner_id===setup.scenarioId))?.base_id}));
- const prices=new RecordedPurchaseModel(data,planningRows,states),runs=new Map(),evaluated=new Map();
+ const prices=new RecordedPurchaseModel(data,planningRows,states),evaluated=new Map(),comparison=createPositionComparison(setup,compiled,nativeIds),excludedCandidates=[];
  let checks=0;
  const legal=(ids,pins=null)=>ids.every((id,i)=>ids.slice(0,i).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>records.get(id)?.inherited).length<=6&&(pins?new EventConstraints(data,{...setup,eventChoices:pins}):events).selection(ids)!==null;
- const run=(ids,sample,count,step)=>{
-  const k=key(ids)+'|'+sample+'|'+count+'|'+step;
-  if(!runs.has(k)){
-   const r=simulateSolo(setup,ids.map(id=>compiled.get(id)).filter(supported),.5,{dt:step,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,nativeIds,sample)});
-   runs.set(k,r);while(runs.size>80)runs.delete(runs.keys().next().value);
-  }
-  return runs.get(k);
- };
  const evaluate=(ids,count=searchSamples,step=searchDt)=>{
   ids=[...new Set([...nativeIds,...ids])].sort();const k=key(ids)+'|'+count+'|'+step;
   if(evaluated.has(k))return evaluated.get(k);
   if(!legal(ids)||ids.some(id=>compiled.get(id)?.status==='unsupported'||!nativeIds.includes(id)&&!supported(compiled.get(id))))return null;
   const price=prices.selection(ids);if(!price.complete)return null;
-  let gain=0,entryGain=0,min=Infinity,max=-Infinity;
-  for(let sample=0;sample<count;sample++){
-   const before=run(nativeIds,sample,count,step),after=run(ids,sample,count,step),value=lengthsBetween(after,before);
-   gain+=value;min=Math.min(min,value);max=Math.max(max,value);
-   entryGain+=(positionAt(after,before.entry.t)-positionAt(before,before.entry.t))/2.5;
-  }
-  const result={ids:ids.filter(id=>!nativeIds.includes(id)),gain:gain/count,entryGain:entryGain/count,min,max,cost:price.used};
+  const result={ids:ids.filter(id=>!nativeIds.includes(id)),...comparison.compare(ids,count,step),cost:price.used};
+  result.score=result.gain-result.cost*minGainPer100Sp/100;
   evaluated.set(k,result);checks++;return result;
  };
  const lateContribution=id=>{
-  const c=compiled.get(id),indices=new Set(c.invocations.filter(i=>i.effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)&&e.value>0)).map(i=>i.index));
-  for(let sample=0;sample<searchSamples;sample++){
-   const before=run(nativeIds,sample,searchSamples,searchDt),after=run([...nativeIds,id],sample,searchSamples,searchDt);
+  const c=compiled.get(id),acceleration=i=>i.effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)&&e.value>0),indices=new Set(c.invocations.filter(acceleration).map(i=>i.index)),connectors=new Set(c.invocations.filter(i=>acceleration(i)&&i.effects.some(e=>['target_speed','current_speed','speed_with_decel'].includes(e.kind)&&e.value>0)).map(i=>i.index));
+  for(const rank of comparison.ranks)for(let sample=0;sample<searchSamples;sample++){
+   const before=comparison.run([],sample,searchDt,rank),after=comparison.run([id],sample,searchDt,rank);
    if(after.events.some(e=>e.id===id&&indices.has(e.index)&&(e.x>=2*setup.course.distance/3||e.t+(e.duration||0)>=after.entry.t)))return true;
-   if(Math.abs(after.entry.speed-before.entry.speed)>.01&&after.events.some(e=>e.id===id&&indices.has(e.index)))return true;
+   // Early acceleration can perturb a later native trigger by a frame. That
+   // indirect change is not a late accelerator. Only a late-half hybrid's
+   // speed connection may qualify without its acceleration overlapping entry.
+   if(Math.abs(after.entry.speed-before.entry.speed)>.01&&after.events.some(e=>e.id===id&&connectors.has(e.index)&&e.x>=setup.course.distance/2))return true;
   }
   return false;
  };
@@ -58,13 +48,16 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   if(cancelled())return null;
   if(native(s)||!supported(compiled.get(id))||!styleRecommendation(s,compiled.get(id),setup).eligible)continue;
   if(!compiled.get(id).invocations.some(i=>i.effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)&&e.value>0)))continue;
+  if(!prices.selection([id]).complete){excludedCandidates.push({id,name:s.name_jp,reason:'구매 비용 확인 필요'});continue;}
   if(!lateContribution(id))continue;
   const row=evaluate([id]);if(row&&row.gain>.005)singles.push(row);
   if(checks%8===0){onProgress({stage:'acceleration',completed:checks,total:checks+1});await pause();}
  }
- const order=(a,b)=>b.gain-a.gain||a.cost-b.cost||key(a.ids).localeCompare(key(b.ids));
- const ranked=singles.slice().sort(order),efficient=singles.slice().sort((a,b)=>b.gain/Math.max(1,b.cost)-a.gain/Math.max(1,a.cost)||order(a,b));
+ const gainOrder=(a,b)=>b.gain-a.gain||a.cost-b.cost||key(a.ids).localeCompare(key(b.ids));
+ const order=(a,b)=>b.score-a.score||gainOrder(a,b);
+ const ranked=singles.slice().sort(gainOrder),efficient=singles.slice().sort((a,b)=>b.gain/Math.max(1,b.cost)-a.gain/Math.max(1,a.cost)||gainOrder(a,b));
  const pool=[...new Set([...ranked.slice(0,Math.ceil(maxCandidates/2)),...efficient.slice(0,Math.ceil(maxCandidates/2))].flatMap(r=>r.ids))];
+ const extend=(ids,id)=>[...ids.filter(other=>rules.compatible(id,other)),id];
  let frontier=[evaluate([])],search='exhaustive';
  if(pool.length<=9&&pool.length===singles.length){
   for(let mask=0;mask<2**pool.length;mask++){
@@ -74,12 +67,23 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   }
  }else{
   search='bounded';
-  for(let depth=0;depth<Math.min(pool.length,6)&&checks<evaluationLimit;depth++){
+  // Start with useful complete packs, so a six-step beam cannot silently
+  // become a six-skill cap. Inherited skills still have their real limit.
+  for(const ranking of [ranked,efficient]){
+   let seed=evaluate([]);
+   for(const row of ranking){
+    if(cancelled())return null;
+    const next=evaluate(extend(seed.ids,row.ids[0]));if(next&&order(next,seed)<0)seed=next;
+    if(checks%8===0)await pause();
+   }
+   frontier.push(seed);
+  }
+  for(let depth=0;depth<pool.length&&checks<evaluationLimit;depth++){
    const next=new Map(frontier.map(r=>[key(r.ids),r]));
    for(const current of frontier)for(const id of pool){
     if(cancelled())return null;
     if(current.ids.includes(id)||checks>=evaluationLimit)continue;
-    const candidate=evaluate([...current.ids.filter(other=>rules.compatible(id,other)),id]);if(candidate)next.set(key(candidate.ids),candidate);
+    const candidate=evaluate(extend(current.ids,id));if(candidate)next.set(key(candidate.ids),candidate);
    }
    const rows=[...next.values()],best=rows.slice().sort(order).slice(0,width),cheap=rows.slice().sort((a,b)=>a.cost-b.cost||order(a,b)).slice(0,2);
    const updated=[...new Map([...best,...cheap].map(r=>[key(r.ids),r])).values()];
@@ -87,8 +91,8 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
    frontier=updated;onProgress({stage:'acceleration',completed:checks,total:evaluationLimit});await pause();
   }
  }
- const coarse=[...evaluated.values()].sort(order),maximum=coarse[0]||evaluate([]),tolerance=Math.min(.10,Math.max(0,maximum.gain)*.03);
- const shortlist=[...coarse.slice(0,4),...coarse.filter(r=>r.gain>=maximum.gain-tolerance-.05).sort((a,b)=>a.cost-b.cost||order(a,b)).slice(0,5)];
+ const scoreTolerance=.01,coarse=[...evaluated.values()].sort(order),maximum=coarse[0]||evaluate([]);
+ const shortlist=[...coarse.slice(0,4),...coarse.filter(r=>r.score>=maximum.score-scoreTolerance-.03).sort((a,b)=>a.cost-b.cost||order(a,b)).slice(0,5)];
  // Each removal is also a finalist; small marginal gains must not force buying
  // another expensive accelerator. This is bounded search, never a global proof.
  for(const id of maximum.ids){const row=evaluate(maximum.ids.filter(other=>other!==id));if(row)shortlist.push(row);}
@@ -97,8 +101,44 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   if(cancelled())return null;
   refined.push(evaluate(row.ids,samples,dt));await pause();
  }
- const fineMaximum=refined.slice().sort(order)[0]||evaluate([],samples,dt),allowedLoss=Math.min(.10,Math.max(0,fineMaximum.gain)*.03);
- const chosen=refined.filter(r=>r.gain>=fineMaximum.gain-allowedLoss-1e-7).sort((a,b)=>a.cost-b.cost||order(a,b))[0]||fineMaximum;
+ const fine=new Map(refined.map(r=>[key(r.ids),r]));
+ let fineBest=refined.slice().sort(order)[0]||evaluate([],samples,dt),fineMaximum=fineBest,chosen=fineBest,refinementEvaluations=0,refinementLimited=false,closureComplete=false;
+ const choose=()=>{
+  fineBest=[...fine.values()].sort(order)[0]||fineBest;fineMaximum=[...fine.values()].sort(gainOrder)[0]||fineMaximum;
+  chosen=[...fine.values()].filter(r=>r.score>=fineBest.score-scoreTolerance-1e-7).sort((a,b)=>a.cost-b.cost||order(a,b))[0]||fineBest;
+ };
+ choose();
+ const precise=ids=>{
+  const k=key(ids);if(fine.has(k))return fine.get(k);
+  if(refinementEvaluations>=refinementLimit){refinementLimited=true;return null;}
+  const result=evaluate(ids,samples,dt);if(result){fine.set(k,result);refinementEvaluations++;}return result;
+ };
+ // Revisit all single additions/removals (including candidates outside the
+ // beam pool), then screen exchanges. This remains a bounded local search.
+ for(let pass=0;pass<4;pass++){
+  const before=key(fineBest.ids)+'|'+key(chosen.ids),seeds=[...new Map([fineBest,chosen].map(r=>[key(r.ids),r])).values()],removals=new Map(),additions=new Map(),swaps=new Map();
+  for(const seed of seeds){
+   const removeRank=[];
+   for(const id of seed.ids){const row=evaluate(seed.ids.filter(other=>other!==id));if(row){removals.set(key(row.ids),row);removeRank.push({id,score:row.score});}}
+   for(const single of singles){
+    if(cancelled())return null;const id=single.ids[0];if(seed.ids.includes(id))continue;
+    const row=evaluate(extend(seed.ids,id));if(row)additions.set(key(row.ids),row);
+    if(checks%8===0)await pause();
+   }
+   const incoming=[...new Set([...ranked,...efficient].flatMap(row=>row.ids))].filter(id=>!seed.ids.includes(id)).slice(0,12),outgoing=removeRank.sort((a,b)=>b.score-a.score).slice(0,6);
+   for(const id of incoming)for(const removed of outgoing){
+    if(cancelled())return null;const row=evaluate(extend(seed.ids.filter(other=>other!==removed.id),id));if(row)swaps.set(key(row.ids),row);
+    if(checks%8===0)await pause();
+   }
+  }
+  const exchanged=[...swaps.values()],variants=[...removals.values(),...[...additions.values()].sort(order).slice(0,16),...exchanged.sort(order).slice(0,8),...exchanged.filter(r=>r.score>=fineBest.score-scoreTolerance-.03).sort((a,b)=>a.cost-b.cost||order(a,b)).slice(0,8)];
+  for(const row of [...new Map(variants.map(r=>[key(r.ids),r])).values()]){
+   if(cancelled())return null;precise(row.ids);await pause();if(refinementLimited)break;
+  }
+  choose();onProgress({stage:'acceleration',completed:refinementEvaluations,total:refinementLimit});
+  if(refinementLimited)break;
+  if(before===key(fineBest.ids)+'|'+key(chosen.ids)){closureComplete=true;break;}
+ }
  const required=chosen.ids;
  const toRow=id=>{
   const s=records.get(id),baseId=planningRows.find(r=>r.id===id)?.evolutionBaseId||id;
@@ -108,7 +148,6 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
  // never purchases or mutations of the training-result checklist.
  const goldGroups=events.groups.map(g=>({...g,choices:g.choices.map(c=>({...c,rewards:c.rewards.filter(r=>data.skills[r.skill_id]?.rarity==='gold')}))})).filter(g=>g.card_id&&g.choices.some(c=>c.rewards.length));
  const positionSensitive=setup.style<=2&&[...nativeIds,...required].some(id=>data.skills[id].invocations.some(i=>(i.condition||[]).flat().some(a=>['order','order_rate','distance_diff_top','bashin_diff_infront'].includes(a.field)&&['<','<=','=='].includes(a.operator))));
- const extend=(ids,id)=>[...ids.filter(other=>rules.compatible(id,other)),id];
  const keepsTarget=ids=>required.every(id=>ids.includes(id));
  const rewardPlan=(current,available,pins)=>{
   let ids=[...current];
@@ -156,6 +195,6 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   const positionPreferred=positionSensitive&&near.length&&assignment.score.entryGain>Math.max(...near.map(a=>a.score.entryGain))+.005;
   return {cardId:group.card_id,groupId:group.id,setId:selected.id,ids:rareIds,targetIds:needed,alternatives,reason:forced?'target':group.choices.length===1?'fixed':near.length?positionPreferred?'position':'cost':'gain',verified:group.choices.length===1||!events.unverified.includes(group.card_id)};
  }).filter(Boolean);
- return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills:required.map(toRow),gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss,scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
-  eventChoices:assignment.pins,rewards,samples,dt,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
+ return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills:required.map(toRow),gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss:null,score:chosen.score,efficiencyPolicy:{minGainPer100Sp,scoreTolerance,source:'preparation-policy-not-measured'},scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
+  eventChoices:assignment.pins,rewards,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
 }

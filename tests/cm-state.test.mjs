@@ -101,3 +101,9 @@ test('player-facing rarity labels use standard terms',()=>{
  assert.deepEqual(['white','gold','evolution'].map(rarity=>skillRarityLabel({rarity})),['일반','레어','진화']);
  assert.equal(skillRarityLabel({rarity:'gold',inherited:true}),'계승');
 });
+test('a saved original inheritance hint migrates only when the current row has no explicit record',()=>{
+ const rows=[{id:'91101411',inherited:true}];
+ assert.equal(checklistSnapshot(rows,{'901411':'5'})['91101411'],'5');
+ assert.equal(checklistSnapshot(rows,{'901411':'owned'})['91101411'],'owned');
+ assert.equal(checklistSnapshot(rows,{'901411':'owned','91101411':'unavailable'})['91101411'],'unavailable');
+});

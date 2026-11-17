@@ -31,3 +31,23 @@ test('the target frame belongs to preparation and its optional lock reaches the 
  assert.ok(ui.includes('maintainTargetAcceleration:raw.maintainTargetAcceleration'));
  assert.ok(ui.includes('value?.maintainTargetAcceleration!==false'));
 });
+
+test('inherited target rows show their exact provider outfit portrait and Korean identity',()=>{
+ const ids=new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>['#'+m[1],new Element('div')]));
+ globalThis.document={querySelector:selector=>ids.get(selector),createElement:tag=>new Element(tag)};
+ try{
+  const path='assets/portraits/outfits/114101-'+ 'a'.repeat(40)+'.webp';
+  const data={skills:{inherit:{id:'inherit',name_jp:'光れ',rarity:'inherited',inherited:true,parent_ids:['unique']}},outfits:{114101:{id:'114101',name_ko:'에피파네이아',name_jp:'エピファネイア',outfit_name_jp:"Fate’s Chosen Star"}},acquisition_routes:[{skill_id:'unique',owner_type:'outfit',owner_id:'114101'}]};
+  const panel=createAccelerationPanel({data,display:{icons:{}},portraits:{outfits:{114101:{path}}},skillDetails:{attach(){}}});
+  panel.render({skills:[{id:'inherit',inherited:true,rarity:'inherited',routes:[],providers:['114101']}],gain:2,cost:120,scenarioEvolutionCount:0,sacrificedGain:0,search:{method:'bounded'},rankComparison:{},rewards:[]});
+  const row=ids.get('#target-skill-list').children[0],copy=row.children[1],badge=copy.children.find(n=>n.className==='target-providers').children[0];
+  assert.match(badge.title,/에피파네이아.*Fate/);assert.equal(badge.children[0].children[0].src,path);
+  assert.match(badge.children[1].textContent,/에피파네이아/);assert.match(ids.get('#target-policy').textContent,/순위 조건별/);
+  assert.equal(ids.get('#target-inherited-count').textContent,'1 / 6');
+  const speedRows=Array.from({length:6},(_,i)=>({id:'speed'+i,inherited:true}));
+  panel.updateAcquisition(speedRows,Object.fromEntries(speedRows.map(r=>[r.id,'owned'])));
+  assert.match(ids.get('#target-inheritance-note').textContent,/모두 유지하면 7개/);assert.match(ids.get('#target-inheritance-note').textContent,/1개를 교체/);
+  panel.render({skills:[{id:'inherit',inherited:true,rarity:'inherited',routes:[]}],gain:2,cost:120,scenarioEvolutionCount:0,sacrificedGain:0,search:{method:'bounded'},rewards:[]});
+  assert.equal(ids.get('#target-skill-list').children[0].children[1].children.find(n=>n.className==='target-providers').children[0].children[0].children[0].src,path);
+ }finally{delete globalThis.document;}
+});
