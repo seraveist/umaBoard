@@ -1,13 +1,20 @@
 # umaBoard 프로젝트 기획
 
-기준일: 2026-10-08 / 일본 서버 전용 / 상태: feat/skill-budget-optimizer 브랜치에 1차 구현.
+기준일: 2026-10-08 / 일본 서버 전용 / 기존 계산기(`legacy.html`)의 기획·확장 이력.
+
+**2026-11-17 현행 CM 화면 기준:** 육성 전에는 예상 총SP 없이 1차 마신표와 목표 가속·레어
+확보 방향을 만들고, 최종 스킬 구매 전 실제 스탯·힌트·남은SP로 구매·진화를 함께 비교한다.
+아래의 예상 총SP·자동 편성·구형 Worker 설명은 기존 계산기 범위이며 공개 CM 루트의
+완료 상태로 해석하지 않는다. 현재 기준은 [개발 현황](CM_PROGRESS_AND_NEXT_STEPS.md),
+[1차 마신표](CM_FIRST_CHART.md), [목표 가속](CM_TARGET_ACCELERATION.md),
+[최종 구매](CM_POST_TRAINING.md), [전체 흐름 점검](CM_WORKFLOW_AUDIT_20261117.md)을 따른다.
 
 2026-10-21: main `1d63d70` JP 데이터와의 [통합 검증 기록](JP_OPTIMIZER_INTEGRATION.md)을 추가했다.
 기존 구현 브랜치는 보존하며 별도 통합 브랜치에서 최신 원본과 구매·이벤트 데이터를 결합했다.
 
-이 문서는 현재 프로젝트의 제품 기준이다. 과거 수집 설계의 SP 제외·이벤트 선택지 무시 정책보다 우선한다.
-입력·출력의 목표 계약은 [MODEL_CONTRACT.md](MODEL_CONTRACT.md), 현재 엔진의 실제 지원 범위는
-[ENGINE_VALIDATION.md](ENGINE_VALIDATION.md)를 따른다. 이 문서는 구현 브랜치 기준이며 main 공개 페이지 배포와는 별개다.
+이 문서는 기존 최적화 계산기의 제품 기준과 과거 구현 계약을 보존한다.
+당시 입력·출력의 목표 계약은 [MODEL_CONTRACT.md](MODEL_CONTRACT.md), 단독 엔진의
+원본 대조 기록은 [ENGINE_VALIDATION.md](ENGINE_VALIDATION.md)에 있다. 최신 CM 사용자 흐름은 위 현행 계약이 우선한다.
 
 ## 1. 프로젝트 정의
 

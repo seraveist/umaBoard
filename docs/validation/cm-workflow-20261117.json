@@ -1,0 +1,491 @@
+{
+  "checkedAt": "2026-11-17",
+  "codeBaseCommit": "79fd514b4ae0781df7c757ccc0d03f973778e1d5",
+  "dataVersion": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "sourceHashes": {
+    "assets/cm-chart.mjs": "b15df75f86ce6d85f943694ab1ed003d45125c75b37460f20969579acc0bb615",
+    "assets/cm-final-plan.mjs": "9f2b99b105f1b7a3d19f658ef707ff1813d2b63839a1222b15d9928ce171a028",
+    "assets/cm-acceleration-plan.mjs": "c188a965c9068bb09115c8c79d6ae40e9180980fe7859a1de26769149eccf9a7",
+    "assets/cm-state.mjs": "680cb6d19e8c4e9cc17b76168be3b62673a5276e424bb69e2814371fc18eb61f",
+    "assets/cm-evolution.mjs": "a8f79b18904004dd20531a1c7ed1e6137b76d85b9ced33573479ee0ec58d9928",
+    "assets/cm-effect-policy.mjs": "ecae9c5065722642d95248923c085c09367ba9fe6aa42fa03e988b7008ae1210",
+    "assets/solo.mjs": "69635141bc0f6a9de9ecce557e8930ef095e73e18bab6ed7ff42e4398f28c7e3",
+    "assets/cm-final-ui.mjs": "d1129e207b0b8ebbc2f487725b4e815c0606ac6179ccddac693ea5a34caf1a6a",
+    "index.html": "5aba3df0dbdeeeb5cf5ed6838fa308f34df9c57f2597b72d1f57741f2170f0b6"
+  },
+  "hpTiming": [
+    {
+      "id": "200761",
+      "name": "火事場のバ鹿力",
+      "condition": "distance_type==4&hp_per<=30",
+      "current": {
+        "events": [
+          {
+            "id": "200761",
+            "index": 1,
+            "x": 0,
+            "t": 0,
+            "duration": 4.5
+          }
+        ],
+        "hpRemaining": 342.21466886022625,
+        "hpGain": -0.16674058369721934,
+        "gain": 0.01955688441412349,
+        "feasible": true
+      },
+      "hpPredicateRetained": {
+        "events": [
+          {
+            "id": "200761",
+            "index": 1,
+            "x": 2140.2474954895984,
+            "t": 107.2,
+            "duration": 4.5
+          }
+        ],
+        "hpRemaining": 534.9512905323917,
+        "hpGain": 192.5698810884682,
+        "gain": 0.7213474863196098,
+        "feasible": true
+      },
+      "hpPredicateRemoved": true
+    },
+    {
+      "id": "200762",
+      "name": "別腹タンク",
+      "condition": "distance_type==4&hp_per<=30",
+      "current": {
+        "events": [
+          {
+            "id": "200762",
+            "index": 1,
+            "x": 0,
+            "t": 0,
+            "duration": 0
+          }
+        ],
+        "hpRemaining": 342.3814094439235,
+        "hpGain": 0,
+        "gain": 0,
+        "feasible": true
+      },
+      "hpPredicateRetained": {
+        "events": [
+          {
+            "id": "200762",
+            "index": 1,
+            "x": 2140.2474954895984,
+            "t": 107.2,
+            "duration": 0
+          }
+        ],
+        "hpRemaining": 396.8198894439243,
+        "hpGain": 54.43848000000082,
+        "gain": 0,
+        "feasible": true
+      },
+      "hpPredicateRemoved": true
+    }
+  ],
+  "rankConsistency": {
+    "kind": "controlled-counterexample",
+    "selected": [
+      "front",
+      "native",
+      "rear"
+    ],
+    "gainUnderFinalPolicy": 1.512200431535166,
+    "fixtureSetup": {
+      "outfitId": "101301",
+      "bloom": 5,
+      "uniqueLevel": 6,
+      "style": 2,
+      "scenarioId": "15",
+      "supportIds": [
+        "30275",
+        "30311",
+        "30300",
+        "30322",
+        "30289",
+        "30323"
+      ],
+      "course": {
+        "calculation_status": "unvalidated",
+        "coordinate_system": "alpha_source_coordinates",
+        "corners": [
+          {
+            "length": 200,
+            "start": 400
+          },
+          {
+            "length": 200,
+            "start": 600
+          },
+          {
+            "length": 250,
+            "start": 1300
+          },
+          {
+            "length": 247,
+            "start": 1550
+          }
+        ],
+        "course_set_status": [
+          1
+        ],
+        "course_variant": 3,
+        "distance": 2200,
+        "distance_type": 3,
+        "geometry_review_reason": null,
+        "id": "10808",
+        "origin": "courses",
+        "run_up_m": null,
+        "selectable": true,
+        "slopes": [
+          {
+            "length": 100,
+            "slope": 20000,
+            "start": 1050
+          },
+          {
+            "length": 225,
+            "slope": 10000,
+            "start": 1150
+          },
+          {
+            "length": 150,
+            "slope": -20000,
+            "start": 1375
+          }
+        ],
+        "straights": [
+          {
+            "end": 400,
+            "frontType": 1,
+            "start": 0
+          },
+          {
+            "end": 1300,
+            "frontType": 2,
+            "start": 800
+          },
+          {
+            "end": 2200,
+            "frontType": 1,
+            "start": 1797
+          }
+        ],
+        "surface": 1,
+        "track_id": "10008",
+        "turn": 1,
+        "tight_track": 0
+      },
+      "going": 1,
+      "weather": 2,
+      "season": 3,
+      "time": 2,
+      "mood": 2,
+      "stats": {
+        "speed": 1500,
+        "stamina": 2000,
+        "power": 1500,
+        "guts": 1700,
+        "wisdom": 1800
+      },
+      "aptitudes": {
+        "distance": "A",
+        "surface": "A",
+        "style": "A"
+      },
+      "chartPolicy": "cm-first-chart-v5"
+    },
+    "finalStatus": {
+      "candidateCount": 2,
+      "excluded": [],
+      "hpRemaining": 596.4121294945339,
+      "feasible": true
+    },
+    "compiled": [
+      {
+        "id": "native",
+        "status": "supported",
+        "reasons": []
+      },
+      {
+        "id": "front",
+        "status": "assumed",
+        "reasons": []
+      },
+      {
+        "id": "rear",
+        "status": "assumed",
+        "reasons": []
+      }
+    ],
+    "allRun": {
+      "gain": 1.512200431535166,
+      "hp": 596.4121294945339,
+      "feasible": true,
+      "events": [
+        {
+          "id": "native",
+          "index": 1,
+          "x": 0,
+          "t": 0,
+          "duration": 6.6
+        },
+        {
+          "id": "front",
+          "index": 1,
+          "x": 1833.5495639747614,
+          "t": 91.49,
+          "duration": 6.6
+        },
+        {
+          "id": "rear",
+          "index": 1,
+          "x": 1833.5495639747614,
+          "t": 91.49,
+          "duration": 6.6
+        }
+      ]
+    },
+    "gainUnderTargetRankPolicy": {
+      "gain": 0.38702484339464716,
+      "entryGain": 0,
+      "min": 0,
+      "max": 0.7740496867892943,
+      "byRank": [
+        {
+          "rank": 2,
+          "gain": 0.7740496867892943,
+          "entryGain": 0,
+          "min": 0.7740496867892943,
+          "max": 0.7740496867892943
+        },
+        {
+          "rank": 3,
+          "gain": 0,
+          "entryGain": 0,
+          "min": 0,
+          "max": 0
+        },
+        {
+          "rank": 4,
+          "gain": 0,
+          "entryGain": 0,
+          "min": 0,
+          "max": 0
+        },
+        {
+          "rank": 5,
+          "gain": 0.7740496867892943,
+          "entryGain": 0,
+          "min": 0.7740496867892943,
+          "max": 0.7740496867892943
+        }
+      ]
+    },
+    "events": [
+      {
+        "id": "native",
+        "index": 1,
+        "x": 0,
+        "t": 0,
+        "duration": 6.6
+      },
+      {
+        "id": "front",
+        "index": 1,
+        "x": 1833.5495639747614,
+        "t": 91.49,
+        "duration": 6.6
+      },
+      {
+        "id": "rear",
+        "index": 1,
+        "x": 1833.5495639747614,
+        "t": 91.49,
+        "duration": 6.6
+      }
+    ],
+    "simultaneousDisjointRankEvents": [
+      {
+        "id": "front",
+        "index": 1,
+        "x": 1833.5495639747614,
+        "t": 91.49,
+        "duration": 6.6
+      },
+      {
+        "id": "rear",
+        "index": 1,
+        "x": 1833.5495639747614,
+        "t": 91.49,
+        "duration": 6.6
+      }
+    ],
+    "finalHasRankPolicy": false
+  },
+  "scenarioChoices": [
+    {
+      "id": "15-link-skill",
+      "choices": [
+        {
+          "id": "2",
+          "rareIds": [
+            "204071"
+          ]
+        },
+        {
+          "id": "6",
+          "rareIds": [
+            "204811"
+          ]
+        }
+      ],
+      "publishedChoice": null,
+      "visibleRewardSet": false
+    }
+  ],
+  "bulkPaidHistory": {
+    "kind": "controlled-interaction",
+    "before": {
+      "front": "owned",
+      "rear": "0"
+    },
+    "after": {
+      "front": "5",
+      "rear": "5"
+    },
+    "paidSkillUnpaidAgain": true,
+    "previouslyPaidStageCostBefore": 0,
+    "previouslyPaidStageCostAfter": 60
+  },
+  "strategyScores": [
+    {
+      "courseId": "10808",
+      "style": 2,
+      "rows": [
+        {
+          "id": "201591",
+          "name": "ウマ好み",
+          "gain": 0.5149943708404331,
+          "hpGain": -2.9839795178704214
+        }
+      ],
+      "scope": "solo numerical effect; no opponents, pace-down mode, position keep or PDM-release value"
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "rows": [
+        {
+          "id": "201591",
+          "name": "ウマ好み",
+          "gain": 0.5942117792002818,
+          "hpGain": -3.4226478738734705
+        }
+      ],
+      "scope": "solo numerical effect; no opponents, pace-down mode, position keep or PDM-release value"
+    },
+    {
+      "courseId": "10506",
+      "style": 3,
+      "rows": [
+        {
+          "id": "201591",
+          "name": "ウマ好み",
+          "gain": 0.5872020055955848,
+          "hpGain": -3.3124504857421684
+        }
+      ],
+      "scope": "solo numerical effect; no opponents, pace-down mode, position keep or PDM-release value"
+    },
+    {
+      "courseId": "10506",
+      "style": 4,
+      "rows": [
+        {
+          "id": "201591",
+          "name": "ウマ好み",
+          "gain": 0.6040368430273627,
+          "hpGain": -3.4551991786889524
+        }
+      ],
+      "scope": "solo numerical effect; no opponents, pace-down mode, position keep or PDM-release value"
+    }
+  ],
+  "realFinalSensitivity": {
+    "source": "docs/validation/cm-acceleration-v3-7000-20261117.json",
+    "finalPublishedGain": 41.93703270239704,
+    "sameSelectionUnderTargetRankPolicy": {
+      "gain": 40.8531123344658,
+      "entryGain": 19.808103028659392,
+      "min": 39.154778048341726,
+      "max": 43.48020018725892,
+      "byRank": [
+        {
+          "rank": 2,
+          "gain": 40.6294236729827,
+          "entryGain": 19.549264097139996,
+          "min": 39.154778048341726,
+          "max": 43.00405707721821
+        },
+        {
+          "rank": 3,
+          "gain": 40.6294236729827,
+          "entryGain": 19.549264097139996,
+          "min": 39.154778048341726,
+          "max": 43.00405707721821
+        },
+        {
+          "rank": 4,
+          "gain": 41.09356361912731,
+          "entryGain": 19.90536999498484,
+          "min": 39.479130269835515,
+          "max": 43.48020018725892
+        },
+        {
+          "rank": 5,
+          "gain": 41.060038372770485,
+          "entryGain": 20.22851392537274,
+          "min": 39.50673195753952,
+          "max": 43.45638304065032
+        }
+      ]
+    },
+    "budget": {
+      "total": 7000,
+      "used": 6996,
+      "remaining": 4
+    },
+    "inheritedCount": 6,
+    "scenarioEvolutionCount": 2,
+    "umaGonomiIncluded": true,
+    "interpretation": "same actual selected skills and stats; comparison-policy sensitivity, not measured race performance or placement probabilities"
+  },
+  "facts": {
+    "scenario15EvolutionChoices": 6,
+    "scenario15EvolutionLimit": [
+      {
+        "assumption": "진화별 보유 스킬·발표회 대성공 조건 충족 가정. 본체 진화는 이 2개 제한에 포함하지 않는다.",
+        "checked_at": "2026-11-04",
+        "id": "15-evolution-limit",
+        "max_count": 2,
+        "scenario_id": "15",
+        "skill_ids": [
+          "415011",
+          "415021",
+          "415031",
+          "415041",
+          "415051",
+          "415061"
+        ],
+        "source": "https://game8.jp/umamusume/837633"
+      }
+    ],
+    "targetInheritedCount": 6
+  },
+  "scope": "read-only production diagnostics; no runtime behavior, raw source or game formula changed"
+}

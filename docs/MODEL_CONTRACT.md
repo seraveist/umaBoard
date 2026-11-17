@@ -1,5 +1,10 @@
 # 스킬 최적화 엔진 목표 계약
 
+> 2026-11-17 범위 구분: 이 문서의 `SkillOptimizer`·예상 총SP·자동 편성 인터페이스는
+> 기존 계산기(`legacy.html`)의 계약이다. 공개 CM 루트는 [1차 마신표](CM_FIRST_CHART.md),
+> [목표 가속](CM_TARGET_ACCELERATION.md), [실제 남은SP·최종 구매](CM_POST_TRAINING.md)를 따른다.
+> 단계 간 정합성과 남은 문제는 [전체 흐름 점검](CM_WORKFLOW_AUDIT_20261117.md)에 기록했다.
+
 2026-10-08 개편 기준. 제품 정의와 정책은 [PROJECT_PLAN.md](PROJECT_PLAN.md)를 따른다.
 아래 엔터티는 논리 계약이다. 실제 Worker는 `SkillOptimizer`와 `PurchaseModel`을 사용한다.
 입력은 기존 setup + `spBudget`, 선택지 고정은 `eventChoices`다. 출력에 `budget`, `prices`, `finalPlan`,
