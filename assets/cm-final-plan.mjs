@@ -233,7 +233,14 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
   if(idKey(next.ids)===idKey(best.ids)){
    const swaps=[];
-   for(const row of candidates)if(!best.ids.includes(row.id))for(const remove of removable){
+   const current=quick(best.ids);
+   const removalRank=removable.map(id=>{
+    const reduced=quick(active([...required,...best.ids.filter(other=>other!==id)]));
+    return {id,efficiency:reduced?(current.gain-reduced.gain)/Math.max(1,current.cost-reduced.cost):Infinity};
+   }).sort((a,b)=>a.efficiency-b.efficiency||a.id.localeCompare(b.id)).slice(0,16);
+   const incomingRank=[...new Set([...byEfficiency,...byGain].map(row=>row.id))].filter(id=>!best.ids.includes(id)).slice(0,16);
+   for(const id of incomingRank)for(const {id:remove} of removalRank){
+    const row={id};
     const ids=active(extend(active([...required,...best.ids.filter(id=>id!==remove)]),row.id));
     if(!retained(ids)||!legal(ids))continue;const price=purchase.selection(ids);
     if(price.complete&&price.used<=setup.spBudget)swaps.push(ids);
