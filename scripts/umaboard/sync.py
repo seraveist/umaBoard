@@ -171,7 +171,13 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
                     **{key:dataset.get(key) for key in ('outfits','supports','courses','relations','evolution_rules')}}
         # Corrected effect mathematics and newly proven prices do not undo real
         # purchases. Reuse only the records/inputs; the chart and result are fresh.
-        if record_identity(previous_data)==record_identity(data):
+        def extends_records(previous, current):
+            for key in ('skills','outfits','supports','courses'):
+                if any(current[key].get(sid)!=row for sid,row in previous[key].items()):return False
+            for key in ('relations','evolution_rules'):
+                if not {canonical_bytes(row) for row in previous[key]} <= {canonical_bytes(row) for row in current[key]}:return False
+            return True
+        if extends_records(record_identity(previous_data),record_identity(data)):
             compatible=set(previous_manifest.get('checklist_record_versions',[]))
             compatible.update(previous_manifest.get('checklist_compatible_versions',[]))
             compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
@@ -196,6 +202,8 @@ def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=Fals
     if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text(encoding='utf-8'))
     planning_path=root/'curated/planning.json'
     if planning_path.exists():curated['planning']=json.loads(planning_path.read_text(encoding='utf-8'))
+    supplements_path=root/'curated/source-supplements.json'
+    if supplements_path.exists():curated['source_supplements']=json.loads(supplements_path.read_text(encoding='utf-8'))
     previous_manifest,previous_data=load_active(root)
     fingerprint=adapter_fingerprint(root,config,curated)
     if rebuild_active:

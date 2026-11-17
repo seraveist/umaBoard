@@ -115,12 +115,13 @@ export function compileSkill(skill,setup){
    linked:(inv.condition||[]).flat().some(a=>['is_activate_other_skill_detail','is_used_skill_id'].includes(a.field))});
  }
  // A physically removed first trigger cannot leave an orphaned linked effect.
- const reachable=new Set(),canReach=(branches,prior)=>branches.some(b=>b.dynamic.every(a=>
-  a.field==='is_activate_other_skill_detail'?compare(Number(prior),a.operator,a.value):
-  a.field==='is_used_skill_id'&&String(a.value)===skill.id?compare(prior?a.value:0,a.operator,a.value):true));
+ const reachable=new Set(),canReach=(branches,current)=>branches.some(b=>b.dynamic.every(a=>{
+  const target=invocations.find(other=>other.index===a.value),prior=target?reachable.has(target):invocations.some(other=>other!==current&&reachable.has(other));
+  return a.field==='is_activate_other_skill_detail'?compare(prior?a.value:0,a.operator,a.value):
+   a.field==='is_used_skill_id'&&String(a.value)===skill.id?compare(prior?a.value:0,a.operator,a.value):true;
+ }));
  for(let pass=0;pass<invocations.length;pass++)for(const inv of invocations){
-  const prior=invocations.some(other=>other!==inv&&reachable.has(other));
-  if(canReach(inv.condition,prior)&&canReach(inv.precondition,prior))reachable.add(inv);
+  if(canReach(inv.condition,inv)&&canReach(inv.precondition,inv))reachable.add(inv);
  }
  for(let i=invocations.length-1;i>=0;i--)if(!reachable.has(invocations[i]))invocations.splice(i,1);
  const assumed=[...new Set(invocations.flatMap(i=>[...i.condition,...i.precondition].flatMap(b=>b.assumed)))];
@@ -145,7 +146,7 @@ export function branchReady(branch,state,skillId){
    case 'is_lastspurt':value=Number(state.phase>=2);break;
    case 'lastspurt':value=state.phase>=2?2:3;break;
    case 'run_at_full_speed_random':value=Number(state.fullSpurtStart!==null&&state.fullSpurtStart!==undefined&&state.x>=state.fullSpurtStart+(state.distance-state.fullSpurtStart)*(branch.fullSpurtQ??.5));break;
-   case 'is_activate_other_skill_detail':value=Number(state.used.has(skillId));break;
+   case 'is_activate_other_skill_detail':value=(state.usedInvocations?state.usedInvocations.has(`${skillId}:${a.value}`):state.used.has(skillId))?a.value:0;break;
    case 'is_used_skill_id':value=state.used.has(String(a.value))?a.value:0;break;
    case 'is_used_skill_id_with_detail_one':value=state.used.has(String(a.value))?a.value:0;break;
    case 'is_exist_skill_id':value=state.selected.has(String(a.value))?a.value:0;break;

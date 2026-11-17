@@ -22,7 +22,7 @@ def purchase_stages(skills, costs, secondary, relations, evolutions, reviewed=No
                 and {r['from_id'], r['to_id']} == {sid, previous_id} for r in relations)
             if base > 0 and row['sp'] - previous_total == base and linked:
                 stages[sid] = {'base_cost': base, 'prerequisite_id': previous_id,
-                               'status': 'verified', 'evidence': 'umatools_increment_umasim_total'}
+                               'status': 'verified', 'evidence': 'reviewed_secondary_increment_and_total' if skills[sid].get('origin')=='umasim' else 'umatools_increment_umasim_total'}
             previous_total = row['sp']
             previous_id = sid
     for sid, skill in skills.items():

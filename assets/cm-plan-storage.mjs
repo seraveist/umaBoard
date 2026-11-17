@@ -6,7 +6,8 @@ export function checklistPlanKey(input,dataVersion){
 export function restoreChecklistPlan(plans,input,manifest){
  const key=checklistPlanKey(input,manifest.checklist_data_sha256||manifest.active_version);
  if(Object.hasOwn(plans,key))return {key,plan:plans[key]};
- for(const version of new Set([...(manifest.checklist_compatible_versions||[]),...(manifest.checklist_record_versions||[])])){
+ const versions=[...new Set([...(manifest.checklist_compatible_versions||[]),...(manifest.checklist_record_versions||[])])].sort((a,b)=>(plans[checklistPlanKey(input,b)]?.savedAt||'').localeCompare(plans[checklistPlanKey(input,a)]?.savedAt||''));
+ for(const version of versions){
   const previous=checklistPlanKey(input,version);
   if(Object.hasOwn(plans,previous))return {key,plan:structuredClone(plans[previous])};
  }

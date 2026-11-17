@@ -70,9 +70,7 @@ the internally scrollable table; search and tabs filter the entire pool. No unma
 query reports a dedicated no-results state. JP names stay JP, all UI copy and
 accessible names Korean. Locale ko-KR, timezone Asia/Seoul for export timestamps.
 
-The 2026-11-16 hierarchy layout orders each family evolution → rare → ordinary,
-with one indentation step per present lower tier. Alternative evolutions share
-the top depth. Without an evolution, rare starts at depth0 and ordinary at depth1.
+The 2026-11-17 first-chart hierarchy shows rare → ordinary, with rare at depth0 and ordinary at depth1. Evolution branches are hidden here and retained as internal planning options. Final results have separate awakening/scenario evolution sections and a complete active list.
 Category/search filtering preserves these depths; gain/state columns stay aligned.
 
 
@@ -112,7 +110,7 @@ lower prerequisites never stack with their upgrade, nor do sibling evolutions.
 
 Whole-list unavailable/Lv5 actions ignore search/category filters. They replace
 each current row's value atomically, drop stale IDs and invalidate final results.
-Lv5 is availability, not purchase, so competing evolution hints may coexist.
+Lv5 is availability, not purchase. Matching evolution options inherit eligibility and prices from the original rare; they never ask for another hint level. Excluding an evolution option does not alter actual purchase history.
 Inherited availability keeps previously secured choices first, fills remaining
 slots in chart order and stops at six; skipped choices stay unavailable with a
 visible explanation. Bulk actions are disabled until a complete chart exists.

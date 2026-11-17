@@ -124,6 +124,7 @@ test('final recommendation preserves owned scenario evolutions, permits hint rec
  await assert.rejects(()=>recommendFinalPlan(data,chart,Object.fromEntries(ids.map(id=>[id,'owned'])),input,options),/진화 제한/);
  const result=await recommendFinalPlan(data,chart,{[ids[0]]:'owned',[ids[1]]:'owned',[ids[2]]:'5'},input,options);
  assert.ok(result.activeIds.includes(ids[0])&&result.activeIds.includes(ids[1]));assert.ok(!result.activeIds.includes(ids[2]));
+ assert.equal(result.scenarioEvolutionCount,2);assert.equal(result.evolutions.scenario.length,0);
  const allHints=await recommendFinalPlan(data,chart,Object.fromEntries(ids.map(id=>[id,'5'])),input,options);
  assert.ok(allHints.activeIds.filter(id=>ids.includes(id)).length<=2);
 });

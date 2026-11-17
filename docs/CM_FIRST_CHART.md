@@ -1,11 +1,11 @@
-# CM first-chart contract (2026-11-16)
+# CM first-chart contract (2026-11-17)
 
 This is the authoritative contract for `feat/cm-first-chart` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
 
 The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING.md).
 It consumes this chart's fixed checklist and adds actual stats/remaining-SP
-recommendation without changing this stage's rows, ordering or acquisition rules.
+recommendation. Presentation separates purchases from evolution, while one search compares their final effects together.
 
 The root uses two stage screens. Preparation groups character, race and deck
 above the chart, with optional caps/course disclosures. Acquisition inputs are
@@ -31,9 +31,7 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
 
 ## Candidate and acquisition state
 
-Keep outfit awakening gold, original gold plus each evolution alternative,
-scenario/deck gold, ordinary purchasable whites/factor candidates, inherited
-versions. Static impossibility and unsupported calculations exclude candidates.
+Display outfit awakening gold, scenario/deck gold, ordinary purchasable whites/factor candidates and inherited versions. Evolution rows are hidden from the first checklist. Every supported matching evolution remains in `evolutionOptions`, linked to its original rare, for joint post-training optimization. An obtainable original rare remains recordable when only its evolution is useful; unsupported original effects display an explicit unknown score rather than zero. Static impossibility and unsupported calculations otherwise exclude candidates.
 Keep ordinary recovery and zero-gain candidates. Inherited skills use a separate
 admission policy before merging into the same checklist:
 
@@ -81,7 +79,7 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v4` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v5` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
@@ -120,13 +118,7 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 
 One semantic table, Japanese skill names with icons, mean lengths and acquisition
 dropdown. Source icon families, display order and upgrade grouping determine
-order between skill families. Within a family, evolutions come first (including
-alternative branches at the same depth), followed by rare and ordinary skills.
-Each present lower rarity tier indents one step: evolution0 → rare1 → ordinary2,
-or rare0 → ordinary1 when no evolution is present. Standalone ordinary and
-inherited skills remain unindented. Search and tabs preserve the full checklist's
-depth and source order. Verified purchase/evolution links also keep families
-together when display metadata is missing. Original gold and evolutions stay together. Missing metadata uses an
+order between skill families. In the first chart, rare skills precede ordinary skills, with rare at depth0 and ordinary at depth1. Hidden evolution branches retain their individual IDs and parent links. Result cards show awakening and scenario evolutions separately. Verified purchase/evolution links keep families together when display metadata is missing. Missing metadata uses an
 explicitly unverified deterministic fallback; exact in-game equality is not yet
 claimed. No per-row condition/assumption/unsupported tags.
 

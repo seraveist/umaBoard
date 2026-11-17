@@ -10,6 +10,7 @@ import {cmRanks} from '../assets/cm-ranks.mjs';
 import {selectInheritedTop,styleRecommendation} from '../assets/cm-recommendation.mjs';
 import {categoryRows,skillCategory} from '../assets/cm-categories.mjs';
 import {courseSegments,elevationProfile,courseSvg} from '../assets/cm-course.mjs';
+import {recommendFinalPlan} from '../assets/cm-final-plan.mjs';
 
 const read=path=>JSON.parse(readFileSync(new URL('../'+path,import.meta.url)));
 const manifest=read('data/manifest.json'),actual=read(manifest.dataset_path),actualProfiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
@@ -39,6 +40,18 @@ test('gold originals and both evolution branches stay in the comparison pool',()
  const pool=buildChartCandidates(d,createChartSetup(d,profiles,input));
  assert.ok(['300','301','302'].every(id=>pool.has(id)));
  d.skills['400']=skill('400',[],'target_speed',9000,'gold');assert.ok(!buildChartCandidates(d,createChartSetup(d,profiles,input)).has('400'));
+});
+
+test('a first-chart cap cannot remove an evolution that becomes active at actual post-training stats',async()=>{
+ const d=fixture(),condition=[[{field:'base_speed',operator:'>=',value:2300}]];
+ d.skills['300']=skill('300',condition,'target_speed',1000,'gold');d.skills['301']=skill('301',condition,'target_speed',4500,'evolution');
+ d.acquisition_routes.push({skill_id:'300',owner_type:'outfit',owner_id:'1',kind:'self'});
+ d.evolution_rules.push({base_id:'300',evolved_id:'301',owner_type:'outfit',owner_id:'1'});d.purchase_stages['300']={status:'verified',base_cost:100};
+ const chart=await generateChart(d,profiles,{},input,{samples:1,dt:.05});
+ assert.ok(chart.rows.some(row=>row.id==='300'));assert.ok(chart.evolutionOptions.some(row=>row.id==='301'));
+ assert.ok(chart.rows.every(row=>row.rarity!=='evolution'));
+ const plan=await recommendFinalPlan(d,chart,{'300':'0'},{stats:{...chart.setup.stats,speed:2300},spBudget:100},{searchSamples:1,searchDt:.05,samples:1,dt:.05});
+ assert.ok(plan.activeIds.includes('301'));assert.equal(plan.purchases[0].id,'300');assert.equal(plan.budget.used,100);
 });
 
 test('each skill family lists evolution alternatives before its indented rare and ordinary tiers',()=>{

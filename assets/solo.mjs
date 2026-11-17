@@ -10,7 +10,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   condition:branchSampler?branchSampler(i.condition,s.id,i,false,q):sampleBranches(i.condition,q),
   precondition:branchSampler?branchSampler(i.precondition,s.id,i,true,q):sampleBranches(i.precondition,q,true)})));
  const passive={speed:0,stamina:0,power:0,guts:0,wisdom:0},used=new Set(),counts=[0,0,0,0],events=[],active=[],cooldowns=new Map();
- const state={x:0,prevX:0,t:0,phase:0,hp:1,hpMax:1,used,selected,counts,laterCount:0,healCount:0,passiveCount:0,distance:d,fullSpurtStart:null,evolutionDuration:1};
+ const state={x:0,prevX:0,t:0,phase:0,hp:1,hpMax:1,used,usedInvocations:new Set(),selected,counts,laterCount:0,healCount:0,passiveCount:0,distance:d,fullSpurtStart:null,evolutionDuration:1};
  let physics=buildPhysics(setup,passive);
  const choice=i=>i.condition[0]?.choiceQ??q;
  // Passives are resolved at the start, including skill-possession predicates.
@@ -32,7 +32,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(stack.has(i.id))return;
   stack=new Set([...stack,i.id]);
   i.done=!i.cooldownSeconds;i.nextTime=state.t+(i.cooldownSeconds||0);cooldowns.set(keyFor(i),i.nextTime);
-  used.add(i.id);if(!i.passiveApplied){counts[state.phase]++;if(state.x>=d/2)state.laterCount++;}
+  used.add(i.id);state.usedInvocations.add(`${i.id}:${i.index}`);if(!i.passiveApplied){counts[state.phase]++;if(state.x>=d/2)state.laterCount++;}
   const duration=effectDuration(i,{setup,state}),random=choice(i);
   for(const raw of i.effects){
    if(raw.kind.startsWith('passive_')||['oonige','model_neutral','temptation_rate'].includes(raw.kind))continue;

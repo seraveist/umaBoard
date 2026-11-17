@@ -4,6 +4,12 @@ import {checklistPlanKey,restoreChecklistPlan,trimChecklistPlans} from '../asset
 
 const input={outfitId:'uma',scenarioId:'14',supportIds:['b','a'],style:2};
 const manifest={active_version:'current',checklist_data_sha256:'new',checklist_compatible_versions:['old']};
+
+test('the newest compatible saved record wins across multiple old data versions',()=>{
+ const a=checklistPlanKey(input,'a'),b=checklistPlanKey(input,'b');
+ const plans={[a]:{savedAt:'2026-11-16T00:00:00Z',value:1},[b]:{savedAt:'2026-11-17T00:00:00Z',value:2}};
+ assert.equal(restoreChecklistPlan(plans,input,{active_version:'c',checklist_record_versions:['a','b']}).plan.value,2);
+});
 test('reviewed route corrections reuse records and actual inputs without changing the previous saved plan',()=>{
  const old=checklistPlanKey(input,'old'),plans={[old]:{states:{evo:'owned',rare:'2'},postTraining:{values:{spBudget:325,discountTrait:'studious'}},savedAt:'yesterday'}};
  const restored=restoreChecklistPlan(plans,{...input,supportIds:['a','b']},manifest);

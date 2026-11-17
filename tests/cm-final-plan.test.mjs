@@ -37,14 +37,38 @@ test('actual stats, remaining SP and aptitudes override only the post-training s
 
 test('an owned lower is retained as paid history, upgraded once, and excluded from additional SP and active effects',async()=>{
  const {data,chart}=fixture(),result=await recommendFinalPlan(data,chart,{white:'owned',gold:'0'},{...input,spBudget:150},quick);
- assert.ok(result.ownedIds.includes('white'));assert.ok(result.activeIds.includes('gold'));assert.ok(!result.activeIds.includes('white'));
+ assert.ok(result.ownedIds.includes('white'));assert.ok(result.activeIds.includes('b'));assert.ok(!result.activeIds.includes('white'));assert.equal(result.purchases[0].id,'gold');
  assert.equal(result.budget.used,150);assert.equal(result.budget.remaining,0);assert.deepEqual(result.purchases[0].stages.map(row=>row.id),['gold']);assert.ok(result.gain>0);
 });
 
 test('both unpurchased evolution alternatives compete; a purchased base can evolve for zero SP',async()=>{
  const {data,chart}=fixture(),result=await recommendFinalPlan(data,chart,{gold:'owned',a:'0',b:'0'},{...input,spBudget:0},quick);
- assert.ok(result.activeIds.includes('b'));assert.ok(!result.activeIds.includes('a'));assert.ok(!result.activeIds.includes('gold'));assert.equal(result.budget.used,0);assert.equal(result.purchases[0].id,'b');
+ assert.ok(result.activeIds.includes('b'));assert.ok(!result.activeIds.includes('a'));assert.ok(!result.activeIds.includes('gold'));assert.equal(result.budget.used,0);assert.deepEqual(result.purchases,[]);assert.equal(result.evolutions.outfit[0].id,'b');
  const locked=await recommendFinalPlan(data,chart,{a:'owned',b:'0'},input,quick);assert.ok(locked.activeIds.includes('a'));assert.ok(!locked.activeIds.includes('b'));
+});
+
+test('hidden evolutions follow rare-only hints and participate before the purchase choice is fixed',async()=>{
+ const {data,chart}=fixture();chart.evolutionOptions=chart.rows.filter(row=>row.rarity==='evolution');chart.rows=chart.rows.filter(row=>row.rarity!=='evolution');
+ data.skills.gold.invocations[0].effects[0].value_raw=500;data.skills.b.invocations[0].effects[0].value_raw=9000;
+ const plan=await recommendFinalPlan(data,chart,{white:'owned',gold:'0',other:'0'},{...input,spBudget:150},quick);
+ assert.equal(plan.purchases[0].id,'gold');assert.ok(plan.activeIds.includes('b'));assert.ok(!plan.activeIds.includes('other'));
+ const free=await recommendFinalPlan(data,chart,{gold:'owned'},{...input,spBudget:0},quick);
+ assert.equal(free.evolutions.outfit[0].id,'b');assert.deepEqual(free.purchases,[]);assert.equal(free.acquisition.b,undefined);
+ const blocked=await recommendFinalPlan(data,chart,{gold:'owned'},{...input,spBudget:0,excludedEvolutionIds:['a','b']},quick);
+ assert.ok(blocked.activeIds.includes('gold'));assert.deepEqual(blocked.evolutions.outfit,[]);
+});
+
+test('five scenario choices survive shortlisting, select two and leave outfit evolution outside that limit',async()=>{
+ const {data,chart}=fixture(),states={};chart.rows=[];chart.evolutionOptions=[];
+ for(let i=0;i<6;i++){
+  const base='base'+i,evo='evo'+i;data.skills[base]=skill(base,300,'gold');data.skills[evo]=skill(evo,1000+i*1000,'evolution');
+  data.purchase_stages[base]={status:'verified',base_cost:100};data.evolution_rules.push({base_id:base,evolved_id:evo,owner_type:i===5?'outfit':'scenario',owner_id:i===5?'uma':'15'});
+  chart.rows.push({...data.skills[base],name:base});chart.evolutionOptions.push({...data.skills[evo],name:evo,evolutionBaseId:base});states[base]='owned';
+ }
+ data.scenario_exclusive_groups=[{scenario_id:'15',skill_ids:['evo0','evo1','evo2','evo3','evo4'],max_count:2}];
+ const plan=await recommendFinalPlan(data,chart,states,{...input,spBudget:0},{...quick,maxCandidates:1,evaluationLimit:10});
+ assert.deepEqual(plan.evolutions.scenario.map(row=>row.id).sort(),['evo3','evo4']);assert.equal(plan.evolutions.outfit[0].id,'evo5');
+ assert.deepEqual(plan.purchases,[]);assert.equal(plan.search.scenarioPacks,16);assert.equal(plan.budget.used,0);
 });
 
 test('unavailable skills never become candidates, and unknown prices are disclosed instead of treated as free',async()=>{

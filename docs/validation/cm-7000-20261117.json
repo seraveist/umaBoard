@@ -1,0 +1,1245 @@
+{
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "input": {
+    "outfitId": "101301",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 2,
+    "courseId": "10808",
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ]
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "spBudget": 7000,
+    "discountTrait": "none",
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "S"
+    }
+  },
+  "chartRows": 228,
+  "inheritedTopIds": [
+    "91101411",
+    "910681",
+    "910271",
+    "910691",
+    "900041",
+    "910121",
+    "910081",
+    "910591",
+    "910771",
+    "900941"
+  ],
+  "evolutionOptions": [
+    "415041",
+    "415011",
+    "415021",
+    "101301211"
+  ],
+  "modelVersion": "cm-post-training-v5",
+  "chartModelVersion": "cm-first-chart-v5",
+  "budget": {
+    "total": 7000,
+    "used": 6990,
+    "remaining": 10
+  },
+  "gain": 42.565699608111025,
+  "hpRemaining": 19.539129674157177,
+  "fullSpeedFeasible": true,
+  "search": {
+    "method": "bounded",
+    "evaluations": 1799,
+    "shortlisted": 138,
+    "scenarioPacks": 7,
+    "closureComplete": true,
+    "closureChecks": 172,
+    "globalOptimal": false,
+    "searchSamples": 2,
+    "searchDt": 0.05,
+    "samples": 24,
+    "dt": 0.01
+  },
+  "purchases": [
+    {
+      "id": "200012",
+      "name": "右回り○",
+      "cost": 54,
+      "stages": [
+        {
+          "id": "200012",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "右回り○"
+        }
+      ]
+    },
+    {
+      "id": "200192",
+      "name": "秋ウマ娘○",
+      "cost": 54,
+      "stages": [
+        {
+          "id": "200192",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "秋ウマ娘○"
+        }
+      ]
+    },
+    {
+      "id": "200262",
+      "name": "外枠得意○",
+      "cost": 54,
+      "stages": [
+        {
+          "id": "200262",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "外枠得意○"
+        }
+      ]
+    },
+    {
+      "id": "200271",
+      "name": "おひとり様◎",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "200272",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "おひとり様○"
+        },
+        {
+          "id": "200271",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "おひとり様◎"
+        }
+      ]
+    },
+    {
+      "id": "200302",
+      "name": "伏兵○",
+      "cost": 54,
+      "stages": [
+        {
+          "id": "200302",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "伏兵○"
+        }
+      ]
+    },
+    {
+      "id": "201631",
+      "name": "シンパシー",
+      "cost": 42,
+      "stages": [
+        {
+          "id": "201631",
+          "base": 70,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 42,
+          "name": "シンパシー"
+        }
+      ]
+    },
+    {
+      "id": "201641",
+      "name": "一匹狼",
+      "cost": 42,
+      "stages": [
+        {
+          "id": "201641",
+          "base": 70,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 42,
+          "name": "一匹狼"
+        }
+      ]
+    },
+    {
+      "id": "202442",
+      "name": "やまっけ",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "202442",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "やまっけ"
+        }
+      ]
+    },
+    {
+      "id": "200152",
+      "name": "良バ場○",
+      "cost": 54,
+      "stages": [
+        {
+          "id": "200152",
+          "base": 90,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 54,
+          "name": "良バ場○"
+        }
+      ]
+    },
+    {
+      "id": "201562",
+      "name": "ラッキーセブン",
+      "cost": 66,
+      "stages": [
+        {
+          "id": "201562",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "ラッキーセブン"
+        }
+      ]
+    },
+    {
+      "id": "900941",
+      "name": "Faith in the Feral",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "900941",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "Faith in the Feral"
+        }
+      ]
+    },
+    {
+      "id": "910081",
+      "name": "Into High Gear!",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910081",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "Into High Gear!"
+        }
+      ]
+    },
+    {
+      "id": "910121",
+      "name": "大盛り！ファーストバイト！",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910121",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "大盛り！ファーストバイト！"
+        }
+      ]
+    },
+    {
+      "id": "910271",
+      "name": "あなたに捧げるフリーポア",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910271",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "あなたに捧げるフリーポア"
+        }
+      ]
+    },
+    {
+      "id": "910591",
+      "name": "ときめきが呼ぶほうへ",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "910591",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "ときめきが呼ぶほうへ"
+        }
+      ]
+    },
+    {
+      "id": "200361",
+      "name": "ハヤテ一文字",
+      "cost": 204,
+      "stages": [
+        {
+          "id": "200362",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "直線巧者"
+        },
+        {
+          "id": "200361",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "ハヤテ一文字"
+        }
+      ]
+    },
+    {
+      "id": "201101",
+      "name": "中距離直線◎",
+      "cost": 126,
+      "stages": [
+        {
+          "id": "201102",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "中距離直線○"
+        },
+        {
+          "id": "201101",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "中距離直線◎"
+        }
+      ]
+    },
+    {
+      "id": "201111",
+      "name": "中距離コーナー◎",
+      "cost": 126,
+      "stages": [
+        {
+          "id": "201112",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "中距離コーナー○"
+        },
+        {
+          "id": "201111",
+          "base": 110,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 66,
+          "name": "中距離コーナー◎"
+        }
+      ]
+    },
+    {
+      "id": "201312",
+      "name": "先行直線○",
+      "cost": 78,
+      "stages": [
+        {
+          "id": "201312",
+          "base": 130,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 78,
+          "name": "先行直線○"
+        }
+      ]
+    },
+    {
+      "id": "201321",
+      "name": "先行コーナー◎",
+      "cost": 162,
+      "stages": [
+        {
+          "id": "201322",
+          "base": 130,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 78,
+          "name": "先行コーナー○"
+        },
+        {
+          "id": "201321",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "先行コーナー◎"
+        }
+      ]
+    },
+    {
+      "id": "201591",
+      "name": "ウマ好み",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201591",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "ウマ好み"
+        }
+      ]
+    },
+    {
+      "id": "201651",
+      "name": "スリップストリーム",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201651",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "スリップストリーム"
+        }
+      ]
+    },
+    {
+      "id": "201661",
+      "name": "遊びはおしまいっ！",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "201661",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "遊びはおしまいっ！"
+        }
+      ]
+    },
+    {
+      "id": "202032",
+      "name": "あやしげな作戦",
+      "cost": 72,
+      "stages": [
+        {
+          "id": "202032",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "あやしげな作戦"
+        }
+      ]
+    },
+    {
+      "id": "202102",
+      "name": "前のめり",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "202102",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "前のめり"
+        }
+      ]
+    },
+    {
+      "id": "202522",
+      "name": "型破り",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "202522",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "型破り"
+        }
+      ]
+    },
+    {
+      "id": "202551",
+      "name": "神速",
+      "cost": 240,
+      "stages": [
+        {
+          "id": "202552",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "快速"
+        },
+        {
+          "id": "202551",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "神速"
+        }
+      ]
+    },
+    {
+      "id": "202742",
+      "name": "品行方正",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "202742",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "品行方正"
+        }
+      ]
+    },
+    {
+      "id": "203052",
+      "name": "揺るがぬ信念",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "203052",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "揺るがぬ信念"
+        }
+      ]
+    },
+    {
+      "id": "203121",
+      "name": "強者の証",
+      "cost": 204,
+      "stages": [
+        {
+          "id": "203122",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "さらなる高みへ"
+        },
+        {
+          "id": "203121",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "強者の証"
+        }
+      ]
+    },
+    {
+      "id": "203222",
+      "name": "アグレッシブ",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "203222",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "アグレッシブ"
+        }
+      ]
+    },
+    {
+      "id": "203312",
+      "name": "光差す方へ",
+      "cost": 84,
+      "stages": [
+        {
+          "id": "203312",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "光差す方へ"
+        }
+      ]
+    },
+    {
+      "id": "203501",
+      "name": "英俊豪傑",
+      "cost": 240,
+      "stages": [
+        {
+          "id": "203502",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "比類なき"
+        },
+        {
+          "id": "203501",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "英俊豪傑"
+        }
+      ]
+    },
+    {
+      "id": "203792",
+      "name": "好戦的",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "203792",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "好戦的"
+        }
+      ]
+    },
+    {
+      "id": "204001",
+      "name": "迸る気迫",
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204002",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "意地っ張り"
+        },
+        {
+          "id": "204001",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "迸る気迫"
+        }
+      ]
+    },
+    {
+      "id": "204012",
+      "name": "力業",
+      "cost": 114,
+      "stages": [
+        {
+          "id": "204012",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "力業"
+        }
+      ]
+    },
+    {
+      "id": "204082",
+      "name": "余勢を駆って",
+      "cost": 72,
+      "stages": [
+        {
+          "id": "204082",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "余勢を駆って"
+        }
+      ]
+    },
+    {
+      "id": "204042",
+      "name": "華麗な足取り",
+      "cost": 72,
+      "stages": [
+        {
+          "id": "204042",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "華麗な足取り"
+        }
+      ]
+    },
+    {
+      "id": "204322",
+      "name": "阿吽の呼吸",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204322",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "阿吽の呼吸"
+        }
+      ]
+    },
+    {
+      "id": "204362",
+      "name": "大立ち回り",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204362",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "大立ち回り"
+        }
+      ]
+    },
+    {
+      "id": "204372",
+      "name": "流れに任せて",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204372",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "流れに任せて"
+        }
+      ]
+    },
+    {
+      "id": "204331",
+      "name": "継続は力なり",
+      "cost": 168,
+      "stages": [
+        {
+          "id": "204332",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "実直な走り"
+        },
+        {
+          "id": "204331",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "継続は力なり"
+        }
+      ]
+    },
+    {
+      "id": "204472",
+      "name": "奮い立つ心",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "204472",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "奮い立つ心"
+        }
+      ]
+    },
+    {
+      "id": "204531",
+      "name": "清麗高雅",
+      "cost": 228,
+      "stages": [
+        {
+          "id": "204532",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "華麗な踏み込み"
+        },
+        {
+          "id": "204531",
+          "base": 190,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 114,
+          "name": "清麗高雅"
+        }
+      ]
+    },
+    {
+      "id": "204571",
+      "name": "純真無垢",
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204572",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "ただその先へ"
+        },
+        {
+          "id": "204571",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "純真無垢"
+        }
+      ]
+    },
+    {
+      "id": "204701",
+      "name": "素質の証明",
+      "cost": 240,
+      "stages": [
+        {
+          "id": "204702",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "突き抜ける走り"
+        },
+        {
+          "id": "204701",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "素質の証明"
+        }
+      ]
+    },
+    {
+      "id": "204622",
+      "name": "連綿",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "204622",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "連綿"
+        }
+      ]
+    },
+    {
+      "id": "204731",
+      "name": "機転",
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204732",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "如才なし"
+        },
+        {
+          "id": "204731",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "機転"
+        }
+      ]
+    },
+    {
+      "id": "204751",
+      "name": "アドバンテージ",
+      "cost": 216,
+      "stages": [
+        {
+          "id": "204752",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "主導権"
+        },
+        {
+          "id": "204751",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "アドバンテージ"
+        }
+      ]
+    },
+    {
+      "id": "204811",
+      "name": "螺旋のエキスパート",
+      "cost": 192,
+      "stages": [
+        {
+          "id": "204812",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "弧を描いて"
+        },
+        {
+          "id": "204811",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "螺旋のエキスパート"
+        }
+      ]
+    },
+    {
+      "id": "200342",
+      "name": "コーナー加速○",
+      "cost": 108,
+      "stages": [
+        {
+          "id": "200342",
+          "base": 180,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 108,
+          "name": "コーナー加速○"
+        }
+      ]
+    },
+    {
+      "id": "201342",
+      "name": "直滑降",
+      "cost": 72,
+      "stages": [
+        {
+          "id": "201342",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "直滑降"
+        }
+      ]
+    },
+    {
+      "id": "201601",
+      "name": "地固め",
+      "cost": 60,
+      "stages": [
+        {
+          "id": "201601",
+          "base": 100,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 60,
+          "name": "地固め"
+        }
+      ]
+    },
+    {
+      "id": "202082",
+      "name": "ワンチャンス",
+      "cost": 96,
+      "stages": [
+        {
+          "id": "202082",
+          "base": 160,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 96,
+          "name": "ワンチャンス"
+        }
+      ]
+    },
+    {
+      "id": "202692",
+      "name": "一番乗り",
+      "cost": 72,
+      "stages": [
+        {
+          "id": "202692",
+          "base": 120,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 72,
+          "name": "一番乗り"
+        }
+      ]
+    },
+    {
+      "id": "203442",
+      "name": "憧れを越えて",
+      "cost": 102,
+      "stages": [
+        {
+          "id": "203442",
+          "base": 170,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 102,
+          "name": "憧れを越えて"
+        }
+      ]
+    },
+    {
+      "id": "210091",
+      "name": "レースの真髄・速",
+      "cost": 90,
+      "stages": [
+        {
+          "id": "210091",
+          "base": 150,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 90,
+          "name": "レースの真髄・速"
+        }
+      ]
+    },
+    {
+      "id": "204262",
+      "name": "星の煌き",
+      "cost": 120,
+      "stages": [
+        {
+          "id": "204262",
+          "base": 200,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 120,
+          "name": "星の煌き"
+        }
+      ]
+    },
+    {
+      "id": "204453",
+      "name": "聖女の挑戦",
+      "cost": 84,
+      "stages": [
+        {
+          "id": "204453",
+          "base": 140,
+          "hint": 5,
+          "extraDiscount": 0,
+          "cost": 84,
+          "name": "聖女の挑戦"
+        }
+      ]
+    }
+  ],
+  "evolutions": {
+    "outfit": [],
+    "scenario": [
+      {
+        "id": "415011",
+        "name": "急之舞",
+        "description": "レース後半のどこかですごく前に出て持久力をわずかに回復する",
+        "rarity": "evolution",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "heal"
+        ],
+        "routes": [
+          {
+            "kind": "evolution",
+            "owner_type": "scenario",
+            "owner_id": "15",
+            "base_id": "202551"
+          }
+        ],
+        "providers": [],
+        "calculationNotes": [],
+        "recommendation": {
+          "policy": "cm9-phase-rank-v1",
+          "source": "phase-rank",
+          "allowedStyles": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "eligible": true
+        },
+        "calculationState": "supported",
+        "evolutionBaseId": "202551",
+        "groupId": "20255",
+        "iconId": "20386",
+        "orderVerified": false,
+        "indentLevel": 0,
+        "baseId": "202551",
+        "baseName": "神速",
+        "additionalSp": 0
+      },
+      {
+        "id": "415021",
+        "name": "吉兆の駆け手",
+        "description": "レース中盤のどこかでしばらくの間前に出る",
+        "rarity": "evolution",
+        "inherited": false,
+        "categories": [
+          "speed"
+        ],
+        "routes": [
+          {
+            "kind": "evolution",
+            "owner_type": "scenario",
+            "owner_id": "15",
+            "base_id": "203501"
+          }
+        ],
+        "providers": [],
+        "calculationNotes": [],
+        "recommendation": {
+          "policy": "cm9-phase-rank-v1",
+          "source": "phase-rank",
+          "allowedStyles": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "eligible": true
+        },
+        "calculationState": "supported",
+        "evolutionBaseId": "203501",
+        "groupId": "20350",
+        "iconId": "20386",
+        "orderVerified": false,
+        "indentLevel": 0,
+        "baseId": "203501",
+        "baseName": "英俊豪傑",
+        "additionalSp": 0
+      }
+    ]
+  },
+  "activeIds": [
+    "100131",
+    "200012",
+    "200152",
+    "200192",
+    "200262",
+    "200271",
+    "200302",
+    "200342",
+    "200361",
+    "201101",
+    "201111",
+    "201312",
+    "201321",
+    "201342",
+    "201562",
+    "201591",
+    "201601",
+    "201631",
+    "201641",
+    "201651",
+    "201661",
+    "202032",
+    "202082",
+    "202102",
+    "202442",
+    "202522",
+    "202692",
+    "202742",
+    "203052",
+    "203121",
+    "203222",
+    "203312",
+    "203442",
+    "203792",
+    "204001",
+    "204012",
+    "204042",
+    "204082",
+    "204262",
+    "204322",
+    "204331",
+    "204362",
+    "204372",
+    "204453",
+    "204472",
+    "204531",
+    "204571",
+    "204622",
+    "204701",
+    "204731",
+    "204751",
+    "204811",
+    "210091",
+    "415011",
+    "415021",
+    "900941",
+    "910081",
+    "910121",
+    "910271",
+    "910591"
+  ],
+  "validated_at": "2026-11-17"
+}

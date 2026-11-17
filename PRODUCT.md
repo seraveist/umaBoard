@@ -2,7 +2,7 @@
 
 Cumulative implementation status, accepted scope and prioritized follow-up work:
 [`docs/CM_PROGRESS_AND_NEXT_STEPS.md`](docs/CM_PROGRESS_AND_NEXT_STEPS.md),
-2026-11-17, feature baseline `81b4bcc` / CM models v4.
+2026-11-17, CM models v5; joint purchase/evolution optimization.
 
 The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
 `docs/CM_POST_TRAINING.md`. They supersede the
@@ -43,7 +43,7 @@ stamina advice. All supported acquisition/trigger predicates are fulfilled;
 physical timing, course geometry, durations and causal linked effects remain.
 
 All skill categories share one table, with an icon-category tab row and name search. Gold candidates come only from the selected
-outfit, scenario and deck. Evolutions and alternatives remain individually visible.
+outfit, scenario and deck. The first chart shows original rares; matching evolution branches remain internal options and become eligible from the rare's actual record.
 Ordinary factor-eligible whites complete the ordinary pool. Inheritance uses a fixed positive-gain Top10 after style suitability filtering, always using verified strengthened forms and excluding pure healing; users can record at most six of these. Unknown
 calculations are excluded. Every admitted row is displayed inside the bounded
 scrollable table, without a display limit or a load-more action.
@@ -70,7 +70,7 @@ baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
 search is bounded and does not guarantee a global optimum. Recommendations never
 change the checklist. Inputs persist per plan; edited inputs/checks invalidate
 recommendations, and changed race/deck settings require a fresh first chart.
-Both stages support independent cancellation and JSON export.
+Both stages support independent cancellation and JSON export. Final results separate additional purchases, awakening evolution, scenario evolution (up to two) and the complete active skill list. All are evaluated jointly against the same remaining SP; evolution itself adds no SP.
 
 Assets: existing UmaTools-only character/support portraits and type badges;
 alpha123 skill display-order metadata and 120 icons, eight additional original

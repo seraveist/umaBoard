@@ -3,7 +3,7 @@ import json
 import re
 from collections import Counter
 
-from .common import DataError, canonical_bytes, identifier, number, rows
+from .common import DataError, canonical_bytes, digest, identifier, number, rows
 from .planning import purchase_stages
 
 # Classification only. Values and source timing/scaling remain explicit raw fields.
@@ -110,7 +110,7 @@ def decode_primary(row, parent=None):
             '_comparison_cost':row.get('cost')}
 
 
-def decode_secondary(row):
+def decode_secondary(row, review=None):
     invocations=[]
     for inv in rows(row['invokes'],'umasim invokes'):
         effects=[{'kind':MEE_KINDS.get(e['type'],'unknown'),'source_type':e['type'],
@@ -123,13 +123,17 @@ def decode_secondary(row):
                             'duration_unit':'umasim_seconds_at_base_distance','time_scale_raw':None,
                             'cooldown_raw':inv.get('cooldown'),'effects':effects,
                             'extras_raw':{k:v for k,v in inv.items() if k not in {'index','skillId','conditions','preConditions','duration','cooldown','effects'}}})
-    if row.get('rarity') != 'inherit':
+    if row.get('rarity') != 'inherit' and not review:
         raise DataError(f"{row['id']}: unreviewed secondary-only skill kind")
+    rarity={'inherit':'inherited','unique':'unique','evo':'evolution','rare':'gold','normal':'white'}.get(row.get('rarity'))
+    if rarity is None:raise DataError('unsupported secondary supplement rarity')
+    if review and (review.get('sha256')!=digest(canonical_bytes(row)) or review.get('rarity')!=rarity):
+        raise DataError(f"{row['id']}: reviewed secondary supplement changed")
     return {'id':identifier(row['id']),'name_jp':row['name'],'name_ko':None,
-            'description_jp':(row.get('info') or [''])[0],'rarity':'inherited','source_rarity':'inherit',
-            'inherited':True,'parent_ids':[],'icon_id':None,'categories':categories(invocations),'invocations':invocations,
+            'description_jp':(row.get('info') or [''])[0],'rarity':rarity,'source_rarity':row['rarity'],
+            'inherited':rarity=='inherited','parent_ids':[],'icon_id':identifier(review['icon_id']) if review and review.get('icon_id') else None,'categories':categories(invocations),'invocations':invocations,
             'activation_raw':row.get('activateLot'),'flags':[],'jp_available':True,
-            'release_evidence':'secondary_inheritance_supplement','calculation_status':'unvalidated',
+            'release_evidence':'reviewed_secondary_supplement' if review else 'secondary_inheritance_supplement','calculation_status':'unvalidated',
             'origin':'umasim','provenance':['umasim'],'unknown_effect_codes':[],
             'unparsed_condition':False,'_comparison_cost':row.get('sp')}
 
@@ -157,6 +161,13 @@ def normalize(raw, curated):
                       'search_aliases_ko':aliases.get(row['UmaNameJP'],[]),'outfit_name_jp':row.get('UmaNicknameJP',''),
                       'base_stars':row['UmaBaseStars'],'aptitudes':row.get('UmaAptitudes',{}),
                       'awakening':'MAX','origin':'umatools'}
+    supplements=curated.get('source_supplements',{})
+    if supplements and (not supplements.get('source') or not supplements.get('release_source') or not supplements.get('checked_at')):
+        raise DataError('secondary supplements require sources and a review date')
+    for row in supplements.get('outfits',[]):
+        sid=identifier(row['id'])
+        if sid not in outfits:
+            outfits[sid]={**row,'name_ko':names.get(row['name_jp']),'search_aliases_ko':aliases.get(row['name_jp'],[]),'awakening':'MAX','origin':'reviewed_secondary_supplement'}
     supports={}
     for row in rows(raw['supports'],'support_hints.json'):
         sid=identifier(row['SupportId'])
@@ -229,9 +240,21 @@ def normalize(raw, curated):
     if len(secondary_by)!=len(secondary):raise DataError('duplicate umasim skill ID')
     secondary_only=sorted(set(secondary_by)-set(skills))
     for sid in secondary_only:
-        rec=decode_secondary(secondary_by[sid]);cost=rec.pop('_comparison_cost')
+        review=supplements.get('skills',{}).get(sid)
+        rec=decode_secondary(secondary_by[sid],review);cost=rec.pop('_comparison_cost')
         skills[sid]=rec
+        if review and 'base_cost' in review:cost=review['base_cost']
         if cost is not None:costs[sid]=number(cost,'comparison cost')
+    for sid,review in supplements.get('skills',{}).items():
+        if sid not in skills:raise DataError('reviewed supplement absent from both sources: '+sid)
+        for pid in review.get('parent_ids',[]):
+            if pid not in skills:raise DataError('supplement parent missing')
+            skills[sid]['parent_ids']=sorted(set(skills[sid]['parent_ids']+[pid]));add_relation('inheritance',pid,sid)
+    for route in supplements.get('routes',[]):
+        add_route(route['skill_id'],route['owner_type'],route['owner_id'],route['kind'],source=supplements['source'])
+    for rule in supplements.get('evolutions',[]):
+        add_evolution(rule['base_id'],rule['evolved_id'],rule['owner_type'],rule['owner_id'])
+    for high,low in supplements.get('version_links',[]):add_relation('version_family',high,low)
     for link in curated.get('inheritance_links',[]):
         pid=identifier(link['parent_skill_id']);sid=identifier(link['inherited_skill_id'])
         if pid not in skills or sid not in skills:raise DataError('curated inheritance reference missing')

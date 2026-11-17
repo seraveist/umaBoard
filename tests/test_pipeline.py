@@ -239,7 +239,7 @@ class PublicationTests(unittest.TestCase):
         result=synchronize(self.root,client=OfflineClient(),rebuild_active=True)
         self.assertEqual(result['status'],'updated')
         manifest=json.loads((self.root/'data/manifest.json').read_text())
-        data=json.loads((self.root/manifest['dataset_path']).read_text())
+        data=json.loads((self.root/manifest['dataset_path']).read_text(encoding='utf-8'))
         self.assertEqual(manifest['sources'],sources);self.assertEqual(manifest['input_hashes'],hashes)
         self.assertEqual((self.root/before['dataset_path']).read_bytes(),old_bundle)
         for field in ('cost_policy','support_events','scenario_events','purchase_order'):self.assertEqual(data[field],planning[field])

@@ -60,6 +60,7 @@
               <div class="field"><label for="actual-surface-aptitude">마장 적성</label><select id="actual-surface-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
               <div class="field"><label for="actual-style-aptitude">각질 적성</label><select id="actual-style-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
             </div></details></div>
+            <details id="evolution-options" class="evolution-options" hidden><summary>진화 후보 조정</summary><p class="final-help">원본 레어스킬을 확보하면 진화를 함께 비교합니다. 진화 조건을 충족하지 못한 후보는 해제하세요.</p><fieldset><legend>각성 스킬 진화</legend><div id="evolution-options-outfit"></div></fieldset><fieldset><legend>시나리오 스킬 진화 · 최대 2개</legend><div id="evolution-options-scenario"></div></fieldset></details>
           </fieldset>
 
           <p id="final-error" class="field-error final-error" role="alert"></p>
@@ -72,9 +73,12 @@
   <div class="finish-grid"><div id="finish-checklist-slot"></div><section id="post-result-panel" class="final-panel" aria-label="최종 스킬 추천 결과">
         <div id="final-empty" class="final-empty"><h2>추천 구매 목록</h2></div>
         <section id="final-result" class="final-result" aria-labelledby="final-result-title" hidden>
-          <div class="final-result-heading"><div><h3 id="final-result-title" tabindex="-1">추천 구매 목록</h3><span id="final-result-state"></span></div><button id="final-export" type="button" class="button subtle" disabled>추천 저장</button></div>
+          <div class="final-result-heading"><div><h3 id="final-result-title" tabindex="-1">최종 스킬 추천</h3><span id="final-result-state"></span></div><button id="final-export" type="button" class="button subtle" disabled>추천 저장</button></div>
           <dl class="final-totals"><div><dt>추가 구매 SP</dt><dd><span id="final-used">0</span> <small>/ <span id="final-budget">0</span></small></dd></div><div><dt>남는 SP</dt><dd id="final-remaining">0</dd></div><div><dt>현재 습득 대비 평균 마신</dt><dd><span id="final-gain">0.00</span></dd></div></dl>
-          <p id="final-hp-note" class="final-help"></p><ol id="final-purchase-list" class="final-purchase-list"></ol><p id="final-no-purchases" class="final-help" hidden>추가 구매 없음</p>
+          <p id="final-hp-note" class="final-help"></p><p id="final-search-note" class="final-help"></p>
+          <section class="final-section"><h4>추가 구매</h4><ol id="final-purchase-list" class="final-purchase-list"></ol><p id="final-no-purchases" class="final-help" hidden>추가 구매 없음</p></section>
+          <div class="final-evolution-grid"><section class="final-section"><h4>각성 스킬 진화</h4><ul id="final-evolution-outfit" class="final-purchase-list"></ul><p id="final-evolution-outfit-empty" class="final-help" hidden>추가 진화 추천 없음</p></section><section class="final-section"><h4>시나리오 스킬 진화 <span id="final-scenario-count">0 / 2</span></h4><ul id="final-evolution-scenario" class="final-purchase-list"></ul><p id="final-evolution-scenario-empty" class="final-help" hidden>추가 진화 추천 없음</p></section></div>
+          <section class="final-section"><h4>최종 적용 스킬 <span id="final-active-count"></span></h4><ul id="final-active-list" class="final-purchase-list final-active-list"></ul></section>
           <details class="final-owned"><summary id="final-owned-summary"></summary><ul id="final-owned-list"></ul></details>
           <details id="final-excluded" class="final-owned" hidden><summary id="final-excluded-summary"></summary><ul id="final-excluded-list"></ul></details>
 

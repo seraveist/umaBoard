@@ -1,5 +1,7 @@
 # umaBoard
 
+> 2026-11-17: 1차는 원본 레어 표시, 최종 단계는 구매·각성/시나리오 진화 공동 계산으로 보완했습니다. [구현·7000 SP 검증](docs/CM_JOINT_EVOLUTION_QA.md)을 참조하세요.
+
 **현재까지의 변경·검증·후속 작업:** [CM 개발 현황과 다음 단계](docs/CM_PROGRESS_AND_NEXT_STEPS.md)
 — 2026-11-17, 기능 기준 `81b4bcc`, 계산 모델 v4.
 

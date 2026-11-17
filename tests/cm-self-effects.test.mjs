@@ -61,12 +61,12 @@ test('HP-dependent durations use current HP and scale the final duration once by
  assert.equal(effectDuration(inv,{setup,state}),5.28);state.hp=2000;assert.equal(effectDuration(inv,{setup,state}),7.92);state.hp=3500;assert.equal(effectDuration(inv,{setup,state}),21.12);
  assert.equal(effectDuration({...inv,evolution:true},{setup,state:{...state,evolutionDuration:1.2}}),25.344);
 });
-test('scenario ending bonuses participate with source-backed policies and unknown newest bonuses remain explicit base-only estimates',()=>{
+test('scenario ending bonuses use the pinned public simulator threshold-fulfilled multipliers',()=>{
  for(const id of ['210301','210321','210341','210361','210371','210381','210391','210401']){
   const s=id==='210321'?{...setup,course:data.courses['10903']}:setup;
   const c=compileChartSkill(data.skills[id],s);assert.notEqual(c.status,'unsupported',id);assert.ok(run([data.skills[id]],s).finishTime<run([],s).finishTime,id);
  }
- for(const id of ['210391','210401'])assert.ok(compileChartSkill(data.skills[id],setup).calculationNotes.some(n=>n.includes('기본 효과')));
+ for(const id of ['210391','210401'])assert.ok(compileChartSkill(data.skills[id],setup).calculationNotes.some(n=>n.includes('1.2')));
 });
 test('repeating alternatives share their cooldown and cannot double-activate in one frame',()=>{
  const repeated=skill('repeat',[['target_speed',1000]],[[{field:'phase',operator:'==',value:1}]],{cooldown_raw:50000});
@@ -105,5 +105,5 @@ test('previously excluded self-strengthening evolutions are real chart and final
  const task=prepareChart(data,profiles,{skills:{}},{...input,outfitId:rule.owner_id},{samples:1,dt:.05});assert.ok(task.rows.some(r=>r.id===id));
  const ids=[id,rule.base_id,data.purchase_stages[rule.base_id].prerequisite_id],rows=task.rows.filter(r=>ids.includes(r.id));
  const chart={setup:task.setup,modelVersion:task.modelVersion,nativeIds:task.nativeIds,rows},result=await recommendFinalPlan(data,chart,{[id]:'5',[rule.base_id]:'5'},{stats:task.setup.stats,spBudget:1000},{samples:1,dt:.05,searchSamples:1,searchDt:.05});
- assert.ok(result.purchases.some(p=>p.id===id));assert.equal(result.effectPolicy,'self-performance-only');assert.ok(result.budget.used>0);assert.ok(result.budget.used<=1000);
+ assert.ok(result.evolutions.outfit.some(p=>p.id===id));assert.ok(result.purchases.some(p=>p.id===rule.base_id));assert.equal(result.effectPolicy,'self-performance-only');assert.ok(result.budget.used>0);assert.ok(result.budget.used<=1000);
 });

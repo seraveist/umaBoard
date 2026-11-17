@@ -1,7 +1,7 @@
 // Equations and explicit approximations: pinned umasim SkillData/SkillChecker,
 // documented in CM_SELF_EFFECTS_QA.md. Raw source records are never rewritten.
 const neutral=new Set(['vision','lane_change_speed','lane_position','ignore_popularity','invoke_group']);
-export const supportedScale=code=>[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,19,20,22,23,24,25,26,27,28,30,31,32,34,35,36,37,40,41].includes(code);
+export const supportedScale=code=>[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,19,20,22,23,24,25,26,27,28,30,31,32,34,35,36,37,40,41,42].includes(code);
 export const supportedDuration=code=>[0,1,2,3,4,5,7,8].includes(code);
 export function selfEffectSkill(skill){
  const notes=new Set();
@@ -17,7 +17,7 @@ export function selfEffectSkill(skill){
   for(const effect of effects){
    const code=effect.extras_raw?.value_scale||effect.extras_raw?.special||0;
    if([3,4,5,6,7,10,11,12,19,20,24,25,26,27,28,30,31,32,34,35,37].includes(code))notes.add(`외부 효과량 조건 ${code}: 공개 시뮬레이터의 충족 가정`);
-   if([40,41].includes(code))notes.add(`시나리오 보너스 ${code}: 증가식 미확정, 검증된 기본 효과만 반영`);
+   if([40,41].includes(code))notes.add(`시나리오 보너스 ${code}: 공개 시뮬레이터의 조건 충족 배율 1.2 적용`);
    if(effect.extras_raw?.additional_activation)notes.add('효과 중 추가 발동·추월은 공개 시뮬레이터의 즉시 근사');
   }
   if([2,4,5].includes(inv.time_scale_raw))notes.add('외부 지속시간 조건은 공개 시뮬레이터의 고정 근사');
@@ -43,7 +43,8 @@ export function effectValue(effect,{setup,physics,state,q=.5}){
   case 34:value+=.2;break;
   case 35:value+=setup.course.distance_type===2?.1:setup.course.distance===2500&&String(setup.course.track_id)==='10005'?.2:0;break;
   case 36:if(setup.course.distance_type===3)value=.65;break;
-  // 40/41: base magnitude is independently present in both source catalogs.
+  case 40:case 41:value*=1.2;break;
+  case 42:if([2,3].includes(setup.course.distance_type))value+=.05;break;
  }
  if([1,2].includes(effect.additional))value*=2;
  return value;

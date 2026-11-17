@@ -24,8 +24,10 @@ export function possibleInContext(skill,context){
   for(let pass=0;pass<skill.invocations.length;pass++){
     let changed=false;
     skill.invocations.forEach((inv,index)=>{
-      const prior=possible.some((yes,other)=>yes&&other!==index);
-      const state={...context,is_activate_other_skill_detail:prior?1:0};
+      const target=(inv.condition||[]).flat().find(a=>a.field==='is_activate_other_skill_detail')?.value;
+      const targetIndex=skill.invocations.findIndex(other=>other.index===target);
+      const prior=targetIndex>=0?possible[targetIndex]:possible.some((yes,other)=>yes&&other!==index);
+      const state={...context,is_activate_other_skill_detail:prior?(target||1):0};
       const eligible=evaluateCondition(inv.condition,state)!==false&&evaluateCondition(inv.precondition,state)!==false;
       if(eligible&&!possible[index]){possible[index]=true;changed=true;}
     });

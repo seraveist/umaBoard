@@ -182,3 +182,17 @@ dialog{padding:0;border:0;border-radius:var(--radius);background:var(--surface);
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 @media(forced-colors:active){*{scrollbar-color:auto}:focus-visible{outline-color:Highlight}.skill-detail-trigger{border-color:ButtonText}.skill-details{border-color:CanvasText}.workflow-tabs [aria-selected=true]{border-color:Highlight}.step-number{border:1px solid ButtonText}}
+:root { --evolution-border: #e7c4db; }
+.final-section { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line, #e7e5e1); min-width: 0; }
+.final-section h4 { margin: 0 0 12px; font-size: 15px; }
+.final-section h4 span { font-size: 12px; color: #746c70; font-weight: 500; margin-left: 6px; }
+.final-evolution-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.final-evolution-grid .final-section { border-top-color: var(--evolution-border); }
+.final-active-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.evolution-options { margin-top: 16px; }
+.evolution-options summary { cursor: pointer; font-size: 13px; }
+.evolution-options fieldset { border: 0; padding: 12px 0 0; margin: 0; min-width: 0; }
+.evolution-options legend { font-size: 13px; font-weight: 700; }
+.evolution-option { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 12px; line-height: 1.6; }
+.evolution-option input { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; }
+@media (max-width: 600px) { .final-evolution-grid, .final-active-list { grid-template-columns: 1fr; gap: 0; } }

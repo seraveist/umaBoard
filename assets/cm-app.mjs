@@ -13,6 +13,7 @@ import {el} from './cm-dom.mjs';
 import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.mjs';
 import {createWorkflow} from './cm-workflow.mjs';
 import {restoreChecklistPlan,trimChecklistPlans} from './cm-plan-storage.mjs';
+import {finalAcquisitionSnapshot} from './cm-evolution.mjs';
 
 const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
@@ -146,8 +147,8 @@ function renderRows(){
  for(const node of [...body.children])if(!wanted.has(node.dataset.skill))node.remove();
  visible.forEach((row,index)=>{
   let node=tableNodes.get(row.id);if(!node){node=newRow(row);tableNodes.set(row.id,node);}
-  const gain=node.querySelector('[data-gain]'),value=Math.abs(row.gain)<.005?0:row.gain;
-  gain.textContent=(value>0?'+':'')+value.toFixed(2);gain.classList.toggle('is-zero',value===0);
+  const gain=node.querySelector('[data-gain]'),value=Number.isFinite(row.gain)&&Math.abs(row.gain)<.005?0:row.gain;
+  gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):'미지원';gain.classList.toggle('is-zero',value===0);
   const select=node.querySelector('select'),state=acquisitionValue(states[acquisitionId(row)]);if(select.value!==state)select.value=state;
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
   node.classList.toggle('is-owned',state==='owned');select.classList.toggle('is-owned',state==='owned');
@@ -198,7 +199,7 @@ function beginCalculation(event){
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:checklistSnapshot(result.rows,states,hierarchy),skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
@@ -209,7 +210,7 @@ function setupWorker(){
   if(message.type==='progress'){
    rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
-   result=message.result;rows=result.rows;total=rows.length;states=checklistSnapshot(rows,states,hierarchy);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
+   result=message.result;rows=result.rows;total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
    notice();renderRows();
    let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
@@ -231,7 +232,7 @@ async function start(){
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
   data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);
-  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();return saveDraft();}});
+  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;
   if(saved&&Array.isArray(saved.supportIds))deck=saved.supportIds.slice(0,6);

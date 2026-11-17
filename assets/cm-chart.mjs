@@ -2,13 +2,13 @@ import {buildCandidates,possibleInContext} from './candidates.mjs';
 import {compileSkill,fixedContext,sampleBranches} from './activation.mjs';
 import {simulateSolo} from './solo.mjs';
 import {lengthsBetween,validateSetup,uniqueLevel} from './physics.mjs';
-import {characterIdentity} from './acquisition-rules.mjs';
+import {characterIdentity,activeAcquisitionRoute} from './acquisition-rules.mjs';
 import {withCourseMetadata} from './cm-course-metadata.mjs';
 import {INHERITED_UPGRADES,inheritedPerformanceSkill,styleRecommendation,selectInheritedTop} from './cm-recommendation.mjs';
 import {skillIconId} from './cm-icons.mjs';
 import {selfEffectSkill} from './cm-effect-policy.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v4';
+export const CM_MODEL_VERSION='cm-first-chart-v5';
 export const CM_SAMPLES=24;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -75,14 +75,27 @@ export function compileChartSkill(skill,setup){
 export function buildChartCandidates(data,setup){
  const candidates=buildCandidates(data,{...setup,purchase:true,preserveEvolutionBases:true,context:fixedContext(setup)});
  const records=new Map([...candidates.learned,...candidates.factorCandidates,...candidates.inheritance].map(s=>[s.id,s]));
- const add=(id,route)=>{
-  const raw=data.skills[id];if(!raw?.jp_available||!possibleInContext(raw,fixedContext(setup)))return;
+ const add=(id,route,allowInactive=false)=>{
+  const raw=data.skills[id];if(!raw?.jp_available||!allowInactive&&!possibleInContext(raw,fixedContext(setup)))return;
   if(!records.has(id))records.set(id,{...raw,routes:[],choice_groups:[]});
   const s=records.get(id),routes=s.routes||[];if(route&&!routes.some(r=>JSON.stringify(r)===JSON.stringify(route)))records.set(id,{...s,routes:[...routes,route]});
  };
+ // Actual stats may exceed the first chart's base scenario caps. Retain
+ // evolution metadata behind stat gates; still apply fixed course/style gates.
+ const evolutionContext={...fixedContext(setup)};
+ for(const key of ['base_speed','base_stamina','base_power','base_guts','base_wiz'])delete evolutionContext[key];
+ for(const rule of data.evolution_rules){
+  const matches=rule.owner_type==='outfit'&&rule.owner_id===setup.outfitId||rule.owner_type==='scenario'&&rule.owner_id===setup.scenarioId;
+  const raw=data.skills[rule.evolved_id];
+  if(!matches||!raw?.jp_available||!possibleInContext(raw,evolutionContext))continue;
+  const routes=data.acquisition_routes.filter(route=>route.skill_id===rule.base_id&&activeAcquisitionRoute(data,setup,route));
+  if(!routes.length&&!records.has(rule.base_id))continue;
+  for(const route of routes)add(rule.base_id,route,true);
+  add(rule.evolved_id,{kind:'evolution',owner_type:rule.owner_type,owner_id:rule.owner_id,base_id:rule.base_id},true);
+ }
  // A comparison/checklist retains the gold AND every evolution alternative.
  // Purchase mutual exclusion belongs to the later training-result optimizer.
- for(const rule of data.evolution_rules)if(records.has(rule.evolved_id))add(rule.base_id,{kind:'evolution_base',owner_type:rule.owner_type,owner_id:rule.owner_id});
+ for(const rule of data.evolution_rules)if(records.has(rule.evolved_id))add(rule.base_id,{kind:'evolution_base',owner_type:rule.owner_type,owner_id:rule.owner_id},true);
  // These verified inherited evolutions replace their weaker version, always.
  for(const [base,strong] of Object.entries(INHERITED_UPGRADES)){
   const original=records.get(base),upgraded=records.get(strong);
@@ -172,8 +185,10 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  const nativeRecords=[...records.values()].filter(native),nativeSkills=nativeRecords.map(s=>compiled.get(s.id));
  if(nativeSkills.some(s=>s.status==='unsupported'))throw new Error('이 육성마의 고유기는 아직 계산을 지원하지 않습니다. 다른 육성마를 선택하세요.');
  const baseline=nativeSkills.filter(supported),nativeIds=nativeRecords.map(s=>s.id);
- const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&supported(compiled.get(s.id))&&(!s.inherited||inheritedPerformanceSkill(compiled.get(s.id))&&styleRecommendation(s,compiled.get(s.id),setup).eligible)).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
+ const evolutionBases=new Set([...records.values()].filter(s=>s.rarity==='evolution').flatMap(s=>data.evolution_rules.filter(r=>r.evolved_id===s.id).map(r=>r.base_id)));
+ const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&(supported(compiled.get(s.id))||s.rarity==='evolution'||evolutionBases.has(s.id))&&(!s.inherited||inheritedPerformanceSkill(compiled.get(s.id))&&styleRecommendation(s,compiled.get(s.id),setup).eligible)).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
   rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
+  calculationState:compiled.get(s.id).status,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
  const baselines=new Map(),optionsFor=sample=>({dt,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,nativeIds,sample)});
  const runBaseline=sample=>{if(!baselines.has(sample))baselines.set(sample,simulateSolo(setup,baseline,.5,optionsFor(sample)));return baselines.get(sample);};
@@ -181,6 +196,7 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  return {setup,rows,nativeIds,modelVersion:CM_MODEL_VERSION,samples,dt,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&!supported(s)).map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
+   if(compiled.get(row.id).status==='unsupported')return {...row,gain:null,timeGain:null,hpGain:null,samples:0};
    const skill=compiled.get(row.id),random=baselineRandom||skill.stochastic||skill.invocations.some(i=>i.chartRandomPolicy||i.condition.some(b=>b.random)),count=random?samples:1;
    let gain=0,timeGain=0,hpGain=0;
    for(let sample=0;sample<count;sample++){
@@ -204,7 +220,9 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
   scored.push(evaluate(inherited[index]));
   if((index+1)%batchSize===0||index+1===inherited.length){onProgress({rows:[],completed:index+1,total:task.rows.length,stage:'inheritance',setup:task.setup,modelVersion:CM_MODEL_VERSION});await new Promise(resolve=>setTimeout(resolve,0));}
  }
- const top=selectInheritedTop(scored),chosen=new Set(top.map(row=>row.id)),ordered=task.rows.filter(row=>!row.inherited||chosen.has(row.id)),rows=[];
+ const top=selectInheritedTop(scored),chosen=new Set(top.map(row=>row.id)),ordered=sortChartRows(task.rows.filter(row=>row.rarity!=='evolution'&&(!row.inherited||chosen.has(row.id))),data,display),rows=[];
+ // Hidden options keep their metadata and parent links, never a separate hint.
+ const evolutionOptions=task.rows.filter(row=>row.rarity==='evolution');
  let completed=inherited.length;
  for(let index=0;index<ordered.length;index++){
   if(cancelled())return null;
@@ -215,6 +233,6 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
   }
  }
  while(cache.size>3000)cache.delete(cache.keys().next().value);
- return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
+ return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,evolutionOptions,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
   inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-family-upper-first',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
 }

@@ -122,10 +122,8 @@ same-ID display record is the compatibility fallback. Grouping/order may follow
 a lower stage, but the image never borrows that lower stage's rarity. All 128
 registered PNGs are served locally with pinned provenance and checksum evidence.
 The runtime owns
-`--skill-indent-step` (16px desktop, 8px narrow): each family's evolutions are
-unindented, rare skills step in once, and ordinary skills step in again. Without
-an evolution, rare is the root and ordinary steps in once. Alternative evolutions
-share the root depth. Mean gain and acquisition controls keep aligned columns.
+`--skill-indent-step` (16px desktop, 8px narrow): first-chart rare rows start at depth0 and ordinary lowers step in once. Evolution options are retained internally. Mean gain and acquisition controls keep aligned columns.
+Final results show additional purchases, then awakening/scenario evolution cards side by side on wide screens and vertically on narrow screens. A complete active skill list follows, with paid history in a disclosure. Evolution cards show the original rare → evolved skill and additional0 SP. Scenario count includes already acquired evolutions.
 The runtime also owns
 `--skill-*-frame` and `--skill-*-surface` tokens in cm.css. One body-mounted
 `cm-skill-details.mjs` tooltip uses `--z-skill-details:300`, stays within the
