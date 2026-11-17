@@ -21,6 +21,9 @@ def validate_dataset(data, config, previous=None, allow_count_decrease=False):
     validate_planning(data)
     for skill in skills.values():
         if skill['calculation_status']!='unvalidated':raise DataError('this adapter cannot declare race calculation validated')
+        icon=skill.get('icon_id')
+        if icon is not None and (not isinstance(icon,str) or identifier(icon,'skill icon ID')!=icon or icon=='0'):
+            raise DataError(f"{skill['id']}: invalid skill icon ID")
         for pid in skill['parent_ids']:
             if pid not in skills:raise DataError(f"{skill['id']}: inherited parent missing {pid}")
     for route in data['acquisition_routes']:

@@ -10,6 +10,23 @@ from test_pipeline import fixtures
 
 
 class ScenarioPlanningTests(unittest.TestCase):
+ def test_reviewed_link_routes_replace_unconditional_tags_and_register_new_scenario_owners(self):
+  raw,rules=fixtures();raw['skills'][1]['sce_e']=[8]
+  rules['scenario_extra_routes']=[{'scenario_id':'8','skill_id':'201011','source':'https://example.com/review',
+   'requirements':{'character_link':{'name_jp':'テストウマ','present':True}}},
+   {'scenario_id':'14','skill_id':'201012','source':'https://example.com/reward'}]
+  d=normalize(raw,rules);self.assertTrue(validate_planning(d))
+  routes=[r for r in d['acquisition_routes'] if r['owner_type']=='scenario' and r['owner_id']=='8']
+  self.assertEqual(len(routes),1);self.assertEqual(routes[0]['requirements']['character_link']['present'],True)
+  self.assertEqual(routes[0]['source'],'https://example.com/review');self.assertIn('14',d['scenarios'])
+ def test_reviewed_route_requires_evidence_and_supported_requirements(self):
+  raw,rules=fixtures()
+  rules['scenario_extra_routes']=[{'scenario_id':'10','skill_id':'201011','source':'https://example.com/group',
+   'requirements':{'support_link':{'name_jp':'伝説の体現者','present':True}}}]
+  d=normalize(raw,rules);self.assertTrue(validate_planning(d))
+  for field,value in [('source',None),('requirements',{'unknown':True}),('requirements',{'support_link':{'name_jp':'伝説の体現者','present':1}})]:
+   bad=copy.deepcopy(d);next(r for r in bad['acquisition_routes'] if r['kind']=='scenario_curated')[field]=value
+   with self.subTest(field=field,value=value),self.assertRaises(DataError):validate_planning(bad)
  def fixture(self):
   raw,rules=fixtures()
   raw['skills'][1]['evo'].append({'scenario_id':'15','evos':[100101111]})

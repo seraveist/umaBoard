@@ -38,6 +38,7 @@
   "curated_files": [
     "curated/rules.json",
     "curated/names-ko.json",
-    "curated/planning.json"
+    "curated/planning.json",
+    "curated/source-supplements.json"
   ]
 }

@@ -45,20 +45,21 @@ export function buildPhysics(setup,passive={}){
  const powerPenalty=course.surface===1?(going===1?0:-50):[0,-100,-50,-100,-100][going];
  const modified=Object.fromEntries(STAT_KEYS.map(key=>[key,Math.max(1,Math.floor(raceStat(stats[key])*coeff*(key==='speed'?courseBonus:key==='wisdom'?STYLE_WISDOM[aptitudes.style]:1)+(passive[key]||0)+(key==='speed'&&going===4?-50:key==='power'?powerPenalty:0)))]));
  const bs=baseSpeed(course.distance),ds=DISTANCE_SPEED[aptitudes.distance],lateAdd=Math.sqrt(modified.speed/500)*ds;
- const spurt=(bs*(SPEED[style-1][2]+.01)+lateAdd)*1.05+lateAdd+Math.pow(450*modified.guts,.597)*.0001;
+ const oonige=style===1&&!!passive.oonige,speedCoefficients=oonige?[1.063,.962,.95]:SPEED[style-1],accelCoefficients=oonige?[1.17,.94,.956]:ACCEL[style-1];
+ const spurt=(bs*(speedCoefficients[2]+.01)+lateAdd)*1.05+lateAdd+Math.pow(450*modified.guts,.597)*.0001;
  const rawPower=stats.power+(passive.power||0),rawStamina=stats.stamina+(passive.stamina||0);
  const legAccel=rawPower>1200?Math.sqrt((rawPower-1200)*130)*.001*LEG_STYLE[course.distance_type-1][style-1]:0;
  const staminaDistance=course.distance<=2100?0:course.distance<=2200?.5:course.distance<=2400?1:course.distance<=2600?1.5:1.8;
  return {modified,bs,spurt,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
-  hpMax:course.distance+.8*modified.stamina*HP_STYLE[style-1],
+  hpMax:course.distance+.8*modified.stamina*(oonige?.86:HP_STYLE[style-1]),
   legAccel,legDuration:3*LEG_TIME[course.distance_type-1],
   staminaSpeed:rawStamina>1200?Math.sqrt(rawStamina-1200)*.0085*staminaDistance:0,
   // Keep the entered speed in the ordinary equations; never clamp it to 2000.
   // Full-spurt's additional speed ceiling is still unverified and is excluded explicitly.
   fullSpurtExcluded:stats.speed>2000||stats.speed*coeff+(passive.speed||0)>2000,
   wisdomSpeedMultiplier(phase){return 1+wisdomSkillBase(stats.wisdom*coeff+(passive.wisdom||0))*WISDOM_SKILL[style-1][phase];},
-  target(phase){return phase>=2?spurt:bs*SPEED[style-1][phase];},
-  acceleration(phase,uphill){return (uphill?.0004:.0006)*Math.sqrt(500*modified.power)*ACCEL[style-1][Math.min(phase,2)]*SURFACE_ACCEL[aptitudes.surface]*DISTANCE_ACCEL[aptitudes.distance];},
+  target(phase){return phase>=2?spurt:bs*speedCoefficients[phase];},
+  acceleration(phase,uphill){return (uphill?.0004:.0006)*Math.sqrt(500*modified.power)*accelCoefficients[Math.min(phase,2)]*SURFACE_ACCEL[aptitudes.surface]*DISTANCE_ACCEL[aptitudes.distance];},
   consumption(speed,phase){return 20*(speed-bs+12)**2/144*(course.surface===1?(going>=3?1.02:1):going===3?1.01:going===4?1.02:1)*(phase>=2?1+200/Math.sqrt(600*modified.guts):1);}
  };
 }

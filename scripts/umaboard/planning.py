@@ -2,7 +2,7 @@
 from .common import DataError, identifier, number, canonical_bytes
 
 
-def purchase_stages(skills, costs, secondary, relations, evolutions):
+def purchase_stages(skills, costs, secondary, relations, evolutions, reviewed=None):
     groups = {}
     for row in secondary:
         sid = identifier(row['id'])
@@ -22,7 +22,7 @@ def purchase_stages(skills, costs, secondary, relations, evolutions):
                 and {r['from_id'], r['to_id']} == {sid, previous_id} for r in relations)
             if base > 0 and row['sp'] - previous_total == base and linked:
                 stages[sid] = {'base_cost': base, 'prerequisite_id': previous_id,
-                               'status': 'verified', 'evidence': 'umatools_increment_umasim_total'}
+                               'status': 'verified', 'evidence': 'reviewed_secondary_increment_and_total' if skills[sid].get('origin')=='umasim' else 'umatools_increment_umasim_total'}
             previous_total = row['sp']
             previous_id = sid
     for sid, skill in skills.items():
@@ -35,11 +35,56 @@ def purchase_stages(skills, costs, secondary, relations, evolutions):
         elif base:
             stages[sid] = {'base_cost': base, 'prerequisite_id': None,
                            'status': 'unverified', 'evidence': 'prerequisite_unresolved'}
+    # The secondary solo catalog omits some vision/debuff golds, but includes
+    # their evolved forms with the same cumulative purchase price. Prove the
+    # missing gold via its unique white relation and the evolved total.
+    secondary_by={identifier(row['id']):row for row in secondary}
+    for sid,stage in list(stages.items()):
+        if stage['status']=='verified' or skills[sid]['rarity']!='gold':continue
+        totals={secondary_by[r['evolved_id']]['sp'] for r in evolutions
+                if r['base_id']==sid and r['evolved_id'] in secondary_by
+                and isinstance(secondary_by[r['evolved_id']].get('sp'),(int,float))}
+        lowers={r['to_id'] if r['from_id']==sid else r['from_id'] for r in relations
+                if r['kind']=='version_family' and sid in (r['from_id'],r['to_id'])}
+        lowers={low for low in lowers if skills[low]['rarity']=='white'}
+        if len(totals)!=1 or len(lowers)!=1:continue
+        low=next(iter(lowers));chain=stages.get(low);total=stage['base_cost'];seen={sid}
+        while chain and chain['status']=='verified' and low not in seen:
+            seen.add(low);total+=chain['base_cost'];low=chain['prerequisite_id']
+            if low is None:break
+            chain=stages.get(low)
+        else:continue
+        if totals=={total}:
+            stages[sid]={**stage,'prerequisite_id':next(iter(lowers)),'status':'verified',
+                         'evidence':'umatools_relation_and_increment_umasim_evolution_total'}
+    for sid,review in (reviewed or {}).items():
+        low=review.get('prerequisite_id');base=review.get('base_cost')
+        if sid not in skills or skills[sid]['rarity']!='gold' or low not in stages or stages[low]['status']!='verified' or stages[low]['prerequisite_id'] is not None or not review.get('source') or base!=costs.get(sid) or base+stages[low]['base_cost']!=review.get('total_cost'):
+            raise DataError('reviewed purchase proof differs from source costs')
+        if not any(r['kind']=='version_family' and {r['from_id'],r['to_id']}=={sid,low} for r in relations):
+            raise DataError('reviewed purchase proof missing source relation')
+        stages[sid]={'base_cost':base,'prerequisite_id':low,'status':'verified',
+                     'evidence':'reviewed_primary_increment_and_independent_skill_page',
+                     'source':review['source'],'checked_at':review.get('checked_at')}
     return stages
 
 
 def validate_planning(data):
     skills = data['skills']
+    def validate_requirements(requirements):
+        if not isinstance(requirements, dict):
+            raise DataError('unsupported scenario reward requirement')
+        if requirements:
+            kinds = set(requirements)
+            link = requirements.get(next(iter(kinds)), {})
+            if len(kinds)!=1 or not kinds <= {'character_link','support_link'} or not isinstance(link, dict) or set(link) != {'name_jp', 'present'} or not isinstance(link['name_jp'], str) or not link['name_jp'] or type(link['present']) is not bool:
+                raise DataError('unsupported scenario reward requirement')
+
+    for route in data.get('acquisition_routes', []):
+        if route['kind']=='scenario_curated':
+            if route['owner_type']!='scenario' or not route.get('source'):
+                raise DataError('reviewed scenario route missing owner or source')
+            validate_requirements(route.get('requirements', {}))
     event_routes = {(r['owner_id'], r['skill_id']) for r in data.get('acquisition_routes', [])
                     if r['owner_type'] == 'support' and r['kind'] == 'support_event'}
     scenario_routes = {(r['owner_id'], r.get('event_id'), r.get('event_choice_id'), r['skill_id'], canonical_bytes(r.get('requirements', {})))
@@ -58,12 +103,7 @@ def validate_planning(data):
             seen.add(sid)
             if event_id is not None:
                 requirements = reward.get('requirements', {})
-                if requirements:
-                    if not isinstance(requirements, dict):
-                        raise DataError('unsupported scenario reward requirement')
-                    link = requirements.get('character_link', {})
-                    if not isinstance(link, dict) or set(requirements) != {'character_link'} or set(link) != {'name_jp', 'present'} or not isinstance(link['name_jp'], str) or not link['name_jp'] or type(link['present']) is not bool:
-                        raise DataError('unsupported scenario reward requirement')
+                validate_requirements(requirements)
                 if (card_id, event_id, choice_id, sid, canonical_bytes(requirements)) not in scenario_routes:
                     raise DataError('event reward missing scenario acquisition route')
             elif (card_id, sid) not in event_routes:

@@ -112,7 +112,7 @@ def portrait_bytes(root, catalog, kind, identifier, client, fetch):
 
 def stage_portraits(root, output, fetch=False, client=None):
     client = client or HttpClient(os.environ.get('GITHUB_TOKEN'))
-    catalog = json.loads((root / 'data/portraits.json').read_text())
+    catalog = json.loads((root / 'data/portraits.json').read_text(encoding='utf-8'))
     staged = {**catalog, 'outfits': {}, 'supports': {}}
     jobs = [(kind, identifier) for kind in KINDS for identifier in catalog[kind]]
 

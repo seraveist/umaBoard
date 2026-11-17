@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
   "review_status": "partial",
+  "purchase_stage_reviews": {
+    "201501": {
+      "base_cost": 110,
+      "prerequisite_id": "201502",
+      "total_cost": 220,
+      "source": "https://xn--gck1f423k.xn--1bvt37a.tools/skills/201501",
+      "checked_at": "2026-11-17"
+    }
+  },
   "scenario_names": {
     "14": "らっしゃい！トレセン軒！ ～恩返し、始めました～",
-    "15": "朋、史解き ―午式駿大祭―"
+    "15": "朋、史解き ―午式駿大祭―",
+    "7": "U.A.F. Ready GO! ～アスリートのキラメキ～",
+    "8": "収穫ッ！満腹ッ！大豊食祭",
+    "9": "走れ！メカウマ娘 -夢繋ぐ発明-",
+    "10": "The Twinkle Legends",
+    "11": "無人島へようこそ -Design Your Island-",
+    "12": "ごくらく♪ゆこま温泉郷",
+    "13": "Beyond Dreams 共に前へ、共に光を"
   },
   "inheritance_links": [
     {
@@ -21,8 +37,1484 @@
   ],
   "jp_unavailable_skill_ids": [],
   "race_presets": [],
-  "scenario_extra_routes": [],
+  "scenario_extra_routes": [
+    {
+      "scenario_id": "7",
+      "skill_id": "200511",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/uaf_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "7",
+      "skill_id": "201701",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/uaf_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "7",
+      "skill_id": "210301",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/uaf_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "7",
+      "skill_id": "210302",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/uaf_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "202791",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/cook_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "210321",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/cook_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "210322",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/cook_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200512",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mecha_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200511",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mecha_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "210342",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mecha_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "210341",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mecha_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "210352",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/twinkle_legends_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202791",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/twinkle_legends_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "210351",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/twinkle_legends_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "200511",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mujinto_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "200512",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mujinto_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "210361",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mujinto_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "210362",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/mujinto_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202801",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/onsen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202791",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/onsen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "210372",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/onsen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "210371",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/onsen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "200511",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "210381",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "210382",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "210391",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/ramen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "210392",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/ramen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "200472",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/ramen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "200742",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/ramen_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201261",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カツラギエース",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201262",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カツラギエース",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201351",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "スペシャルウィーク",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201352",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "スペシャルウィーク",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "200361",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ニシノフラワー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "200362",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ニシノフラワー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "203011",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ヒシアケボノ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "203012",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ヒシアケボノ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201341",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ライスシャワー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "201342",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ライスシャワー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "203021",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "秋川理事長",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "8",
+      "skill_id": "203022",
+      "source": "https://gamewith.jp/uma-musume/article/show/451602",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "秋川理事長",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "203301",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ビワハヤヒデ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "203302",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ビワハヤヒデ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "201453",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナリタタイシン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "201452",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナリタタイシン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200331",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "エアシャカール",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200332",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "エアシャカール",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200591",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "シンボリクリスエス",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200592",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "シンボリクリスエス",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "203311",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タニノギムレット",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "203312",
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タニノギムレット",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202901",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "オルフェーヴル",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202902",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "オルフェーヴル",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202501",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メジロラモーヌ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202502",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メジロラモーヌ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "201103",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ジェンティルドンナ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "201102",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ジェンティルドンナ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202471",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "シリウスシンボリ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202472",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "シリウスシンボリ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "203101",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "スマートファルコン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "203103",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "スマートファルコン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "203111",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "アイネスフウジン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "203112",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "アイネスフウジン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "202661",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ゴールドシチー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "202662",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ゴールドシチー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "202451",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メジロライアン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "202452",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メジロライアン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "203221",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "サクラチヨノオー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "203222",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "サクラチヨノオー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "201612",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タマモクロス",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "201611",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タマモクロス",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "200461",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タッカーブライン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "11",
+      "skill_id": "200462",
+      "source": "https://game8.jp/umamusume/701148",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "タッカーブライン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202471",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ワンダーアキュート",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202472",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ワンダーアキュート",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "203601",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ホッコータルマエ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "203602",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ホッコータルマエ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "200431",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "トランセンド",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "200432",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "トランセンド",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202461",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ミホノブルボン",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202462",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ミホノブルボン",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202371",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "トウカイテイオー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "202372",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "トウカイテイオー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "200511",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "保科健子",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "12",
+      "skill_id": "200512",
+      "source": "https://game8.jp/umamusume/734323",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "保科健子",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "202951",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "エスポワールシチー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "202952",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "エスポワールシチー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "204111",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ラヴズオンリーユー",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "204112",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ラヴズオンリーユー",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "202091",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "レッドディザイア",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "202092",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "レッドディザイア",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203501",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "フォーエバーヤング",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203502",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "フォーエバーヤング",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203101",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "マルシュロレーヌ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203103",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "マルシュロレーヌ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "201662",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カジノドライヴ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "201661",
+      "source": "https://game8.jp/umamusume/763745",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カジノドライヴ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201313",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ファインモーション",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201312",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ファインモーション",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201173",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナリタトップロード",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201172",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナリタトップロード",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "203871",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カルストンライトオ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "203872",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "カルストンライトオ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "202721",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メイショウドトウ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "202722",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "メイショウドトウ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201103",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナイスネイチャ",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201102",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "character_link": {
+          "name_jp": "ナイスネイチャ",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "9",
+      "skill_id": "200721",
+      "source": "https://gamewith.jp/uma-musume/article/show/465315",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202801",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "support_link": {
+          "name_jp": "伝説の体現者",
+          "present": true
+        }
+      }
+    },
+    {
+      "scenario_id": "10",
+      "skill_id": "202802",
+      "source": "https://gamewith.jp/uma-musume/article/show/483380",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다.",
+      "requirements": {
+        "support_link": {
+          "name_jp": "伝説の体現者",
+          "present": false
+        }
+      }
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "203501",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203011",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "201043",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "201103",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "202791",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "200973",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "200963",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203021",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "201033",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "13",
+      "skill_id": "203311",
+      "source": "https://github.com/mee1080/umasim/blob/3ab736cbda7b35944342dae43aa97016d8839cd8/data/dreams_memo.md",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "200761",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "201652",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "203851",
+      "source": "https://game8.jp/umamusume/794070",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    },
+    {
+      "scenario_id": "14",
+      "skill_id": "202791",
+      "source": "https://kamigame.jp/umamusume/page/428952978217565927.html",
+      "checked_at": "2026-11-17",
+      "assumption": "획득 조건 달성 가능성만 후보에 반영. 실제 습득·힌트는 사용자가 기록한다."
+    }
+  ],
   "scenario_exclusive_groups": [
+    {
+      "id": "7-evolution-limit",
+      "scenario_id": "7",
+      "skill_ids": [
+        "407011",
+        "407021",
+        "407031",
+        "407041",
+        "407051",
+        "407061",
+        "407071"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/595453",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "8-evolution-limit",
+      "scenario_id": "8",
+      "skill_ids": [
+        "408011",
+        "408021",
+        "408031",
+        "408041",
+        "408051",
+        "408061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/620521",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "9-evolution-limit",
+      "scenario_id": "9",
+      "skill_ids": [
+        "409011",
+        "409021",
+        "409031",
+        "409041",
+        "409051",
+        "409061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/650156",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "10-evolution-limit",
+      "scenario_id": "10",
+      "skill_ids": [
+        "410011",
+        "410021",
+        "410031",
+        "410041",
+        "410051",
+        "410061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/670791",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "11-evolution-limit",
+      "scenario_id": "11",
+      "skill_ids": [
+        "411011",
+        "411021",
+        "411031",
+        "411041",
+        "411051",
+        "411061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/701249",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "12-evolution-limit",
+      "scenario_id": "12",
+      "skill_ids": [
+        "412011",
+        "412021",
+        "412031",
+        "412041",
+        "412051"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/734327",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "13-evolution-limit",
+      "scenario_id": "13",
+      "skill_ids": [
+        "413011",
+        "413021",
+        "413031",
+        "413041",
+        "413051"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/763918",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
+    {
+      "id": "14-evolution-limit",
+      "scenario_id": "14",
+      "skill_ids": [
+        "414011",
+        "414021",
+        "414031",
+        "414041",
+        "414051",
+        "414061"
+      ],
+      "max_count": 2,
+      "source": "https://game8.jp/umamusume/794793",
+      "checked_at": "2026-11-17",
+      "assumption": "진화 조건 충족 가정. 육성마 자체 진화는 시나리오 진화 2개 제한에 포함하지 않는다."
+    },
     {
       "id": "15-evolution-limit",
       "scenario_id": "15",

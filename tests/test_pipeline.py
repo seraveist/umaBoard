@@ -38,6 +38,73 @@ def fixtures():
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_effect_corrections_preserve_real_records_only_for_unchanged_skill_identities(self):
+        raw,rules=fixtures();data=normalize(raw,rules)
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);publish(root,data,validate_dataset(data,{}),[],[],'before')
+            old=json.loads((root/'data/manifest.json').read_text(encoding='utf8'))
+            corrected=copy.deepcopy(data);corrected['skills']['201011']['invocations'][0]['effects'][0]['value_raw']+=100
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'effect')
+            new=json.loads((root/'data/manifest.json').read_text(encoding='utf8'))
+            self.assertIn(old['checklist_data_sha256'],new['checklist_record_versions']);self.assertNotIn('checklist_compatible_versions',new)
+            corrected['skills']['201011']['rarity']='white';publish(root,corrected,validate_dataset(corrected,{}),[],[],'identity')
+            self.assertNotIn('checklist_record_versions',json.loads((root/'data/manifest.json').read_text(encoding='utf8')))
+    def test_candidate_route_corrections_migrate_records_only_with_identical_skill_mechanics(self):
+        raw,rules=fixtures();data=normalize(raw,rules)
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            publish(root,data,validate_dataset(data,{}),[],[],'before')
+            old=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            corrected=copy.deepcopy(data)
+            corrected['acquisition_routes'].append({'skill_id':'201012','owner_type':'outfit','owner_id':'100101','kind':'outfit_event','event_conditions_affect_candidates':False})
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'routes')
+            new=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            self.assertIn(old['checklist_data_sha256'],new['checklist_compatible_versions'])
+            self.assertNotEqual(old['checklist_data_sha256'],new['checklist_data_sha256'])
+            corrected['purchase_stages']['201012']['base_cost']+=1
+            publish(root,corrected,validate_dataset(corrected,{}),[],[],'cost')
+            self.assertNotIn('checklist_compatible_versions',json.loads((root/'data/manifest.json').read_text(encoding='utf-8')))
+    def test_icon_only_publication_preserves_old_checklist_scope_but_mechanics_changes_do_not(self):
+        raw,rules=fixtures();legacy=normalize(raw,rules)
+        for skill in legacy['skills'].values():skill.pop('icon_id',None)
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            publish(root,legacy,validate_dataset(legacy,{}),[],[],'legacy')
+            before=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            enriched=copy.deepcopy(legacy)
+            for skill in enriched['skills'].values():skill['icon_id']='20016' if skill['rarity']=='evolution' else '20011'
+            publish(root,enriched,validate_dataset(enriched,{}),[],[],'icons')
+            after=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            self.assertNotEqual(before['active_version'],after['active_version'])
+            self.assertEqual(after['checklist_data_sha256'],before['active_version'])
+            enriched['skills']['201011']['invocations'][0]['effects'][0]['value_raw']+=100
+            publish(root,enriched,validate_dataset(enriched,{}),[],[],'mechanics')
+            changed=json.loads((root/'data/manifest.json').read_text(encoding='utf-8'))
+            self.assertNotEqual(changed['checklist_data_sha256'],after['checklist_data_sha256'])
+
+    def test_each_skill_keeps_its_own_source_icon_through_normalization(self):
+        raw,rules=fixtures()
+        raw['skills'][0]['iconid']=20013
+        raw['skills'][0]['gene_version']['iconid']=20011
+        raw['skills'][1]['iconid']=20012
+        raw['skills'][2]['iconid']=20011
+        raw['skills'][3]['iconid']=20016
+        data=normalize(raw,rules);validate_dataset(data,{})
+        self.assertEqual({sid:data['skills'][sid]['icon_id'] for sid in ['110011','910011','201011','201012','100101111']},
+                         {'110011':'20013','910011':'20011','201011':'20012','201012':'20011','100101111':'20016'})
+        del raw['skills'][0]['gene_version']['iconid']
+        self.assertIsNone(normalize(raw,rules)['skills']['910011']['icon_id'])
+
+    def test_invalid_and_conflicting_icon_ids_cannot_silently_replace_source_metadata(self):
+        raw,rules=fixtures()
+        for icon in [True,-1,'not-an-icon']:
+            with self.subTest(icon=icon):
+                bad=copy.deepcopy(raw);bad['skills'][0]['iconid']=icon
+                with self.assertRaises(DataError):normalize(bad,rules)
+        raw['skills'][0]['iconid']=20013
+        duplicate=copy.deepcopy(raw['skills'][0]);duplicate['iconid']=20011;raw['skills'].append(duplicate)
+        with self.assertRaisesRegex(DataError,'conflicting duplicate icon_id'):normalize(raw,rules)
+
     def test_legacy_bundle_without_planning_contract_cannot_pass_ci_or_pages_validation(self):
         raw,rules=fixtures();data=normalize(raw,rules)
         for field in ('purchase_stages','support_events','cost_policy','purchase_order'):
@@ -172,7 +239,7 @@ class PublicationTests(unittest.TestCase):
         result=synchronize(self.root,client=OfflineClient(),rebuild_active=True)
         self.assertEqual(result['status'],'updated')
         manifest=json.loads((self.root/'data/manifest.json').read_text())
-        data=json.loads((self.root/manifest['dataset_path']).read_text())
+        data=json.loads((self.root/manifest['dataset_path']).read_text(encoding='utf-8'))
         self.assertEqual(manifest['sources'],sources);self.assertEqual(manifest['input_hashes'],hashes)
         self.assertEqual((self.root/before['dataset_path']).read_bytes(),old_bundle)
         for field in ('cost_policy','support_events','scenario_events','purchase_order'):self.assertEqual(data[field],planning[field])

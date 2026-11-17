@@ -1,0 +1,156 @@
+{
+  "source": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/data/skill_data.txt",
+  "release_source": "https://umamusume.jp/news/detail?id=3547",
+  "outfit_source": "https://gametora.com/ja/umamusume/characters/107501-daring-tact",
+  "checked_at": "2026-11-17",
+  "outfits": [
+    {
+      "id": "107501",
+      "name_jp": "デアリングタクト",
+      "outfit_name_jp": "白光のレガリア",
+      "base_stars": 3,
+      "aptitudes": {
+        "Surface": {
+          "Turf": "A",
+          "Dirt": "G"
+        },
+        "Distance": {
+          "Short": "F",
+          "Mile": "A",
+          "Medium": "A",
+          "Long": "F"
+        },
+        "Strategy": {
+          "Front": "G",
+          "Pace": "D",
+          "Late": "A",
+          "End": "F"
+        }
+      }
+    }
+  ],
+  "skills": {
+    "100751": {
+      "rarity": "unique",
+      "sha256": "ada1d14cfa27929767ddaccb2640c80bd2a0f2f743e43377ee8e4698a68c92eb",
+      "icon_id": "20013"
+    },
+    "900751": {
+      "rarity": "inherited",
+      "sha256": "c1280c8bfd887d3b8f341fdf02577e545b759b88ae5e359ed17d22afb6297efb",
+      "parent_ids": [
+        "100751"
+      ],
+      "icon_id": "20011"
+    },
+    "107501211": {
+      "rarity": "evolution",
+      "sha256": "60f4fef5a5853d9777af9d0ab04e70467232713c018e4e62cd760269f2913504",
+      "icon_id": "20046"
+    },
+    "107501221": {
+      "rarity": "evolution",
+      "sha256": "cda1a6f59032be3953c14397ffb2b3d8f663c60382cf709b52ceeef09c5de21c",
+      "icon_id": "20046"
+    },
+    "204911": {
+      "rarity": "gold",
+      "sha256": "672034830e1816499720fee50b61f611e1575f34aede3d3d8764ab6e7a9262dd",
+      "base_cost": 190,
+      "icon_id": "20012"
+    },
+    "107501111": {
+      "rarity": "evolution",
+      "sha256": "02f7567c0de6bd10ce1575be13a0c36ca0d6e7aba9f6bd50d02e8c5687c1369d",
+      "icon_id": "20016"
+    },
+    "204912": {
+      "rarity": "white",
+      "sha256": "444270f3daa87931e54129fc1fac24d60651d4567eecebd8af067188b0f7047d",
+      "icon_id": "20011"
+    }
+  },
+  "routes": [
+    {
+      "skill_id": "100751",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "203592",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "204322",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "204912",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "204622",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "204911",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "203792",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "203591",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "self"
+    },
+    {
+      "skill_id": "202712",
+      "owner_type": "outfit",
+      "owner_id": "107501",
+      "kind": "outfit_event"
+    }
+  ],
+  "evolutions": [
+    {
+      "base_id": "203591",
+      "evolved_id": "107501211",
+      "owner_type": "outfit",
+      "owner_id": "107501"
+    },
+    {
+      "base_id": "203591",
+      "evolved_id": "107501221",
+      "owner_type": "outfit",
+      "owner_id": "107501"
+    },
+    {
+      "base_id": "204911",
+      "evolved_id": "107501111",
+      "owner_type": "outfit",
+      "owner_id": "107501"
+    }
+  ],
+  "version_links": [
+    [
+      "204911",
+      "204912"
+    ]
+  ],
+  "icon_source": "https://gametora.com/data/umamusume/skills.15f537cc.json"
+}

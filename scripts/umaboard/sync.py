@@ -101,7 +101,7 @@ def raw_inputs(client,sources,cache):
 def load_active(root):
     path=root/'data/manifest.json'
     if not path.exists():return None,None
-    manifest=json.loads(path.read_text())
+    manifest=json.loads(path.read_text(encoding='utf-8'))
     relative=manifest['dataset_path']
     if not re.fullmatch(r'data/bundles/[a-f0-9]{64}/dataset.json',relative):raise DataError('invalid active bundle path')
     content=(root/relative).read_bytes()
@@ -138,12 +138,51 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
         if (dest/'validation.json').read_bytes()!=canonical_bytes(validation):
             # Validation report is reproducible for a given payload/config. Keep bundles immutable.
             raise DataError('immutable validation report conflict')
+    # Display-only icon enrichment must not discard previously recorded skills.
+    # For a pre-icon bundle this digest is exactly its original data version.
+    checklist_data={**data,'skills':{sid:{k:v for k,v in skill.items() if k!='icon_id'}
+                                   for sid,skill in data.get('skills',{}).items()}}
     manifest={'schema_version':1,'server':'JP','active_version':version,
+              'checklist_data_sha256':digest(canonical_bytes(checklist_data)),
               'dataset_path':f'data/bundles/{version}/dataset.json','dataset_sha256':version,
               'validation_path':f'data/bundles/{version}/validation.json',
               'counts':validation['counts'],'sources':sources,'input_hashes':input_hashes,
               'adapter_fingerprint':fingerprint,'game_build':None,
               'calculation_status':'unvalidated','curation_status':data['curation']['status']}
+    previous_manifest,previous_data=load_active(root)
+    if previous_data:
+        # Candidate-route/limit corrections require a fresh chart, but recorded
+        # purchases and actual inputs can be reused when skill mechanics and
+        # purchase chains are byte-for-byte equivalent (apart from icons).
+        def record_contract(dataset):
+            return {key:({sid:{k:v for k,v in skill.items() if k!='icon_id'}
+                          for sid,skill in value.items()} if key=='skills' else value)
+                    for key,value in dataset.items() if key in {
+                        'schema_version','server','skills','outfits','supports','courses',
+                        'relations','evolution_rules','purchase_stages','internal_acceleration_comparison_cost'}}
+        if record_contract(previous_data)==record_contract(data):
+            compatible=set(previous_manifest.get('checklist_compatible_versions',[]))
+            compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
+            compatible.discard(manifest['checklist_data_sha256'])
+            if compatible:manifest['checklist_compatible_versions']=sorted(compatible)
+        def record_identity(dataset):
+            return {'skills':{sid:{key:row.get(key) for key in ('rarity','inherited','parent_ids')}
+                              for sid,row in dataset['skills'].items()},
+                    **{key:dataset.get(key) for key in ('outfits','supports','courses','relations','evolution_rules')}}
+        # Corrected effect mathematics and newly proven prices do not undo real
+        # purchases. Reuse only the records/inputs; the chart and result are fresh.
+        def extends_records(previous, current):
+            for key in ('skills','outfits','supports','courses'):
+                if any(current[key].get(sid)!=row for sid,row in previous[key].items()):return False
+            for key in ('relations','evolution_rules'):
+                if not {canonical_bytes(row) for row in previous[key]} <= {canonical_bytes(row) for row in current[key]}:return False
+            return True
+        if extends_records(record_identity(previous_data),record_identity(data)):
+            compatible=set(previous_manifest.get('checklist_record_versions',[]))
+            compatible.update(previous_manifest.get('checklist_compatible_versions',[]))
+            compatible.add(previous_manifest.get('checklist_data_sha256',previous_manifest['active_version']))
+            compatible.discard(manifest['checklist_data_sha256'])
+            if compatible:manifest['checklist_record_versions']=sorted(compatible)
     pointer=root/'data/manifest.json';new=canonical_bytes(manifest)
     if pointer.exists() and pointer.read_bytes()==new:return False,version
     fd,tmp=tempfile.mkstemp(prefix='.manifest-',dir=pointer.parent)
@@ -157,12 +196,14 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
 
 def synchronize(root,client=None,refresh_courses=False,allow_count_decrease=False,rebuild_active=False):
     client=client or HttpClient(os.environ.get('GITHUB_TOKEN'))
-    config=json.loads((root/'sync-config.json').read_text())
-    curated=json.loads((root/'curated/rules.json').read_text())
+    config=json.loads((root/'sync-config.json').read_text(encoding='utf-8'))
+    curated=json.loads((root/'curated/rules.json').read_text(encoding='utf-8'))
     labels_path=root/'curated/names-ko.json'
-    if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text())
+    if labels_path.exists():curated['korean_names']=json.loads(labels_path.read_text(encoding='utf-8'))
     planning_path=root/'curated/planning.json'
-    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text())
+    if planning_path.exists():curated['planning']=json.loads(planning_path.read_text(encoding='utf-8'))
+    supplements_path=root/'curated/source-supplements.json'
+    if supplements_path.exists():curated['source_supplements']=json.loads(supplements_path.read_text(encoding='utf-8'))
     previous_manifest,previous_data=load_active(root)
     fingerprint=adapter_fingerprint(root,config,curated)
     if rebuild_active:
@@ -202,7 +243,7 @@ def main(argv=None):
         print(json.dumps(result,ensure_ascii=False))
         summary=os.environ.get('GITHUB_STEP_SUMMARY')
         if summary:
-            with open(summary,'a') as stream:stream.write(f'## JP data sync: {result["status"]}\n\nVersion: `{result["version"]}`\n\nCounts: `{result["counts"]}`\n\nRace calculation: unvalidated.\n')
+            with open(summary,'a',encoding='utf-8') as stream:stream.write(f'## JP data sync: {result["status"]}\n\nVersion: `{result["version"]}`\n\nCounts: `{result["counts"]}`\n\nRace calculation: unvalidated.\n')
         return 0
     except (DataError,OSError,KeyError,TypeError,ValueError) as exc:
         result={'status':'failed','checked_at':datetime.now(timezone.utc).isoformat(),'error':str(exc),'previous_bundle_retained':True}
