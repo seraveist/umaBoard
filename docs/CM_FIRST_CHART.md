@@ -24,7 +24,7 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
 - Mood best, distance/surface/style aptitude A. Unique level comes from the owned
   outfit record; absent records default visibly to final bloom-five level six.
 - Baseline: the outfit's native unique only. Every candidate is added alone.
-  There is no SP search and no deck speed-locking in the first-chart path.
+  There is no whole-budget SP search or deck speed-locking in the individual chart. The separate target frame compares acceleration packs and their assumed costs; see [target contract](CM_TARGET_ACCELERATION.md).
 - Native unique unsupported: stop with a recoverable choice error. A physically
   inactive unique is valid and contributes zero. Never silently drop an unknown
   native effect while claiming to have applied it.
@@ -46,7 +46,7 @@ admission policy before merging into the same checklist:
   product recommendation, not game eligibility or measured activation probability.
 - Rank by unrounded arithmetic mean, keep at most ten with gain >=0.005 lengths
   (so a displayed 0.00 is not admitted), with stable skill-ID tie breaks. The final
-  table remains icon/source ordered. No outside-Top10 acquired exceptions.
+  table remains icon/source ordered. The target-acceleration extension may append recommended inherited skills with an explicit target label; other outside-Top10 acquired exceptions remain unsupported.
 - Lock Top10 before publishing checklist rows. Hint changes never rerank/recompute.
   At most six inherited rows may be marked purchased or Lv0–5 across all tabs and
   search results. Setting one to unavailable frees a slot. Hidden stale IDs never

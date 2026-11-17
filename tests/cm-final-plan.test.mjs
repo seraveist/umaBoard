@@ -8,6 +8,14 @@ const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,tur
 const stats={speed:1500,stamina:1600,power:1500,guts:1200,wisdom:1200};
 const input={stats,spBudget:200,aptitudes:{distance:'A',surface:'A',style:'A'}};
 const quick={searchSamples:1,searchDt:.05,samples:2,dt:.02};
+test('secured targets cost actual SP, remain optional and gain is still relative to actual owned skills',async()=>{
+ const {data,chart}=fixture();chart.accelerationPlan={ids:['other']};
+ const result=await recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:100},quick);
+ assert.ok(result.activeIds.includes('other'));assert.deepEqual(result.ownedIds,[]);assert.deepEqual(result.maintainedTargetIds,['other']);assert.equal(result.budget.used,100);assert.ok(result.gain>0);
+ await assert.rejects(recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:0},quick),/목표 가속 유지/);
+ const released=await recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:0,maintainTargetAcceleration:false},quick);assert.deepEqual(released.maintainedTargetIds,[]);
+ const missing=await recommendFinalPlan(data,chart,{},input,quick);assert.deepEqual(missing.unavailableTargetIds,['other']);assert.ok(!missing.activeIds.includes('other'));
+});
 function skill(id,value,rarity='white',kind='target_speed'){
  return {id,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
 }

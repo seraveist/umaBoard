@@ -98,8 +98,8 @@ test('Korean Azuma name is searchable while JP skills and raw card identity stay
 });
 
 test('other unverified cards retain conservative single-gold routes and Lv0 prices',()=>{
- const card=Object.keys(data.supports).find(cid=>!data.support_events[cid]&&routeIds(cid,'support_event').filter(id=>data.skills[id].rarity==='gold').length>1);
- assert.ok(card);const m=model({supportIds:[card]}),group=m.groups.find(g=>!g.verified);
+ const card='30152',unreviewed={...data,support_events:{...data.support_events}};delete unreviewed.support_events[card];
+ const m=model({supportIds:[card]},unreviewed),group=m.groups.find(g=>!g.verified);
  assert.ok(group);assert.ok(m.warnings.includes(card));
  assert.ok(group.choices.every(c=>c.rewards.length===1&&c.rewards[0].hint_level===0));
  assert.equal(m.selection(group.choices.slice(0,2).map(c=>c.rewards[0].skill_id)).conflict,true);

@@ -9,8 +9,9 @@ import {skillIconId} from './cm-icons.mjs';
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
  let chart=null,states={},scope='',worker=null,requestId=0,result=null,busy=false;
- const values=()=>{const discountTrait=$('#discount-trait').value;return {stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,discountTrait,fastLearner:discountTrait==='fast-learner',aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value])),excludedEvolutionIds:[...form.querySelectorAll('[data-evolution-option]:not(:checked)')].map(node=>node.value)};};
+ const values=()=>{const discountTrait=$('#discount-trait').value;return {maintainTargetAcceleration:$('#maintain-target').checked,stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,discountTrait,fastLearner:discountTrait==='fast-learner',aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value])),excludedEvolutionIds:[...form.querySelectorAll('[data-evolution-option]:not(:checked)')].map(node=>node.value)};};
  const setEvolutionOptions=excluded=>{
+  $('#maintain-target-control').hidden=!chart.accelerationPlan?.ids?.length;
   const groups=evolutionGroups(data,chart.setup,evolutionOptions(data,chart));
   for(const kind of ['outfit','scenario'])$('#evolution-options-'+kind).replaceChildren(...groups[kind].map(row=>{
    const label=el('label','evolution-option'),input=el('input');input.type='checkbox';input.value=row.id;input.dataset.evolutionOption='';input.checked=!excluded?.includes(row.id);
@@ -26,7 +27,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const parts=[`보유 ${Number(value.spBudget).toLocaleString('ko-KR')} SP`,...(value.discountTrait!=='none'?[DISCOUNT_TRAITS[value.discountTrait].label]:[]),`적성 ${['distance','surface','style'].map(key=>value.aptitudes[key]).join(' / ')}`];
   summary.replaceChildren(...parts.map((text,index)=>el('span','input-summary-part',`${index?' · ':''}${text}`)));
  };
- const setValues=value=>{for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#discount-trait').value=resolveDiscountTrait({discountTrait:Object.hasOwn(DISCOUNT_TRAITS,value?.discountTrait)?value.discountTrait:undefined,fastLearner:value?.fastLearner===true});for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';setEvolutionOptions(value?.excludedEvolutionIds);aptitudeSummary();inputSummary();};
+ const setValues=value=>{$('#maintain-target').checked=value?.maintainTargetAcceleration!==false;for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#discount-trait').value=resolveDiscountTrait({discountTrait:Object.hasOwn(DISCOUNT_TRAITS,value?.discountTrait)?value.discountTrait:undefined,fastLearner:value?.fastLearner===true});for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';setEvolutionOptions(value?.excludedEvolutionIds);aptitudeSummary();inputSummary();};
  const message=(text='')=>{$('#final-status').textContent=text;};
  const stop=()=>{requestId++;worker?.terminate();worker=null;busy=false;$('#final-submit').disabled=!chart;$('#final-submit').textContent='최종 스킬 추천';$('#final-cancel').hidden=true;$('#final-progress').hidden=true;form.setAttribute('aria-busy','false');};
  const stale=()=>{stop();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
@@ -62,6 +63,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
   $('#final-search-note').textContent=plan.search.closureComplete?'구매·진화를 함께 비교했습니다.':'탐색 범위 내 추천입니다. 후보를 조정해 다시 비교할 수 있습니다.';
+  if(plan.unavailableTargetIds?.length)$('#final-search-note').textContent+=' 미확보·조건 변경으로 유지하지 못한 목표: '+plan.unavailableTargetIds.map(id=>data.skills[id].name_jp).join(' · ')+'.';
   if(plan.unverifiedEventCards?.length)$('#final-search-note').textContent+=' 선택지 미검증 카드 '+plan.unverifiedEventCards.length+'장: 미검증 레어 보상은 카드당 1개로 제한했습니다.';
   $('#final-owned-summary').textContent=`습득 스킬 ${plan.ownedIds.length}개`;
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
@@ -77,7 +79,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    const node=$('#actual-'+key),value=node.value.trim(),max=key==='sp'?100000:3000,min=key==='sp'?0:1;
    if(!/^\d+$/.test(value)||Number(value)<min||Number(value)>max){error(key==='sp'?'보유 SP를 0~100000 사이의 정수로 입력하세요.':'실제 능력치 5개를 각각 1~3000 사이의 정수로 입력하세요.',node);return;}
   }
-  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,excludedEvolutionIds:raw.excludedEvolutionIds};
+  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,excludedEvolutionIds:raw.excludedEvolutionIds,maintainTargetAcceleration:raw.maintainTargetAcceleration};
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
   stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message();save();
   const job=requestId;

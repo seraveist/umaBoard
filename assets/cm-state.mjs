@@ -79,7 +79,7 @@ export function bulkAcquisition(rows,states,value){
  if(!['unavailable','5'].includes(value))throw new Error('지원하지 않는 일괄 설정입니다.');
  const inherits=rows.filter(row=>row.inherited),selected=new Set([
   ...inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable'),
-  ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable')
+  ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable').sort((a,b)=>Number(!!b.targetInheritance)-Number(!!a.targetInheritance))
  ].slice(0,INHERITED_LIMIT).map(row=>row.id));
  return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
 }
