@@ -1,5 +1,8 @@
 # 1차 마신표·구매와 진화 공동 최적화 검증
 
+> 2026-11-17 정정: 기존 42.5657마신/6990 SP 예시는 이벤트 배타 조건 누락으로 실현 가능한 조합 검증값에서 철회합니다. 최신 정책은 [이벤트·효율 보완](CM_ROUTE_EFFICIENCY_FIX.md)을 따릅니다.
+
+
 기준: 2026-11-17 Asia/Seoul. 작업 브랜치 `feat/cm-first-chart`.
 구현 모델: `cm-first-chart-v5`, `cm-post-training-v5`.
 

@@ -8,6 +8,14 @@ const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,tur
 const stats={speed:1500,stamina:1600,power:1500,guts:1200,wisdom:1200};
 const input={stats,spBudget:200,aptitudes:{distance:'A',surface:'A',style:'A'}};
 const quick={searchSamples:1,searchDt:.05,samples:2,dt:.02};
+test('secured targets cost actual SP, remain optional and gain is still relative to actual owned skills',async()=>{
+ const {data,chart}=fixture();chart.accelerationPlan={ids:['other']};
+ const result=await recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:100},quick);
+ assert.ok(result.activeIds.includes('other'));assert.deepEqual(result.ownedIds,[]);assert.deepEqual(result.maintainedTargetIds,['other']);assert.equal(result.budget.used,100);assert.ok(result.gain>0);
+ await assert.rejects(recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:0},quick),/목표 가속 유지/);
+ const released=await recommendFinalPlan(data,chart,{other:'0'},{...input,spBudget:0,maintainTargetAcceleration:false},quick);assert.deepEqual(released.maintainedTargetIds,[]);
+ const missing=await recommendFinalPlan(data,chart,{},input,quick);assert.deepEqual(missing.unavailableTargetIds,['other']);assert.ok(!missing.activeIds.includes('other'));
+});
 function skill(id,value,rarity='white',kind='target_speed'){
  return {id,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
 }
@@ -26,6 +34,34 @@ test('recorded Lv0–5 discounts apply to each stage, shared stages once, and pa
  assert.equal(new RecordedPurchaseModel(data,chart.rows,{gold:'owned',a:'0'}).selection(['a']).used,0);
  assert.equal(new RecordedPurchaseModel(data,chart.rows,{a:'5'}).selection(['a']).used,101+90);
  assert.equal(new RecordedPurchaseModel(data,chart.rows,{}).selection(['unknown']).complete,false);
+});
+
+test('inherited evolution pays its original stage once and uses the displayed acquired hint',async()=>{
+ const {data,chart}=fixture();
+ const base={...skill('901411',1500,'inherited'),inherited:true,parent_ids:['other-native']},strong={...skill('91101411',3500,'inherited'),inherited:true,parent_ids:['other-native']};
+ data.skills[base.id]=base;data.skills[strong.id]=strong;data.purchase_stages[base.id]={status:'verified',base_cost:200};
+ chart.rows=[{...strong,name:strong.name_jp}];
+ for(const [level,expected]of [200,180,160,140,130,120].entries()){
+  const price=new RecordedPurchaseModel(data,chart.rows,{[strong.id]:String(level)}).selection([strong.id]);
+  assert.equal(price.complete,true);assert.equal(price.used,expected);assert.equal(price.stages[0].id,base.id);
+ }
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[base.id]:'0',[strong.id]:'5'}).selection([base.id,strong.id]).used,120);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[strong.id]:'owned'}).selection([strong.id]).used,0);
+ assert.equal(new RecordedPurchaseModel(data,chart.rows,{[base.id]:'owned'}).selection([strong.id]).used,0);
+ const plan=await recommendFinalPlan(data,chart,{[strong.id]:'5'},{...input,spBudget:120},quick);
+ assert.ok(plan.activeIds.includes(strong.id));assert.equal(plan.budget.used,120);assert.equal(plan.purchases[0].id,strong.id);assert.equal(plan.purchases[0].stages[0].id,base.id);
+ const restored=await recommendFinalPlan(data,chart,{[base.id]:'owned'},{...input,spBudget:0},quick);
+ assert.ok(restored.ownedIds.includes(strong.id));assert.equal(restored.budget.used,0);
+});
+
+test('five owned speed inherits and a new accelerator consume the same six final slots',async()=>{
+ const {data,chart}=fixture(),list=Array.from({length:6},(_,i)=>({...skill('inherited'+i,i===5?4000:1500,'inherited',i===5?'acceleration':'target_speed'),inherited:true,parent_ids:['parent'+i]}));
+ for(const s of list){data.skills[s.id]=s;data.purchase_stages[s.id]={status:'verified',base_cost:100};}
+ chart.rows=list.map(s=>({...s,name:s.name_jp}));chart.accelerationPlan={ids:['inherited5']};
+ const states=Object.fromEntries(list.map((s,i)=>[s.id,i<5?'owned':'0'])),plan=await recommendFinalPlan(data,chart,states,{...input,spBudget:100},quick);
+ assert.equal(plan.activeIds.filter(id=>data.skills[id].inherited).length,6);assert.ok(plan.activeIds.includes('inherited5'));
+ const seventh={...list[0],id:'seventh'};data.skills.seventh=seventh;chart.rows.push({...seventh,name:seventh.name_jp});data.purchase_stages.seventh={status:'verified',base_cost:1};
+ await assert.rejects(recommendFinalPlan(data,chart,{...states,seventh:'owned'},input,quick),/계승.*6개/);
 });
 
 test('actual stats, remaining SP and aptitudes override only the post-training setup',()=>{
@@ -178,4 +214,31 @@ test('Studious changes affordable combinations and records the selected trait wi
  assert.deepEqual(none.purchases,[]);assert.equal(study.purchases[0].id,'other');assert.equal(study.budget.used,56);assert.equal(study.setup.discountTrait,'studious');assert.equal(study.setup.fastLearner,false);
  assert.equal(fast.budget.used,50);assert.equal(study.purchases[0].stages[0].extraDiscount,4);
  assert.equal(chart.setup.discountTrait,undefined);assert.equal(input.discountTrait,undefined);
+});
+
+test('late recovery after depletion cannot outrank an earlier useful recovery',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=[];
+ for(const [id,value,condition,cost]of [['early',550,[[{field:'phase',operator:'==',value:1}]],20],['late',5500,[[{field:'distance_rate',operator:'>=',value:99}]],100]]){
+  data.skills[id]=skill(id,value,'white','heal');data.skills[id].invocations[0].condition=condition;data.purchase_stages[id]={status:'verified',base_cost:cost};chart.rows.push({...data.skills[id],name:id});
+ }
+ const plan=await recommendFinalPlan(data,chart,{early:'0',late:'0'},{...input,stats:{...stats,stamina:1},spBudget:100},quick);
+ assert.deepEqual(plan.activeIds,['early']);assert.equal(plan.budget.used,20);assert.equal(plan.fullSpeedFeasible,false);
+});
+
+test('actual CM recommendation enforces event routes including owned records',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=['x','y'].map(id=>{data.skills[id]=skill(id,3000,'gold');data.purchase_stages[id]={status:'verified',base_cost:50};return {...data.skills[id],name:id};});
+ chart.setup.supportIds=['card'];data.acquisition_routes=['x','y'].map(id=>({skill_id:id,owner_type:'support',owner_id:'card',kind:'support_event'}));
+ data.support_events={card:{events:[{id:'choice',choices:['x','y'].map(id=>({id,rewards:[{skill_id:id}]}))}]}};
+ const plan=await recommendFinalPlan(data,chart,{x:'0',y:'0'},input,quick);assert.equal(plan.purchases.length,1);
+ await assert.rejects(()=>recommendFinalPlan(data,chart,{x:'owned',y:'owned'},input,quick),/이벤트 선택지/);
+});
+
+test('redundant saturated accelerations do not consume extra SP',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=[];
+ for(const [id,cost]of [['cheap',50],['expensive',100]]){
+  data.skills[id]=skill(id,1000000000,'white','acceleration');data.skills[id].invocations[0].condition=[[{field:'phase',operator:'==',value:2}]];
+  data.purchase_stages[id]={status:'verified',base_cost:cost};chart.rows.push({...data.skills[id],name:id});
+ }
+ const plan=await recommendFinalPlan(data,chart,{cheap:'0',expensive:'0'},{...input,spBudget:200},quick);
+ assert.deepEqual(plan.activeIds,['cheap']);assert.equal(plan.budget.used,50);
 });

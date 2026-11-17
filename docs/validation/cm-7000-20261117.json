@@ -1241,5 +1241,7 @@
     "910271",
     "910591"
   ],
-  "validated_at": "2026-11-17"
+  "validated_at": "2026-11-17",
+  "status": "withdrawn-event-conflict",
+  "reason": "This historical result combines mutually exclusive support event rewards; it is not an obtainable training build."
 }

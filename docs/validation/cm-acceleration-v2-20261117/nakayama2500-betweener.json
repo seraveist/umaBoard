@@ -1,0 +1,1530 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeBaseCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "sourceHashes": {
+    "assets/cm-acceleration-plan.mjs": "71dc19f409518456772ab591dbdd5c13b5bfdc4c7fdf7d1ed99a30d2d0e9b5ff",
+    "assets/cm-position-comparison.mjs": "db7023d8bbe46084458300b974eb3e4083728ffa0b9aa4ba246e7961a536e51b",
+    "assets/cm-final-plan.mjs": "9f2b99b105f1b7a3d19f658ef707ff1813d2b63839a1222b15d9928ce171a028",
+    "assets/cm-state.mjs": "680cb6d19e8c4e9cc17b76168be3b62673a5276e424bb69e2814371fc18eb61f"
+  },
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 134.581,
+  "case": {
+    "id": "nakayama2500-betweener",
+    "label": "나카야마 2500m 선입",
+    "courseId": "10506",
+    "style": 3,
+    "outfitId": "107601",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30281",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+    "guideDate": "2026-11-14",
+    "scope": "upcoming December CM preview, not completed-event results",
+    "expected": [
+      {
+        "name": "스테이 골드 강화 계승",
+        "ids": [
+          "91101351"
+        ]
+      },
+      {
+        "name": "무아몽중 계열",
+        "ids": [
+          "202421",
+          "202422"
+        ]
+      },
+      {
+        "name": "절진 계열",
+        "ids": [
+          "204431",
+          "204432"
+        ]
+      }
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10506",
+    "style": 3,
+    "outfitId": "107601",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30281",
+      "30322",
+      "30289",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "107601",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 3,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30281",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 146,
+          "start": 100
+        },
+        {
+          "length": 250,
+          "start": 246
+        },
+        {
+          "length": 250,
+          "start": 875
+        },
+        {
+          "length": 250,
+          "start": 1125
+        },
+        {
+          "length": 250,
+          "start": 1700
+        },
+        {
+          "length": 240,
+          "start": 1950
+        }
+      ],
+      "course_set_status": [
+        2,
+        4
+      ],
+      "course_variant": 2,
+      "distance": 2500,
+      "distance_type": 4,
+      "geometry_review_reason": null,
+      "id": "10506",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 110,
+          "slope": 20000,
+          "start": 621
+        },
+        {
+          "length": 200,
+          "slope": 15000,
+          "start": 825
+        },
+        {
+          "length": 400,
+          "slope": -15000,
+          "start": 1125
+        },
+        {
+          "length": 110,
+          "slope": 20000,
+          "start": 2325
+        }
+      ],
+      "straights": [
+        {
+          "end": 875,
+          "frontType": 1,
+          "start": 496
+        },
+        {
+          "end": 1700,
+          "frontType": 2,
+          "start": 1375
+        },
+        {
+          "end": 2500,
+          "frontType": 1,
+          "start": 2190
+        }
+      ],
+      "surface": 1,
+      "track_id": "10005",
+      "turn": 1,
+      "tight_track": 1
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "100761",
+      "name": "花開き、世界"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v2",
+    "ids": [
+      "200492",
+      "201212",
+      "202122",
+      "202421",
+      "204022",
+      "204262",
+      "204432",
+      "204762",
+      "900011",
+      "900211",
+      "900561",
+      "91101351"
+    ],
+    "skills": [
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "outfit_event",
+            "owner_id": "107601",
+            "owner_type": "outfit",
+            "skill_id": "200492"
+          },
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "200492"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "201212",
+        "name": "追い上げ",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤で追い抜くと速度がわずかに上がり加速力がほんのちょっと上がる＜長距離＞",
+        "baseId": "201212",
+        "baseName": "追い上げ",
+        "cost": 96,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202122",
+        "name": "恐れぬ心",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半のどこかで中団だと速度がわずかに上がり加速力がほんのちょっと上がる＜作戦・差し＞",
+        "baseId": "202122",
+        "baseName": "恐れぬ心",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202421",
+        "name": "無我夢中",
+        "rarity": "gold",
+        "inherited": false,
+        "categories": [
+          "acceleration",
+          "heal"
+        ],
+        "description": "中団以降だとラストスパートの最中なら持久力を少し使って加速力が上がる＜差し・長距離＞",
+        "baseId": "202421",
+        "baseName": "無我夢中",
+        "cost": 216,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_event",
+            "owner_id": "30281",
+            "owner_type": "support",
+            "skill_id": "202421"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "204022",
+        "name": "ここ一番",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めの早めのどこかで中団以降だと加速力がわずかに上がる＜差し・長距離＞",
+        "baseId": "204022",
+        "baseName": "ここ一番",
+        "cost": 96,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30281",
+            "owner_type": "support",
+            "skill_id": "204022"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "204262",
+        "name": "星の煌き",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+        "baseId": "204262",
+        "baseName": "星の煌き",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204432",
+        "name": "影より速く",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "直線でラストスパートの最中なら加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "204432",
+        "baseName": "影より速く",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204762",
+        "name": "死力を尽くして",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかでわずかに伸びを見せる＜長距離＞",
+        "baseId": "204762",
+        "baseName": "死力を尽くして",
+        "cost": 108,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30322",
+            "owner_type": "support",
+            "skill_id": "204762"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "900011",
+        "name": "シューティングスター",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+        "baseId": "900011",
+        "baseName": "シューティングスター",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "100101"
+        ]
+      },
+      {
+        "id": "900211",
+        "name": "白い稲妻、見せたるで！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半の直線で好位置にいるまたは中団から追い抜こうとすると速度が上がり加速力がちょっと上がる",
+        "baseId": "900211",
+        "baseName": "白い稲妻、見せたるで！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102101"
+        ]
+      },
+      {
+        "id": "900561",
+        "name": "来てください来てください！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に3番手以降で前方が詰まったときお告げの力で速度が少し上がり加速力がちょっと上がる",
+        "baseId": "900561",
+        "baseName": "来てください来てください！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105601"
+        ]
+      },
+      {
+        "id": "91101351",
+        "name": "黄金を訪ねて",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半に速度を少し上げ続ける2000m以上のレースならその後ラストスパートの最中に短い間加速力が少し上がる＜差し/追込＞",
+        "baseId": "91101351",
+        "baseName": "黄金を訪ねて",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "113501"
+        ]
+      }
+    ],
+    "gain": 10.390305087245574,
+    "min": 7.166256236293156,
+    "max": 12.267725160552072,
+    "cost": 1422,
+    "maximumGain": 10.782166013627442,
+    "sacrificedGain": 0.3918609263818684,
+    "allowedLoss": null,
+    "score": 8.257305087245573,
+    "efficiencyPolicy": {
+      "minGainPer100Sp": 0.15,
+      "scoreTolerance": 0.01,
+      "source": "preparation-policy-not-measured"
+    },
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "1",
+      "30311-chain-final": "1",
+      "30281-rare-sets": "1",
+      "30322-chain-final": "2",
+      "30289-chain-final": "2",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "groupId": "30275-chain-final",
+        "setId": "1",
+        "ids": [
+          "204001",
+          "203421"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203441"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30281",
+        "groupId": "30281-rare-sets",
+        "setId": "1",
+        "ids": [
+          "202421",
+          "203331"
+        ],
+        "targetIds": [
+          "202421"
+        ],
+        "alternatives": [],
+        "reason": "target",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "groupId": "30322-chain-final",
+        "setId": "2",
+        "ids": [
+          "203501",
+          "204741"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204731"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204751"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "groupId": "30289-chain-final",
+        "setId": "2",
+        "ids": [
+          "201612",
+          "204181"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "202831",
+              "204191"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "rankComparison": {
+      "version": "cm9-fixed-rank-sensitivity-v1",
+      "ranks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aggregation": "equal-weight-sensitivity-mean",
+      "probabilities": false,
+      "rankChanges": false
+    },
+    "gainByRank": [
+      {
+        "rank": 3,
+        "gain": 8.90378722987491,
+        "entryGain": 1.0066693580001511,
+        "min": 7.166256236293156,
+        "max": 10.207201012332916
+      },
+      {
+        "rank": 4,
+        "gain": 10.832952822967355,
+        "entryGain": 0.5555733315661884,
+        "min": 9.742866921692803,
+        "max": 11.673047638556636
+      },
+      {
+        "rank": 5,
+        "gain": 10.832952822967355,
+        "entryGain": 0.5555733315661884,
+        "min": 9.742866921692803,
+        "max": 11.673047638556636
+      },
+      {
+        "rank": 6,
+        "gain": 11.29318005855847,
+        "entryGain": 0.7333820070343376,
+        "min": 9.823598831442178,
+        "max": 12.267725160552072
+      },
+      {
+        "rank": 7,
+        "gain": 10.803432698382311,
+        "entryGain": 0.7333820070343376,
+        "min": 9.266264881501229,
+        "max": 11.755394048920788
+      },
+      {
+        "rank": 8,
+        "gain": 10.032914988984302,
+        "entryGain": 0.5388331744590118,
+        "min": 9.068433427298805,
+        "max": 10.74692255040227
+      },
+      {
+        "rank": 9,
+        "gain": 10.032914988984302,
+        "entryGain": 0.5388331744590118,
+        "min": 9.068433427298805,
+        "max": 10.74692255040227
+      }
+    ],
+    "excludedCandidates": [],
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 36,
+      "shortlisted": 12,
+      "evaluations": 411,
+      "refinementEvaluations": 75,
+      "refinementLimit": 96,
+      "refinementLimited": false,
+      "closureComplete": true,
+      "exchangeMethod": "coarse-screened-12-in-6-out-8-score-8-cost",
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "cost-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "스테이 골드 강화 계승",
+      "ids": [
+        "91101351"
+      ],
+      "matched": [
+        "91101351"
+      ],
+      "available": [
+        "91101351"
+      ],
+      "candidates": [
+        {
+          "id": "91101351",
+          "name": "黄金を訪ねて",
+          "status": "supported",
+          "price": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "solo": 2.6431455904490577
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    },
+    {
+      "name": "무아몽중 계열",
+      "ids": [
+        "202421",
+        "202422"
+      ],
+      "matched": [
+        "202421"
+      ],
+      "available": [
+        "202422",
+        "202421"
+      ],
+      "candidates": [
+        {
+          "id": "202422",
+          "name": "がむしゃら",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 108,
+            "stages": [
+              {
+                "id": "202422",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 2.341688684567089
+        },
+        {
+          "id": "202421",
+          "name": "無我夢中",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 216,
+            "stages": [
+              {
+                "id": "202422",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              },
+              {
+                "id": "202421",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 4.261008221384327
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    },
+    {
+      "name": "절진 계열",
+      "ids": [
+        "204431",
+        "204432"
+      ],
+      "matched": [
+        "204432"
+      ],
+      "available": [
+        "204432"
+      ],
+      "candidates": [
+        {
+          "id": "204432",
+          "name": "影より速く",
+          "status": "supported",
+          "price": {
+            "complete": true,
+            "used": 108,
+            "stages": [
+              {
+                "id": "204432",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 1.5901948045353493
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    }
+  ],
+  "negatives": [],
+  "firstSampleEvents": [
+    {
+      "rank": 3,
+      "id": "100761",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 15
+    },
+    {
+      "rank": 3,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 3,
+      "id": "900211",
+      "index": 1,
+      "x": 1375.0482552411465,
+      "t": 72.56,
+      "duration": 7.5
+    },
+    {
+      "rank": 3,
+      "id": "202122",
+      "index": 1,
+      "x": 1513.241784529827,
+      "t": 79.47,
+      "duration": 6
+    },
+    {
+      "rank": 3,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.7012637883586,
+      "t": 87.27,
+      "duration": 2.25
+    },
+    {
+      "rank": 3,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.7012637883586,
+      "t": 87.27,
+      "duration": 3
+    },
+    {
+      "rank": 3,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.6799338394524,
+      "t": 88.12,
+      "duration": 7.5
+    },
+    {
+      "rank": 3,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.7985569017803,
+      "t": 96.67,
+      "duration": 7.5
+    },
+    {
+      "rank": 3,
+      "id": "900011",
+      "index": 1,
+      "x": 2041.0576900983983,
+      "t": 102.69,
+      "duration": 9
+    },
+    {
+      "rank": 3,
+      "id": "204262",
+      "index": 1,
+      "x": 2100.8137705779473,
+      "t": 105.02,
+      "duration": 5
+    },
+    {
+      "rank": 3,
+      "id": "900561",
+      "index": 1,
+      "x": 2159.9314312030006,
+      "t": 107.3,
+      "duration": 7.5
+    },
+    {
+      "rank": 3,
+      "id": "204762",
+      "index": 1,
+      "x": 2452.6256923138053,
+      "t": 118.67,
+      "duration": 5
+    },
+    {
+      "rank": 4,
+      "id": "100761",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 15
+    },
+    {
+      "rank": 4,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 4,
+      "id": "202122",
+      "index": 1,
+      "x": 1513.2142271211442,
+      "t": 79.52,
+      "duration": 6
+    },
+    {
+      "rank": 4,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3.75
+    },
+    {
+      "rank": 4,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 2.25
+    },
+    {
+      "rank": 4,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3
+    },
+    {
+      "rank": 4,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.2590819430718,
+      "t": 87.71000000000001,
+      "duration": 3
+    },
+    {
+      "rank": 4,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.683840784143,
+      "t": 88.17,
+      "duration": 7.5
+    },
+    {
+      "rank": 4,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.8328315906945,
+      "t": 96.4,
+      "duration": 7.5
+    },
+    {
+      "rank": 4,
+      "id": "900011",
+      "index": 1,
+      "x": 2041.0042057746928,
+      "t": 102.41,
+      "duration": 9
+    },
+    {
+      "rank": 4,
+      "id": "204262",
+      "index": 1,
+      "x": 2054.8638133654135,
+      "t": 102.95,
+      "duration": 5
+    },
+    {
+      "rank": 4,
+      "id": "900561",
+      "index": 1,
+      "x": 2159.990112397451,
+      "t": 107,
+      "duration": 7.5
+    },
+    {
+      "rank": 4,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.1972157219643,
+      "t": 118.16,
+      "duration": 5
+    },
+    {
+      "rank": 5,
+      "id": "100761",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 15
+    },
+    {
+      "rank": 5,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 5,
+      "id": "202122",
+      "index": 1,
+      "x": 1513.2142271211442,
+      "t": 79.52,
+      "duration": 6
+    },
+    {
+      "rank": 5,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3.75
+    },
+    {
+      "rank": 5,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 2.25
+    },
+    {
+      "rank": 5,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3
+    },
+    {
+      "rank": 5,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.2590819430718,
+      "t": 87.71000000000001,
+      "duration": 3
+    },
+    {
+      "rank": 5,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.683840784143,
+      "t": 88.17,
+      "duration": 7.5
+    },
+    {
+      "rank": 5,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.8328315906945,
+      "t": 96.4,
+      "duration": 7.5
+    },
+    {
+      "rank": 5,
+      "id": "900011",
+      "index": 1,
+      "x": 2041.0042057746928,
+      "t": 102.41,
+      "duration": 9
+    },
+    {
+      "rank": 5,
+      "id": "204262",
+      "index": 1,
+      "x": 2054.8638133654135,
+      "t": 102.95,
+      "duration": 5
+    },
+    {
+      "rank": 5,
+      "id": "900561",
+      "index": 1,
+      "x": 2159.990112397451,
+      "t": 107,
+      "duration": 7.5
+    },
+    {
+      "rank": 5,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.1972157219643,
+      "t": 118.16,
+      "duration": 5
+    },
+    {
+      "rank": 6,
+      "id": "100761",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 15
+    },
+    {
+      "rank": 6,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 6,
+      "id": "202122",
+      "index": 1,
+      "x": 1513.2142271211442,
+      "t": 79.52,
+      "duration": 6
+    },
+    {
+      "rank": 6,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3.75
+    },
+    {
+      "rank": 6,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 2.25
+    },
+    {
+      "rank": 6,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3
+    },
+    {
+      "rank": 6,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.2590819430718,
+      "t": 87.71000000000001,
+      "duration": 3
+    },
+    {
+      "rank": 6,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.683840784143,
+      "t": 88.17,
+      "duration": 7.5
+    },
+    {
+      "rank": 6,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.8328315906945,
+      "t": 96.4,
+      "duration": 7.5
+    },
+    {
+      "rank": 6,
+      "id": "900011",
+      "index": 1,
+      "x": 2041.0042057746928,
+      "t": 102.41,
+      "duration": 9
+    },
+    {
+      "rank": 6,
+      "id": "204262",
+      "index": 1,
+      "x": 2054.8638133654135,
+      "t": 102.95,
+      "duration": 5
+    },
+    {
+      "rank": 6,
+      "id": "900561",
+      "index": 1,
+      "x": 2159.990112397451,
+      "t": 107,
+      "duration": 7.5
+    },
+    {
+      "rank": 6,
+      "id": "900211",
+      "index": 1,
+      "x": 2422.4682055168296,
+      "t": 117.19,
+      "duration": 7.5
+    },
+    {
+      "rank": 6,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.320108470214,
+      "t": 118.16,
+      "duration": 5
+    },
+    {
+      "rank": 7,
+      "id": "100761",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 15
+    },
+    {
+      "rank": 7,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 7,
+      "id": "202122",
+      "index": 1,
+      "x": 1513.2142271211442,
+      "t": 79.52,
+      "duration": 6
+    },
+    {
+      "rank": 7,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3.75
+    },
+    {
+      "rank": 7,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 2.25
+    },
+    {
+      "rank": 7,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.7477183923756,
+      "t": 87.33,
+      "duration": 3
+    },
+    {
+      "rank": 7,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.2590819430718,
+      "t": 87.71000000000001,
+      "duration": 3
+    },
+    {
+      "rank": 7,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.683840784143,
+      "t": 88.17,
+      "duration": 7.5
+    },
+    {
+      "rank": 7,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.8328315906945,
+      "t": 96.4,
+      "duration": 7.5
+    },
+    {
+      "rank": 7,
+      "id": "204262",
+      "index": 1,
+      "x": 2055.0379978338456,
+      "t": 102.96000000000001,
+      "duration": 5
+    },
+    {
+      "rank": 7,
+      "id": "900561",
+      "index": 1,
+      "x": 2160.074088113995,
+      "t": 107.03,
+      "duration": 7.5
+    },
+    {
+      "rank": 7,
+      "id": "900211",
+      "index": 1,
+      "x": 2422.389839001944,
+      "t": 117.24000000000001,
+      "duration": 7.5
+    },
+    {
+      "rank": 7,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.2421840743405,
+      "t": 118.21000000000001,
+      "duration": 5
+    },
+    {
+      "rank": 8,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 8,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 3.75
+    },
+    {
+      "rank": 8,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 2.25
+    },
+    {
+      "rank": 8,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 3
+    },
+    {
+      "rank": 8,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.1892426593963,
+      "t": 88,
+      "duration": 3
+    },
+    {
+      "rank": 8,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.8231391597942,
+      "t": 88.47,
+      "duration": 7.5
+    },
+    {
+      "rank": 8,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.7678734370038,
+      "t": 96.69,
+      "duration": 7.5
+    },
+    {
+      "rank": 8,
+      "id": "204262",
+      "index": 1,
+      "x": 2054.7184523002843,
+      "t": 103.24000000000001,
+      "duration": 5
+    },
+    {
+      "rank": 8,
+      "id": "900561",
+      "index": 1,
+      "x": 2160.0130064757864,
+      "t": 107.32000000000001,
+      "duration": 7.5
+    },
+    {
+      "rank": 8,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.0568213405704,
+      "t": 118.5,
+      "duration": 5
+    },
+    {
+      "rank": 9,
+      "id": "91101351",
+      "index": 1,
+      "x": 1250.0373049391376,
+      "t": 66.28,
+      "duration": 9
+    },
+    {
+      "rank": 9,
+      "id": "202421",
+      "index": 1,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 3.75
+    },
+    {
+      "rank": 9,
+      "id": "204432",
+      "index": 1,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 2.25
+    },
+    {
+      "rank": 9,
+      "id": "91101351",
+      "index": 2,
+      "x": 1666.6778791087002,
+      "t": 87.62,
+      "duration": 3
+    },
+    {
+      "rank": 9,
+      "id": "204022",
+      "index": 1,
+      "x": 1674.1892426593963,
+      "t": 88,
+      "duration": 3
+    },
+    {
+      "rank": 9,
+      "id": "201212",
+      "index": 1,
+      "x": 1683.8231391597942,
+      "t": 88.47,
+      "duration": 7.5
+    },
+    {
+      "rank": 9,
+      "id": "200492",
+      "index": 1,
+      "x": 1887.7678734370038,
+      "t": 96.69,
+      "duration": 7.5
+    },
+    {
+      "rank": 9,
+      "id": "204262",
+      "index": 1,
+      "x": 2054.7184523002843,
+      "t": 103.24000000000001,
+      "duration": 5
+    },
+    {
+      "rank": 9,
+      "id": "900561",
+      "index": 1,
+      "x": 2160.0130064757864,
+      "t": 107.32000000000001,
+      "duration": 7.5
+    },
+    {
+      "rank": 9,
+      "id": "204762",
+      "index": 1,
+      "x": 2447.0568213405704,
+      "t": 118.5,
+      "duration": 5
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 4,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": true
+}

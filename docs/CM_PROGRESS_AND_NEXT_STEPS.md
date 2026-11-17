@@ -1,23 +1,28 @@
 # CM 개발 현황·누적 변경·후속 작업
 
+> 2026-11-17 정정: 기존 42.5657마신/6990 SP 예시는 이벤트 배타 조건 누락으로 실현 가능한 조합 검증값에서 철회합니다. 최신 정책은 [이벤트·효율 보완](CM_ROUTE_EFFICIENCY_FIX.md)을 따릅니다.
+
+
 작성 기준: **2026-11-17 (Asia/Seoul)**
 
 | 항목 | 기준 |
 | --- | --- |
-| 작업 브랜치 | `feat/cm-first-chart` |
+| 작업 브랜치 | `fix/cm-event-and-efficiency` |
 | 보완 전 기능 기준 커밋 | [`81b4bcc`](https://github.com/seraveist/umaBoard/commit/81b4bcc09bd87dec373cac971dfb3dadcb04db87) |
-| 검토 PR | [#3](https://github.com/seraveist/umaBoard/pull/3) |
+| 검토 PR | [#4](https://github.com/seraveist/umaBoard/pull/4) |
 | 1차 마신표 모델 | `cm-first-chart-v5` |
-| 육성 후 추천 모델 | `cm-post-training-v5` |
-| 활성 데이터 | `0b1057411682…` — 정확한 버전·원본 커밋은 [manifest](../data/manifest.json) 참조 |
-| 최신 기능 검증 | Node 209개 + Python 51개 = **260개 통과** |
+| 육성 후 추천 모델 | `cm-post-training-v7` |
+| 활성 데이터 | `e8fe44237bf2…` — 정확한 버전·원본 커밋은 [manifest](../data/manifest.json) 참조 |
+| 최신 기능 검증 | Node 226개 + Python 53개 = **279개 통과** |
 
 이 문서는 현재까지의 기능과 사용자 결정을 후속 작업에 전달하기 위한 기준 문서다.
 구현 계약은 [1차 마신표](CM_FIRST_CHART.md), [육성 후 추천](CM_POST_TRAINING.md)을 따른다.
 날짜가 있는 QA 문서는 해당 시점의 검증 기록이다. 과거 문서의 v2/v3 모델이나
 이전 데이터·테스트 개수를 현재 상태로 해석하지 않는다.
 
-최신 보완: [구매·진화 공동 최적화 및7000 SP 검증](CM_JOINT_EVOLUTION_QA.md).
+최신 확장: [목표 가속·서포트 레어 세트](CM_TARGET_ACCELERATION.md).
+
+이전 보완: [구매·진화 공동 최적화 및7000 SP 검증](CM_JOINT_EVOLUTION_QA.md).
 진화는 원본 레어의 실제 기록에 자동 연결하고, 결과는 구매·각성 진화·시나리오 진화·최종 적용 목록으로 나눈다.
 
 ## 1. 현재 완성된 사용자 흐름

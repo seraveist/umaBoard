@@ -1,3 +1,4 @@
+import {createAccelerationPanel} from './cm-acceleration-ui.mjs';
 import {createChartSetup,CM_MODEL_VERSION} from './cm-chart.mjs';
 import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition,buildAcquisitionHierarchy,relatedAcquisitionIds,updateAcquisition,bulkAcquisition} from './cm-state.mjs';
 import {createSkillDetails} from './cm-skill-details.mjs';
@@ -19,7 +20,7 @@ const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
 const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹'};
 const statLabels={speed:'스피드',stamina:'스태미나',power:'파워',guts:'근성',wisdom:'지능'};
-let data,profiles,display,portraits,manifest,worker,hierarchy,finalPlanner,skillSources,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,total=0;
+let data,profiles,display,portraits,manifest,worker,hierarchy,finalPlanner,accelerationPanel,skillSources,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,total=0;
 let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311','30300','30322','30289','30323'];
 let states={},category='all',pickerKind='',pickerSlot=-1,pickerType='',returnFocus=null,searchComposing=false,pickerComposing=false;
 const tableNodes=new Map();
@@ -41,7 +42,7 @@ function ownedProfile(id=outfitId){
  return {bloom:5,uniqueLevel:6};
 }
 function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
-function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
+function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();accelerationPanel?.stale();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
  $('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;
@@ -130,7 +131,7 @@ function newRow(row){
  if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
  else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}
  skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)});identity.append(iconButton);
- const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)));
+ const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)+(row.targetInheritance?' · 목표 가속 계승':'')));
  identity.append(copy);nameCell.append(identity);const gain=el('td','gain-cell');gain.dataset.gain='';
  const state=el('td','state-cell'),select=el('select','hint-select');select.dataset.skillId=acquisitionId(row);select.setAttribute('aria-label',`${row.name} 획득 상태 및 할인 레벨`);
  select.append(...ACQUISITION_OPTIONS.map(item=>option(item.value,item.label)));state.append(select);tr.append(nameCell,gain,state);return tr;
@@ -162,6 +163,7 @@ function renderRows(){
  else $('#checklist-count').textContent=busy?'계산 준비 중':'목록을 생성해 주세요';
  $('#clear-skill-search').hidden=!$('#skill-search').value;
  for(const id of ['bulk-unavailable','bulk-level5'])$('#'+id).disabled=busy||!result;
+ accelerationPanel?.updateAcquisition(rows,states);
 }
 function recordState(id,value){
  if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승은 최대 6개입니다.';return;}
@@ -188,7 +190,7 @@ function beginCalculation(event){
  skillSources=createSkillSourceResolver(data,input);
  workflow.setChartState('loading');
  finalPlanner?.invalidate();
- skillDetails.dismiss();draft.setup=input;
+ skillDetails.dismiss();accelerationPanel?.clear();draft.setup=input;
  const restored=restoreChecklistPlan(draft.plans,input,manifest);currentPlan=restored.key;
  if(restored.plan)draft.plans[currentPlan]=restored.plan;
  saveDraft();states=draft.plans[currentPlan]?.states||{};rows=[];result=null;total=0;category='all';tableNodes.clear();$('#skill-table-body').replaceChildren();$('#skill-search').value='';
@@ -199,7 +201,7 @@ function beginCalculation(event){
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  accelerationPlan:result.accelerationPlan,acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
@@ -208,14 +210,14 @@ function setupWorker(){
   if(message.type==='loaded'){ready=true;$('#generate').disabled=false;return;}
   if(message.requestId!==requestId)return;
   if(message.type==='progress'){
-   rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
+   rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=({inheritance:'계승 Top 10 후보 비교 중',acceleration:'목표 가속 조합 비교 중',rewards:'서포트 레어 세트 비교 중'})[message.progress.stage]||'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
    result=message.result;rows=result.rows;total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
    notice();renderRows();
    let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
    renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
-   finalPlanner?.setChart(result,states,currentPlan);
+   accelerationPanel?.render(result.accelerationPlan);accelerationPanel?.updateAcquisition(rows,states);finalPlanner?.setChart(result,states,currentPlan);
    workflow.setContext(umaName(data.outfits[result.setup.outfitId]),`${data.outfits[result.setup.outfitId].outfit_name_jp} · ${['','도주','선행','선입','추입'][result.setup.style]} · ${trackLabels[result.setup.course.track_id]} ${result.setup.course.surface===1?'잔디':'더트'} ${result.setup.course.distance.toLocaleString('ko-KR')}m · SSR ${result.setup.supportIds.length}장`);
    workflow.setChartState('ready');
    if(workflow.stage==='prepare'){$('#checklist-title').focus({preventScroll:true});$('#checklist').scrollIntoView({block:'start'});}
@@ -231,7 +233,7 @@ async function start(){
  readDraft();
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
-  data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);
+  data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);accelerationPanel=createAccelerationPanel({data,display,portraits,skillDetails});
   finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;

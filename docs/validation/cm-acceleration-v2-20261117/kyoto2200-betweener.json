@@ -1,0 +1,1563 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeBaseCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "sourceHashes": {
+    "assets/cm-acceleration-plan.mjs": "71dc19f409518456772ab591dbdd5c13b5bfdc4c7fdf7d1ed99a30d2d0e9b5ff",
+    "assets/cm-position-comparison.mjs": "db7023d8bbe46084458300b974eb3e4083728ffa0b9aa4ba246e7961a536e51b",
+    "assets/cm-final-plan.mjs": "9f2b99b105f1b7a3d19f658ef707ff1813d2b63839a1222b15d9928ce171a028",
+    "assets/cm-state.mjs": "680cb6d19e8c4e9cc17b76168be3b62673a5276e424bb69e2814371fc18eb61f"
+  },
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 165.112,
+  "case": {
+    "id": "kyoto2200-betweener",
+    "label": "교토 2200m 선입",
+    "courseId": "10808",
+    "style": 3,
+    "outfitId": "111101",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "source": "https://umamusumelabo.com/ikusei/chanmi-sasioikomi-202610",
+    "guideDate": "2026-10",
+    "scope": "current-skill course guidance; scenario/stats normalized",
+    "expected": [
+      {
+        "name": "스테이 골드 강화 계승",
+        "ids": [
+          "91101351"
+        ]
+      },
+      {
+        "name": "駆け降り",
+        "ids": [
+          "203322"
+        ]
+      }
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10808",
+    "style": 3,
+    "outfitId": "111101",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "111101",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 3,
+    "scenarioId": "15",
+    "supportIds": [
+      "30317",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 200,
+          "start": 400
+        },
+        {
+          "length": 200,
+          "start": 600
+        },
+        {
+          "length": 250,
+          "start": 1300
+        },
+        {
+          "length": 247,
+          "start": 1550
+        }
+      ],
+      "course_set_status": [
+        1
+      ],
+      "course_variant": 3,
+      "distance": 2200,
+      "distance_type": 3,
+      "geometry_review_reason": null,
+      "id": "10808",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 100,
+          "slope": 20000,
+          "start": 1050
+        },
+        {
+          "length": 225,
+          "slope": 10000,
+          "start": 1150
+        },
+        {
+          "length": 150,
+          "slope": -20000,
+          "start": 1375
+        }
+      ],
+      "straights": [
+        {
+          "end": 400,
+          "frontType": 1,
+          "start": 0
+        },
+        {
+          "end": 1300,
+          "frontType": 2,
+          "start": 800
+        },
+        {
+          "end": 2200,
+          "frontType": 1,
+          "start": 1797
+        }
+      ],
+      "surface": 1,
+      "track_id": "10008",
+      "turn": 1,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "101111",
+      "name": "辿る血脈、芽吹く未来"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v2",
+    "ids": [
+      "200492",
+      "200602",
+      "200732",
+      "202122",
+      "203322",
+      "203832",
+      "204222",
+      "204262",
+      "900011",
+      "900561",
+      "900591",
+      "910121",
+      "910271",
+      "91101351"
+    ],
+    "skills": [
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "200492"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "200602",
+        "name": "差し切り体勢",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで中団以降だと加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "200602",
+        "baseName": "差し切り体勢",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "200732",
+        "name": "食い下がり",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終コーナー以降に詰め寄られると速度がわずかに上がり、加速力がほんのちょっと上がる＜中距離＞",
+        "baseId": "200732",
+        "baseName": "食い下がり",
+        "cost": 96,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202122",
+        "name": "恐れぬ心",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半のどこかで中団だと速度がわずかに上がり加速力がほんのちょっと上がる＜作戦・差し＞",
+        "baseId": "202122",
+        "baseName": "恐れぬ心",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "203322",
+        "name": "駆け降り",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "いずれかの下り坂のどこかで加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "203322",
+        "baseName": "駆け降り",
+        "cost": 72,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "self",
+            "owner_id": "111101",
+            "owner_type": "outfit",
+            "skill_id": "203322"
+          },
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30317",
+            "owner_type": "support",
+            "skill_id": "203322"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "203832",
+        "name": "頂を目指して",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めの早めのどこかで中団以降だと加速力がわずかに上がる＜差し・中距離＞",
+        "baseId": "203832",
+        "baseName": "頂を目指して",
+        "cost": 102,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204222",
+        "name": "もう一踏ん張り",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかでわずかに伸びを見せる＜中距離＞",
+        "baseId": "204222",
+        "baseName": "もう一踏ん張り",
+        "cost": 108,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "204222"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "204262",
+        "name": "星の煌き",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+        "baseId": "204262",
+        "baseName": "星の煌き",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "900011",
+        "name": "シューティングスター",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+        "baseId": "900011",
+        "baseName": "シューティングスター",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "100101"
+        ]
+      },
+      {
+        "id": "900561",
+        "name": "来てください来てください！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に3番手以降で前方が詰まったときお告げの力で速度が少し上がり加速力がちょっと上がる",
+        "baseId": "900561",
+        "baseName": "来てください来てください！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105601"
+        ]
+      },
+      {
+        "id": "900591",
+        "name": "彼方、その先へ…",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "掛からなければ中盤の最終コーナーか終盤以降の最終コーナーではないコーナーで中団にいるとき奮い立ち加速力が上がる",
+        "baseId": "900591",
+        "baseName": "彼方、その先へ…",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105901"
+        ]
+      },
+      {
+        "id": "910121",
+        "name": "大盛り！ファーストバイト！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース中盤に3回以上追い抜いた場合終盤目前の下り坂で後方だと少しの間速度が上がり加速力がちょっと上がる",
+        "baseId": "910121",
+        "baseName": "大盛り！ファーストバイト！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "101202"
+        ]
+      },
+      {
+        "id": "910271",
+        "name": "あなたに捧げるフリーポア",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤目前の下り坂で2番手以降かつ先頭から4バ身以内だと少しの間速度が上がる、さらに中距離レースなら加速力がちょっと上がる",
+        "baseId": "910271",
+        "baseName": "あなたに捧げるフリーポア",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102702"
+        ]
+      },
+      {
+        "id": "91101351",
+        "name": "黄金を訪ねて",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半に速度を少し上げ続ける2000m以上のレースならその後ラストスパートの最中に短い間加速力が少し上がる＜差し/追込＞",
+        "baseId": "91101351",
+        "baseName": "黄金を訪ねて",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "113501"
+        ]
+      }
+    ],
+    "gain": 9.343947954063447,
+    "min": 6.802388958917618,
+    "max": 11.555051571040531,
+    "cost": 1524,
+    "maximumGain": 9.562029851917838,
+    "sacrificedGain": 0.21808189785439147,
+    "allowedLoss": null,
+    "score": 7.057947954063447,
+    "efficiencyPolicy": {
+      "minGainPer100Sp": 0.15,
+      "scoreTolerance": 0.01,
+      "source": "preparation-policy-not-measured"
+    },
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30317-rare-sets": "1",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30322-chain-final": "1",
+      "30289-chain-final": "2",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30317",
+        "groupId": "30317-rare-sets",
+        "setId": "1",
+        "ids": [
+          "202621",
+          "204711"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "groupId": "30322-chain-final",
+        "setId": "1",
+        "ids": [
+          "203501",
+          "204731"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204741"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204751"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "groupId": "30289-chain-final",
+        "setId": "2",
+        "ids": [
+          "201612",
+          "204181"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "202831",
+              "204191"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "rankComparison": {
+      "version": "cm9-fixed-rank-sensitivity-v1",
+      "ranks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aggregation": "equal-weight-sensitivity-mean",
+      "probabilities": false,
+      "rankChanges": false
+    },
+    "gainByRank": [
+      {
+        "rank": 3,
+        "gain": 8.327034378060238,
+        "entryGain": 0.6568020927773432,
+        "min": 6.802388958917618,
+        "max": 9.577625340509986
+      },
+      {
+        "rank": 4,
+        "gain": 9.022784475376321,
+        "entryGain": 0.6454050933059724,
+        "min": 7.548822513022605,
+        "max": 10.309099443727245
+      },
+      {
+        "rank": 5,
+        "gain": 10.445723902515232,
+        "entryGain": 0.9103917995049491,
+        "min": 9.263544901243586,
+        "max": 11.555051571040531
+      },
+      {
+        "rank": 6,
+        "gain": 10.445723902515232,
+        "entryGain": 0.9103917995049491,
+        "min": 9.263544901243586,
+        "max": 11.555051571040531
+      },
+      {
+        "rank": 7,
+        "gain": 9.269747457487144,
+        "entryGain": 0.9098761328383301,
+        "min": 7.888235313311088,
+        "max": 10.477950941806558
+      },
+      {
+        "rank": 8,
+        "gain": 8.94293254642213,
+        "entryGain": 0.862206456913229,
+        "min": 7.571262636911888,
+        "max": 10.071354653041272
+      },
+      {
+        "rank": 9,
+        "gain": 8.953689016067822,
+        "entryGain": 0.8733891833061156,
+        "min": 7.582583069927205,
+        "max": 10.079668017762014
+      }
+    ],
+    "excludedCandidates": [],
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 45,
+      "shortlisted": 12,
+      "evaluations": 390,
+      "refinementEvaluations": 67,
+      "refinementLimit": 96,
+      "refinementLimited": false,
+      "closureComplete": true,
+      "exchangeMethod": "coarse-screened-12-in-6-out-8-score-8-cost",
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "cost-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "스테이 골드 강화 계승",
+      "ids": [
+        "91101351"
+      ],
+      "matched": [
+        "91101351"
+      ],
+      "available": [
+        "91101351"
+      ],
+      "candidates": [
+        {
+          "id": "91101351",
+          "name": "黄金を訪ねて",
+          "status": "supported",
+          "price": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "solo": 2.3438985983601013
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    },
+    {
+      "name": "駆け降り",
+      "ids": [
+        "203322"
+      ],
+      "matched": [
+        "203322"
+      ],
+      "available": [
+        "203322"
+      ],
+      "candidates": [
+        {
+          "id": "203322",
+          "name": "駆け降り",
+          "status": "supported",
+          "price": {
+            "complete": true,
+            "used": 72,
+            "stages": [
+              {
+                "id": "203322",
+                "base": 120,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 72
+              }
+            ]
+          },
+          "solo": 2.057143947211671
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    }
+  ],
+  "negatives": [],
+  "firstSampleEvents": [
+    {
+      "rank": 3,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.1676164332177,
+      "t": 57.4,
+      "duration": 7.92
+    },
+    {
+      "rank": 3,
+      "id": "202122",
+      "index": 1,
+      "x": 1331.6672184106005,
+      "t": 69.15,
+      "duration": 5.28
+    },
+    {
+      "rank": 3,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.011572499268,
+      "t": 72.85000000000001,
+      "duration": 5.28
+    },
+    {
+      "rank": 3,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.7679138952828,
+      "t": 75.94,
+      "duration": 2.64
+    },
+    {
+      "rank": 3,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.3640235908115,
+      "t": 76.02,
+      "duration": 6.6
+    },
+    {
+      "rank": 3,
+      "id": "204222",
+      "index": 1,
+      "x": 1624.680881608295,
+      "t": 82.7,
+      "duration": 4.4
+    },
+    {
+      "rank": 3,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.4581958790807,
+      "t": 84.14,
+      "duration": 6.6
+    },
+    {
+      "rank": 3,
+      "id": "900011",
+      "index": 1,
+      "x": 1796.0348609559862,
+      "t": 89.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 3,
+      "id": "204262",
+      "index": 1,
+      "x": 1846.9400613224725,
+      "t": 91.36,
+      "duration": 4.4
+    },
+    {
+      "rank": 3,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.752934930042,
+      "t": 93.42,
+      "duration": 6.6
+    },
+    {
+      "rank": 3,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.0991300253193,
+      "t": 95.22,
+      "duration": 6.6
+    },
+    {
+      "rank": 4,
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "rank": 4,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.194147752397,
+      "t": 57.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 4,
+      "id": "202122",
+      "index": 1,
+      "x": 1331.666928511947,
+      "t": 68.87,
+      "duration": 5.28
+    },
+    {
+      "rank": 4,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0259040756755,
+      "t": 72.55,
+      "duration": 5.28
+    },
+    {
+      "rank": 4,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.7852454716906,
+      "t": 75.64,
+      "duration": 2.64
+    },
+    {
+      "rank": 4,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.183658327661,
+      "t": 75.66,
+      "duration": 3.96
+    },
+    {
+      "rank": 4,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.3817151672195,
+      "t": 75.72,
+      "duration": 6.6
+    },
+    {
+      "rank": 4,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.3285139662999,
+      "t": 76.87,
+      "duration": 2.64
+    },
+    {
+      "rank": 4,
+      "id": "204222",
+      "index": 1,
+      "x": 1584.0279176491395,
+      "t": 80.66,
+      "duration": 4.4
+    },
+    {
+      "rank": 4,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.2345143910375,
+      "t": 83.68,
+      "duration": 6.6
+    },
+    {
+      "rank": 4,
+      "id": "900011",
+      "index": 1,
+      "x": 1795.9754084535023,
+      "t": 88.93,
+      "duration": 7.92
+    },
+    {
+      "rank": 4,
+      "id": "204262",
+      "index": 1,
+      "x": 1822.0870628211267,
+      "t": 89.94,
+      "duration": 4.4
+    },
+    {
+      "rank": 4,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.7695731189474,
+      "t": 92.95,
+      "duration": 6.6
+    },
+    {
+      "rank": 4,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.093375627226,
+      "t": 94.75,
+      "duration": 6.6
+    },
+    {
+      "rank": 5,
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "rank": 5,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.194147752397,
+      "t": 57.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 5,
+      "id": "202122",
+      "index": 1,
+      "x": 1331.666928511947,
+      "t": 68.87,
+      "duration": 5.28
+    },
+    {
+      "rank": 5,
+      "id": "910121",
+      "index": 1,
+      "x": 1375.1744786165225,
+      "t": 71.05,
+      "duration": 5.28
+    },
+    {
+      "rank": 5,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0030339940308,
+      "t": 72.54,
+      "duration": 5.28
+    },
+    {
+      "rank": 5,
+      "id": "900591",
+      "index": 1,
+      "x": 1466.8274836070357,
+      "t": 75.61,
+      "duration": 5.28
+    },
+    {
+      "rank": 5,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.8274836070357,
+      "t": 75.61,
+      "duration": 2.64
+    },
+    {
+      "rank": 5,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.2289464630064,
+      "t": 75.63,
+      "duration": 3.96
+    },
+    {
+      "rank": 5,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.4367533025647,
+      "t": 75.69,
+      "duration": 6.6
+    },
+    {
+      "rank": 5,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.2967016732368,
+      "t": 76.82000000000001,
+      "duration": 2.64
+    },
+    {
+      "rank": 5,
+      "id": "204222",
+      "index": 1,
+      "x": 1567.7322289987696,
+      "t": 79.91,
+      "duration": 4.4
+    },
+    {
+      "rank": 5,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.3380582654445,
+      "t": 83.57000000000001,
+      "duration": 6.6
+    },
+    {
+      "rank": 5,
+      "id": "900011",
+      "index": 1,
+      "x": 1796.1313628614396,
+      "t": 88.82000000000001,
+      "duration": 7.92
+    },
+    {
+      "rank": 5,
+      "id": "204262",
+      "index": 1,
+      "x": 1811.9049339033052,
+      "t": 89.43,
+      "duration": 4.4
+    },
+    {
+      "rank": 5,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.8062764954252,
+      "t": 92.83,
+      "duration": 6.6
+    },
+    {
+      "rank": 5,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.050358176009,
+      "t": 94.63,
+      "duration": 6.6
+    },
+    {
+      "rank": 6,
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "rank": 6,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.194147752397,
+      "t": 57.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 6,
+      "id": "202122",
+      "index": 1,
+      "x": 1331.666928511947,
+      "t": 68.87,
+      "duration": 5.28
+    },
+    {
+      "rank": 6,
+      "id": "910121",
+      "index": 1,
+      "x": 1375.1744786165225,
+      "t": 71.05,
+      "duration": 5.28
+    },
+    {
+      "rank": 6,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0030339940308,
+      "t": 72.54,
+      "duration": 5.28
+    },
+    {
+      "rank": 6,
+      "id": "900591",
+      "index": 1,
+      "x": 1466.8274836070357,
+      "t": 75.61,
+      "duration": 5.28
+    },
+    {
+      "rank": 6,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.8274836070357,
+      "t": 75.61,
+      "duration": 2.64
+    },
+    {
+      "rank": 6,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.2289464630064,
+      "t": 75.63,
+      "duration": 3.96
+    },
+    {
+      "rank": 6,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.4367533025647,
+      "t": 75.69,
+      "duration": 6.6
+    },
+    {
+      "rank": 6,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.2967016732368,
+      "t": 76.82000000000001,
+      "duration": 2.64
+    },
+    {
+      "rank": 6,
+      "id": "204222",
+      "index": 1,
+      "x": 1567.7322289987696,
+      "t": 79.91,
+      "duration": 4.4
+    },
+    {
+      "rank": 6,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.3380582654445,
+      "t": 83.57000000000001,
+      "duration": 6.6
+    },
+    {
+      "rank": 6,
+      "id": "900011",
+      "index": 1,
+      "x": 1796.1313628614396,
+      "t": 88.82000000000001,
+      "duration": 7.92
+    },
+    {
+      "rank": 6,
+      "id": "204262",
+      "index": 1,
+      "x": 1811.9049339033052,
+      "t": 89.43,
+      "duration": 4.4
+    },
+    {
+      "rank": 6,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.8062764954252,
+      "t": 92.83,
+      "duration": 6.6
+    },
+    {
+      "rank": 6,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.050358176009,
+      "t": 94.63,
+      "duration": 6.6
+    },
+    {
+      "rank": 7,
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "rank": 7,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.194147752397,
+      "t": 57.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 7,
+      "id": "202122",
+      "index": 1,
+      "x": 1331.666928511947,
+      "t": 68.87,
+      "duration": 5.28
+    },
+    {
+      "rank": 7,
+      "id": "910121",
+      "index": 1,
+      "x": 1375.1744786165225,
+      "t": 71.05,
+      "duration": 5.28
+    },
+    {
+      "rank": 7,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0030339940308,
+      "t": 72.54,
+      "duration": 5.28
+    },
+    {
+      "rank": 7,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.8274836070357,
+      "t": 75.61,
+      "duration": 2.64
+    },
+    {
+      "rank": 7,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.228906463006,
+      "t": 75.63,
+      "duration": 3.96
+    },
+    {
+      "rank": 7,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.4361133025639,
+      "t": 75.69,
+      "duration": 6.6
+    },
+    {
+      "rank": 7,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.3683606734483,
+      "t": 76.83,
+      "duration": 2.64
+    },
+    {
+      "rank": 7,
+      "id": "204222",
+      "index": 1,
+      "x": 1580.4721964443952,
+      "t": 80.46000000000001,
+      "duration": 4.4
+    },
+    {
+      "rank": 7,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.2651225253335,
+      "t": 83.62,
+      "duration": 6.6
+    },
+    {
+      "rank": 7,
+      "id": "204262",
+      "index": 1,
+      "x": 1819.6663206830797,
+      "t": 89.79,
+      "duration": 4.4
+    },
+    {
+      "rank": 7,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.761949660628,
+      "t": 92.91,
+      "duration": 6.6
+    },
+    {
+      "rank": 7,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.051138731596,
+      "t": 94.72,
+      "duration": 6.6
+    },
+    {
+      "rank": 8,
+      "id": "101111",
+      "index": 1,
+      "x": 1078.1281080229621,
+      "t": 56.27,
+      "duration": 13.2
+    },
+    {
+      "rank": 8,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.194147752397,
+      "t": 57.39,
+      "duration": 7.92
+    },
+    {
+      "rank": 8,
+      "id": "910121",
+      "index": 1,
+      "x": 1375.0717006536752,
+      "t": 71.06,
+      "duration": 5.28
+    },
+    {
+      "rank": 8,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0696705753244,
+      "t": 72.57000000000001,
+      "duration": 5.28
+    },
+    {
+      "rank": 8,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.8378379713515,
+      "t": 75.65,
+      "duration": 2.64
+    },
+    {
+      "rank": 8,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.239260827322,
+      "t": 75.67,
+      "duration": 3.96
+    },
+    {
+      "rank": 8,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.2449479569902,
+      "t": 75.72,
+      "duration": 6.6
+    },
+    {
+      "rank": 8,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.3802325377642,
+      "t": 76.87,
+      "duration": 2.64
+    },
+    {
+      "rank": 8,
+      "id": "204222",
+      "index": 1,
+      "x": 1580.4845608087105,
+      "t": 80.5,
+      "duration": 4.4
+    },
+    {
+      "rank": 8,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.2774868896488,
+      "t": 83.66,
+      "duration": 6.6
+    },
+    {
+      "rank": 8,
+      "id": "204262",
+      "index": 1,
+      "x": 1819.678685047395,
+      "t": 89.83,
+      "duration": 4.4
+    },
+    {
+      "rank": 8,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.7743140249434,
+      "t": 92.95,
+      "duration": 6.6
+    },
+    {
+      "rank": 8,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.0635030959113,
+      "t": 94.76,
+      "duration": 6.6
+    },
+    {
+      "rank": 9,
+      "id": "91101351",
+      "index": 1,
+      "x": 1100.1676164332177,
+      "t": 57.4,
+      "duration": 7.92
+    },
+    {
+      "rank": 9,
+      "id": "910121",
+      "index": 1,
+      "x": 1375.0543690772615,
+      "t": 71.36,
+      "duration": 5.28
+    },
+    {
+      "rank": 9,
+      "id": "910271",
+      "index": 1,
+      "x": 1405.0523389989107,
+      "t": 72.87,
+      "duration": 5.28
+    },
+    {
+      "rank": 9,
+      "id": "91101351",
+      "index": 2,
+      "x": 1466.8205063949379,
+      "t": 75.95,
+      "duration": 2.64
+    },
+    {
+      "rank": 9,
+      "id": "200602",
+      "index": 1,
+      "x": 1467.2219292509083,
+      "t": 75.97,
+      "duration": 3.96
+    },
+    {
+      "rank": 9,
+      "id": "203322",
+      "index": 1,
+      "x": 1468.429136090466,
+      "t": 76.03,
+      "duration": 6.6
+    },
+    {
+      "rank": 9,
+      "id": "203832",
+      "index": 1,
+      "x": 1492.3606109613506,
+      "t": 77.17,
+      "duration": 2.64
+    },
+    {
+      "rank": 9,
+      "id": "204222",
+      "index": 1,
+      "x": 1580.459789232296,
+      "t": 80.8,
+      "duration": 4.4
+    },
+    {
+      "rank": 9,
+      "id": "200492",
+      "index": 1,
+      "x": 1661.2527153132344,
+      "t": 83.96000000000001,
+      "duration": 6.6
+    },
+    {
+      "rank": 9,
+      "id": "204262",
+      "index": 1,
+      "x": 1819.6539134709806,
+      "t": 90.13,
+      "duration": 4.4
+    },
+    {
+      "rank": 9,
+      "id": "900561",
+      "index": 1,
+      "x": 1900.749542448529,
+      "t": 93.25,
+      "duration": 6.6
+    },
+    {
+      "rank": 9,
+      "id": "200732",
+      "index": 1,
+      "x": 1948.0387315194969,
+      "t": 95.06,
+      "duration": 6.6
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 6,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": true
+}

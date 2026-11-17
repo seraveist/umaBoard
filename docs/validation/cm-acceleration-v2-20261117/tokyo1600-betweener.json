@@ -1,0 +1,2610 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeBaseCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "sourceHashes": {
+    "assets/cm-acceleration-plan.mjs": "71dc19f409518456772ab591dbdd5c13b5bfdc4c7fdf7d1ed99a30d2d0e9b5ff",
+    "assets/cm-position-comparison.mjs": "db7023d8bbe46084458300b974eb3e4083728ffa0b9aa4ba246e7961a536e51b",
+    "assets/cm-final-plan.mjs": "9f2b99b105f1b7a3d19f658ef707ff1813d2b63839a1222b15d9928ce171a028",
+    "assets/cm-state.mjs": "680cb6d19e8c4e9cc17b76168be3b62673a5276e424bb69e2814371fc18eb61f"
+  },
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 114.108,
+  "case": {
+    "id": "tokyo1600-betweener",
+    "label": "도쿄 잔디 1600m 선입",
+    "courseId": "10602",
+    "style": 3,
+    "outfitId": "108501",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ],
+    "source": "https://umamusumelabo.com/event/champions-meeting/chanmi-mile-202306",
+    "guideDate": "2023-06",
+    "scope": "historical guide validates geometry/role only, not 2026 ranking; native activation aid may replace Anabolic",
+    "expected": [
+      {
+        "name": "전광석화 계열",
+        "ids": [
+          "202401",
+          "202402"
+        ]
+      }
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "courseId": "10602",
+    "style": 3,
+    "outfitId": "108501",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "108501",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 3,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30268",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 275,
+          "start": 550
+        },
+        {
+          "length": 250,
+          "start": 825
+        }
+      ],
+      "course_set_status": [
+        2,
+        4
+      ],
+      "course_variant": 1,
+      "distance": 1600,
+      "distance_type": 2,
+      "geometry_review_reason": null,
+      "id": "10602",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 75,
+          "slope": 20000,
+          "start": 325
+        },
+        {
+          "length": 250,
+          "slope": -15000,
+          "start": 450
+        },
+        {
+          "length": 150,
+          "slope": 15000,
+          "start": 1150
+        }
+      ],
+      "straights": [
+        {
+          "end": 550,
+          "frontType": 2,
+          "start": 0
+        },
+        {
+          "end": 1600,
+          "frontType": 1,
+          "start": 1075
+        }
+      ],
+      "surface": 1,
+      "track_id": "10006",
+      "turn": 2,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 2,
+    "season": 3,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "100851",
+      "name": "至上であれ"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v2",
+    "ids": [
+      "200492",
+      "200602",
+      "202122",
+      "202672",
+      "203542",
+      "204262",
+      "204432",
+      "210042",
+      "900011",
+      "900561",
+      "910401",
+      "910611"
+    ],
+    "skills": [
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "200602",
+        "name": "差し切り体勢",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで中団以降だと加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "200602",
+        "baseName": "差し切り体勢",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202122",
+        "name": "恐れぬ心",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半のどこかで中団だと速度がわずかに上がり加速力がほんのちょっと上がる＜作戦・差し＞",
+        "baseId": "202122",
+        "baseName": "恐れぬ心",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202672",
+        "name": "心弾んで",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで前方だと加速力がわずかに上がる＜マイル＞",
+        "baseId": "202672",
+        "baseName": "心弾んで",
+        "cost": 96,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "203542",
+        "name": "足任せ",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで中団以降だと加速力がわずかに上がる＜マイル＞",
+        "baseId": "203542",
+        "baseName": "足任せ",
+        "cost": 96,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204262",
+        "name": "星の煌き",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+        "baseId": "204262",
+        "baseName": "星の煌き",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204432",
+        "name": "影より速く",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "直線でラストスパートの最中なら加速力がわずかに上がる＜作戦・差し＞",
+        "baseId": "204432",
+        "baseName": "影より速く",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "210042",
+        "name": "アオハル点火・根",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤のどこかでアオハル魂が燃えレース中のチームメンバーの根性合計が高いほど速度と加速力がちょっと上がる",
+        "baseId": "210042",
+        "baseName": "アオハル点火・根",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "900011",
+        "name": "シューティングスター",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+        "baseId": "900011",
+        "baseName": "シューティングスター",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "100101"
+        ]
+      },
+      {
+        "id": "900561",
+        "name": "来てください来てください！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に3番手以降で前方が詰まったときお告げの力で速度が少し上がり加速力がちょっと上がる",
+        "baseId": "900561",
+        "baseName": "来てください来てください！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105601"
+        ]
+      },
+      {
+        "id": "910401",
+        "name": "GET DOWN",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終コーナーで中団にいるとき競り合うと速度と加速力が少し上がる",
+        "baseId": "910401",
+        "baseName": "GET DOWN",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "104002"
+        ]
+      },
+      {
+        "id": "910611",
+        "name": "轟！トレセン応援団！！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース前半に掛からず最後方付近をキープすると、最終直線で気合を爆発させて加速力が上がる",
+        "baseId": "910611",
+        "baseName": "轟！トレセン応援団！！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "106102"
+        ]
+      }
+    ],
+    "gain": 6.749087526143386,
+    "min": 4.092647962347746,
+    "max": 8.19962428359031,
+    "cost": 1326,
+    "maximumGain": 7.139521879130924,
+    "sacrificedGain": 0.3904343529875378,
+    "allowedLoss": null,
+    "score": 4.760087526143386,
+    "efficiencyPolicy": {
+      "minGainPer100Sp": 0.15,
+      "scoreTolerance": 0.01,
+      "source": "preparation-policy-not-measured"
+    },
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "1",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30322-chain-final": "3",
+      "30268-rare-sets": "1",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "groupId": "30275-chain-final",
+        "setId": "1",
+        "ids": [
+          "204001",
+          "203421"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203441"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30322",
+        "groupId": "30322-chain-final",
+        "setId": "3",
+        "ids": [
+          "203501",
+          "204751"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "203501",
+              "204731"
+            ]
+          },
+          {
+            "ids": [
+              "203501",
+              "204741"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30268",
+        "groupId": "30268-rare-sets",
+        "setId": "1",
+        "ids": [
+          "201453",
+          "202401"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "201453",
+              "203761"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "rankComparison": {
+      "version": "cm9-fixed-rank-sensitivity-v1",
+      "ranks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aggregation": "equal-weight-sensitivity-mean",
+      "probabilities": false,
+      "rankChanges": false
+    },
+    "gainByRank": [
+      {
+        "rank": 3,
+        "gain": 6.24993394867172,
+        "entryGain": 0.10637255516996902,
+        "min": 4.092647962347746,
+        "max": 7.610272683410767
+      },
+      {
+        "rank": 4,
+        "gain": 7.222652415806902,
+        "entryGain": 0.106373221836634,
+        "min": 6.0954868807288225,
+        "max": 8.19962428359031
+      },
+      {
+        "rank": 5,
+        "gain": 6.947094344144019,
+        "entryGain": 0.10751839786131162,
+        "min": 5.6953783620462675,
+        "max": 7.9951096311842775
+      },
+      {
+        "rank": 6,
+        "gain": 6.519164099203827,
+        "entryGain": 0.10751839786131162,
+        "min": 4.819689472222126,
+        "max": 7.910686979275215
+      },
+      {
+        "rank": 7,
+        "gain": 6.884203143630518,
+        "entryGain": 0.034406057773992416,
+        "min": 5.33860539304942,
+        "max": 7.805658593737735
+      },
+      {
+        "rank": 8,
+        "gain": 6.632175803035209,
+        "entryGain": 0,
+        "min": 5.1098991611764175,
+        "max": 7.590850768347536
+      },
+      {
+        "rank": 9,
+        "gain": 6.788388928511509,
+        "entryGain": 0,
+        "min": 5.334466834488467,
+        "max": 7.968160966902724
+      }
+    ],
+    "excludedCandidates": [],
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 34,
+      "shortlisted": 13,
+      "evaluations": 543,
+      "refinementEvaluations": 96,
+      "refinementLimit": 96,
+      "refinementLimited": true,
+      "closureComplete": false,
+      "exchangeMethod": "coarse-screened-12-in-6-out-8-score-8-cost",
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "cost-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "전광석화 계열",
+      "ids": [
+        "202401",
+        "202402"
+      ],
+      "matched": [],
+      "available": [
+        "108501211",
+        "202401",
+        "202402"
+      ],
+      "candidates": [
+        {
+          "id": "108501211",
+          "name": "常に最たる輝きを",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 216,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              },
+              {
+                "id": "202401",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.7331209248730867
+        },
+        {
+          "id": "202401",
+          "name": "電光石火",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 216,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              },
+              {
+                "id": "202401",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.7380715011336405
+        },
+        {
+          "id": "202402",
+          "name": "一足飛び",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 108,
+            "stages": [
+              {
+                "id": "202402",
+                "base": 180,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 108
+              }
+            ]
+          },
+          "solo": 0.4513114804749534
+        }
+      ],
+      "counterfactual": {
+        "ids": [
+          "200492",
+          "200602",
+          "202122",
+          "202672",
+          "203542",
+          "204262",
+          "204432",
+          "210042",
+          "900011",
+          "900561",
+          "910401",
+          "910611",
+          "202401"
+        ],
+        "gain": 6.846945751082687,
+        "entryGain": 0.06602694721474553,
+        "min": 4.092647962347746,
+        "max": 9.16572196545685,
+        "byRank": [
+          {
+            "rank": 3,
+            "gain": 6.24993394867172,
+            "entryGain": 0.10637255516996902,
+            "min": 4.092647962347746,
+            "max": 7.610272683410767
+          },
+          {
+            "rank": 4,
+            "gain": 7.3409679778516574,
+            "entryGain": 0.106373221836634,
+            "min": 6.0954868807288225,
+            "max": 9.16572196545685
+          },
+          {
+            "rank": 5,
+            "gain": 7.0725181990157395,
+            "entryGain": 0.10751839786131162,
+            "min": 5.695404170346592,
+            "max": 8.682839836381481
+          },
+          {
+            "rank": 6,
+            "gain": 6.667760889250417,
+            "entryGain": 0.10751839786131162,
+            "min": 4.821089086008124,
+            "max": 8.677246270080468
+          },
+          {
+            "rank": 7,
+            "gain": 6.983207958681231,
+            "entryGain": 0.034406057773992416,
+            "min": 5.33860539304942,
+            "max": 8.50528772363623
+          },
+          {
+            "rank": 8,
+            "gain": 6.731423636872095,
+            "entryGain": 0,
+            "min": 5.1098991611764175,
+            "max": 8.350867398754144
+          },
+          {
+            "rank": 9,
+            "gain": 6.88280764723595,
+            "entryGain": 0,
+            "min": 5.334466834488467,
+            "max": 8.823800785081493
+          }
+        ],
+        "cost": 1542,
+        "score": 4.533945751082688,
+        "eventExamples": [
+          {
+            "rank": 3,
+            "id": "202122",
+            "index": 1,
+            "x": 968.5047685072772,
+            "t": 48.980000000000004,
+            "duration": 3.84
+          },
+          {
+            "rank": 3,
+            "id": "910401",
+            "index": 1,
+            "x": 972.997826224055,
+            "t": 49.2,
+            "duration": 4.8
+          },
+          {
+            "rank": 3,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.049342926713,
+            "t": 54.17,
+            "duration": 1.44
+          },
+          {
+            "rank": 3,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.752018371561,
+            "t": 55.24,
+            "duration": 2.88
+          },
+          {
+            "rank": 3,
+            "id": "202672",
+            "index": 1,
+            "x": 1109.1816307208892,
+            "t": 55.76,
+            "duration": 2.88
+          },
+          {
+            "rank": 3,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.3542493154546,
+            "t": 59.9,
+            "duration": 4.8
+          },
+          {
+            "rank": 3,
+            "id": "900011",
+            "index": 1,
+            "x": 1306.2696528504187,
+            "t": 63.71,
+            "duration": 5.76
+          },
+          {
+            "rank": 3,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.5312778134578,
+            "t": 66.62,
+            "duration": 4.8
+          },
+          {
+            "rank": 3,
+            "id": "204262",
+            "index": 1,
+            "x": 1427.3897580304433,
+            "t": 68.32000000000001,
+            "duration": 3.2
+          },
+          {
+            "rank": 4,
+            "id": "202122",
+            "index": 1,
+            "x": 968.5047685072772,
+            "t": 48.980000000000004,
+            "duration": 3.84
+          },
+          {
+            "rank": 4,
+            "id": "910401",
+            "index": 1,
+            "x": 972.997826224055,
+            "t": 49.2,
+            "duration": 4.8
+          },
+          {
+            "rank": 4,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.2294246067086,
+            "t": 53.79,
+            "duration": 2.88
+          },
+          {
+            "rank": 4,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.0637829267134,
+            "t": 54.17,
+            "duration": 1.44
+          },
+          {
+            "rank": 4,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7422991881274,
+            "t": 55.230000000000004,
+            "duration": 2.88
+          },
+          {
+            "rank": 4,
+            "id": "202672",
+            "index": 1,
+            "x": 1109.3441894313899,
+            "t": 55.75,
+            "duration": 2.88
+          },
+          {
+            "rank": 4,
+            "id": "203542",
+            "index": 1,
+            "x": 1171.9956810756742,
+            "t": 58.36,
+            "duration": 2.88
+          },
+          {
+            "rank": 4,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.4190636942005,
+            "t": 59.79,
+            "duration": 4.8
+          },
+          {
+            "rank": 4,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.4951377262717,
+            "t": 63.160000000000004,
+            "duration": 3.2
+          },
+          {
+            "rank": 4,
+            "id": "900011",
+            "index": 1,
+            "x": 1306.3771683376408,
+            "t": 63.58,
+            "duration": 5.76
+          },
+          {
+            "rank": 4,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.3797592827586,
+            "t": 66.48,
+            "duration": 4.8
+          },
+          {
+            "rank": 4,
+            "id": "204262",
+            "index": 1,
+            "x": 1426.4473446704371,
+            "t": 68.15,
+            "duration": 3.2
+          },
+          {
+            "rank": 5,
+            "id": "202122",
+            "index": 1,
+            "x": 968.5047685072772,
+            "t": 48.980000000000004,
+            "duration": 3.84
+          },
+          {
+            "rank": 5,
+            "id": "910401",
+            "index": 1,
+            "x": 972.997826224055,
+            "t": 49.2,
+            "duration": 4.8
+          },
+          {
+            "rank": 5,
+            "id": "100851",
+            "index": 1,
+            "x": 1056.0041995257088,
+            "t": 53.24,
+            "duration": 8
+          },
+          {
+            "rank": 5,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.1986915067096,
+            "t": 53.78,
+            "duration": 2.88
+          },
+          {
+            "rank": 5,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.1552081267143,
+            "t": 54.160000000000004,
+            "duration": 1.44
+          },
+          {
+            "rank": 5,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7290400427628,
+            "t": 55.2,
+            "duration": 2.88
+          },
+          {
+            "rank": 5,
+            "id": "202672",
+            "index": 1,
+            "x": 1109.2581122558986,
+            "t": 55.71,
+            "duration": 2.88
+          },
+          {
+            "rank": 5,
+            "id": "203542",
+            "index": 1,
+            "x": 1171.9313183125344,
+            "t": 58.29,
+            "duration": 2.88
+          },
+          {
+            "rank": 5,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.2487016277062,
+            "t": 59.7,
+            "duration": 4.8
+          },
+          {
+            "rank": 5,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.4292532544891,
+            "t": 63.050000000000004,
+            "duration": 3.2
+          },
+          {
+            "rank": 5,
+            "id": "900011",
+            "index": 1,
+            "x": 1306.3302669235939,
+            "t": 63.47,
+            "duration": 5.76
+          },
+          {
+            "rank": 5,
+            "id": "204262",
+            "index": 1,
+            "x": 1366.1802359690082,
+            "t": 65.75,
+            "duration": 3.2
+          },
+          {
+            "rank": 5,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.3627818810169,
+            "t": 66.36,
+            "duration": 4.8
+          },
+          {
+            "rank": 6,
+            "id": "202122",
+            "index": 1,
+            "x": 968.5047685072772,
+            "t": 48.980000000000004,
+            "duration": 3.84
+          },
+          {
+            "rank": 6,
+            "id": "910401",
+            "index": 1,
+            "x": 972.997826224055,
+            "t": 49.2,
+            "duration": 4.8
+          },
+          {
+            "rank": 6,
+            "id": "100851",
+            "index": 1,
+            "x": 1056.0041995257088,
+            "t": 53.24,
+            "duration": 8
+          },
+          {
+            "rank": 6,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.1986915067096,
+            "t": 53.78,
+            "duration": 2.88
+          },
+          {
+            "rank": 6,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.1552081267143,
+            "t": 54.160000000000004,
+            "duration": 1.44
+          },
+          {
+            "rank": 6,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7290400427628,
+            "t": 55.2,
+            "duration": 2.88
+          },
+          {
+            "rank": 6,
+            "id": "203542",
+            "index": 1,
+            "x": 1172.0113321608126,
+            "t": 58.32,
+            "duration": 2.88
+          },
+          {
+            "rank": 6,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.3106393639416,
+            "t": 59.76,
+            "duration": 4.8
+          },
+          {
+            "rank": 6,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.2391665983644,
+            "t": 63.11,
+            "duration": 3.2
+          },
+          {
+            "rank": 6,
+            "id": "900011",
+            "index": 1,
+            "x": 1306.134304909142,
+            "t": 63.53,
+            "duration": 5.76
+          },
+          {
+            "rank": 6,
+            "id": "204262",
+            "index": 1,
+            "x": 1378.3073237491546,
+            "t": 66.28,
+            "duration": 3.2
+          },
+          {
+            "rank": 6,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.5507540746669,
+            "t": 66.44,
+            "duration": 4.8
+          },
+          {
+            "rank": 7,
+            "id": "202122",
+            "index": 1,
+            "x": 968.5047685072772,
+            "t": 48.980000000000004,
+            "duration": 3.84
+          },
+          {
+            "rank": 7,
+            "id": "100851",
+            "index": 1,
+            "x": 1056.009219440968,
+            "t": 53.25,
+            "duration": 8
+          },
+          {
+            "rank": 7,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.1766914219752,
+            "t": 53.79,
+            "duration": 2.88
+          },
+          {
+            "rank": 7,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.10750804198,
+            "t": 54.17,
+            "duration": 1.44
+          },
+          {
+            "rank": 7,
+            "id": "910611",
+            "index": 1,
+            "x": 1075.10750804198,
+            "t": 54.17,
+            "duration": 3.84
+          },
+          {
+            "rank": 7,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7125399580284,
+            "t": 55.21,
+            "duration": 2.88
+          },
+          {
+            "rank": 7,
+            "id": "203542",
+            "index": 1,
+            "x": 1172.096848095224,
+            "t": 58.28,
+            "duration": 2.88
+          },
+          {
+            "rank": 7,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.304507475062,
+            "t": 59.68,
+            "duration": 4.8
+          },
+          {
+            "rank": 7,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.2430489714354,
+            "t": 63.02,
+            "duration": 3.2
+          },
+          {
+            "rank": 7,
+            "id": "204262",
+            "index": 1,
+            "x": 1363.5656851166336,
+            "t": 65.64,
+            "duration": 3.2
+          },
+          {
+            "rank": 7,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.559880675212,
+            "t": 66.36,
+            "duration": 4.8
+          },
+          {
+            "rank": 8,
+            "id": "100851",
+            "index": 1,
+            "x": 1056.0493285072769,
+            "t": 53.28,
+            "duration": 8
+          },
+          {
+            "rank": 8,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.216800488284,
+            "t": 53.82,
+            "duration": 2.88
+          },
+          {
+            "rank": 8,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.1476171082888,
+            "t": 54.2,
+            "duration": 1.44
+          },
+          {
+            "rank": 8,
+            "id": "910611",
+            "index": 1,
+            "x": 1075.1476171082888,
+            "t": 54.2,
+            "duration": 3.84
+          },
+          {
+            "rank": 8,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7526490243372,
+            "t": 55.24,
+            "duration": 2.88
+          },
+          {
+            "rank": 8,
+            "id": "203542",
+            "index": 1,
+            "x": 1172.1369571615328,
+            "t": 58.31,
+            "duration": 2.88
+          },
+          {
+            "rank": 8,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.344616541371,
+            "t": 59.71,
+            "duration": 4.8
+          },
+          {
+            "rank": 8,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.2831580377442,
+            "t": 63.050000000000004,
+            "duration": 3.2
+          },
+          {
+            "rank": 8,
+            "id": "204262",
+            "index": 1,
+            "x": 1363.6057941829424,
+            "t": 65.67,
+            "duration": 3.2
+          },
+          {
+            "rank": 8,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.3360827642325,
+            "t": 66.38,
+            "duration": 4.8
+          },
+          {
+            "rank": 9,
+            "id": "200602",
+            "index": 1,
+            "x": 1067.0433327775313,
+            "t": 53.82,
+            "duration": 2.88
+          },
+          {
+            "rank": 9,
+            "id": "204432",
+            "index": 1,
+            "x": 1075.056626908288,
+            "t": 54.21,
+            "duration": 1.44
+          },
+          {
+            "rank": 9,
+            "id": "910611",
+            "index": 1,
+            "x": 1075.056626908288,
+            "t": 54.21,
+            "duration": 3.84
+          },
+          {
+            "rank": 9,
+            "id": "210042",
+            "index": 1,
+            "x": 1097.7722431697014,
+            "t": 55.27,
+            "duration": 2.88
+          },
+          {
+            "rank": 9,
+            "id": "203542",
+            "index": 1,
+            "x": 1171.989366564059,
+            "t": 58.370000000000005,
+            "duration": 2.88
+          },
+          {
+            "rank": 9,
+            "id": "200492",
+            "index": 1,
+            "x": 1208.2931993839895,
+            "t": 59.79,
+            "duration": 4.8
+          },
+          {
+            "rank": 9,
+            "id": "202401",
+            "index": 1,
+            "x": 1295.3692734160607,
+            "t": 63.160000000000004,
+            "duration": 3.2
+          },
+          {
+            "rank": 9,
+            "id": "900561",
+            "index": 1,
+            "x": 1382.3405706608257,
+            "t": 66.5,
+            "duration": 4.8
+          },
+          {
+            "rank": 9,
+            "id": "204262",
+            "index": 1,
+            "x": 1426.4193501017426,
+            "t": 68.18,
+            "duration": 3.2
+          }
+        ]
+      },
+      "bestOneSwap": {
+        "removed": "202122",
+        "result": {
+          "ids": [
+            "200492",
+            "200602",
+            "202672",
+            "203542",
+            "204262",
+            "204432",
+            "210042",
+            "900011",
+            "900561",
+            "910401",
+            "910611",
+            "202401"
+          ],
+          "gain": 6.653511196129635,
+          "entryGain": 0.04154378094512184,
+          "min": 3.810712856941791,
+          "max": 9.008507826230835,
+          "byRank": [
+            {
+              "rank": 3,
+              "gain": 5.953975973431031,
+              "entryGain": 0.07233805556664569,
+              "min": 3.810712856941791,
+              "max": 7.384164222517211
+            },
+            {
+              "rank": 4,
+              "gain": 7.047645360518633,
+              "entryGain": 0.07233805556664569,
+              "min": 5.759781995785306,
+              "max": 9.008507826230835
+            },
+            {
+              "rank": 5,
+              "gain": 6.82030688411302,
+              "entryGain": 0.07306517774128073,
+              "min": 5.532998606000365,
+              "max": 8.527351469335372
+            },
+            {
+              "rank": 6,
+              "gain": 6.406995233864619,
+              "entryGain": 0.07306517774128073,
+              "min": 4.588808568018339,
+              "max": 8.518753663865573
+            },
+            {
+              "rank": 7,
+              "gain": 6.731423636872095,
+              "entryGain": 0,
+              "min": 5.1098991611764175,
+              "max": 8.350867398754144
+            },
+            {
+              "rank": 8,
+              "gain": 6.731423636872095,
+              "entryGain": 0,
+              "min": 5.1098991611764175,
+              "max": 8.350867398754144
+            },
+            {
+              "rank": 9,
+              "gain": 6.88280764723595,
+              "entryGain": 0,
+              "min": 5.334466834488467,
+              "max": 8.823800785081493
+            }
+          ],
+          "cost": 1434,
+          "score": 4.502511196129635,
+          "eventExamples": [
+            {
+              "rank": 3,
+              "id": "910401",
+              "index": 1,
+              "x": 972.9837925072762,
+              "t": 49.2,
+              "duration": 4.8
+            },
+            {
+              "rank": 3,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.0918386440846,
+              "t": 54.2,
+              "duration": 1.44
+            },
+            {
+              "rank": 3,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7913040889327,
+              "t": 55.27,
+              "duration": 2.88
+            },
+            {
+              "rank": 3,
+              "id": "202672",
+              "index": 1,
+              "x": 1109.219356438261,
+              "t": 55.79,
+              "duration": 2.88
+            },
+            {
+              "rank": 3,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.3795550328252,
+              "t": 59.93,
+              "duration": 4.8
+            },
+            {
+              "rank": 3,
+              "id": "900011",
+              "index": 1,
+              "x": 1306.2907135677892,
+              "t": 63.74,
+              "duration": 5.76
+            },
+            {
+              "rank": 3,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.5523385308284,
+              "t": 66.65,
+              "duration": 4.8
+            },
+            {
+              "rank": 3,
+              "id": "204262",
+              "index": 1,
+              "x": 1427.410818747814,
+              "t": 68.35000000000001,
+              "duration": 3.2
+            },
+            {
+              "rank": 4,
+              "id": "910401",
+              "index": 1,
+              "x": 972.9837925072762,
+              "t": 49.2,
+              "duration": 4.8
+            },
+            {
+              "rank": 4,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.068259513328,
+              "t": 53.81,
+              "duration": 2.88
+            },
+            {
+              "rank": 4,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.107048644085,
+              "t": 54.2,
+              "duration": 1.44
+            },
+            {
+              "rank": 4,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7845049054986,
+              "t": 55.26,
+              "duration": 2.88
+            },
+            {
+              "rank": 4,
+              "id": "202672",
+              "index": 1,
+              "x": 1109.1598283997623,
+              "t": 55.77,
+              "duration": 2.88
+            },
+            {
+              "rank": 4,
+              "id": "203542",
+              "index": 1,
+              "x": 1172.0350335713715,
+              "t": 58.39,
+              "duration": 2.88
+            },
+            {
+              "rank": 4,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.1940115682332,
+              "t": 59.81,
+              "duration": 4.8
+            },
+            {
+              "rank": 4,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.2700856003044,
+              "t": 63.18,
+              "duration": 3.2
+            },
+            {
+              "rank": 4,
+              "id": "900011",
+              "index": 1,
+              "x": 1306.1501833423272,
+              "t": 63.6,
+              "duration": 5.76
+            },
+            {
+              "rank": 4,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.4145931331477,
+              "t": 66.51,
+              "duration": 4.8
+            },
+            {
+              "rank": 4,
+              "id": "204262",
+              "index": 1,
+              "x": 1426.4821785208262,
+              "t": 68.18,
+              "duration": 3.2
+            },
+            {
+              "rank": 5,
+              "id": "910401",
+              "index": 1,
+              "x": 972.9837925072762,
+              "t": 49.2,
+              "duration": 4.8
+            },
+            {
+              "rank": 5,
+              "id": "100851",
+              "index": 1,
+              "x": 1056.0472502430803,
+              "t": 53.27,
+              "duration": 8
+            },
+            {
+              "rank": 5,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.241742224081,
+              "t": 53.81,
+              "duration": 2.88
+            },
+            {
+              "rank": 5,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.1977338440859,
+              "t": 54.19,
+              "duration": 1.44
+            },
+            {
+              "rank": 5,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7684457601338,
+              "t": 55.230000000000004,
+              "duration": 2.88
+            },
+            {
+              "rank": 5,
+              "id": "202672",
+              "index": 1,
+              "x": 1109.295987973269,
+              "t": 55.74,
+              "duration": 2.88
+            },
+            {
+              "rank": 5,
+              "id": "203542",
+              "index": 1,
+              "x": 1171.961454029905,
+              "t": 58.32,
+              "duration": 2.88
+            },
+            {
+              "rank": 5,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.2745818254284,
+              "t": 59.730000000000004,
+              "duration": 4.8
+            },
+            {
+              "rank": 5,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.4547022647541,
+              "t": 63.08,
+              "duration": 3.2
+            },
+            {
+              "rank": 5,
+              "id": "900011",
+              "index": 1,
+              "x": 1306.3556660815216,
+              "t": 63.5,
+              "duration": 5.76
+            },
+            {
+              "rank": 5,
+              "id": "204262",
+              "index": 1,
+              "x": 1366.4680670376872,
+              "t": 65.79,
+              "duration": 3.2
+            },
+            {
+              "rank": 5,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.3852775073879,
+              "t": 66.39,
+              "duration": 4.8
+            },
+            {
+              "rank": 6,
+              "id": "910401",
+              "index": 1,
+              "x": 972.9837925072762,
+              "t": 49.2,
+              "duration": 4.8
+            },
+            {
+              "rank": 6,
+              "id": "100851",
+              "index": 1,
+              "x": 1056.0472502430803,
+              "t": 53.27,
+              "duration": 8
+            },
+            {
+              "rank": 6,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.241742224081,
+              "t": 53.81,
+              "duration": 2.88
+            },
+            {
+              "rank": 6,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.1977338440859,
+              "t": 54.19,
+              "duration": 1.44
+            },
+            {
+              "rank": 6,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7684457601338,
+              "t": 55.230000000000004,
+              "duration": 2.88
+            },
+            {
+              "rank": 6,
+              "id": "203542",
+              "index": 1,
+              "x": 1172.0413778781835,
+              "t": 58.35,
+              "duration": 2.88
+            },
+            {
+              "rank": 6,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.3363650813126,
+              "t": 59.79,
+              "duration": 4.8
+            },
+            {
+              "rank": 6,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.262687315735,
+              "t": 63.14,
+              "duration": 3.2
+            },
+            {
+              "rank": 6,
+              "id": "900011",
+              "index": 1,
+              "x": 1306.1578256265127,
+              "t": 63.56,
+              "duration": 5.76
+            },
+            {
+              "rank": 6,
+              "id": "204262",
+              "index": 1,
+              "x": 1378.3308444665254,
+              "t": 66.31,
+              "duration": 3.2
+            },
+            {
+              "rank": 6,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.5742747920376,
+              "t": 66.47,
+              "duration": 4.8
+            },
+            {
+              "rank": 7,
+              "id": "100851",
+              "index": 1,
+              "x": 1056.0493285072769,
+              "t": 53.28,
+              "duration": 8
+            },
+            {
+              "rank": 7,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.216800488284,
+              "t": 53.82,
+              "duration": 2.88
+            },
+            {
+              "rank": 7,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.1476171082888,
+              "t": 54.2,
+              "duration": 1.44
+            },
+            {
+              "rank": 7,
+              "id": "910611",
+              "index": 1,
+              "x": 1075.1476171082888,
+              "t": 54.2,
+              "duration": 3.84
+            },
+            {
+              "rank": 7,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7526490243372,
+              "t": 55.24,
+              "duration": 2.88
+            },
+            {
+              "rank": 7,
+              "id": "203542",
+              "index": 1,
+              "x": 1172.1369571615328,
+              "t": 58.31,
+              "duration": 2.88
+            },
+            {
+              "rank": 7,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.344616541371,
+              "t": 59.71,
+              "duration": 4.8
+            },
+            {
+              "rank": 7,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.2831580377442,
+              "t": 63.050000000000004,
+              "duration": 3.2
+            },
+            {
+              "rank": 7,
+              "id": "204262",
+              "index": 1,
+              "x": 1363.6057941829424,
+              "t": 65.67,
+              "duration": 3.2
+            },
+            {
+              "rank": 7,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.3360827642325,
+              "t": 66.38,
+              "duration": 4.8
+            },
+            {
+              "rank": 8,
+              "id": "100851",
+              "index": 1,
+              "x": 1056.0493285072769,
+              "t": 53.28,
+              "duration": 8
+            },
+            {
+              "rank": 8,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.216800488284,
+              "t": 53.82,
+              "duration": 2.88
+            },
+            {
+              "rank": 8,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.1476171082888,
+              "t": 54.2,
+              "duration": 1.44
+            },
+            {
+              "rank": 8,
+              "id": "910611",
+              "index": 1,
+              "x": 1075.1476171082888,
+              "t": 54.2,
+              "duration": 3.84
+            },
+            {
+              "rank": 8,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7526490243372,
+              "t": 55.24,
+              "duration": 2.88
+            },
+            {
+              "rank": 8,
+              "id": "203542",
+              "index": 1,
+              "x": 1172.1369571615328,
+              "t": 58.31,
+              "duration": 2.88
+            },
+            {
+              "rank": 8,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.344616541371,
+              "t": 59.71,
+              "duration": 4.8
+            },
+            {
+              "rank": 8,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.2831580377442,
+              "t": 63.050000000000004,
+              "duration": 3.2
+            },
+            {
+              "rank": 8,
+              "id": "204262",
+              "index": 1,
+              "x": 1363.6057941829424,
+              "t": 65.67,
+              "duration": 3.2
+            },
+            {
+              "rank": 8,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.3360827642325,
+              "t": 66.38,
+              "duration": 4.8
+            },
+            {
+              "rank": 9,
+              "id": "200602",
+              "index": 1,
+              "x": 1067.0433327775313,
+              "t": 53.82,
+              "duration": 2.88
+            },
+            {
+              "rank": 9,
+              "id": "204432",
+              "index": 1,
+              "x": 1075.056626908288,
+              "t": 54.21,
+              "duration": 1.44
+            },
+            {
+              "rank": 9,
+              "id": "910611",
+              "index": 1,
+              "x": 1075.056626908288,
+              "t": 54.21,
+              "duration": 3.84
+            },
+            {
+              "rank": 9,
+              "id": "210042",
+              "index": 1,
+              "x": 1097.7722431697014,
+              "t": 55.27,
+              "duration": 2.88
+            },
+            {
+              "rank": 9,
+              "id": "203542",
+              "index": 1,
+              "x": 1171.989366564059,
+              "t": 58.370000000000005,
+              "duration": 2.88
+            },
+            {
+              "rank": 9,
+              "id": "200492",
+              "index": 1,
+              "x": 1208.2931993839895,
+              "t": 59.79,
+              "duration": 4.8
+            },
+            {
+              "rank": 9,
+              "id": "202401",
+              "index": 1,
+              "x": 1295.3692734160607,
+              "t": 63.160000000000004,
+              "duration": 3.2
+            },
+            {
+              "rank": 9,
+              "id": "900561",
+              "index": 1,
+              "x": 1382.3405706608257,
+              "t": 66.5,
+              "duration": 4.8
+            },
+            {
+              "rank": 9,
+              "id": "204262",
+              "index": 1,
+              "x": 1426.4193501017426,
+              "t": 68.18,
+              "duration": 3.2
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "negatives": [],
+  "firstSampleEvents": [
+    {
+      "rank": 3,
+      "id": "202122",
+      "index": 1,
+      "x": 968.5047685072772,
+      "t": 48.980000000000004,
+      "duration": 3.84
+    },
+    {
+      "rank": 3,
+      "id": "910401",
+      "index": 1,
+      "x": 972.997826224055,
+      "t": 49.2,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.049342926713,
+      "t": 54.17,
+      "duration": 1.44
+    },
+    {
+      "rank": 3,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.752018371561,
+      "t": 55.24,
+      "duration": 2.88
+    },
+    {
+      "rank": 3,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.1816307208892,
+      "t": 55.76,
+      "duration": 2.88
+    },
+    {
+      "rank": 3,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.3542493154546,
+      "t": 59.9,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.2696528504187,
+      "t": 63.71,
+      "duration": 5.76
+    },
+    {
+      "rank": 3,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.5312778134578,
+      "t": 66.62,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "204262",
+      "index": 1,
+      "x": 1427.3897580304433,
+      "t": 68.32000000000001,
+      "duration": 3.2
+    },
+    {
+      "rank": 4,
+      "id": "202122",
+      "index": 1,
+      "x": 968.5047685072772,
+      "t": 48.980000000000004,
+      "duration": 3.84
+    },
+    {
+      "rank": 4,
+      "id": "910401",
+      "index": 1,
+      "x": 972.997826224055,
+      "t": 49.2,
+      "duration": 4.8
+    },
+    {
+      "rank": 4,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.2294246067086,
+      "t": 53.79,
+      "duration": 2.88
+    },
+    {
+      "rank": 4,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.0637829267134,
+      "t": 54.17,
+      "duration": 1.44
+    },
+    {
+      "rank": 4,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7422991881274,
+      "t": 55.230000000000004,
+      "duration": 2.88
+    },
+    {
+      "rank": 4,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.3441894313899,
+      "t": 55.75,
+      "duration": 2.88
+    },
+    {
+      "rank": 4,
+      "id": "203542",
+      "index": 1,
+      "x": 1171.9956810756742,
+      "t": 58.36,
+      "duration": 2.88
+    },
+    {
+      "rank": 4,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.4190636942005,
+      "t": 59.79,
+      "duration": 4.8
+    },
+    {
+      "rank": 4,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.3683700160116,
+      "t": 63.58,
+      "duration": 5.76
+    },
+    {
+      "rank": 4,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.3676687077755,
+      "t": 66.48,
+      "duration": 4.8
+    },
+    {
+      "rank": 4,
+      "id": "204262",
+      "index": 1,
+      "x": 1427.225846249858,
+      "t": 68.18,
+      "duration": 3.2
+    },
+    {
+      "rank": 5,
+      "id": "202122",
+      "index": 1,
+      "x": 968.5047685072772,
+      "t": 48.980000000000004,
+      "duration": 3.84
+    },
+    {
+      "rank": 5,
+      "id": "910401",
+      "index": 1,
+      "x": 972.997826224055,
+      "t": 49.2,
+      "duration": 4.8
+    },
+    {
+      "rank": 5,
+      "id": "100851",
+      "index": 1,
+      "x": 1056.0041995257088,
+      "t": 53.24,
+      "duration": 8
+    },
+    {
+      "rank": 5,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.1986915067096,
+      "t": 53.78,
+      "duration": 2.88
+    },
+    {
+      "rank": 5,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.1552081267143,
+      "t": 54.160000000000004,
+      "duration": 1.44
+    },
+    {
+      "rank": 5,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7290400427628,
+      "t": 55.2,
+      "duration": 2.88
+    },
+    {
+      "rank": 5,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.2581122558986,
+      "t": 55.71,
+      "duration": 2.88
+    },
+    {
+      "rank": 5,
+      "id": "203542",
+      "index": 1,
+      "x": 1171.9313183125344,
+      "t": 58.29,
+      "duration": 2.88
+    },
+    {
+      "rank": 5,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.2487016277062,
+      "t": 59.7,
+      "duration": 4.8
+    },
+    {
+      "rank": 5,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.3215006498956,
+      "t": 63.47,
+      "duration": 5.76
+    },
+    {
+      "rank": 5,
+      "id": "204262",
+      "index": 1,
+      "x": 1366.1712754086097,
+      "t": 65.75,
+      "duration": 3.2
+    },
+    {
+      "rank": 5,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.3538213206184,
+      "t": 66.36,
+      "duration": 4.8
+    },
+    {
+      "rank": 6,
+      "id": "202122",
+      "index": 1,
+      "x": 968.5047685072772,
+      "t": 48.980000000000004,
+      "duration": 3.84
+    },
+    {
+      "rank": 6,
+      "id": "910401",
+      "index": 1,
+      "x": 972.997826224055,
+      "t": 49.2,
+      "duration": 4.8
+    },
+    {
+      "rank": 6,
+      "id": "100851",
+      "index": 1,
+      "x": 1056.0041995257088,
+      "t": 53.24,
+      "duration": 8
+    },
+    {
+      "rank": 6,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.1986915067096,
+      "t": 53.78,
+      "duration": 2.88
+    },
+    {
+      "rank": 6,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.1552081267143,
+      "t": 54.160000000000004,
+      "duration": 1.44
+    },
+    {
+      "rank": 6,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7290400427628,
+      "t": 55.2,
+      "duration": 2.88
+    },
+    {
+      "rank": 6,
+      "id": "203542",
+      "index": 1,
+      "x": 1172.0113321608126,
+      "t": 58.32,
+      "duration": 2.88
+    },
+    {
+      "rank": 6,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.3106393639416,
+      "t": 59.76,
+      "duration": 4.8
+    },
+    {
+      "rank": 6,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.1257464340845,
+      "t": 63.53,
+      "duration": 5.76
+    },
+    {
+      "rank": 6,
+      "id": "204262",
+      "index": 1,
+      "x": 1378.2983781887558,
+      "t": 66.28,
+      "duration": 3.2
+    },
+    {
+      "rank": 6,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.541808514268,
+      "t": 66.44,
+      "duration": 4.8
+    },
+    {
+      "rank": 7,
+      "id": "202122",
+      "index": 1,
+      "x": 968.5047685072772,
+      "t": 48.980000000000004,
+      "duration": 3.84
+    },
+    {
+      "rank": 7,
+      "id": "100851",
+      "index": 1,
+      "x": 1056.009219440968,
+      "t": 53.25,
+      "duration": 8
+    },
+    {
+      "rank": 7,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.1766914219752,
+      "t": 53.79,
+      "duration": 2.88
+    },
+    {
+      "rank": 7,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.10750804198,
+      "t": 54.17,
+      "duration": 1.44
+    },
+    {
+      "rank": 7,
+      "id": "910611",
+      "index": 1,
+      "x": 1075.10750804198,
+      "t": 54.17,
+      "duration": 3.84
+    },
+    {
+      "rank": 7,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7125399580284,
+      "t": 55.21,
+      "duration": 2.88
+    },
+    {
+      "rank": 7,
+      "id": "203542",
+      "index": 1,
+      "x": 1172.096848095224,
+      "t": 58.28,
+      "duration": 2.88
+    },
+    {
+      "rank": 7,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.304507475062,
+      "t": 59.68,
+      "duration": 4.8
+    },
+    {
+      "rank": 7,
+      "id": "204262",
+      "index": 1,
+      "x": 1363.5567095562349,
+      "t": 65.64,
+      "duration": 3.2
+    },
+    {
+      "rank": 7,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.5509051148133,
+      "t": 66.36,
+      "duration": 4.8
+    },
+    {
+      "rank": 8,
+      "id": "100851",
+      "index": 1,
+      "x": 1056.0493285072769,
+      "t": 53.28,
+      "duration": 8
+    },
+    {
+      "rank": 8,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.216800488284,
+      "t": 53.82,
+      "duration": 2.88
+    },
+    {
+      "rank": 8,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.1476171082888,
+      "t": 54.2,
+      "duration": 1.44
+    },
+    {
+      "rank": 8,
+      "id": "910611",
+      "index": 1,
+      "x": 1075.1476171082888,
+      "t": 54.2,
+      "duration": 3.84
+    },
+    {
+      "rank": 8,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7526490243372,
+      "t": 55.24,
+      "duration": 2.88
+    },
+    {
+      "rank": 8,
+      "id": "203542",
+      "index": 1,
+      "x": 1172.1369571615328,
+      "t": 58.31,
+      "duration": 2.88
+    },
+    {
+      "rank": 8,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.344616541371,
+      "t": 59.71,
+      "duration": 4.8
+    },
+    {
+      "rank": 8,
+      "id": "204262",
+      "index": 1,
+      "x": 1363.5968186225437,
+      "t": 65.67,
+      "duration": 3.2
+    },
+    {
+      "rank": 8,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.3271072038337,
+      "t": 66.38,
+      "duration": 4.8
+    },
+    {
+      "rank": 9,
+      "id": "200602",
+      "index": 1,
+      "x": 1067.0433327775313,
+      "t": 53.82,
+      "duration": 2.88
+    },
+    {
+      "rank": 9,
+      "id": "204432",
+      "index": 1,
+      "x": 1075.056626908288,
+      "t": 54.21,
+      "duration": 1.44
+    },
+    {
+      "rank": 9,
+      "id": "910611",
+      "index": 1,
+      "x": 1075.056626908288,
+      "t": 54.21,
+      "duration": 3.84
+    },
+    {
+      "rank": 9,
+      "id": "210042",
+      "index": 1,
+      "x": 1097.7722431697014,
+      "t": 55.27,
+      "duration": 2.88
+    },
+    {
+      "rank": 9,
+      "id": "203542",
+      "index": 1,
+      "x": 1171.989366564059,
+      "t": 58.370000000000005,
+      "duration": 2.88
+    },
+    {
+      "rank": 9,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.2931993839895,
+      "t": 59.79,
+      "duration": 4.8
+    },
+    {
+      "rank": 9,
+      "id": "900561",
+      "index": 1,
+      "x": 1382.3268920665678,
+      "t": 66.5,
+      "duration": 4.8
+    },
+    {
+      "rank": 9,
+      "id": "204262",
+      "index": 1,
+      "x": 1427.7161153099767,
+      "t": 68.23,
+      "duration": 3.2
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 4,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": false
+}

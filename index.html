@@ -37,6 +37,16 @@
         <div id="no-results" class="no-results" hidden>일치하는 스킬이 없습니다. 카테고리나 검색어를 바꿔 주세요.</div>
         </div><p id="draft-status" class="draft-status" aria-live="polite"></p>
       </section></div>
+  <section id="target-acceleration" class="target-panel" aria-labelledby="target-title" hidden>
+   <div class="target-heading"><div><h2 id="target-title">추천 가속 조합</h2><p id="target-plan-state">육성 전 확보 목표</p></div></div>
+   <dl class="target-totals"><div><dt>본체 대비 조합 마신</dt><dd id="target-gain">—</dd></div><div><dt>예상 구매 SP</dt><dd id="target-cost">—</dd></div><div><dt>계승 사용 · 속도와 공유</dt><dd id="target-inherited-count">0 / 6</dd></div><div><dt>목표 시나리오 진화</dt><dd id="target-scenario-count">0 / 2</dd></div></dl>
+   <ul id="target-skill-list" class="target-skill-list"></ul><p id="target-no-skills" class="target-help" hidden>본체 고유기를 기준으로 추가할 유효 가속을 찾지 못했습니다.</p>
+   <p id="target-policy" class="target-help"></p>
+   <p id="target-inheritance-note" class="target-help"></p>
+   <div class="target-rewards-heading"><h3>서포트에서 확보할 레어 세트</h3><p>함께 받은 레어의 구매 여부는 최종 추천에서 결정합니다.</p></div>
+   <div id="target-reward-list" class="target-reward-list"></div><p id="target-reward-empty" class="target-help" hidden>현재 편성에서 비교할 레어 세트가 없습니다.</p>
+   <p id="target-search-note" class="target-help"></p>
+  </section>
   <div id="pre-next-step" class="stage-footer" hidden><button id="continue-training" type="button" class="button primary" disabled>육성 후 스킬 기록하기<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></button></div>
  </section>
  <section id="finish-stage" role="tabpanel" aria-labelledby="stage-finish" hidden>
@@ -60,6 +70,7 @@
               <div class="field"><label for="actual-surface-aptitude">마장 적성</label><select id="actual-surface-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
               <div class="field"><label for="actual-style-aptitude">각질 적성</label><select id="actual-style-aptitude"><option>S</option><option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
             </div></details></div>
+            <label id="maintain-target-control" class="target-maintain" hidden><input id="maintain-target" type="checkbox" checked>확보한 목표 가속 유지</label>
             <details id="evolution-options" class="evolution-options" hidden><summary>진화 후보 조정</summary><p class="final-help">원본 레어스킬을 확보하면 진화를 함께 비교합니다. 진화 조건을 충족하지 못한 후보는 해제하세요.</p><fieldset><legend>각성 스킬 진화</legend><div id="evolution-options-outfit"></div></fieldset><fieldset><legend>시나리오 스킬 진화 · 최대 2개</legend><div id="evolution-options-scenario"></div></fieldset></details>
           </fieldset>
 

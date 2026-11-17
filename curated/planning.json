@@ -584,6 +584,2216 @@
           ]
         }
       ]
+    },
+    "30152": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30152-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202481",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200361",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30153": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30153-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200184",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202671",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30157": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30157-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202421",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200741",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30161": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30161-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202711",
+                  "hint_level": 3
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200331",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30164": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30164-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "201463",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200641",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30166": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30166-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200551",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200541",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30170": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30170-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202541",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202751",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30173": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30173-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200361",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200381",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30177": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30177-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200591",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "201691",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30179": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30179-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202151",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202091",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30184": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30184-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202861",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200973",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30201": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30201-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202901",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200641",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30208": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30208-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203041",
+                  "hint_level": 3
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203031",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30211": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30211-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202951",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202841",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30215": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30215-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203151",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203141",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30222": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30222-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202331",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203181",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30224": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30224-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202481",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203221",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30226": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30226-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203241",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203251",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30227": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30227-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202821",
+                  "hint_level": 3
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "201271",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30228": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30228-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202421",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202641",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30232": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30232-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203411",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203421",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30233": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30233-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202711",
+                  "hint_level": 3
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "201652",
+                  "hint_level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30234": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30234-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202741",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203131",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30237": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30237-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203491",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200431",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30242": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30242-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202701",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203431",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200331",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "200361",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30245": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30245-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "201383",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203571",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30246": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30246-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202881",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202931",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30248": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30248-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200591",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203591",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30249": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30249-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203091",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203601",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30250": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30250-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202871",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202101",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30252": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30252-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203381",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200541",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30253": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30253-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "201051",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202671",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30256": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30256-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202551",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203361",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202551",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203661",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30261": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30261-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200751",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203731",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30262": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30262-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202901",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203751",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30264": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30264-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202721",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203851",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202721",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203861",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30265": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30265-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203831",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203841",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30267": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30267-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202041",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203881",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30268": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30268-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "201453",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202401",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "201453",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203761",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30272": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30272-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202641",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203671",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30274": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30274-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200351",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203991",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30277": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30277-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200531",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203461",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30278": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30278-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200641",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202891",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30279": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30279-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202011",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202771",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30281": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30281-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202421",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203331",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30283": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30283-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202761",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204071",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30285": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30285-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202621",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204131",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30287": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30287-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202601",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203141",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30292": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30292-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202301",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203611",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30293": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30293-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203791",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204051",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30294": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30294-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202531",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "202741",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30296": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30296-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "204271",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204311",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30297": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30297-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202151",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204351",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30298": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30298-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "200431",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "201271",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200431",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203401",
+                  "hint_level": 2
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "label": "레어 세트 3",
+              "rewards": [
+                {
+                  "skill_id": "201271",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "203401",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30300": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30300-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203121",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204331",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30301": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30301-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203541",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204171",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30302": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30302-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203241",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203561",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "203561",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204381",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30306": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30306-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203571",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203681",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30307": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30307-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202821",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204481",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "202681",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204481",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30308": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30308-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203631",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204501",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200024",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "203631",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30314": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30314-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "201671",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204661",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30315": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30315-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202751",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204671",
+                  "hint_level": 1
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "label": "레어 세트 2",
+              "rewards": [
+                {
+                  "skill_id": "200194",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204671",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30317": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30317-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202621",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204711",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30319": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30319-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "202371",
+                  "hint_level": 1
+                },
+                {
+                  "skill_id": "204151",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30320": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30320-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203801",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204721",
+                  "hint_level": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "30324": {
+      "source": "https://gametora.com/data/umamusume/training_events/ssr.fa74f9c4.json",
+      "checked_at": "2026-11-17",
+      "scope": "rare_reward_sets",
+      "source_sha256": "fa74f9c406230881b89cf16bf6fb1ae74f091da8ec455833e2669113f8783639",
+      "reward_sha256": "a687fca928e22d2da0e30dda5b48f22c44acf7c3886df4b15e2fcc329e765ba5",
+      "events": [
+        {
+          "id": "30324-rare-sets",
+          "name_jp": "レアスキルセット",
+          "choices": [
+            {
+              "id": "1",
+              "label": "레어 세트 1",
+              "rewards": [
+                {
+                  "skill_id": "203621",
+                  "hint_level": 2
+                },
+                {
+                  "skill_id": "204771",
+                  "hint_level": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   "scenario_events": {

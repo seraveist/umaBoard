@@ -1,0 +1,545 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 1.476,
+  "case": {
+    "id": "chukyo1200-leader",
+    "label": "주쿄 1200m 선행",
+    "courseId": "10701",
+    "style": 2,
+    "outfitId": "103801",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30130",
+      "30289",
+      "30323"
+    ],
+    "going": 1,
+    "weather": 1,
+    "season": 4,
+    "source": "https://umamusumelabo.com/event/champions-meeting/capricorn2023-course-umamusume",
+    "guideDate": "2022-12-24 (2023-01 CM)",
+    "scope": "historical guide validates geometry/role only, not 2026 ranking; only Tsubomi is a required anchor",
+    "expected": [
+      {
+        "name": "꽃봉오리",
+        "ids": [
+          "900511"
+        ]
+      }
+    ],
+    "negative": [
+      "900201",
+      "900041"
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 1,
+    "weather": 1,
+    "season": 4,
+    "time": 2,
+    "courseId": "10701",
+    "style": 2,
+    "outfitId": "103801",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30130",
+      "30289",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "103801",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 2,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30130",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 250,
+          "start": 300
+        },
+        {
+          "length": 238,
+          "start": 550
+        }
+      ],
+      "course_set_status": [],
+      "course_variant": 1,
+      "distance": 1200,
+      "distance_type": 1,
+      "geometry_review_reason": null,
+      "id": "10701",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 775,
+          "slope": -10000,
+          "start": 100
+        },
+        {
+          "length": 100,
+          "slope": 20000,
+          "start": 875
+        }
+      ],
+      "straights": [
+        {
+          "end": 300,
+          "frontType": 2,
+          "start": 0
+        },
+        {
+          "end": 1200,
+          "frontType": 1,
+          "start": 788
+        }
+      ],
+      "surface": 1,
+      "track_id": "10007",
+      "turn": 2,
+      "tight_track": 0
+    },
+    "going": 1,
+    "weather": 1,
+    "season": 4,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "100381",
+      "name": "#LookatCurren"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v1",
+    "ids": [
+      "203711",
+      "204162",
+      "900141",
+      "900211",
+      "900511",
+      "910411"
+    ],
+    "skills": [
+      {
+        "id": "203711",
+        "name": "ショーダウン",
+        "rarity": "gold",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "直線でラストスパートの最中なら加速力が上がる＜作戦・先行＞",
+        "baseId": "203711",
+        "baseName": "ショーダウン",
+        "cost": 216,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_event",
+            "owner_id": "30311",
+            "owner_type": "support",
+            "skill_id": "203711"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "204162",
+        "name": "押しの一手",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "終盤以降かつ残り600mを切っているとき前方で追い抜こうとするか先頭だと加速力がわずかに上がる＜逃げ/先行＞",
+        "baseId": "204162",
+        "baseName": "押しの一手",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "900141",
+        "name": "熱血☆アミーゴ",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終直線で余力を持って2番手以内だと速度と加速力がわずかに上がる",
+        "baseId": "900141",
+        "baseName": "熱血☆アミーゴ",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "101401"
+        ]
+      },
+      {
+        "id": "900211",
+        "name": "白い稲妻、見せたるで！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半の直線で好位置にいるまたは中団から追い抜こうとすると速度が上がり加速力がちょっと上がる",
+        "baseId": "900211",
+        "baseName": "白い稲妻、見せたるで！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102101"
+        ]
+      },
+      {
+        "id": "900511",
+        "name": "つぼみ、ほころぶ時",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース中盤のコーナーで競り合っていた場合終盤以降かつ最終コーナー後半以降に好位置だと加速力が上がる",
+        "baseId": "900511",
+        "baseName": "つぼみ、ほころぶ時",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "105101"
+        ]
+      },
+      {
+        "id": "910411",
+        "name": "CHERRY☆スクランブル",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "残り400m地点で3番手以内だと短い間加速力がちょっと上がるレース中盤に連続して競り合い続けた時間が長いほど効果と時間が増える",
+        "baseId": "910411",
+        "baseName": "CHERRY☆スクランブル",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "104102"
+        ]
+      }
+    ],
+    "gain": 5.114063584971269,
+    "min": 3.4212072217971583,
+    "max": 6.62880319224214,
+    "cost": 804,
+    "maximumGain": 5.114063584971269,
+    "sacrificedGain": 0,
+    "allowedLoss": 0.1,
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "1",
+      "30311-chain-final": "3",
+      "30300-rare-sets": "1",
+      "30130-unverified": "201901",
+      "30289-chain-final": "2",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "groupId": "30275-chain-final",
+        "setId": "1",
+        "ids": [
+          "204001",
+          "203421"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203441"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "3",
+        "ids": [
+          "204701",
+          "203711"
+        ],
+        "targetIds": [
+          "203711"
+        ],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204531"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          }
+        ],
+        "reason": "target",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30130",
+        "groupId": "30130-unverified",
+        "setId": "201901",
+        "ids": [
+          "201901"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "groupId": "30289-chain-final",
+        "setId": "2",
+        "ids": [
+          "201612",
+          "204181"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "202831",
+              "204191"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 35,
+      "shortlisted": 13,
+      "evaluations": 251,
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "prefer-mid-position-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "꽃봉오리",
+      "ids": [
+        "900511"
+      ],
+      "matched": [
+        "900511"
+      ],
+      "available": [
+        "900511"
+      ],
+      "candidates": [
+        {
+          "id": "900511",
+          "name": "つぼみ、ほころぶ時",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "900511",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "solo": 1.614681456776532
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    }
+  ],
+  "negatives": [
+    {
+      "id": "900201",
+      "name": "アングリング×スキーミング",
+      "selected": false,
+      "available": true,
+      "status": "inactive",
+      "solo": null
+    },
+    {
+      "id": "900041",
+      "name": "紅焔ギア/LP1211-M",
+      "selected": false,
+      "available": true,
+      "status": "assumed",
+      "solo": 0.00020854099140024118
+    }
+  ],
+  "firstSampleEvents": [
+    {
+      "id": "100381",
+      "index": 1,
+      "x": 646.245174552387,
+      "t": 32.09,
+      "duration": 6
+    },
+    {
+      "id": "900141",
+      "index": 1,
+      "x": 788.0309548607505,
+      "t": 38.87,
+      "duration": 3.6
+    },
+    {
+      "id": "900211",
+      "index": 1,
+      "x": 788.0309548607505,
+      "t": 38.87,
+      "duration": 3.6
+    },
+    {
+      "id": "910411",
+      "index": 1,
+      "x": 798.1998027566115,
+      "t": 39.36,
+      "duration": 2.16
+    },
+    {
+      "id": "203711",
+      "index": 1,
+      "x": 800.0729547566114,
+      "t": 39.45,
+      "duration": 1.08
+    },
+    {
+      "id": "204162",
+      "index": 1,
+      "x": 800.0729547566114,
+      "t": 39.45,
+      "duration": 1.8
+    },
+    {
+      "id": "900511",
+      "index": 1,
+      "x": 800.0729547566114,
+      "t": 39.45,
+      "duration": 2.88
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 4,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": true
+}

@@ -1,0 +1,922 @@
+{
+  "auditedAt": "2026-11-17",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "codeBaseCommit": "d99ff136c255a24099947abbbba887c547ebc60c",
+  "sourceHashes": {
+    "assets/cm-acceleration-plan.mjs": "71dc19f409518456772ab591dbdd5c13b5bfdc4c7fdf7d1ed99a30d2d0e9b5ff",
+    "assets/cm-position-comparison.mjs": "db7023d8bbe46084458300b974eb3e4083728ffa0b9aa4ba246e7961a536e51b",
+    "assets/cm-final-plan.mjs": "9f2b99b105f1b7a3d19f658ef707ff1813d2b63839a1222b15d9928ce171a028",
+    "assets/cm-state.mjs": "680cb6d19e8c4e9cc17b76168be3b62673a5276e424bb69e2814371fc18eb61f"
+  },
+  "controlledExperiment": null,
+  "method": "prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required",
+  "elapsedSeconds": 41.746,
+  "case": {
+    "id": "tokyo-dirt1600-runner",
+    "label": "도쿄 더트 1600m 도주",
+    "courseId": "10611",
+    "style": 1,
+    "outfitId": "108001",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30277",
+      "30289",
+      "30323"
+    ],
+    "going": 3,
+    "weather": 4,
+    "season": 4,
+    "source": "https://umamusumelabo.com/event/champions-meeting/aquarius2023-course-umamusume",
+    "guideDate": "2023-01-26 (2023-02 CM)",
+    "scope": "historical guide validates geometry/role only, not 2026 ranking",
+    "expected": [
+      {
+        "name": "앵글링",
+        "ids": [
+          "900201"
+        ]
+      }
+    ],
+    "negative": [
+      "900591"
+    ]
+  },
+  "input": {
+    "scenarioId": "15",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "going": 3,
+    "weather": 4,
+    "season": 4,
+    "time": 2,
+    "courseId": "10611",
+    "style": 1,
+    "outfitId": "108001",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30277",
+      "30289",
+      "30323"
+    ]
+  },
+  "setup": {
+    "outfitId": "108001",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 1,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30277",
+      "30289",
+      "30323"
+    ],
+    "course": {
+      "calculation_status": "unvalidated",
+      "coordinate_system": "alpha_source_coordinates",
+      "corners": [
+        {
+          "length": 225,
+          "start": 650
+        },
+        {
+          "length": 224,
+          "start": 875
+        }
+      ],
+      "course_set_status": [
+        1,
+        2
+      ],
+      "course_variant": 1,
+      "distance": 1600,
+      "distance_type": 2,
+      "geometry_review_reason": null,
+      "id": "10611",
+      "origin": "courses",
+      "run_up_m": null,
+      "selectable": true,
+      "slopes": [
+        {
+          "length": 200,
+          "slope": -10000,
+          "start": 575
+        },
+        {
+          "length": 250,
+          "slope": 15000,
+          "start": 1100
+        }
+      ],
+      "straights": [
+        {
+          "end": 650,
+          "frontType": 2,
+          "start": 0
+        },
+        {
+          "end": 1600,
+          "frontType": 1,
+          "start": 1099
+        }
+      ],
+      "surface": 2,
+      "track_id": "10006",
+      "turn": 2,
+      "tight_track": 0
+    },
+    "going": 3,
+    "weather": 4,
+    "season": 4,
+    "time": 2,
+    "mood": 2,
+    "stats": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "chartPolicy": "cm-first-chart-v5"
+  },
+  "native": [
+    {
+      "id": "100801",
+      "name": "Info: Acquired"
+    }
+  ],
+  "plan": {
+    "modelVersion": "cm-target-acceleration-v2",
+    "ids": [
+      "200492",
+      "201292",
+      "202672",
+      "204162",
+      "204262",
+      "204662",
+      "210072",
+      "900011",
+      "900141",
+      "900201",
+      "900211",
+      "910221"
+    ],
+    "skills": [
+      {
+        "id": "200492",
+        "name": "垂れウマ回避",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がりコース取りがちょっとうまくなる",
+        "baseId": "200492",
+        "baseName": "垂れウマ回避",
+        "cost": 90,
+        "routes": [
+          {
+            "event_conditions_affect_candidates": false,
+            "kind": "support_hint",
+            "owner_id": "30289",
+            "owner_type": "support",
+            "skill_id": "200492"
+          }
+        ],
+        "providers": []
+      },
+      {
+        "id": "201292",
+        "name": "二の矢",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration",
+          "heal"
+        ],
+        "description": "レース終盤のどこかで持久力を少し使って加速力がわずかに上がる＜作戦・逃げ＞",
+        "baseId": "201292",
+        "baseName": "二の矢",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "202672",
+        "name": "心弾んで",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤始めのどこかで前方だと加速力がわずかに上がる＜マイル＞",
+        "baseId": "202672",
+        "baseName": "心弾んで",
+        "cost": 96,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204162",
+        "name": "押しの一手",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "終盤以降かつ残り600mを切っているとき前方で追い抜こうとするか先頭だと加速力がわずかに上がる＜逃げ/先行＞",
+        "baseId": "204162",
+        "baseName": "押しの一手",
+        "cost": 108,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204262",
+        "name": "星の煌き",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "全開スパート中どこかで少し前に出てちょっと伸びを見せる",
+        "baseId": "204262",
+        "baseName": "星の煌き",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "204662",
+        "name": "砂塵を越えて",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "ラストスパートの最中なら前が塞がれた時加速力がわずかに上がる＜ダート＞",
+        "baseId": "204662",
+        "baseName": "砂塵を越えて",
+        "cost": 90,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "210072",
+        "name": "夢の途中",
+        "rarity": "white",
+        "inherited": false,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半のどこかで中団以前だと速度がわずかに上がり加速力がほんのわずかに上がるファンが多いほど効果が増える",
+        "baseId": "210072",
+        "baseName": "夢の途中",
+        "cost": 120,
+        "routes": [],
+        "providers": []
+      },
+      {
+        "id": "900011",
+        "name": "シューティングスター",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース終盤以降に追い抜いて中団以前につけると前に出続けて加速力をちょっと上げ続ける",
+        "baseId": "900011",
+        "baseName": "シューティングスター",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "100101"
+        ]
+      },
+      {
+        "id": "900141",
+        "name": "熱血☆アミーゴ",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "最終直線で余力を持って2番手以内だと速度と加速力がわずかに上がる",
+        "baseId": "900141",
+        "baseName": "熱血☆アミーゴ",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "101401"
+        ]
+      },
+      {
+        "id": "900201",
+        "name": "アングリング×スキーミング",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "acceleration"
+        ],
+        "description": "レース終盤以降のコーナーで先頭だとこれ幸いと加速力が上がる",
+        "baseId": "900201",
+        "baseName": "アングリング×スキーミング",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102001"
+        ]
+      },
+      {
+        "id": "900211",
+        "name": "白い稲妻、見せたるで！",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "レース後半の直線で好位置にいるまたは中団から追い抜こうとすると速度が上がり加速力がちょっと上がる",
+        "baseId": "900211",
+        "baseName": "白い稲妻、見せたるで！",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102101"
+        ]
+      },
+      {
+        "id": "910221",
+        "name": "Best day ever",
+        "rarity": "inherited",
+        "inherited": true,
+        "categories": [
+          "speed",
+          "acceleration"
+        ],
+        "description": "終盤以降かつ最終コーナー以降に好位置だと速度が上がるさらにゴールまで遠いなら最高の走りで加速力がちょっと上がる",
+        "baseId": "910221",
+        "baseName": "Best day ever",
+        "cost": 120,
+        "routes": [
+          {
+            "kind": "inheritance",
+            "owner_type": "outfit",
+            "owner_id": null
+          }
+        ],
+        "providers": [
+          "102202"
+        ]
+      }
+    ],
+    "gain": 7.286585045474624,
+    "min": 5.870856310755971,
+    "max": 8.30437554011678,
+    "cost": 1332,
+    "maximumGain": 7.286585045474624,
+    "sacrificedGain": 0,
+    "allowedLoss": null,
+    "score": 5.288585045474624,
+    "efficiencyPolicy": {
+      "minGainPer100Sp": 0.15,
+      "scoreTolerance": 0.01,
+      "source": "preparation-policy-not-measured"
+    },
+    "scenarioEvolutionCount": 0,
+    "eventChoices": {
+      "30275-chain-final": "1",
+      "30311-chain-final": "1",
+      "30300-rare-sets": "1",
+      "30277-rare-sets": "1",
+      "30289-chain-final": "1",
+      "30323-outing-5": "1"
+    },
+    "rewards": [
+      {
+        "cardId": "30275",
+        "groupId": "30275-chain-final",
+        "setId": "1",
+        "ids": [
+          "204001",
+          "203421"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204001",
+              "203441"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30311",
+        "groupId": "30311-chain-final",
+        "setId": "1",
+        "ids": [
+          "204701",
+          "204531"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "204701",
+              "204571"
+            ]
+          },
+          {
+            "ids": [
+              "204701",
+              "203711"
+            ]
+          }
+        ],
+        "reason": "cost",
+        "verified": true
+      },
+      {
+        "cardId": "30300",
+        "groupId": "30300-rare-sets",
+        "setId": "1",
+        "ids": [
+          "203121",
+          "204331"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30277",
+        "groupId": "30277-rare-sets",
+        "setId": "1",
+        "ids": [
+          "200531",
+          "203461"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      },
+      {
+        "cardId": "30289",
+        "groupId": "30289-chain-final",
+        "setId": "1",
+        "ids": [
+          "202831",
+          "204191"
+        ],
+        "targetIds": [],
+        "alternatives": [
+          {
+            "ids": [
+              "201612",
+              "204181"
+            ]
+          }
+        ],
+        "reason": "gain",
+        "verified": true
+      },
+      {
+        "cardId": "30323",
+        "groupId": "30323-outing-5",
+        "setId": "1",
+        "ids": [
+          "202551"
+        ],
+        "targetIds": [],
+        "alternatives": [],
+        "reason": "fixed",
+        "verified": true
+      }
+    ],
+    "samples": 24,
+    "dt": 0.01,
+    "rankComparison": {
+      "version": "cm9-fixed-rank-sensitivity-v1",
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "aggregation": "equal-weight-sensitivity-mean",
+      "probabilities": false,
+      "rankChanges": false
+    },
+    "gainByRank": [
+      {
+        "rank": 1,
+        "gain": 7.602841704046768,
+        "entryGain": 0.023943288524318027,
+        "min": 7.103986319199248,
+        "max": 8.248812239745622
+      },
+      {
+        "rank": 2,
+        "gain": 7.129220604395883,
+        "entryGain": 0.02393949685765241,
+        "min": 5.870856310755971,
+        "max": 8.30437554011678
+      },
+      {
+        "rank": 3,
+        "gain": 7.127692827981221,
+        "entryGain": 0.024441613785605415,
+        "min": 5.874564304215255,
+        "max": 8.302359339553096
+      }
+    ],
+    "excludedCandidates": [],
+    "search": {
+      "method": "bounded",
+      "rewardMethod": "beam-4",
+      "candidateCount": 34,
+      "shortlisted": 12,
+      "evaluations": 503,
+      "refinementEvaluations": 96,
+      "refinementLimit": 96,
+      "refinementLimited": true,
+      "closureComplete": false,
+      "exchangeMethod": "coarse-screened-12-in-6-out-8-score-8-cost",
+      "globalOptimal": false
+    },
+    "pricePolicy": "all-hints-lv5-no-trait",
+    "positionPolicy": "prefer-mid-position-on-tie",
+    "baseline": "native-unique-only"
+  },
+  "comparisons": [
+    {
+      "name": "앵글링",
+      "ids": [
+        "900201"
+      ],
+      "matched": [
+        "900201"
+      ],
+      "available": [
+        "900201"
+      ],
+      "candidates": [
+        {
+          "id": "900201",
+          "name": "アングリング×スキーミング",
+          "status": "assumed",
+          "price": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "900201",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "solo": 2.738590831266902
+        }
+      ],
+      "counterfactual": null,
+      "bestOneSwap": null
+    }
+  ],
+  "negatives": [
+    {
+      "id": "900591",
+      "name": "彼方、その先へ…",
+      "selected": false,
+      "available": true,
+      "status": "assumed",
+      "solo": null
+    }
+  ],
+  "firstSampleEvents": [
+    {
+      "rank": 1,
+      "id": "100801",
+      "index": 1,
+      "x": 800.1817868774294,
+      "t": 40.45,
+      "duration": 8
+    },
+    {
+      "rank": 1,
+      "id": "210072",
+      "index": 1,
+      "x": 995.9625360968836,
+      "t": 50.02,
+      "duration": 1.92
+    },
+    {
+      "rank": 1,
+      "id": "204162",
+      "index": 1,
+      "x": 1066.6730798673393,
+      "t": 53.54,
+      "duration": 2.4
+    },
+    {
+      "rank": 1,
+      "id": "204662",
+      "index": 1,
+      "x": 1066.6730798673393,
+      "t": 53.54,
+      "duration": 4.8
+    },
+    {
+      "rank": 1,
+      "id": "900201",
+      "index": 1,
+      "x": 1066.6730798673393,
+      "t": 53.54,
+      "duration": 3.84
+    },
+    {
+      "rank": 1,
+      "id": "201292",
+      "index": 1,
+      "x": 1069.6875159550666,
+      "t": 53.69,
+      "duration": 4.8
+    },
+    {
+      "rank": 1,
+      "id": "900141",
+      "index": 1,
+      "x": 1099.0780584345416,
+      "t": 55.07,
+      "duration": 4.8
+    },
+    {
+      "rank": 1,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.3130710686662,
+      "t": 55.52,
+      "duration": 2.88
+    },
+    {
+      "rank": 1,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.1939250243117,
+      "t": 59.5,
+      "duration": 4.8
+    },
+    {
+      "rank": 1,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.259619940232,
+      "t": 63.4,
+      "duration": 5.76
+    },
+    {
+      "rank": 1,
+      "id": "204262",
+      "index": 1,
+      "x": 1454.3848418443863,
+      "t": 69.22,
+      "duration": 3.2
+    },
+    {
+      "rank": 2,
+      "id": "100801",
+      "index": 1,
+      "x": 800.1817868774294,
+      "t": 40.45,
+      "duration": 8
+    },
+    {
+      "rank": 2,
+      "id": "210072",
+      "index": 1,
+      "x": 995.9625360968836,
+      "t": 50.02,
+      "duration": 1.92
+    },
+    {
+      "rank": 2,
+      "id": "204662",
+      "index": 1,
+      "x": 1066.6730798673393,
+      "t": 53.54,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "910221",
+      "index": 1,
+      "x": 1066.6730798673393,
+      "t": 53.54,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "201292",
+      "index": 1,
+      "x": 1069.6835784550672,
+      "t": 53.69,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "900141",
+      "index": 1,
+      "x": 1099.1058290680546,
+      "t": 55.09,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "900211",
+      "index": 1,
+      "x": 1099.1058290680546,
+      "t": 55.09,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.3051232593316,
+      "t": 55.550000000000004,
+      "duration": 2.88
+    },
+    {
+      "rank": 2,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.3950579064708,
+      "t": 59.58,
+      "duration": 4.8
+    },
+    {
+      "rank": 2,
+      "id": "204162",
+      "index": 1,
+      "x": 1212.199152338329,
+      "t": 59.730000000000004,
+      "duration": 2.4
+    },
+    {
+      "rank": 2,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.1830605016187,
+      "t": 63.46,
+      "duration": 5.76
+    },
+    {
+      "rank": 2,
+      "id": "204262",
+      "index": 1,
+      "x": 1343.7197239243462,
+      "t": 64.94,
+      "duration": 3.2
+    },
+    {
+      "rank": 3,
+      "id": "210072",
+      "index": 1,
+      "x": 996.1033868774491,
+      "t": 50.25,
+      "duration": 1.92
+    },
+    {
+      "rank": 3,
+      "id": "204662",
+      "index": 1,
+      "x": 1066.813930647905,
+      "t": 53.77,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "910221",
+      "index": 1,
+      "x": 1066.813930647905,
+      "t": 53.77,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "201292",
+      "index": 1,
+      "x": 1069.623001417659,
+      "t": 53.910000000000004,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "900141",
+      "index": 1,
+      "x": 1099.030693788141,
+      "t": 55.31,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "900211",
+      "index": 1,
+      "x": 1099.030693788141,
+      "t": 55.31,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "202672",
+      "index": 1,
+      "x": 1109.2252045568807,
+      "t": 55.77,
+      "duration": 2.88
+    },
+    {
+      "rank": 3,
+      "id": "200492",
+      "index": 1,
+      "x": 1208.2952187337537,
+      "t": 59.800000000000004,
+      "duration": 4.8
+    },
+    {
+      "rank": 3,
+      "id": "204162",
+      "index": 1,
+      "x": 1212.3529103115202,
+      "t": 59.96,
+      "duration": 2.4
+    },
+    {
+      "rank": 3,
+      "id": "900011",
+      "index": 1,
+      "x": 1306.33481847481,
+      "t": 63.690000000000005,
+      "duration": 5.76
+    },
+    {
+      "rank": 3,
+      "id": "204262",
+      "index": 1,
+      "x": 1343.8714818975375,
+      "t": 65.17,
+      "duration": 3.2
+    }
+  ],
+  "structuralChecks": {
+    "legalFamiliesEventsAndLimits": true,
+    "priceComplete": true,
+    "inheritedCount": 5,
+    "scenarioEvolutionCount": 0
+  },
+  "allExpectedMatched": true
+}
