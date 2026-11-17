@@ -11,9 +11,9 @@
 | 보완 전 기능 기준 커밋 | [`81b4bcc`](https://github.com/seraveist/umaBoard/commit/81b4bcc09bd87dec373cac971dfb3dadcb04db87) |
 | 검토 PR | [#3](https://github.com/seraveist/umaBoard/pull/3) |
 | 1차 마신표 모델 | `cm-first-chart-v5` |
-| 육성 후 추천 모델 | `cm-post-training-v5` |
+| 육성 후 추천 모델 | `cm-post-training-v6` |
 | 활성 데이터 | `0b1057411682…` — 정확한 버전·원본 커밋은 [manifest](../data/manifest.json) 참조 |
-| 최신 기능 검증 | Node 209개 + Python 51개 = **260개 통과** |
+| 최신 기능 검증 | Node 215개 + Python 51개 = **266개 통과** |
 
 이 문서는 현재까지의 기능과 사용자 결정을 후속 작업에 전달하기 위한 기준 문서다.
 구현 계약은 [1차 마신표](CM_FIRST_CHART.md), [육성 후 추천](CM_POST_TRAINING.md)을 따른다.
