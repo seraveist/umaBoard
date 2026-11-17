@@ -66,6 +66,29 @@ test('inherited acceleration and speed hybrids share one six-skill total limit',
  assert.equal(result.ids.length,6);assert.equal(result.skills.filter(s=>s.inherited).length,6);
 });
 
+test('six inherited candidates do not force filling six slots and contributions use removal from the selected combination',async()=>{
+ const list=[skill('useful',4000,{inherited:true,rarity:'inherited'}),...Array.from({length:5},(_,i)=>skill('insurance'+i,100,{inherited:true,rarity:'inherited'}))];
+ list.forEach((s,i)=>{s.parent_ids=['parent'+i];});
+ const costs=Object.fromEntries(list.map(s=>[s.id,s.id==='useful'?100:10000]));
+ const {data,chart}=fixture(list,costs),result=await recommendTargetAcceleration(data,chart,quick);
+ assert.deepEqual(result.ids,['useful']);assert.equal(result.skills.length,1);
+ assert.equal(result.skillGainPolicy,'remove-one-from-target');assert.equal(result.skills[0].marginalGain,result.gain);
+ const tooExpensive=await recommendTargetAcceleration(data,chart,{...quick,minGainPer100Sp:100});
+ assert.deepEqual(tooExpensive.ids,[]);assert.equal(tooExpensive.gain,0);
+});
+
+test('target rows are sorted by paired marginal gain rather than ID or standalone gain',async()=>{
+ const {data,chart}=fixture([skill('a-small',1000),skill('z-large',3000)],{'a-small':10,'z-large':10});
+ const result=await recommendTargetAcceleration(data,chart,quick);
+ assert.equal(result.skills.length,2);assert.equal(result.skills[0].id,'z-large');
+ const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=createPositionComparison(chart.setup,compiled,chart.nativeIds);
+ for(const row of result.skills){
+  const without=comparison.compare(result.ids.filter(id=>id!==row.id),quick.samples,quick.dt);
+  assert.ok(Math.abs(row.marginalGain-(result.gain-without.gain))<1e-9);
+ }
+ assert.ok(result.skills[0].marginalGain>=result.skills[1].marginalGain);
+});
+
 test('positive but inefficient insurance is left out according to its additional SP instead of absolute maximum gain',async()=>{
  const {data,chart}=fixture([skill('core',4000),skill('insurance',500)],{core:100,insurance:1500}),result=await recommendTargetAcceleration(data,chart,quick);
  const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=createPositionComparison(chart.setup,compiled,chart.nativeIds),a=comparison.compare(['core'],quick.samples,quick.dt),b=comparison.compare(['core','insurance'],quick.samples,quick.dt);

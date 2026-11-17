@@ -34,7 +34,7 @@ def version_app_assets(output):
 
 def main():
     parser = argparse.ArgumentParser(description='Stage the static app for GitHub Pages')
-    parser.add_argument('--fetch-portraits', action='store_true', help='Download missing pinned UmaTools images into the build cache')
+    parser.add_argument('--fetch-portraits', action='store_true', help='Download missing pinned outfit/support images into the build cache')
     parser.add_argument('--output', default='.cache/pages', help='Relative static output directory')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]

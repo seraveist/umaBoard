@@ -8,6 +8,7 @@ import {portraitPath} from '../assets/portraits.mjs';
 const manifest=JSON.parse(readFileSync(new URL('../data/manifest.json',import.meta.url)));
 const data=JSON.parse(readFileSync(new URL('../'+manifest.dataset_path,import.meta.url)));
 const portraits=JSON.parse(readFileSync(new URL('../data/portraits.json',import.meta.url)));
+const ingame=JSON.parse(readFileSync(new URL('../curated/ingame-portraits.json',import.meta.url)));
 
 test('portrait paths use exact outfit/card IDs and only local assets',()=>{
  assert.equal(portraits.source.repository,'daftuyda/UmaTools');
@@ -21,6 +22,21 @@ test('portrait paths use exact outfit/card IDs and only local assets',()=>{
  }
  const catalog={outfits:{'1':{path:'https://gametora.com/image.png'},'2':{path:'assets/portraits/outfits/1-'+ 'a'.repeat(40)+'.webp'}}};
  assert.equal(portraitPath(catalog,'outfits','1'),null);assert.equal(portraitPath(catalog,'outfits','2'),null);
+});
+
+test('curated in-game list icons keep exact costume identity throughout the shared portrait catalog',()=>{
+ assert.equal(portraits.ingame_source.provider,'bwiki-ingame');
+ for(const [id,pinned] of Object.entries(ingame.outfits)){
+  if(!data.outfits[id])continue;
+  const image=portraits.outfits[id];assert.equal(image.provider,'bwiki-ingame');
+  assert.equal(image.source_path,`Chr_icon_${Math.floor(Number(id)/100)}_${id}_01.png`);
+  assert.equal(image.blob_sha,pinned.blob_sha);assert.equal(image.sha1,pinned.sha1);
+  assert.equal(portraitPath(portraits,'outfits',id),`assets/portraits/outfits/${id}-${pinned.blob_sha}.png`);
+  assert.equal(image.width,256);assert.equal(image.height,280);
+ }
+ assert.ok(portraits.outfits['107501']); // Previously absent in the illustration source.
+ assert.notEqual(portraits.outfits['100601'].path,portraits.outfits['100602'].path);
+ assert.ok(Object.values(portraits.supports).every(image=>!image.provider));
 });
 
 test('character localization keeps Japanese outfit titles and all skill names',()=>{

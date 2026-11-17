@@ -4,6 +4,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {prepareChart,buildChartCandidates,compileChartSkill} from '../assets/cm-chart.mjs';
 import {recommendTargetAcceleration,TARGET_ACCELERATION_VERSION} from '../assets/cm-acceleration-plan.mjs';
 import {createPositionComparison} from '../assets/cm-position-comparison.mjs';
@@ -17,6 +18,7 @@ const read=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
 const sourceFiles=['assets/cm-acceleration-plan.mjs','assets/cm-position-comparison.mjs','assets/cm-final-plan.mjs','assets/cm-state.mjs'];
 const sourceHashes=Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex')]));
+const codeBaseCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
 const costBridge=process.argv.includes('--cost-bridge');
 // Diagnostic only: never writes modified game data or production code.
 if(costBridge)for(const [base,strong] of [['901351','91101351'],['901411','91101411']])data.purchase_stages[strong]={...data.purchase_stages[base]};
@@ -80,11 +82,11 @@ let selected=requested?cases.filter(c=>c.id===requested):costBridge?cases.filter
 const partition=process.argv.find(arg=>arg.startsWith('--partition='))?.slice('--partition='.length);
 if(partition){const [index,count]=partition.split('/').map(Number);if(!Number.isInteger(index)||!Number.isInteger(count)||index<0||index>=count)throw new Error('Invalid partition');selected=selected.filter((_,i)=>i%count===index);}
 if(!selected.length)throw new Error('Unknown case');
-const outputDirectory=TARGET_ACCELERATION_VERSION==='cm-target-acceleration-v1'?'docs/validation/cm-acceleration-external-20261117':'docs/validation/cm-acceleration-v2-20261117';
+const outputDirectory=TARGET_ACCELERATION_VERSION==='cm-target-acceleration-v1'?'docs/validation/cm-acceleration-external-20261117':`docs/validation/cm-acceleration-${TARGET_ACCELERATION_VERSION.replace('cm-target-acceleration-','')}-20261117`;
 mkdirSync(resolve(root,outputDirectory),{recursive:true});
 for(const c of selected){
  console.log('START',c.id);const started=Date.now(),result=await execute(c);
- const out={auditedAt:'2026-11-17',dataVersion:manifest.active_version,codeBaseCommit:'d99ff136c255a24099947abbbba887c547ebc60c',sourceHashes,controlledExperiment:costBridge?'IN-MEMORY ONLY: upgraded inheritance uses original verified 200 SP price stage':null,method:'prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required',elapsedSeconds:(Date.now()-started)/1000,...result};
+ const out={auditedAt:'2026-11-17',dataVersion:manifest.active_version,codeBaseCommit,sourceHashes,controlledExperiment:costBridge?'IN-MEMORY ONLY: upgraded inheritance uses original verified 200 SP price stage':null,method:'prepareChart inputs + production recommendTargetAcceleration defaults; no display Top10 scoring required',elapsedSeconds:(Date.now()-started)/1000,...result};
  writeFileSync(resolve(root,outputDirectory,c.id+(costBridge?'.cost-bridge':'')+'.json'),JSON.stringify(out,null,2)+'\n');
  console.log(JSON.stringify({id:c.id,seconds:out.elapsedSeconds,ids:result.plan.skills.map(s=>s.name),gain:result.plan.gain,cost:result.plan.cost,expected:result.comparisons.map(e=>({name:e.name,matched:e.matched,candidates:e.candidates.map(x=>({id:x.id,solo:x.solo})),counterfactual:e.counterfactual&&{gain:e.counterfactual.gain,cost:e.counterfactual.cost}})),negatives:result.negatives}));
 }

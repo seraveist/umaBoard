@@ -6,7 +6,7 @@ import {styleRecommendation} from './cm-recommendation.mjs';
 import {RecordedPurchaseModel} from './cm-final-plan.mjs';
 import {EventConstraints} from './cm-event-constraints.mjs';
 
-export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v2';
+export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v3';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const native=s=>['unique','unique_low_star','unique_upgraded'].includes(s.rarity);
 const key=ids=>[...new Set(ids)].sort().join(',');
@@ -144,6 +144,17 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   const s=records.get(id),baseId=planningRows.find(r=>r.id===id)?.evolutionBaseId||id;
   return {id,name:s.name_jp,rarity:s.rarity,inherited:s.inherited,categories:s.categories,description:s.description_jp,baseId,baseName:data.skills[baseId]?.name_jp,cost:prices.selection([id]).used,routes:s.routes||[],providers:s.inheritance_outfit_ids||[]};
  };
+ // Display the loss from removing one skill from this exact target, paired
+ // with the same ranks/samples. Overlapping contributions are not additive.
+ const contributionStart=checks,skills=[];
+ for(const id of required){
+  if(cancelled())return null;
+  const without=evaluate(required.filter(other=>other!==id),samples,dt);
+  skills.push({...toRow(id),marginalGain:without?chosen.gain-without.gain:null});
+  await pause();
+ }
+ skills.sort((a,b)=>(b.marginalGain??-Infinity)-(a.marginalGain??-Infinity)||a.cost-b.cost||a.id.localeCompare(b.id));
+ const contributionEvaluations=checks-contributionStart;
  // Compare whole rare bundles with the same target. Hints are possibilities,
  // never purchases or mutations of the training-result checklist.
  const goldGroups=events.groups.map(g=>({...g,choices:g.choices.map(c=>({...c,rewards:c.rewards.filter(r=>data.skills[r.skill_id]?.rarity==='gold')}))})).filter(g=>g.card_id&&g.choices.some(c=>c.rewards.length));
@@ -195,6 +206,6 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   const positionPreferred=positionSensitive&&near.length&&assignment.score.entryGain>Math.max(...near.map(a=>a.score.entryGain))+.005;
   return {cardId:group.card_id,groupId:group.id,setId:selected.id,ids:rareIds,targetIds:needed,alternatives,reason:forced?'target':group.choices.length===1?'fixed':near.length?positionPreferred?'position':'cost':'gain',verified:group.choices.length===1||!events.unverified.includes(group.card_id)};
  }).filter(Boolean);
- return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills:required.map(toRow),gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss:null,score:chosen.score,efficiencyPolicy:{minGainPer100Sp,scoreTolerance,source:'preparation-policy-not-measured'},scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
-  eventChoices:assignment.pins,rewards,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
+ return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills,skillGainPolicy:'remove-one-from-target',gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss:null,score:chosen.score,efficiencyPolicy:{minGainPer100Sp,scoreTolerance,source:'preparation-policy-not-measured'},scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
+  eventChoices:assignment.pins,rewards,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,contributionEvaluations,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
 }

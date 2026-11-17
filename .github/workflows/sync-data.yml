@@ -56,7 +56,7 @@ jobs:
           fi
       - name: Validate activated bundle
         run: python scripts/validate_data.py
-      - name: Synchronize available UmaTools portraits (SSR supports only)
+      - name: Synchronize pinned in-game outfits and UmaTools SSR portraits
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/sync_portraits.py

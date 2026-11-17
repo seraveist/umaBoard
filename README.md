@@ -148,13 +148,16 @@ GitHub API 한도에 도달했다면 로컬 환경에 `GITHUB_TOKEN`을 설정�
 코스 `10613`은 원본의 마지막 코너가 결승선을 초과하여 선택에서 제외합니다. 원본 좌표는 보존합니다.
 현재 공개 소스의 수록 수이며 게임 전체 커버리지를 보증하는 숫자는 아닙니다.
 
-포트레잇은 **UmaTools만** 사용합니다. 활성 데이터의 의상·SSR ID와 이미지 경로를 기준으로
-UmaTools 최신 commit의 파일을 확인하고 `data/portraits.json`에 이미지 경로와 Git blob을 기록합니다.
-계산 데이터가 그대로인 상태에서 이미지만 추가·수정되어도 다음 동기화에 반영합니다.
-WebP를 우선 사용하고 없으면 같은 소스의 PNG를 사용합니다.
-2026-10-21 통합 기준 의상 271종·SSR 316장의 이미지가 목록에 있으며 원본 누락 ID는 없습니다.
-GameTora 등 다른 이미지 소스로 보완하지 않습니다.
-Pages 빌드가 필요한 이미지만 받아 Git blob·크기·형식을 검사하고 자체 정적 경로로 배포합니다.
+우마무스메 의상 이미지는 **인게임 목록용 아이콘**을 사용합니다. 2026-11-17 기준 활성 의상
+274종의 BWiki 원본 `Chr_icon_<캐릭터ID>_<의상ID>_01.png`를 정확한 ID로 연결하며,
+256×280 RGBA PNG의 귀·테두리·투명 배경을 유지합니다. 출처 URL·파일명·SHA1·Git blob은
+`curated/ingame-portraits.json`에 고정합니다. 갱신은 `python scripts/import_ingame_portraits.py`로
+재현하며, 일일 동기화가 이 목록을 덮어쓰지 않습니다. 신규 의상의 고정 아이콘이 없으면
+기존 UmaTools의 같은 의상 ID 이미지만 사용하며 다른 의상으로 추정하지 않습니다.
+SSR 서포트는 기존 UmaTools 최신 commit의 카드 이미지를 유지합니다. 계산 데이터 변경이
+없는 이미지 추가·수정도 다음 동기화에 반영하고, WebP 우선·같은 소스 PNG 차선으로 처리합니다.
+통합 이미지 경로와 Git blob은 `data/portraits.json`에 기록합니다.
+Pages 빌드가 필요한 이미지만 받아 해시·크기·형식을 검사하고 자체 정적 경로로 배포합니다.
 다운로드 파일은 Actions 캐시에 보관하므로 변경되지 않은 이미지를 매번 다시 받지 않습니다.
 다운로드에 실패한 이미지도 배포 목록에서 제외하여 계산 화면에 깨진 이미지 주소를 만들지 않습니다.
 
@@ -263,7 +266,8 @@ Pages 배포 파일은 `.cache/pages/`에 생성됩니다. 상대 경로를 사�
 | `curated/rules.json` | 출처를 명시한 보완 관계와 검증 대기 목록 |
 | `data/manifest.json` | 현재 활성 묶음, 출처 commit/blob, 해시와 어댑터 버전 |
 | `data/bundles/` | 정규화 데이터와 동일 버전의 검증 결과 |
-| `data/portraits.json` | UmaTools 전용 의상·SSR 이미지 목록, 출처 commit/blob, 누락 ID |
+| `data/portraits.json` | 인게임 의상·UmaTools SSR 이미지 목록, 출처·해시, 누락 ID |
+| `curated/ingame-portraits.json` | 의상 ID별 인게임 목록 아이콘 원본·검증 해시 |
 | `docs/` | 수집 설계, 조사 기록, 엔진 연결 계약 |
 | `tests/` | 정규화·실패 복구·실제 후보·속도/가속/HP·추천 정책 검증 |
 

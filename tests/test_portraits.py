@@ -1,17 +1,34 @@
 import json
+import hashlib
+import struct
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from umaboard.common import DataError
-from umaboard.portraits import catalog_for, portrait_bytes, stage_portraits, synchronize_catalog, write_json
+from umaboard.portraits import (INGAME_PROVIDER, IngameImageClient, apply_ingame_catalog,
+    catalog_for, portrait_bytes, stage_portraits, synchronize_catalog, write_json)
 from umaboard.sync import git_blob_sha
 
 
 class PortraitTests(unittest.TestCase):
+    def ingame_fixture(self):
+        def chunk(kind, body):
+            return struct.pack('>I', len(body)) + kind + body + struct.pack('>I', zlib.crc32(kind + body))
+        body = (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 256, 280, 8, 6, 0, 0, 0))
+            + chunk(b'IDAT', zlib.compress(b'\0' * (280 * (1 + 256 * 4)))) + chunk(b'IEND', b''))
+        entry = {'source_path': 'Chr_icon_1001_100102_01.png',
+            'source_url': 'https://patchwiki.biligame.com/images/umamusume/1/12/test.png',
+            'bytes': len(body), 'width': 256, 'height': 280,
+            'sha1': hashlib.sha1(body).hexdigest(), 'blob_sha': git_blob_sha(body)}
+        snapshot = {'provider': INGAME_PROVIDER, 'source': 'https://wiki.biligame.com/umamusume/',
+            'checked_at': '2026-11-17', 'outfits': {'100102': entry}}
+        return body, snapshot
+
     def fixture(self):
         body = b'RIFF' + b'\x00' * 4 + b'WEBP' + b'pinned test image'
         path = 'public/assets/character_thumbs/100101-special-week.webp'
@@ -106,6 +123,67 @@ class PortraitTests(unittest.TestCase):
             self.assertEqual(second['source']['commit'], 'b' * 40)
             self.assertEqual(second['data_source_commit'], source['commit'])
             self.assertEqual(manifest['sources'][0]['commit'], 'a' * 40)
+
+    def test_ingame_override_survives_sync_without_changing_supports_or_mechanics(self):
+        _, source, raw, data, tree = self.fixture()
+        _, snapshot = self.ingame_fixture()
+        manifest = {'sources': [{**source, 'source_id': 'umatools', 'files': []}]}
+        class Client:
+            def json(self, url): return [{'sha': 'b' * 40}] if '/commits?' in url else tree
+        with tempfile.TemporaryDirectory() as directory, patch('umaboard.portraits.load_active', return_value=(manifest, data)), patch('umaboard.portraits.raw_inputs', return_value=(raw, [])):
+            root = Path(directory)
+            write_json(root / 'curated/ingame-portraits.json', snapshot)
+            catalog, _ = synchronize_catalog(root, Client())
+            self.assertEqual(catalog['outfits']['100102']['provider'], INGAME_PROVIDER)
+            self.assertEqual(catalog['outfits']['100102']['source_path'], 'Chr_icon_1001_100102_01.png')
+            self.assertEqual(catalog['missing']['outfits'], [])
+            self.assertEqual(catalog['supports'], catalog_for(source, raw, data, tree)['supports'])
+            self.assertEqual(catalog['data_source_commit'], source['commit'])
+
+    def test_ingame_download_is_pinned_cached_and_never_uses_the_github_client(self):
+        _, source, raw, data, tree = self.fixture()
+        body, snapshot = self.ingame_fixture()
+        class GithubClient:
+            def get(self, url): raise AssertionError('GitHub credential client used for external image')
+        class ImageClient:
+            urls = []
+            def get(self, url):
+                self.urls.append(url)
+                return body
+        client = ImageClient()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_json(root / 'curated/ingame-portraits.json', snapshot)
+            catalog = apply_ingame_catalog(root, catalog_for(source, raw, data, tree), data)
+            for _ in range(2):
+                self.assertEqual(portrait_bytes(root, catalog, 'outfits', '100102', GithubClient(), True, client), body)
+            self.assertEqual(client.urls, [snapshot['outfits']['100102']['source_url']])
+            catalog['outfits'].pop('100101')
+            write_json(root / 'data/portraits.json', catalog)
+            report = stage_portraits(root, root / 'public', fetch=True, client=GithubClient(), ingame_client=client)
+            self.assertEqual(report['available']['outfits'], 1)
+            self.assertEqual(len(client.urls), 1)
+            catalog['outfits']['100102']['sha1'] = '0' * 40
+            with self.assertRaisesRegex(DataError, 'original RGBA'):
+                portrait_bytes(root, catalog, 'outfits', '100102', GithubClient(), False, client)
+
+    def test_ingame_identity_host_and_local_paths_are_checked_before_download(self):
+        _, source, raw, data, tree = self.fixture()
+        _, snapshot = self.ingame_fixture()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_json(root / 'curated/ingame-portraits.json', snapshot)
+            catalog = apply_ingame_catalog(root, catalog_for(source, raw, data, tree), data)
+            entry = catalog['outfits']['100102']
+            for field, invalid in [('source_url', 'https://example.com/image.png'),
+                    ('source_path', 'Chr_icon_1001_100101_01.png'), ('path', '../../image.png')]:
+                old = entry[field]
+                entry[field] = invalid
+                with self.assertRaises(DataError):
+                    portrait_bytes(root, catalog, 'outfits', '100102', None, True)
+                entry[field] = old
+            with self.assertRaises(DataError):
+                IngameImageClient().get('https://example.com/image.png')
 
 
 if __name__ == '__main__':

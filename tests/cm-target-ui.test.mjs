@@ -32,6 +32,24 @@ test('the target frame belongs to preparation and its optional lock reaches the 
  assert.ok(ui.includes('value?.maintainTargetAcceleration!==false'));
 });
 
+test('target rows show signed contribution values in descending order without mutating the plan',()=>{
+ const ids=new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>['#'+m[1],new Element('div')]));
+ globalThis.document={querySelector:selector=>ids.get(selector),createElement:tag=>new Element(tag)};
+ try{
+  const data={skills:Object.fromEntries(['low','high'].map(id=>[id,{id,name_jp:id,rarity:'white'}]))};
+  const panel=createAccelerationPanel({data,display:{icons:{}},skillDetails:{attach(){}}});
+  const plan={skills:[{id:'low',routes:[],marginalGain:.123},{id:'high',routes:[],marginalGain:1.236}],skillGainPolicy:'remove-one-from-target',gain:1.5,cost:120,scenarioEvolutionCount:0,sacrificedGain:0,search:{method:'bounded'},rewards:[]};
+  const before=JSON.stringify(plan);panel.render(plan);
+  const rows=ids.get('#target-skill-list').children;
+  assert.equal(rows[0].children[2].children[1].textContent,'+1.24마신');
+  assert.equal(rows[1].children[2].children[1].textContent,'+0.12마신');
+  assert.match(rows[0].children[2].title,/제외했을 때/);
+  assert.match(ids.get('#target-search-note').textContent,/내림차순/);
+  assert.match(ids.get('#target-inheritance-note').textContent,/최대 6개/);
+  assert.equal(JSON.stringify(plan),before);
+ }finally{delete globalThis.document;}
+});
+
 test('inherited target rows show their exact provider outfit portrait and Korean identity',()=>{
  const ids=new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>['#'+m[1],new Element('div')]));
  globalThis.document={querySelector:selector=>ids.get(selector),createElement:tag=>new Element(tag)};

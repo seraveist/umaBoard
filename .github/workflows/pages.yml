@@ -42,8 +42,10 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .cache/portrait-blobs
-          key: portraits-umatools-v1-${{ hashFiles('data/portraits.json') }}
-          restore-keys: portraits-umatools-v1-
+          key: portraits-v2-${{ hashFiles('data/portraits.json') }}
+          restore-keys: |
+            portraits-v2-
+            portraits-umatools-v1-
       - name: Test normalization and engine before publishing
         run: |
           python -m unittest discover -s tests -v
