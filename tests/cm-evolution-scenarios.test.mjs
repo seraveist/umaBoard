@@ -117,7 +117,7 @@ test('actual stat thresholds change the ramen evolution effect without becoming 
 });
 
 test('final recommendation preserves owned scenario evolutions, permits hint records for every alternative, and rejects over-limit owned records',async()=>{
- const setup=createChartSetup(data,profiles,{outfitId,style:2,courseId:'10811',scenarioId:'14',supportIds:[],bloom:5,uniqueLevel:6});
+ const setup=createChartSetup(data,profiles,{outfitId,style:2,courseId:'10811',scenarioId:'14',supportIds:['30304'],bloom:5,uniqueLevel:6});
  const ids=['414021','414031','414041'],rows=ids.flatMap(id=>{const r=data.evolution_rules.find(r=>r.evolved_id===id);return [{...data.skills[id],evolutionBaseId:r.base_id},data.skills[r.base_id]];});
  const chart={setup,rows,nativeIds:[]},input={stats:{speed:1600,stamina:1600,power:1400,guts:1300,wisdom:1200},spBudget:10000};
  const options={searchSamples:1,searchDt:.05,samples:1,dt:.05};

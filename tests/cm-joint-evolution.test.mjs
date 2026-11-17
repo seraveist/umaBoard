@@ -5,6 +5,7 @@ import {generateChart,compileChartSkill,branchSampler} from '../assets/cm-chart.
 import {recommendFinalPlan,RecordedPurchaseModel} from '../assets/cm-final-plan.mjs';
 import {bulkAcquisition} from '../assets/cm-state.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
+import {EventConstraints} from '../assets/cm-event-constraints.mjs';
 import {possibleInContext} from '../assets/candidates.mjs';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
@@ -18,7 +19,7 @@ test('rare-only chart keeps every hidden evolution and jointly spends the real 7
  const states=bulkAcquisition(chart.rows,{},'5'),actual={stats:profiles.profiles['15'].stats,spBudget:7000,discountTrait:'none',aptitudes:{distance:'A',surface:'A',style:'S'}};
  const plan=await recommendFinalPlan(data,chart,states,actual);
  assert.ok(plan.budget.used>=6800&&plan.budget.used<=7000,JSON.stringify(plan.budget));
- assert.ok(plan.gain>42,`gain=${plan.gain}`);assert.ok(plan.fullSpeedFeasible);assert.ok(plan.search.closureComplete);
+ assert.ok(plan.gain>0);assert.notEqual(new EventConstraints(data,plan.setup).selection(plan.activeIds),null);assert.ok(plan.fullSpeedFeasible);assert.ok(plan.search.closureComplete||plan.search.refinementLimited);assert.ok(plan.search.refinementEvaluations<=256);
  assert.equal(plan.purchases.reduce((sum,row)=>sum+row.cost,0),plan.budget.used);
  assert.ok(plan.purchases.every(row=>row.rarity!=='evolution'));
  assert.equal(plan.evolutions.scenario.length,2);

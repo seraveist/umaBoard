@@ -179,3 +179,30 @@ test('Studious changes affordable combinations and records the selected trait wi
  assert.equal(fast.budget.used,50);assert.equal(study.purchases[0].stages[0].extraDiscount,4);
  assert.equal(chart.setup.discountTrait,undefined);assert.equal(input.discountTrait,undefined);
 });
+
+test('late recovery after depletion cannot outrank an earlier useful recovery',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=[];
+ for(const [id,value,condition,cost]of [['early',550,[[{field:'phase',operator:'==',value:1}]],20],['late',5500,[[{field:'distance_rate',operator:'>=',value:99}]],100]]){
+  data.skills[id]=skill(id,value,'white','heal');data.skills[id].invocations[0].condition=condition;data.purchase_stages[id]={status:'verified',base_cost:cost};chart.rows.push({...data.skills[id],name:id});
+ }
+ const plan=await recommendFinalPlan(data,chart,{early:'0',late:'0'},{...input,stats:{...stats,stamina:1},spBudget:100},quick);
+ assert.deepEqual(plan.activeIds,['early']);assert.equal(plan.budget.used,20);assert.equal(plan.fullSpeedFeasible,false);
+});
+
+test('actual CM recommendation enforces event routes including owned records',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=['x','y'].map(id=>{data.skills[id]=skill(id,3000,'gold');data.purchase_stages[id]={status:'verified',base_cost:50};return {...data.skills[id],name:id};});
+ chart.setup.supportIds=['card'];data.acquisition_routes=['x','y'].map(id=>({skill_id:id,owner_type:'support',owner_id:'card',kind:'support_event'}));
+ data.support_events={card:{events:[{id:'choice',choices:['x','y'].map(id=>({id,rewards:[{skill_id:id}]}))}]}};
+ const plan=await recommendFinalPlan(data,chart,{x:'0',y:'0'},input,quick);assert.equal(plan.purchases.length,1);
+ await assert.rejects(()=>recommendFinalPlan(data,chart,{x:'owned',y:'owned'},input,quick),/이벤트 선택지/);
+});
+
+test('redundant saturated accelerations do not consume extra SP',async()=>{
+ const {data,chart}=fixture();chart.nativeIds=[];chart.rows=[];
+ for(const [id,cost]of [['cheap',50],['expensive',100]]){
+  data.skills[id]=skill(id,1000000000,'white','acceleration');data.skills[id].invocations[0].condition=[[{field:'phase',operator:'==',value:2}]];
+  data.purchase_stages[id]={status:'verified',base_cost:cost};chart.rows.push({...data.skills[id],name:id});
+ }
+ const plan=await recommendFinalPlan(data,chart,{cheap:'0',expensive:'0'},{...input,spBudget:200},quick);
+ assert.deepEqual(plan.activeIds,['cheap']);assert.equal(plan.budget.used,50);
+});

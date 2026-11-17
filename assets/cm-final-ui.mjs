@@ -62,6 +62,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
   $('#final-search-note').textContent=plan.search.closureComplete?'구매·진화를 함께 비교했습니다.':'탐색 범위 내 추천입니다. 후보를 조정해 다시 비교할 수 있습니다.';
+  if(plan.unverifiedEventCards?.length)$('#final-search-note').textContent+=' 선택지 미검증 카드 '+plan.unverifiedEventCards.length+'장: 미검증 레어 보상은 카드당 1개로 제한했습니다.';
   $('#final-owned-summary').textContent=`습득 스킬 ${plan.ownedIds.length}개`;
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
   $('#final-excluded').hidden=!plan.excluded.length;$('#final-excluded-summary').textContent=`제외 ${plan.excluded.length}개`;
