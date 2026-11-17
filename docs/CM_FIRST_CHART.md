@@ -4,7 +4,7 @@ This is the authoritative contract for `feat/cm-first-chart` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
 
 The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING.md).
-It consumes this chart's fixed checklist and adds actual stats/remaining-SP
+It consumes this chart's checklist and full inheritance options and adds actual stats/remaining-SP
 recommendation. Presentation separates purchases from evolution, while one search compares their final effects together.
 
 The root uses two stage screens. Preparation groups character, race and deck
@@ -18,6 +18,8 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
 
 - Outfit, running style, CM course/ground/weather/season/time, up to six distinct
   legal SSR supports, and a supported scenario. No SP/stat input before training.
+- Optional known gate/popularity (CM9, 1–9). Missing gate is sampled uniformly;
+  missing popularity uses an explicit uniform prior, not an empirical estimate.
 - Scenario MAX means the scenario's verified **base five-stat caps**, without
   inheritance-dependent cap raises. Profiles 6–15 are pinned in
   `curated/cm-scenario-profiles.json`. It is not an all-2500 absolute-limit claim.
@@ -37,7 +39,8 @@ admission policy before merging into the same checklist:
 
 - Use verified strengthened inherited forms 901351→91101351 (Stay Gold) and
   901411→91101411 (Epiphaneia), replacing their weaker versions. One origin per row.
-- Exclude pure recovery inherits. Positive speed/acceleration composites may heal.
+- Pure recovery inherits are excluded from the default performance Top10, but
+  retained in `inheritanceOptions` for actual acquisition and joint evaluation.
 - Apply real fixed course/style gates first, then the internal CM9 phase/rank
   recommendation policy. Curated exceptions cover Anabolic, Angling, Tsubomi,
   Kanata and Emperor. Broad middle ranges overlap styles; unknown overtakes/gaps
@@ -46,11 +49,14 @@ admission policy before merging into the same checklist:
   product recommendation, not game eligibility or measured activation probability.
 - Rank by unrounded arithmetic mean, keep at most ten with gain >=0.005 lengths
   (so a displayed 0.00 is not admitted), with stable skill-ID tie breaks. The final
-  table remains icon/source ordered. No outside-Top10 acquired exceptions.
+  table remains icon/source ordered. `전체 계승 후보 보기` exposes the full legal
+  inheritance pool, including fixed-inactive/unknown scores. Recorded outside-Top10
+  rows stay visible when the option is closed and enter the final optimizer.
 - Lock Top10 before publishing checklist rows. Hint changes never rerank/recompute.
   At most six inherited rows may be marked purchased or Lv0–5 across all tabs and
   search results. Setting one to unavailable frees a slot. Hidden stale IDs never
-  enter counts/exports. Legacy drafts over the limit retain the first six in table
+  enter counts/exports. All full-pool recorded inheritance counts toward the same
+  six slots. Legacy drafts over the limit retain the first six in table
   order and display an explicit migration notice.
 - Ordinary checklist rows are not removed just because recommendation suitability
   is low. All speed/acceleration rows export internal suitability for later use.
@@ -79,26 +85,37 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v5` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v6` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
-- Mean is an arithmetic mean of paired trajectory differences. Default 24
-  deterministic low-discrepancy samples, dt=0.01s. Fixed-position rows are computed
-  once only if the native baseline is also deterministic.
-- Random dimensions distinguish the native and candidate skill. The same native
-  sample is reused in both trajectories. Baselines are cached per sample.
+- Mean is an arithmetic mean of paired trajectory differences. Default 128
+  reproducible stratified samples, dt=0.01s. Fixed-position rows use the same
+  samples because race starts and HP-based spurt choices can still vary.
+- Full skill/channel/dimension keys replace modulo-ID streams. Each64-sample
+  block visits every stratum. Race starts, gates, popularity and native draws
+  are shared by both trajectories and independent of selection/order. Baselines
+  are cached per sample. Export spread/half differences are not confidence bounds.
 - As of `cm-first-chart-v3`, invocation alternatives with the same spatial
   random-condition key share the sample. A stronger stat-dependent form and its
   fallback cannot independently race to activate. Explicitly linked effects
   retain their own conditions and follow-up timing.
-- Counter, HP, possession and start predicates are fulfilled in this chart only;
-  real spatial/temporal predicates and same-skill links remain. Rank, position, temptation, counters, other-runner and skill-possession triggers
-  are assumed successful, including same-style counts and popularity matching.
-  Unknown effect mathematics still stay excluded. Real distance/style/weather and
-  temporal/spatial predicates are never erased.
+- Own activation/heal/passive/phase counters, HP, possession, inheritance count
+  and start predicates are evaluated against live state. `activation_raw=0`
+  exempts wisdom checks; otherwise activation uses max(.2,1−90/rawWisdom).
+  Skill lottery and shared-lottery predicates have separate draws. Native
+  supplements without activation metadata use their reviewed native rarity.
+- Unobserved rank, overtaking, gaps, team and temptation conditions still assume
+  fulfillment; this is a conditional solo contribution, not measured overall
+  activation probability or win probability. Explicit numeric external conditions
+  and distance/rank timelines are executable through `raceContext`. Gate and
+  popularity use the separate recorded/prior policy above. Unknown effect
+  mathematics stay excluded; spatial/temporal predicates are never erased.
+- HP-adaptive spurt planning computes feasible start/speed from remaining HP and
+  recalculates after real healing. Actual spurt state gates last-spurt conditions.
+  HP depletion changes travel speed. Future recovery is never presumed.
 - Repeat triggers share the distance-scaled cooldown and require it to strictly
   elapse. all_corner_random draws two different cached10m corner windows;
   straight_random draws one cached10m window. Other spatial random repeats use
@@ -113,6 +130,9 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
   e5d940ce8f73bbb756ae3cffd0a081c34b8124da. No solver source was copied.
 - HP is internal only in the first chart. Recovery can show 0.00 lengths without
   being removed. No pre-training required-stamina number is displayed.
+
+The [v6 activation/probability audit](CM_ACTIVATION_PROBABILITY_QA.md) records
+source formulas, same-input results, reproducible checks and remaining limits.
 
 ## Display and performance
 
@@ -130,7 +150,7 @@ shows all matching rows. Ordinary recovery stays in the same table.
 
 All admitted rows render without a display limit or load-more control. The table
 retains its own bounded scrollbar. Worker
-scores inherited candidates first, locks Top10, then publishes ordered batches. Inputs are stable while receiving batches and progress
+scores inherited candidates first, locks the default Top10, retains all scored inheritance options, then publishes ordered batches. Inputs are stable while receiving batches and progress
 is count-based. New jobs cancel stale results. Draft/checklist storage is local;
 scope/version prevent unrelated plans from overwriting each other. JSON export
 records the input, model/version, profiles and checklist for the next stage.

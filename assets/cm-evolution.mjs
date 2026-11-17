@@ -8,7 +8,7 @@ export function evolutionOptions(data,chart){
 export function finalAcquisitionSnapshot(data,chart,states){
  const options=evolutionOptions(data,chart),history=options.filter(row=>states[row.id]==='owned');
  // Preserve actual purchases from older drafts, discard obsolete evolution hints.
- return checklistSnapshot([...chart.rows.filter(row=>row.rarity!=='evolution'),...history],states,buildAcquisitionHierarchy(data));
+ return checklistSnapshot([...new Map([...chart.rows.filter(row=>row.rarity!=='evolution'),...(chart.inheritanceOptions||[]),...history].map(row=>[row.id,row])).values()],states,buildAcquisitionHierarchy(data));
 }
 export function evolutionGroups(data,setup,rows){
  const groups={outfit:[],scenario:[]};

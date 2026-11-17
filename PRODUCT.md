@@ -2,7 +2,7 @@
 
 Cumulative implementation status, accepted scope and prioritized follow-up work:
 [`docs/CM_PROGRESS_AND_NEXT_STEPS.md`](docs/CM_PROGRESS_AND_NEXT_STEPS.md),
-2026-11-17, CM models v5; joint purchase/evolution optimization.
+2026-11-17, CM models v6; live self conditions and sampled activation probabilities.
 
 The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
 `docs/CM_POST_TRAINING.md`. They supersede the
@@ -39,12 +39,14 @@ decision does not change costs, acquisition rules or persisted records.
 Only initial inputs: owned outfit, running style, CM race conditions, support deck,
 scenario. A persisted owned-outfit record supplies bloom and unique level. Race
 stats use verified scenario base caps, mood is best, aptitudes A. No pre-training
-stamina advice. All supported acquisition/trigger predicates are fulfilled;
-physical timing, course geometry, durations and causal linked effects remain.
+stamina advice. Self counters, ownership, HP, start and skill probabilities are
+executable in the shared chart/final model. Unobserved opponent conditions remain
+explicit conditional assumptions. Known gate/popularity can be entered; missing
+values use uniform CM9 gate draws and an explicit uniform popularity prior.
 
 All skill categories share one table, with an icon-category tab row and name search. Gold candidates come only from the selected
 outfit, scenario and deck. The first chart shows original rares; matching evolution branches remain internal options and become eligible from the rare's actual record.
-Ordinary factor-eligible whites complete the ordinary pool. Inheritance uses a fixed positive-gain Top10 after style suitability filtering, always using verified strengthened forms and excluding pure healing; users can record at most six of these. Unknown
+Ordinary factor-eligible whites complete the ordinary pool. Inheritance defaults to a positive-gain Top10 after style suitability filtering, using verified strengthened forms and excluding pure healing from that display. The full inheritance option exposes actual acquired alternatives, including pure healing and fixed-inactive ownership helpers. At most six may be recorded across the full pool. Unknown
 calculations are excluded. Every admitted row is displayed inside the bounded
 scrollable table, without a display limit or a load-more action.
 The acquisition dropdown retains eight stored states: owned, unavailable, levels
@@ -67,7 +69,10 @@ or Fast Learner10%, added to each stage's hint rate before integer flooring.
 Traits cannot stack; old Fast Learner records restore to the corresponding new
 choice. It compares actual combinations against the acquired
 baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
-search is bounded and does not guarantee a global optimum. Recommendations never
+HP-adaptive trajectory recalculates spurt decisions after actual heals and slows
+after depletion. Default128 samples include wisdom and skill lotteries. Collapsed
+`발동 조건과 표본` details qualify conditional opponent assumptions and approximations.
+The search is bounded and does not guarantee a global optimum. Recommendations never
 change the checklist. Inputs persist per plan; edited inputs/checks invalidate
 recommendations, and changed race/deck settings require a fresh first chart.
 Both stages support independent cancellation and JSON export. Final results separate additional purchases, awakening evolution, scenario evolution (up to two) and the complete active skill list. All are evaluated jointly against the same remaining SP; evolution itself adds no SP.

@@ -9,7 +9,7 @@ const stats={speed:1500,stamina:1600,power:1500,guts:1200,wisdom:1200};
 const input={stats,spBudget:200,aptitudes:{distance:'A',surface:'A',style:'A'}};
 const quick={searchSamples:1,searchDt:.05,samples:2,dt:.02};
 function skill(id,value,rarity='white',kind='target_speed'){
- return {id,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
+ return {id,activation_raw:0,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
 }
 function fixture(){
  const list=[skill('native',1000,'unique'),skill('white',2000),skill('gold',4500,'gold'),skill('a',5500,'evolution'),skill('b',6500,'evolution'),skill('other',3000),skill('unavailable',20000),skill('unknown',20000)];

@@ -79,7 +79,10 @@ reruns calculations, changes source order or discards acquisition states. Tabs
 have arrow/Home/End keyboard navigation and counts; tab/search changes retain all
 matching rows without a display batch. Source icons determine mixed-effect categories.
 Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
-purchased and Lv0–5 states across every view. A seventh attempt restores the
+purchased and Lv0–5 states across every view and full inheritance options. The
+native `전체 계승 후보 보기` checkbox exposes all inherited rows; recorded outside
+Top10 rows remain visible after it closes. It does not rerun or discard records.
+A seventh attempt restores the
 previous select value and reports the six-slot limit in the live draft status.
 
 Post-training inputs remain hidden and disabled until a complete first chart exists. The
@@ -96,6 +99,14 @@ precedence. The legacy boolean remains derived for compatibility in saved inputs
 and exports, so it never stacks with Studious. Selection persists per plan and
 cancels stale work on change. UI restoration tolerates malformed legacy drafts;
 calculation input rejects unknown choices.
+
+Native optional gate/popularity selects appear in collapsed race-context details
+in both stages. Missing values visibly say uniform assumption. Changed values
+invalidate the corresponding calculation; they do not create a new acquisition
+history scope. Stage2 restores its own values, falling back to the chart context.
+Collapsed `발동 조건과 표본` details disclose self/probability sampling, opponent
+assumptions and full-spurt approximation. Result HP text gives sampled success
+count/total. No per-row warning badges or expanded policy prose are added.
 
 `cm-final-plan.mjs` owns stage pricing and combination recommendation; the shared
 discount function remains in `purchases.mjs`. `cm-final-ui.mjs` owns the second

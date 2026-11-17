@@ -1,10 +1,12 @@
 import {phaseAt,STAT_KEYS,uniqueLevel,uniqueMultiplier} from './physics.mjs';
 import {evaluateCondition} from './candidates.mjs';
+import {activationProbability,externalConditionValue} from './race-sampling.mjs';
 import {cmRanks} from './cm-ranks.mjs';
 import {supportedScale,supportedDuration} from './cm-effect-policy.mjs';
 const compare=(a,op,b)=>({'==':a===b,'!=':a!==b,'>':a>b,'>=':a>=b,'<':a<b,'<=':a<=b})[op]??false;
-const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','popularity','post_number','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
-const DYNAMIC=new Set(['accumulatetime','hp_per','is_lastspurt','lastspurt','run_at_full_speed_random','is_activate_other_skill_detail','is_used_skill_id','is_used_skill_id_with_detail_one','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
+const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
+const START_PREDICATES=new Set(['is_exist_skill_id','succession_skill_count','random_lot','random_lot_shared','post_number','popularity','is_badstart','is_goodstart']);
+const DYNAMIC=new Set(['succession_skill_count','random_lot','random_lot_shared','post_number','popularity','accumulatetime','hp_per','is_lastspurt','lastspurt','run_at_full_speed_random','is_activate_other_skill_detail','is_used_skill_id','is_used_skill_id_with_detail_one','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
 const SPATIAL=new Set(['phase','phase_random','phase_firsthalf','phase_firsthalf_random','phase_laterhalf','phase_laterhalf_random','phase_firstquarter','phase_firstquarter_random','phase_corner_random','phase_straight_random','phase_latter_half_straight_random','phase_first_half_straight_random','distance_rate','remain_distance','distance_rate_after_random','corner','corner_random','all_corner_random','is_finalcorner','is_finalcorner_laterhalf','is_finalcorner_random','is_last_straight','is_last_straight_onetime','last_straight_random','straight_random','straight_front_type','slope','up_slope_random','up_slope_random_later_half','down_slope_random','down_slope_random_later_half']);
 const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate']);
 const phaseBounds=(d,p)=>[[0,d/6],[d/6,2*d/3],[2*d/3,5*d/6],[5*d/6,d]][p];
@@ -67,10 +69,12 @@ const feasibleOrder=group=>cmRanks(group).length>0;
 function compileCondition(dnf,setup){
  if(dnf===null)return {unsupported:['조건 구문'],branches:[]};
  const fixed=fixedContext(setup),points=boundaries(setup.course,dnf),branches=[],unsupported=[];
+ const recordedExternal=a=>Object.hasOwn(setup.raceContext?.conditions||{},a.field)&&!(a.field in fixed)&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field);
  for(const group of dnf.length?dnf:[[]]){
   if(evaluateCondition([group],fixed)===false||!feasibleOrder(group))continue;
-  const unknown=group.filter(a=>!(a.field in fixed)&&a.field!=='furlong'&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field));
+  const unknown=group.filter(a=>!(a.field in fixed)&&a.field!=='furlong'&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field)&&!recordedExternal(a));
   if(unknown.length){unsupported.push(...unknown.map(a=>a.field));continue;}
+  if(group.some(a=>['random_lot','random_lot_shared'].includes(a.field)&&(a.operator!=='=='||a.value<0||a.value>100))){unsupported.push('확률 조건 구문');continue;}
   const spatial=group.filter(a=>SPATIAL.has(a.field)||a.field==='furlong'),windows=[];
   for(let k=0;k<points.length-1;k++){
    const lo=points[k],hi=points[k+1],x=(lo+hi)/2,state=courseState(setup.course,x);
@@ -80,8 +84,8 @@ function compileCondition(dnf,setup){
   }
   if(!windows.length)continue;
   const randomKey=spatial.filter(a=>a.field.includes('random')).map(a=>`${a.field}:${a.operator}:${a.value}`).sort().join('|');
-  branches.push({windows,randomKey,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),assumed:group.filter(a=>OPPONENT.has(a.field)).map(a=>a.field),
-   random:group.some(a=>a.field.includes('random')&&a.field!=='run_at_full_speed_random')||group.some(a=>OPPONENT.has(a.field)&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
+  branches.push({windows,randomKey,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),external:group.filter(a=>OPPONENT.has(a.field)||recordedExternal(a)),assumed:group.filter(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined||a.field==='post_number'&&setup.raceContext?.postNumber==null||a.field==='popularity'&&setup.raceContext?.popularity==null).map(a=>a.field),
+   random:spatial.some(a=>a.field.includes('random')&&a.field!=='run_at_full_speed_random')||group.some(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
  }
  return {branches,unsupported};
 }
@@ -110,7 +114,7 @@ export function compileSkill(skill,setup){
   else if(inv.duration_unit==='umasim_seconds_at_base_distance')duration=inv.duration_raw<0?Infinity:inv.duration_raw*setup.course.distance/1000;
   else reasons.push('지속시간 단위');
   const passive=effects.some(e=>e.kind.startsWith('passive_')||['oonige','temptation_rate'].includes(e.kind))&&effects.every(e=>e.kind.startsWith('passive_')||['oonige','temptation_rate','start_multiplier','start_offset'].includes(e.kind));
-  if(effects.some(e=>e.kind.startsWith('passive_'))&&(!passive||condition.branches.some(b=>b.dynamic.length||b.random||b.windows[0]?.[0]!==0)))reasons.push('주행 중 능력치 변경');
+  if(effects.some(e=>e.kind.startsWith('passive_'))&&(!passive||condition.branches.some(b=>b.dynamic.some(a=>!START_PREDICATES.has(a.field))||b.random||b.windows[0]?.[0]!==0)))reasons.push('주행 중 능력치 변경');
   invocations.push({index:inv.index,condition:condition.branches,precondition:precondition.branches,effects,duration,passive,durationScale:skill.cmSelfEffects?inv.time_scale_raw||0:0,evolution:skill.rarity==='evolution',
    linked:(inv.condition||[]).flat().some(a=>['is_activate_other_skill_detail','is_used_skill_id'].includes(a.field))});
  }
@@ -125,7 +129,7 @@ export function compileSkill(skill,setup){
  }
  for(let i=invocations.length-1;i>=0;i--)if(!reachable.has(invocations[i]))invocations.splice(i,1);
  const assumed=[...new Set(invocations.flatMap(i=>[...i.condition,...i.precondition].flatMap(b=>b.assumed)))];
- return {id:skill.id,skill,invocations,reasons:[...new Set(reasons)],assumed,
+ return {id:skill.id,skill,activationProbability:activationProbability(skill,setup),invocations,reasons:[...new Set(reasons)],assumed,
   status:reasons.length?'unsupported':invocations.length?assumed.length?'assumed':'supported':'inactive'};
 }
 export function sampleBranches(branches,q,pre=false){
@@ -138,13 +142,18 @@ export function sampleBranches(branches,q,pre=false){
 }
 export function branchReady(branch,state,skillId){
  if(state.x+1e-6<branch.at||!branch.windows.some(([lo,hi])=>state.x+1e-6>=lo&&(state.prevX??state.x)<hi))return false;
+ if(!(branch.external||[]).every(a=>{const value=externalConditionValue(a,state);return value===undefined||compare(value,a.operator,a.field==='order_rate'?Math.round(9*a.value/100):a.value);}))return false;
  return branch.dynamic.every(a=>{
   let value;
   switch(a.field){
    case 'accumulatetime':value=state.t;break;
-   case 'hp_per':value=100*state.hp/state.hpMax;break;
-   case 'is_lastspurt':value=Number(state.phase>=2);break;
-   case 'lastspurt':value=state.phase>=2?2:3;break;
+   case 'hp_per':value=Math.floor(100*state.hp/state.hpMax);break;
+   case 'succession_skill_count':value=state.inheritedCount??0;break;
+   case 'post_number':if(state.postNumber===undefined)return true;value=state.postNumber;break;
+   case 'popularity':if(state.popularity===undefined)return true;value=state.popularity;break;
+   case 'random_lot':case 'random_lot_shared':return a.operator==='=='&&(a.field==='random_lot_shared'?(branch.sharedLotQ??.5):(branch.lotQ??.5))<a.value/100;
+   case 'is_lastspurt':value=Number(state.lastSpurtActive??state.phase>=2);break;
+   case 'lastspurt':value=(state.maximumSpurt??state.phase>=2)?2:3;break;
    case 'run_at_full_speed_random':value=Number(state.fullSpurtStart!==null&&state.fullSpurtStart!==undefined&&state.x>=state.fullSpurtStart+(state.distance-state.fullSpurtStart)*(branch.fullSpurtQ??.5));break;
    case 'is_activate_other_skill_detail':value=(state.usedInvocations?state.usedInvocations.has(`${skillId}:${a.value}`):state.used.has(skillId))?a.value:0;break;
    case 'is_used_skill_id':value=state.used.has(String(a.value))?a.value:0;break;
@@ -157,8 +166,9 @@ export function branchReady(branch,state,skillId){
    case 'activate_count_later_half':value=state.laterCount;break;
    case 'activate_count_heal':value=state.healCount;break;
    case 'activate_count_param_skill':value=state.passiveCount;break;
-   case 'is_badstart':value=1;break;
-   case 'is_goodstart':case 'temptation_count':case 'is_temptation':value=0;break;
+   case 'is_badstart':value=Number((state.startDelay??.1)>=.08);break;
+   case 'is_goodstart':value=Number((state.startDelay??.1)<=.05);break;
+   case 'temptation_count':case 'is_temptation':value=externalConditionValue(a,state)??0;break;
   }
   return compare(value,a.operator,a.value);
  });

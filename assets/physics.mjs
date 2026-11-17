@@ -50,7 +50,7 @@ export function buildPhysics(setup,passive={}){
  const rawPower=stats.power+(passive.power||0),rawStamina=stats.stamina+(passive.stamina||0);
  const legAccel=rawPower>1200?Math.sqrt((rawPower-1200)*130)*.001*LEG_STYLE[course.distance_type-1][style-1]:0;
  const staminaDistance=course.distance<=2100?0:course.distance<=2200?.5:course.distance<=2400?1:course.distance<=2600?1.5:1.8;
- return {modified,bs,spurt,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
+ return {modified,bs,spurt,lateCruise:bs*speedCoefficients[2]+lateAdd+Math.pow(450*modified.guts,.597)*.0001,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
   hpMax:course.distance+.8*modified.stamina*(oonige?.86:HP_STYLE[style-1]),
   legAccel,legDuration:3*LEG_TIME[course.distance_type-1],
   staminaSpeed:rawStamina>1200?Math.sqrt(rawStamina-1200)*.0085*staminaDistance:0,

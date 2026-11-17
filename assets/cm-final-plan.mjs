@@ -1,6 +1,9 @@
+import {dependencyPacks} from './skill-dependencies.mjs';
+import {RaceEvaluator} from './race-evaluation.mjs';
+import {normalizeRaceContext,samplingPolicy} from './race-sampling.mjs';
 import {compileChartSkill,branchSampler,CM_DT,CM_SAMPLES} from './cm-chart.mjs';
-import {STAT_KEYS,validateSetup,lengthsBetween} from './physics.mjs';
-import {simulateSolo} from './solo.mjs';
+import {STAT_KEYS,validateSetup} from './physics.mjs';
+import {SPURT_POLICY} from './spurt-planning.mjs';
 import {discountedCost,nativeUnique} from './purchases.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
@@ -8,7 +11,7 @@ import {buildAcquisitionHierarchy,relatedAcquisitionIds} from './cm-state.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 import {evolutionOptions,evolutionGroups,finalAcquisitionSnapshot} from './cm-evolution.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v5';
+export const FINAL_MODEL_VERSION='cm-post-training-v6';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -16,7 +19,7 @@ const pause=()=>new Promise(resolve=>setTimeout(resolve,0));
 
 export function createFinalSetup(chart,input){
  if(!chart?.setup||!Array.isArray(chart.rows)||!Array.isArray(chart.nativeIds))throw new Error('먼저 1차 마신표를 완성해 주세요.');
- const setup={...chart.setup,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes}};
+ const setup={...chart.setup,spurtPolicy:SPURT_POLICY,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes},raceContext:normalizeRaceContext(input.raceContext??chart.setup.raceContext)};
  for(const key of STAT_KEYS)if(!Number.isInteger(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('실제 능력치는 1~3000 사이의 정수로 입력하세요.');
  if(!Number.isSafeInteger(input.spBudget)||input.spBudget<0||input.spBudget>100000)throw new Error('보유 SP는 0~100000 사이의 정수로 입력하세요.');
  const discountTrait=resolveDiscountTrait(input);
@@ -65,9 +68,9 @@ export class RecordedPurchaseModel{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,searchSamples=2,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,searchSamples=8,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT}={}){
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
- const options=evolutionOptions(data,chart),planningRows=[...new Map([...chart.rows,...options].map(row=>[row.id,row])).values()];
+ const options=evolutionOptions(data,chart),planningRows=[...new Map([...chart.rows,...(chart.inheritanceOptions||[]),...options].map(row=>[row.id,row])).values()];
  const states=finalAcquisitionSnapshot(data,chart,acquisition);
  for(const row of options){
   if(states[row.id]==='owned')continue;
@@ -76,7 +79,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  }
  const records=new Map(planningRows.map(row=>[row.id,data.skills[row.id]]));
  if([...records.values()].some(skill=>!skill))throw new Error('체크리스트의 스킬 데이터를 확인할 수 없습니다. 1차 마신표를 다시 만들어 주세요.');
- if(chart.rows.filter(row=>row.inherited&&states[row.id]!=='unavailable').length>6)throw new Error('계승 스킬 확보는 최대 6개입니다. 체크리스트를 확인하세요.');
+ if(planningRows.filter(row=>row.inherited&&states[row.id]!=='unavailable').length>6)throw new Error('계승 스킬 확보는 최대 6개입니다. 체크리스트를 확인하세요.');
  for(const id of chart.nativeIds){if(!nativeUnique(data.skills[id]))throw new Error('본체 고유기 정보를 확인하세요.');records.set(id,data.skills[id]);}
  const rules=selectionRules(data,records),purchase=new RecordedPurchaseModel(data,planningRows,states,setup);
  const lower=new Map([...records.keys()].map(id=>[id,new Set(relatedAcquisitionIds(hierarchy,id))]));
@@ -89,32 +92,18 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const retained=ids=>required.every(id=>ids.includes(id)||ids.some(high=>lower.get(high)?.has(id)));
  const excluded=[];
  const candidates=planningRows.filter(row=>hint(states[row.id])!==null&&!owned.includes(row.id)).filter(row=>{
-  if(!supported(compiled.get(row.id))){excluded.push({id:row.id,reason:'현재 능력치·조건에서 계산할 수 없음'});return false;}
+  if(!supported(compiled.get(row.id))&&compiled.get(row.id).status!=='inactive'){excluded.push({id:row.id,reason:'현재 능력치·조건에서 계산할 수 없음'});return false;}
   if(!purchase.selection([row.id]).complete){excluded.push({id:row.id,reason:'구매 비용 확인 필요'});return false;}
   const ids=active([...required,row.id]);return retained(ids)&&legal(ids)&&!required.includes(row.id);
  });
- const runs=new Map();let evaluations=0;
- const simulate=(ids,sample,step)=>{
-  const key=idKey(ids)+'|'+sample+'|'+step;
-  if(!runs.has(key)){
-   const run=simulateSolo(setup,ids.map(id=>compiled.get(id)).filter(supported),.5,{dt:step,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(setup,chart.nativeIds,sample)});
-   runs.set(key,{finishTime:run.finishTime,hp:run.hpRemaining,feasible:run.fullSpeedFeasible,run});
-   // Keep only compact summaries after comparison; traces never accumulate.
-   while(runs.size>100)runs.delete(runs.keys().next().value);
-  }
-  return runs.get(key);
- };
+ const evaluator=new RaceEvaluator(setup,compiled,required,chart.nativeIds,branchSampler);let evaluations=0;
  const evaluate=(ids,count,step)=>{
   ids=active(ids);if(!retained(ids)||!legal(ids))return null;
   const priced=purchase.selection(ids);if(!priced.complete||priced.used>setup.spBudget)return null;
-  let gain=0,timeGain=0,hp=Infinity,feasible=true;
-  for(let sample=0;sample<count;sample++){
-   const before=simulate(required,sample,step),after=simulate(ids,sample,step);
-   gain+=lengthsBetween(after.run,before.run);timeGain+=before.finishTime-after.finishTime;hp=Math.min(hp,after.hp);feasible&&=after.feasible;
-  }
-  evaluations++;return {ids,cost:priced.used,gain:gain/count,timeGain:timeGain/count,hp,feasible};
+  const result=evaluator.evaluate(ids,count,step);evaluations++;
+  return {ids,cost:priced.used,...result};
  };
- const order=(a,b)=>Number(b.feasible)-Number(a.feasible)||(!a.feasible&&!b.feasible?b.hp-a.hp:0)||b.gain-a.gain||a.cost-b.cost||idKey(a.ids).localeCompare(idKey(b.ids));
+ const order=(a,b)=>Number(b.feasible)-Number(a.feasible)||(!a.feasible&&!b.feasible?b.hpSuccessRate-a.hpSuccessRate||a.hpShortfall-b.hpShortfall:0)||b.gain-a.gain||a.cost-b.cost||idKey(a.ids).localeCompare(idKey(b.ids));
  const evaluated=new Map();
  const quick=ids=>{const key=idKey(active(ids));if(!evaluated.has(key))evaluated.set(key,evaluate(ids,searchSamples,searchDt));return evaluated.get(key);};
  const baseline=quick(required),singles=[];
@@ -128,7 +117,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const byGain=[...singles].sort(gainOrder),byEfficiency=[...singles].sort((a,b)=>b.gain/Math.max(1,b.cost)-a.gain/Math.max(1,a.cost)||gainOrder(a,b));
  const heals=[...singles].filter(row=>row.hp>baseline.hp+.1).sort((a,b)=>(b.hp-baseline.hp)/Math.max(1,b.cost)-(a.hp-baseline.hp)/Math.max(1,a.cost)).slice(0,8);
  const limit=Math.max(maxCandidates,Math.ceil(setup.spBudget/35));
- const pool=[...new Set([...byGain.slice(0,Math.ceil(limit/2)),...byEfficiency.slice(0,Math.ceil(limit/2)),...heals,...singles.filter(row=>data.skills[row.id].rarity==='evolution')].map(row=>row.id))];
+ const pool=[...new Set([...byGain.slice(0,Math.ceil(limit/2)),...byEfficiency.slice(0,Math.ceil(limit/2)),...heals,...singles.filter(row=>data.skills[row.id].inherited),...singles.filter(row=>data.skills[row.id].rarity==='evolution')].map(row=>row.id))];
  const extend=(ids,id)=>[...ids.filter(other=>required.includes(other)||rules.compatible(id,other)||lower.get(id)?.has(other)),id];
  const scenarioIds=candidates.filter(row=>data.evolution_rules.some(r=>r.evolved_id===row.id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).map(row=>row.id);
  const scenarioPacks=[[],...scenarioIds.map(id=>[id])];
@@ -150,6 +139,11 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   // shortlist with many singletons must not exhaust the search budget before
   // it can form a realistically sized purchase plan.
   const seeds=[baseline];
+  for(const pack of dependencyPacks(compiled,candidates,required,purchase,setup.course.distance)){
+   if(cancelled())return null;
+   const value=quick(pack.reduce(extend,required));if(value)seeds.push(value);
+   if(evaluated.size%16===0)await pause();
+  }
   for(const ranking of [byEfficiency,byGain]){
    let seed=baseline;
    for(const row of ranking){
@@ -199,7 +193,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
  }
  // Actual combinations, rather than sums of individual chart gains, determine
- // the recommendation. Re-evaluate finalists with the chart's full 24/.01 policy.
+ // the recommendation. Re-evaluate finalists at the declared final resolution.
  const finalists=[...evaluated.values()].filter(Boolean).sort(order).slice(0,method==='exhaustive'?8:6),refined=[];
  if(!finalists.some(row=>idKey(row.ids)===idKey(required)))finalists.push(baseline);
  for(let i=0;i<finalists.length;i++){
@@ -213,10 +207,10 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  // merely because it fell outside the coarse shortlist. No global-optimum claim.
  for(let pass=0;pass<12;pass++){
   let next=best;
-  const variants=[...candidates.filter(row=>!best.ids.includes(row.id)).map(row=>extend(best.ids,row.id)),...scenarioPacks.map(pack=>replaceScenario(best.ids,pack))];
+  const variants=[...best.ids.filter(id=>!required.includes(id)).map(id=>best.ids.filter(other=>other!==id)),...candidates.filter(row=>!best.ids.includes(row.id)).map(row=>extend(best.ids,row.id)),...scenarioPacks.map(pack=>replaceScenario(best.ids,pack))];
   for(let i=0;i<variants.length;i++){
    if(cancelled())return null;
-   const value=precise(variants[i]);if(value&&order(value,next)<0&&(!value.feasible||value.gain>next.gain+1e-7||!next.feasible))next=value;
+   const value=precise(variants[i]);if(value&&order(value,next)<0)next=value;
    if(i%8===7){onProgress({stage:'closure',completed:i+1,total:variants.length});await pause();}
   }
   if(idKey(next.ids)===idKey(best.ids)){closureComplete=true;break;}best=next;
@@ -232,6 +226,6 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const finalSkills=best.ids.map(id=>{const row=planningRows.find(row=>row.id===id)||{...data.skills[id],name:data.skills[id].name_jp,description:data.skills[id].description_jp};return {...row,origin:chart.nativeIds.includes(id)?'native':owned.includes(id)?'owned':data.skills[id].rarity==='evolution'?'evolution':'purchase'};});
  const scenarioEvolutionCount=best.ids.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length;
  return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,activeIds:best.ids,purchases,evolutions:groups,scenarioEvolutionCount,finalSkills,
-  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,
+  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
   candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureChecks,globalOptimal:false,searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }

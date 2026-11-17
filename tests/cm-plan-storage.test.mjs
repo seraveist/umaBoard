@@ -5,6 +5,14 @@ import {checklistPlanKey,restoreChecklistPlan,trimChecklistPlans} from '../asset
 const input={outfitId:'uma',scenarioId:'14',supportIds:['b','a'],style:2};
 const manifest={active_version:'current',checklist_data_sha256:'new',checklist_compatible_versions:['old']};
 
+test('known race probabilities and sampling changes preserve acquisition history while using the new calculation inputs',()=>{
+ const key=checklistPlanKey(input,'new'),record={states:{inherit:'owned',gold:'3'},postTraining:{values:{spBudget:300}}};
+ const changed={...input,raceContext:{postNumber:7,popularity:4},samplingSeed:11};
+ assert.equal(checklistPlanKey(changed,'new'),key);
+ assert.deepEqual(restoreChecklistPlan({[key]:record},changed,manifest).plan,record);
+ assert.equal(changed.raceContext.postNumber,7);
+});
+
 test('the newest compatible saved record wins across multiple old data versions',()=>{
  const a=checklistPlanKey(input,'a'),b=checklistPlanKey(input,'b');
  const plans={[a]:{savedAt:'2026-11-16T00:00:00Z',value:1},[b]:{savedAt:'2026-11-17T00:00:00Z',value:2}};

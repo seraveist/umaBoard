@@ -176,6 +176,12 @@ sampling, not a claim of complete accessibility certification.
 
 ## Do's and Don'ts
 
+Optional gate/popularity controls reuse native selects inside existing details.
+The full-inheritance view uses one compact native checkbox beside the shared
+six-slot count. Model qualifications stay in collapsed `발동 조건과 표본` details;
+sample HP count/total remains ordinary numeric result text. These additions use
+the existing spacing, focus, border and muted-text tokens.
+
 - Do keep the acquisition checklist in source order while users work.
 - Do preserve inputs, scroll and focus during asynchronous progress.
 - Do use actual portraits/icons and actual course coordinates.

@@ -196,3 +196,5 @@ dialog{padding:0;border:0;border-radius:var(--radius);background:var(--surface);
 .evolution-option { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 12px; line-height: 1.6; }
 .evolution-option input { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; }
 @media (max-width: 600px) { .final-evolution-grid, .final-active-list { grid-template-columns: 1fr; gap: 0; } }
+
+.inheritance-note label{display:inline-flex;align-items:center;gap:6px;margin-inline-start:16px;cursor:pointer}.inheritance-note input{width:16px;height:16px;min-height:16px;accent-color:var(--primary)}

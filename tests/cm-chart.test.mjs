@@ -17,7 +17,7 @@ const manifest=read('data/manifest.json'),actual=read(manifest.dataset_path),act
 const input={outfitId:'1',style:2,courseId:'c',scenarioId:'15',supportIds:[],bloom:5,uniqueLevel:6};
 const profiles={profiles:{'15':{id:'15',stats:{speed:1800,stamina:1800,power:1800,guts:1600,wisdom:1800}}}};
 function skill(id,condition,effect='target_speed',value=1500,rarity='white'){
- return {id,name_jp:id,description_jp:id,rarity,inherited:false,jp_available:true,parent_ids:[],categories:[effect==='heal'?'heal':effect==='acceleration'?'acceleration':'speed'],
+ return {id,activation_raw:0,name_jp:id,description_jp:id,rarity,inherited:false,jp_available:true,parent_ids:[],categories:[effect==='heal'?'heal':effect==='acceleration'?'acceleration':'speed'],
  invocations:[{index:1,condition,precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,time_scale_raw:null,effects:[{kind:effect,source_type:effect==='heal'?9:effect==='acceleration'?31:27,value_raw:value,unit:'umatools_raw',extras_raw:{}}]}]};
 }
 function fixture(){
@@ -85,10 +85,10 @@ test('the chart uses an arithmetic mean, remains SP independent, and retains a z
  assert.deepEqual(a.rows,b.rows);assert.equal(a.rows.length,2);
 });
 
-test('start/count predicates are fulfilled only in chart compilation; spatial impossibility remains excluded',()=>{
+test('start predicates remain executable in chart compilation and spatial impossibility stays excluded',()=>{
  const d=fixture(),setup=createChartSetup(d,profiles,input),s=skill('start',[[{field:'is_badstart',operator:'==',value:0},{field:'phase',operator:'==',value:1}]],'heal',550);
  const ordinary=simulateSolo(setup,[compileSkill(s,setup)]),chart=simulateSolo(setup,[compileChartSkill(s,setup)]);
- assert.equal(ordinary.events.length,0);assert.equal(chart.events.length,1);assert.ok(chart.hpRemaining>ordinary.hpRemaining);
+ assert.equal(ordinary.events.length,0);assert.equal(chart.events.length,0);assert.equal(chart.hpRemaining,ordinary.hpRemaining);
  const corner=skill('corner',[[{field:'is_finalcorner',operator:'==',value:1}]]);
  assert.equal(compileChartSkill(corner,setup).status,'inactive');
 });
@@ -193,12 +193,12 @@ test('final-corner latter-half includes the final straight, furlong stays spatia
  assert.equal(compileChartSkill(orphan,setup).status,'inactive');
 });
 
-test('strengthened inheritance replaces normal, respects real style gates and excludes pure healing inherits',()=>{
+test('strengthened inheritance replaces normal, respects real style gates while retaining inactive and healing inherits for actual possession',()=>{
  for(const style of [2,3]){
   const t=prepareChart(actual,actualProfiles,display,{outfitId:'101301',scenarioId:'15',style,courseId:'10808',supportIds:[]},{samples:1,dt:.05});
   const strong=style===2?'91101411':'91101351',wrong=style===2?'91101351':'91101411';
-  assert.ok(t.rows.some(r=>r.id===strong));assert.ok(!t.rows.some(r=>['901351','901411',wrong].includes(r.id)));
-  assert.ok(t.rows.filter(r=>r.inherited).every(r=>r.categories.some(c=>['speed','acceleration'].includes(c))));
+  assert.ok(t.rows.some(r=>r.id===strong));assert.ok(!t.rows.some(r=>['901351','901411'].includes(r.id)));assert.equal(t.rows.find(r=>r.id===wrong)?.calculationState,'inactive');
+  assert.ok(t.rows.some(r=>r.inherited&&r.categories.includes('heal')));
  }
 });
 
