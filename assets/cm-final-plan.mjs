@@ -66,7 +66,7 @@ export class RecordedPurchaseModel{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,searchSamples=2,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,refinementLimit=256}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,searchSamples=2,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,refinementLimit=64}={}){
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  const options=evolutionOptions(data,chart),planningRows=[...new Map([...chart.rows,...options].map(row=>[row.id,row])).values()];
  const states=finalAcquisitionSnapshot(data,chart,acquisition);
@@ -223,10 +223,13 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   let next=best;
   const removable=best.ids.filter(id=>!required.includes(id));
   const variants=[...removable.map(id=>active([...required,...best.ids.filter(other=>other!==id)])),...candidates.filter(row=>!best.ids.includes(row.id)).map(row=>extend(best.ids,row.id)),...scenarioPacks.map(pack=>replaceScenario(best.ids,pack))];
+  const rankedVariants=[];
   for(let i=0;i<variants.length;i++){
-   if(cancelled())return null;
-   const value=precise(variants[i]);if(value&&order(value,next)<0)next=value;
-   if(i%8===7){onProgress({stage:'closure',completed:i+1,total:variants.length});await pause();}
+   if(cancelled())return null;const value=quick(variants[i]);if(value)rankedVariants.push(value);
+   if(i%32===31){onProgress({stage:'closure',completed:i+1,total:variants.length});await pause();}
+  }
+  for(const variant of rankedVariants.sort(order).slice(0,24)){
+   if(cancelled())return null;const value=precise(variant.ids);if(value&&order(value,next)<0)next=value;await pause();
   }
   if(idKey(next.ids)===idKey(best.ids)){
    const swaps=[];
@@ -242,7 +245,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
    }
    // Bounded coarse screening, followed by full-resolution comparison. This
    // is deliberately not a proof over all possible multi-skill exchanges.
-   for(const swap of rankedSwaps.sort(order).slice(0,32)){
+   for(const swap of rankedSwaps.sort(order).slice(0,8)){
     if(cancelled())return null;const value=precise(swap.ids);if(value&&order(value,next)<0)next=value;await pause();
    }
    if(idKey(next.ids)===idKey(best.ids)){closureComplete=!refinementLimited;break;}

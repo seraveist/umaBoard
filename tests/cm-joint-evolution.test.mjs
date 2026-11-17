@@ -19,7 +19,7 @@ test('rare-only chart keeps every hidden evolution and jointly spends the real 7
  const states=bulkAcquisition(chart.rows,{},'5'),actual={stats:profiles.profiles['15'].stats,spBudget:7000,discountTrait:'none',aptitudes:{distance:'A',surface:'A',style:'S'}};
  const plan=await recommendFinalPlan(data,chart,states,actual);
  assert.ok(plan.budget.used>=6800&&plan.budget.used<=7000,JSON.stringify(plan.budget));
- assert.ok(plan.gain>0);assert.notEqual(new EventConstraints(data,plan.setup).selection(plan.activeIds),null);assert.ok(plan.fullSpeedFeasible);assert.ok(plan.search.closureComplete||plan.search.refinementLimited);assert.ok(plan.search.refinementEvaluations<=256);
+ assert.ok(plan.gain>0);assert.notEqual(new EventConstraints(data,plan.setup).selection(plan.activeIds),null);assert.ok(plan.fullSpeedFeasible);assert.ok(plan.search.closureComplete||plan.search.refinementLimited);assert.ok(plan.search.refinementEvaluations<=64);
  assert.equal(plan.purchases.reduce((sum,row)=>sum+row.cost,0),plan.budget.used);
  assert.ok(plan.purchases.every(row=>row.rarity!=='evolution'));
  assert.equal(plan.evolutions.scenario.length,2);
