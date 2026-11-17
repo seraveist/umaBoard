@@ -1,5 +1,7 @@
 # umaBoard
 
+> 챔미 자료 대조에서 강화 계승2종의 미습득 가격 연결 누락을 확인했습니다. 가속 시점 검증과 실전 추천의 완전성은 구분해야 합니다. [대회 자료 기반 신뢰도 검증](docs/CM_EVENT_EVIDENCE_QA.md)을 확인하세요.
+
 > 2026-11-17: v6는 실제 자기 발동 조건·지능/추첨 확률·HP 기반 스퍼트와 보조 스킬 조합을 함께 계산합니다. [수정 내역·동일 조건 재검증](docs/CM_ACTIVATION_PROBABILITY_QA.md)을 참조하세요.
 
 **현재까지의 변경·검증·후속 작업:** [CM 개발 현황과 다음 단계](docs/CM_PROGRESS_AND_NEXT_STEPS.md)
