@@ -3,7 +3,7 @@ import {evaluateCondition} from './candidates.mjs';
 import {activationProbability,externalConditionValue} from './race-sampling.mjs';
 import {cmRanks} from './cm-ranks.mjs';
 import {supportedScale,supportedDuration} from './cm-effect-policy.mjs';
-const compare=(a,op,b)=>({'==':a===b,'!=':a!==b,'>':a>b,'>=':a>=b,'<':a<b,'<=':a<=b})[op]??false;
+const compare=(a,op,b)=>op==='=='?a===b:op==='!='?a!==b:op==='>'?a>b:op==='>='?a>=b:op==='<'?a<b:op==='<='?a<=b:false;
 const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
 const START_PREDICATES=new Set(['is_exist_skill_id','succession_skill_count','random_lot','random_lot_shared','post_number','popularity','is_badstart','is_goodstart']);
 const DYNAMIC=new Set(['succession_skill_count','random_lot','random_lot_shared','post_number','popularity','accumulatetime','hp_per','is_lastspurt','lastspurt','run_at_full_speed_random','is_activate_other_skill_detail','is_used_skill_id','is_used_skill_id_with_detail_one','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
@@ -69,7 +69,7 @@ const feasibleOrder=group=>cmRanks(group).length>0;
 function compileCondition(dnf,setup){
  if(dnf===null)return {unsupported:['조건 구문'],branches:[]};
  const fixed=fixedContext(setup),points=boundaries(setup.course,dnf),branches=[],unsupported=[];
- const recordedExternal=a=>Object.hasOwn(setup.raceContext?.conditions||{},a.field)&&!(a.field in fixed)&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field);
+ const recordedExternal=a=>(Object.hasOwn(setup.raceContext?.conditions||{},a.field)||Object.hasOwn(setup.externalDomains||{},a.field))&&!(a.field in fixed)&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field);
  for(const group of dnf.length?dnf:[[]]){
   if(evaluateCondition([group],fixed)===false||!feasibleOrder(group))continue;
   const unknown=group.filter(a=>!(a.field in fixed)&&a.field!=='furlong'&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field)&&!recordedExternal(a));
@@ -85,7 +85,7 @@ function compileCondition(dnf,setup){
   if(!windows.length)continue;
   const randomKey=spatial.filter(a=>a.field.includes('random')).map(a=>`${a.field}:${a.operator}:${a.value}`).sort().join('|');
   branches.push({windows,randomKey,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),external:group.filter(a=>OPPONENT.has(a.field)||recordedExternal(a)),assumed:group.filter(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined||a.field==='post_number'&&setup.raceContext?.postNumber==null||a.field==='popularity'&&setup.raceContext?.popularity==null).map(a=>a.field),
-   random:spatial.some(a=>a.field.includes('random')&&a.field!=='run_at_full_speed_random')||group.some(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
+   random:spatial.some(a=>a.field.includes('random')&&a.field!=='run_at_full_speed_random')||group.some(a=>OPPONENT.has(a.field)&&!Object.hasOwn(setup.externalDomains||{},a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
  }
  return {branches,unsupported};
 }

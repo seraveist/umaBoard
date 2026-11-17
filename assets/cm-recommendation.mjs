@@ -1,8 +1,9 @@
 import {phaseAt} from './physics.mjs';
+import {INHERITED_EVOLUTIONS} from './skill-transforms.mjs';
 
 export const INHERITED_LIMIT=6;
 export const INHERITED_TOP=10;
-export const INHERITED_UPGRADES=Object.freeze({'901351':'91101351','901411':'91101411'});
+export const INHERITED_UPGRADES=Object.freeze(Object.fromEntries(INHERITED_EVOLUTIONS.map(r=>[r.base_id,r.evolved_id])));
 const originals=Object.fromEntries(Object.entries(INHERITED_UPGRADES).map(([a,b])=>[b,a]));
 export const inheritedOrigin=id=>originals[id]||id;
 // Recommendation policy, not game eligibility or a measured activation rate.
@@ -37,5 +38,5 @@ export function inheritedPerformanceSkill(compiled){
 export function selectInheritedTop(rows){
  const seen=new Set();
  return rows.filter(row=>row.inherited&&row.recommendation?.eligible&&Number.isFinite(row.gain)&&row.gain>=.005)
-  .sort((a,b)=>b.gain-a.gain||a.id.localeCompare(b.id)).filter(row=>{const key=inheritedOrigin(row.id);if(seen.has(key))return false;seen.add(key);return true;}).slice(0,INHERITED_TOP);
+  .sort((a,b)=>(b.robustGain??b.gain)-(a.robustGain??a.gain)||b.gain-a.gain||a.id.localeCompare(b.id)).filter(row=>{const key=row.inheritanceOriginId??inheritedOrigin(row.id);if(seen.has(key))return false;seen.add(key);return true;}).slice(0,INHERITED_TOP);
 }

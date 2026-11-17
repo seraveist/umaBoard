@@ -7,11 +7,14 @@ import {INHERITED_UPGRADES,styleRecommendation,selectInheritedTop} from './cm-re
 import {skillIconId} from './cm-icons.mjs';
 import {SPURT_POLICY} from './spurt-planning.mjs';
 import {RaceEvaluator} from './race-evaluation.mjs';
-import {sampleUnit,samplingPolicy,normalizeRaceContext} from './race-sampling.mjs';
+import {sampleUnit,samplingPolicy,normalizeRaceContext,scheduleContextBranches} from './race-sampling.mjs';
 import {selfEffectSkill} from './cm-effect-policy.mjs';
+import {ENCOUNTER_POLICY,contextDomains} from './race-scenarios.mjs';
+import {inheritanceOrigins} from './skill-transforms.mjs';
+import {buildAcquisitionHierarchy} from './cm-state.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v6';
-export const CM_SAMPLES=128;
+export const CM_MODEL_VERSION='cm-first-chart-v7';
+export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
 const supported=skill=>['supported','assumed'].includes(skill?.status);
@@ -36,7 +39,7 @@ export function createChartSetup(data,catalog,input){
  if(!Number.isInteger(bloom)||bloom<outfit.base_stars||bloom>5||!Number.isInteger(level)||level<1||level>6)throw new Error('보유 육성마의 개화와 고유기 레벨을 확인하세요.');
  const setup={outfitId:outfit.id,bloom,uniqueLevel:level,style:Number(input.style),scenarioId:profile.id,supportIds:supports,
   course:withCourseMetadata(data.courses[String(input.courseId)]),going:Number(input.going??1),weather:Number(input.weather??1),season:Number(input.season??3),time:Number(input.time??2),
-  raceContext:normalizeRaceContext(input.raceContext),samplingSeed:input.samplingSeed??0,spurtPolicy:SPURT_POLICY,mood:2,stats:{...profile.stats},aptitudes:{distance:'A',surface:'A',style:'A'},chartPolicy:CM_MODEL_VERSION};
+  raceContext:normalizeRaceContext(input.raceContext),samplingSeed:input.samplingSeed??0,spurtPolicy:SPURT_POLICY,encounterPolicy:ENCOUNTER_POLICY,externalDomains:contextDomains(data),mood:2,stats:{...profile.stats},aptitudes:{distance:'A',surface:'A',style:'A'},chartPolicy:CM_MODEL_VERSION};
  validateSetup(setup);
  if(![1,2,3,4].includes(setup.weather)||![1,2,3,4].includes(setup.season)||![1,2,3].includes(setup.time))throw new Error('CM의 날씨·계절·시간을 확인하세요.');
  return setup;
@@ -47,7 +50,7 @@ export function compileChartSkill(skill,setup){
  const omitted=new Set();
  // Only unobserved opponent/temptation state is conditional. Endogenous
  // counters, ownership, HP, start and lottery predicates stay executable.
- const assume=dnf=>dnf===null?null:dnf.map(group=>group.filter(a=>{if(ASSUME.has(a.field)&&!Object.hasOwn(setup.raceContext?.conditions||{},a.field)){omitted.add(a.field);return false;}return true;}));
+ const assume=dnf=>dnf===null?null:dnf.map(group=>group.filter(a=>{if(ASSUME.has(a.field)&&!Object.hasOwn(setup.raceContext?.conditions||{},a.field)&&!Object.hasOwn(setup.externalDomains||{},a.field)){omitted.add(a.field);return false;}return true;}));
  const policies=new Map();
  const adjusted={...skill,invocations:skill.invocations.map(inv=>{
   const atoms=(inv.condition||[]).flat();
@@ -60,7 +63,7 @@ export function compileChartSkill(skill,setup){
  const compiled=compileSkill(adjusted,setup);
  compiled.probabilistic=true;
  compiled.assumed=[...new Set([...compiled.assumed,...omitted])];
- compiled.calculationNotes=[...skill.calculationNotes,...(compiled.assumed.length?['미입력 상대·걸림 조건 충족 가정']:[])];
+ compiled.calculationNotes=[...skill.calculationNotes,...(compiled.assumed.length?[setup.encounterPolicy?'상대 조건은 공통 전개별 비교':'미입력 상대·걸림 조건 충족 가정']:[])];
  compiled.stochastic=compiled.activationProbability<1||compiled.invocations.some(i=>i.effects.some(e=>[8,9].includes(e.scale)||['invoke_rare','invoke_unique'].includes(e.kind))||[...i.condition,...i.precondition].some(b=>b.dynamic.some(a=>['run_at_full_speed_random','random_lot','random_lot_shared','post_number','popularity','is_goodstart','is_badstart'].includes(a.field))));
  if(adjusted.invocations.length){
   const first=adjusted.invocations[0],forced=compileSkill({...adjusted,invocations:[{...first,condition:[],precondition:[],cooldown_raw:null}]},setup);
@@ -98,11 +101,11 @@ export function buildChartCandidates(data,setup){
  // A comparison/checklist retains the gold AND every evolution alternative.
  // Purchase mutual exclusion belongs to the later training-result optimizer.
  for(const rule of data.evolution_rules)if(records.has(rule.evolved_id))add(rule.base_id,{kind:'evolution_base',owner_type:rule.owner_type,owner_id:rule.owner_id},true);
- // These verified inherited evolutions replace their weaker version, always.
+ // Keep both the paid original and its conditional strengthened effect. Only
+ // the default Top10 deduplicates origins; actual acquisition can record either.
  for(const [base,strong] of Object.entries(INHERITED_UPGRADES)){
   const original=records.get(base),upgraded=records.get(strong);
   if(original&&!upgraded){add(strong,original.routes?.[0]);if(records.has(strong))records.set(strong,{...records.get(strong),inheritance_outfit_ids:original.inheritance_outfit_ids});}
-  if(records.has(strong))records.delete(base);
  }
  for(const skill of [...records.values()]){
   let stage=data.purchase_stages?.[skill.id];const seen=new Set();
@@ -146,7 +149,7 @@ export function branchSampler(setup,nativeIds,sample){
  const value=(id,index,dimension)=>sampleUnit(sample,`${id}|${index}|${dimension}`,setup.samplingSeed??0);
  const sampler=(branches,id,inv,pre)=>{
   const decorate=(branch,index)=>({...branch,lotQ:value(id,`lot:${inv.index}:${pre?'pre':'condition'}`,index),sharedLotQ:value(id,'lot-shared',0),fullSpurtQ:value(id,'full-spurt',0),choiceQ:value(id,'effect-value',inv.index)});
-  if(pre)return branches.map((branch,index)=>decorate(sampleBranches([branch],value(id,branch.randomKey||`pre:${inv.index}`,branch.randomKey?0:index),!branch.random)[0],index));
+  if(pre)return scheduleContextBranches(branches.map((branch,index)=>decorate(sampleBranches([branch],value(id,branch.randomKey||`pre:${inv.index}`,branch.randomKey?0:index),!branch.random)[0],index)),setup);
   if(inv.chartRandomPolicy){
    const areas=inv.chartRandomPolicy==='corners'?setup.course.corners.map(c=>[c.start,c.start+c.length]):setup.course.straights.map(s=>[s.start,s.end]);
    const count=inv.chartRandomPolicy==='corners'?2:1,windows=[];
@@ -159,21 +162,21 @@ export function branchSampler(setup,nativeIds,sample){
      :Math.min(selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*(selected[1]-selected[0]),selected[1]-2);
     windows.push([start,Math.min(selected[1],start+10)]);
    }
-   return branches.flatMap(branch=>{
+   return scheduleContextBranches(branches.flatMap(branch=>{
     const clipped=windows.flatMap(([lo,hi])=>branch.windows.map(([a,b])=>[Math.max(lo,a),Math.min(hi,b)]).filter(([a,b])=>a<b)).sort((a,b)=>a[0]-b[0]);
     return clipped.length?[decorate({...branch,random:false,windows:clipped,at:clipped[0][0]},0)]:[];
-   });
+   }),setup);
   }
   // The source caches each random condition per skill, across its invocation
   // alternatives. A weaker fallback must not roll ahead of its stronger form.
-  return branches.map((branch,index)=>{
+  return scheduleContextBranches(branches.map((branch,index)=>{
    const sampled=sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0];
    if(inv.cooldownSeconds&&branch.randomKey){
     const area=branch.windows.find(([lo,hi])=>sampled.at>=lo&&sampled.at<hi);
     if(area){sampled.at=Math.max(area[0],Math.min(sampled.at,area[1]-2));sampled.windows=[[sampled.at,Math.min(area[1],sampled.at+10)]];}
    }
    return decorate(sampled,index);
-  });
+  }),setup);
  };
  sampler.unit=(id,channel)=>value(id,channel,0);
  sampler.policy=samplingPolicy(setup);
@@ -181,14 +184,15 @@ export function branchSampler(setup,nativeIds,sample){
 }
 
 export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=CM_DT}={}){
- if(!Number.isInteger(samples)||samples<1||samples>256||!(dt>0&&dt<=.1))throw new Error('계산 표본 설정이 올바르지 않습니다.');
+ if(!Number.isInteger(samples)||samples<1||samples>512||!(dt>0&&dt<=.1))throw new Error('계산 표본 설정이 올바르지 않습니다.');
  const setup=createChartSetup(data,profiles,input),records=buildChartCandidates(data,setup),compiled=new Map([...records].map(([id,s])=>[id,compileChartSkill(s,setup)]));
  const nativeRecords=[...records.values()].filter(native),nativeSkills=nativeRecords.map(s=>compiled.get(s.id));
  if(nativeSkills.some(s=>s.status==='unsupported'))throw new Error('이 육성마의 고유기는 아직 계산을 지원하지 않습니다. 다른 육성마를 선택하세요.');
  const nativeIds=nativeRecords.map(s=>s.id);
+ const hierarchy=buildAcquisitionHierarchy(data);setup.possessionGraph=Object.fromEntries([...hierarchy.lower].map(([id,low])=>[id,[...low]]));setup.inheritanceOrigins=inheritanceOrigins(data);
  const evolutionBases=new Set([...records.values()].filter(s=>s.rarity==='evolution').flatMap(s=>data.evolution_rules.filter(r=>r.evolved_id===s.id).map(r=>r.base_id)));
  const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&(supported(compiled.get(s.id))||s.inherited||s.rarity==='evolution'||evolutionBases.has(s.id))).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
-  rarity:s.rarity,inherited:s.inherited,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
+  rarity:s.rarity,inherited:s.inherited,inheritanceOriginId:setup.inheritanceOrigins[s.id]||null,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   calculationState:compiled.get(s.id).status,assumptions:compiled.get(s.id).assumed,activationProbability:compiled.get(s.id).activationProbability,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
  const evaluator=new RaceEvaluator(setup,compiled,nativeIds,nativeIds,branchSampler);
@@ -200,7 +204,7 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
    // race samples for every row instead of presuming a deterministic outcome.
    const count=samples;
    const stats=evaluator.evaluate([...nativeIds,row.id],count,dt);
-   return {...row,gain:stats.gain,timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
+   return {...row,gain:stats.gain,robustGain:stats.robustGain,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
   }};
 }
 
@@ -208,7 +212,7 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:{...task.setup,supportIds:undefined,scenarioId:undefined},samples:task.samples,dt:task.dt});
  const evaluate=row=>{
   const key=setupKey+'|'+row.id;
-  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate});}
+  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate});}
   return {...row,...cache.get(key)};
  };
  const inherited=task.rows.filter(row=>row.inherited),scored=[];

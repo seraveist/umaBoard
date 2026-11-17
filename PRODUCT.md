@@ -2,7 +2,7 @@
 
 Cumulative implementation status, accepted scope and prioritized follow-up work:
 [`docs/CM_PROGRESS_AND_NEXT_STEPS.md`](docs/CM_PROGRESS_AND_NEXT_STEPS.md),
-2026-11-17, CM models v6; live self conditions and sampled activation probabilities.
+2026-11-18, CM models v7; shared contexts, executable conditions and package contributions.
 
 The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
 `docs/CM_POST_TRAINING.md`. They supersede the
@@ -40,8 +40,8 @@ Only initial inputs: owned outfit, running style, CM race conditions, support de
 scenario. A persisted owned-outfit record supplies bloom and unique level. Race
 stats use verified scenario base caps, mood is best, aptitudes A. No pre-training
 stamina advice. Self counters, ownership, HP, start and skill probabilities are
-executable in the shared chart/final model. Unobserved opponent conditions remain
-explicit conditional assumptions. Known gate/popularity can be entered; missing
+executable in the shared chart/final model. Unobserved opponent conditions use
+shared rank trajectories and threshold stress cases, explicitly not observed frequencies. Known gate/popularity can be entered; missing
 values use uniform CM9 gate draws and an explicit uniform popularity prior.
 
 All skill categories share one table, with an icon-category tab row and name search. Gold candidates come only from the selected
@@ -68,11 +68,11 @@ Lv5 or event maximum hints. A single discount choice selects none0%, Studious4%
 or Fast Learner10%, added to each stage's hint rate before integer flooring.
 Traits cannot stack; old Fast Learner records restore to the corresponding new
 choice. It compares actual combinations against the acquired
-baseline, prioritizing full-speed-spurt HP feasibility, then mean lengths. The
+baseline, prioritizing full-speed-spurt HP feasibility, then minimum context gain and mean lengths (provided weighted contexts use their weighted mean). The
 HP-adaptive trajectory recalculates spurt decisions after actual heals and slows
-after depletion. Default128 samples include wisdom and skill lotteries. Collapsed
-`발동 조건과 표본` details qualify conditional opponent assumptions and approximations.
-The search is bounded and does not guarantee a global optimum. Recommendations never
+after depletion. Default144 samples include wisdom and skill lotteries. Collapsed
+`발동 조건과 표본` details qualify context coverage and approximations. Final skill details show package ablation contributions; activation and useful acceleration remain separate measures.
+Large-pool search is bounded; complete small-pool enumeration is optimal only within the declared sampled model. Recommendations never
 change the checklist. Inputs persist per plan; edited inputs/checks invalidate
 recommendations, and changed race/deck settings require a fresh first chart.
 Both stages support independent cancellation and JSON export. Final results separate additional purchases, awakening evolution, scenario evolution (up to two) and the complete active skill list. All are evaluated jointly against the same remaining SP; evolution itself adds no SP.

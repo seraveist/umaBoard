@@ -134,3 +134,10 @@ badges are omitted. Source evidence filters by selected owners and reviewed
 requirements; verified prerequisite-derived paths and factor candidates are
 marked inferred, and other missing paths are unknown. Display sources never
 become acquisition edges or pricing rules.
+
+The chart label is 단독 평균 마신; calculation details qualify9 shared comparison
+contexts/144 samples as coverage, not measured probabilities. Final applied
+skills expose their whole-effect ablation contribution in the current package.
+Activation sample rate and useful-acceleration sample rate are separate. Normal
+and strengthened inheritance share one origin/slot and the original paid stage;
+recording a strengthened effect asserts that its actual requirements are met.

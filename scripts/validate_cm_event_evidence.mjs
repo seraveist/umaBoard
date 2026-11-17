@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import {compileChartSkill,branchSampler,createChartSetup,CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {RaceEvaluator} from '../assets/race-evaluation.mjs';
 import {recommendFinalPlan} from '../assets/cm-final-plan.mjs';
+if(CM_MODEL_VERSION!=='cm-first-chart-v6')throw new Error('v6 고정 기록입니다. 현재 엔진 검증에는 scripts/validate_cm_v7.mjs를 사용하세요.');
 const root=new URL('../',import.meta.url),read=p=>JSON.parse(fs.readFileSync(new URL(p,root),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json');
 const stats={speed:2100,stamina:1600,power:1600,guts:1200,wisdom:1700};

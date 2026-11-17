@@ -5,6 +5,7 @@ import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.m
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 import {evolutionOptions,evolutionGroups} from './cm-evolution.mjs';
 import {skillIconId} from './cm-icons.mjs';
+import {calculationSummary,marginalSummary} from './cm-model-presentation.mjs';
 
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
@@ -37,7 +38,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const panel=$('#final-result'),source=createSkillSourceResolver(data,plan.setup);skillDetails.dismiss();$('#final-empty').hidden=true;panel.hidden=false;panel.classList.remove('is-stale');$('#final-result-state').textContent='';
   for(const [id,value]of [['final-used',plan.budget.used],['final-remaining',plan.budget.remaining],['final-budget',plan.budget.total]])$('#'+id).textContent=value.toLocaleString('ko-KR');
   $('#final-gain').textContent=`${plan.gain>0?'+':''}${plan.gain.toFixed(2)}`;
-  $('#final-hp-note').textContent=`표본 스퍼트 HP 충족 ${Math.round(plan.hpSuccessRate*100)}% (${Math.round(plan.hpSuccessRate*plan.sampling.count)} / ${plan.sampling.count})`;
+  $('#final-hp-note').textContent=`비교 표본 스퍼트 HP 충족 ${plan.hpSuccesses} / ${plan.sampling.count}`;
   $('#final-hp-note').classList.toggle('is-error',!plan.fullSpeedFeasible);
   $('#final-purchase-list').replaceChildren(...plan.purchases.map(row=>{
    const item=el('li','final-purchase');item.dataset.finalSkill=row.id;
@@ -46,13 +47,15 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    skillDetails.attach(icon,row);item.append(icon);
    const copy=el('div','final-purchase-copy'),heading=el('div','final-purchase-heading');heading.append(skillNameLine(row),el('strong','final-price',`${row.cost} SP`));copy.append(heading,el('span','final-purchase-kind',`${source(row)} · ${row.rarity==='evolution'?'원본 레어 기준':row.hintLevel===0?'획득':`할인 Lv${row.hintLevel}`}`));
    if(row.stages.length){const details=el('details','final-cost-details'),summary=el('summary','','구매 비용 상세');details.append(summary);const list=el('ul');for(const stage of row.stages){const li=el('li');li.append(el('span','',stage.name),el('span','',`${stage.hint===0?'획득':`할인 Lv${stage.hint}`}${stage.extraDiscount?` · ${DISCOUNT_TRAITS[resolveDiscountTrait(plan.setup)].label}`:''} · ${stage.cost} SP`));list.append(li);}details.append(list);copy.append(details);}
+   const marginal=marginalSummary(plan,row.id);if(marginal)copy.append(el('span','final-purchase-kind',marginal));
+   if(row.transformation?.kind==='inherited_evolution')copy.append(el('span','final-purchase-kind','기본 계승 구매 단계 공유 · 강화 조건 충족 기록 기준'));
    item.append(copy);return item;
   }));
   $('#final-no-purchases').hidden=plan.purchases.length>0;
   const skillItem=(row,note)=>{
    const item=el('li','final-purchase'),button=el('button',`skill-detail-trigger rarity-${row.rarity==='evolution'?'evolution':row.rarity==='gold'?'rare':'normal'}`);button.type='button';
    const id=row.iconId||skillIconId(data.skills[row.id],display);if(display.icons[id]){const img=el('img','skill-icon');img.src=`assets/skill-icons/utx_ico_skill_${id}.png`;img.alt='';img.loading='lazy';button.append(img);}
-   skillDetails.attach(button,row);const copy=el('div','final-purchase-copy');copy.append(skillNameLine(row),el('span','final-purchase-kind',note));item.append(button,copy);return item;
+   skillDetails.attach(button,row);const copy=el('div','final-purchase-copy');copy.append(skillNameLine(row),el('span','final-purchase-kind',note));const marginal=marginalSummary(plan,row.id);if(marginal)copy.append(el('span','final-purchase-kind',marginal));item.append(button,copy);return item;
   };
   for(const kind of ['outfit','scenario']){
    const rows=plan.evolutions[kind];$('#final-evolution-'+kind).replaceChildren(...rows.map(row=>skillItem(row,`${row.baseName} → 진화 · 추가 0 SP`)));
@@ -61,10 +64,10 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-scenario-count').textContent=`${plan.scenarioEvolutionCount} / 2`;
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
-  $('#final-search-note').textContent=plan.search.closureComplete?'구매·진화를 함께 비교했습니다.':'탐색 범위 내 추천입니다. 후보를 조정해 다시 비교할 수 있습니다.';
+  $('#final-search-note').textContent=plan.search.globalOptimal?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':plan.scenarioCoverage.probabilityBasis==='user-provided-weights'?'입력 전개 가중 평균을 비교한 범위 내 추천입니다.':'전개별 최소 기여와 평균을 비교한 범위 내 추천입니다.';
   $('#final-owned-summary').textContent=`습득 스킬 ${plan.ownedIds.length}개`;
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
-  $('#final-calculation-note').textContent=`발동 확률과 자기 조건 반영 · ${plan.sampling.count}표본 · 반별 평균 차이 ${plan.sampling.halfDifference?.toFixed(2)??'—'}마신 · 미입력 순위·추월 조건 충족 가정 · 전개 스퍼트 근사`;
+  $('#final-calculation-note').textContent=`${calculationSummary(plan)} · 전개 최소 ${plan.robustGain.toFixed(2)}마신${plan.physicsSensitivity?` · 전개 스퍼트 근사 사용/제외 차이 ${plan.physicsSensitivity.difference.toFixed(2)}마신`:''}`;
   $('#final-excluded').hidden=!plan.excluded.length;$('#final-excluded-summary').textContent=`제외 ${plan.excluded.length}개`;
   $('#final-excluded-list').replaceChildren(...plan.excluded.map(row=>el('li','',`${data.skills[row.id].name_jp} · ${row.reason}`)));
   $('#final-export').disabled=false;inputSummary();if(inputs.contains(document.activeElement))$('#final-inputs>summary').focus({preventScroll:true});inputs.open=false;if(onResult()!==false)$('#final-result-title').focus();

@@ -191,3 +191,6 @@ the existing spacing, focus, border and muted-text tokens.
 - Do draw relative elevation, phase bands and numbered segments from course geometry.
 - Don't turn this tool into a landing page or rankings dashboard. SP recommendation belongs only in the separate post-training stage; the initial chart remains SP-free.
 - Don't claim exact game simulation or exact sorting before verification.
+- Keep v7 context coverage/physics sensitivity in the existing calculation
+  disclosure; show package contribution as muted detail under applied skills.
+  Preserve the table and stage layout. Comparison percentages are not empirical rates.

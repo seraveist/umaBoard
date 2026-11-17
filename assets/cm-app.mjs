@@ -1,7 +1,8 @@
 import {createChartSetup,sortChartRows,CM_MODEL_VERSION} from './cm-chart.mjs';
 import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition,buildAcquisitionHierarchy,relatedAcquisitionIds,updateAcquisition,bulkAcquisition} from './cm-state.mjs';
 import {createSkillDetails} from './cm-skill-details.mjs';
-import {INHERITED_LIMIT} from './cm-recommendation.mjs';
+import {INHERITED_LIMIT,inheritedOrigin} from './cm-recommendation.mjs';
+import {calculationSummary,contributionTitle} from './cm-model-presentation.mjs';
 import {SKILL_CATEGORIES,categoryRows} from './cm-categories.mjs';
 import {courseSvg} from './cm-course.mjs';
 import {umaName,cardName,cardTypeBadge,cardTypes,selectableSupports} from './display.mjs';
@@ -151,7 +152,7 @@ function renderRows(){
   let node=tableNodes.get(row.id);if(!node){node=newRow(row);tableNodes.set(row.id,node);}
   const gain=node.querySelector('[data-gain]'),value=Number.isFinite(row.gain)&&Math.abs(row.gain)<.005?0:row.gain;
   gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):'미지원';gain.classList.toggle('is-zero',value===0);
-  gain.title=Number.isFinite(value)?`표본 ${row.samples??0}개 · 발동 ${((row.activationRate??0)*100).toFixed(1)}%${row.assumptions?.length?' · 미입력 상대 조건 충족 가정':''}`:'계산 미지원';
+  gain.title=contributionTitle(row);
   const select=node.querySelector('select'),state=acquisitionValue(states[acquisitionId(row)]);if(select.value!==state)select.value=state;
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
   node.classList.toggle('is-owned',state==='owned');select.classList.toggle('is-owned',state==='owned');
@@ -202,7 +203,7 @@ function beginCalculation(event){
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
@@ -213,9 +214,9 @@ function setupWorker(){
   if(message.type==='progress'){
    rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=message.progress.stage==='inheritance'?'계승 Top 10 후보 비교 중':'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
-   result=message.result;rows=result.rows;$('#chart-calculation-details').hidden=false;$('#chart-calculation-note').textContent=`발동 확률과 자기 조건 반영 · 기본 ${result.samples}표본 · 미입력 순위·추월 조건 충족 가정 · 전개 스퍼트 근사`;total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
+   result=message.result;rows=result.rows;$('#chart-calculation-details').hidden=false;$('#chart-calculation-note').textContent=calculationSummary(result);total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
    notice();renderRows();
-   let retained=0,trimmed=false;for(const row of allChecklistRows())if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
+   const retained=new Set();let trimmed=false;for(const row of allChecklistRows())if(row.inherited&&states[row.id]!=='unavailable'){const origin=row.inheritanceOriginId??inheritedOrigin(row.id);if(!retained.has(origin)&&retained.size>=INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}else retained.add(origin);}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
    renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
    finalPlanner?.setChart(result,states,currentPlan);

@@ -1,4 +1,4 @@
-# CM first-chart contract (2026-11-17)
+# CM first-chart contract (2026-11-18)
 
 This is the authoritative contract for `feat/cm-first-chart` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
@@ -85,14 +85,15 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v6` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v7` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
-- Mean is an arithmetic mean of paired trajectory differences. Default 128
-  reproducible stratified samples, dt=0.01s. Fixed-position rows use the same
+- Mean aggregates paired trajectory differences within each shared context,
+  then averages context means (or applies explicit supplied context weights). Default144
+  reproducible stratified samples across9 coverage contexts, dt=0.01s. Fixed-position rows use the same
   samples because race starts and HP-based spurt choices can still vary.
 - Full skill/channel/dimension keys replace modulo-ID streams. Each64-sample
   block visits every stratum. Race starts, gates, popularity and native draws
@@ -107,12 +108,23 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
   exempts wisdom checks; otherwise activation uses max(.2,1−90/rawWisdom).
   Skill lottery and shared-lottery predicates have separate draws. Native
   supplements without activation metadata use their reviewed native rarity.
-- Unobserved rank, overtaking, gaps, team and temptation conditions still assume
-  fulfillment; this is a conditional solo contribution, not measured overall
-  activation probability or win probability. Explicit numeric external conditions
-  and distance/rank timelines are executable through `raceContext`. Gate and
-  popularity use the separate recorded/prior policy above. Unknown effect
-  mathematics stay excluded; spatial/temporal predicates are never erased.
+- Every skill in a sample shares a single distance/rank trajectory. Rank changes
+  and continuous rank-band time follow that trajectory. Unobserved other external
+  numeric gates use shared threshold stress values; explicit records take priority.
+  These9 synthetic cases provide coverage, not empirical frequencies or complete
+  opponent/lane physics. `raceContext.scenarios` accepts up to32 named, nonnegative
+  weighted contexts with provenance in `scenarioSource`. Means use scenario means,
+  not accidental unequal sample counts; zero-weight cases are omitted. Recorded
+  ranks and other external values remain executable. Unknown effects stay excluded.
+- `activationRate` is activation within these comparison samples. The separate
+  `usefulAccelerationRate` requires positive additional acceleration during any
+  part of the effect's lifetime, including an effect laid before the late phase.
+  It does not substitute for a final-package ablation margin. No skill/course
+  blacklist or name-based penalty is used for late final-corner acceleration.
+- Ownership includes verified prerequisite/transformation closure while only
+  the active upper effect runs. An inherited original and strengthened effect
+  share one origin/slot and one paid stage. Both options remain available for
+  actual acquisition recording; strengthened requirements must actually be met.
 - HP-adaptive spurt planning computes feasible start/speed from remaining HP and
   recalculates after real healing. Actual spurt state gates last-spurt conditions.
   HP depletion changes travel speed. Future recovery is never presumed.
@@ -131,8 +143,8 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 - HP is internal only in the first chart. Recovery can show 0.00 lengths without
   being removed. No pre-training required-stamina number is displayed.
 
-The [v6 activation/probability audit](CM_ACTIVATION_PROBABILITY_QA.md) records
-source formulas, same-input results, reproducible checks and remaining limits.
+The [v7 algorithm audit](CM_ALGORITHMS_V7_QA.md) records current results and limits.
+The [v6 audit](CM_ACTIVATION_PROBABILITY_QA.md) remains a historical snapshot.
 
 ## Display and performance
 

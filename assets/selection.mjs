@@ -1,5 +1,6 @@
 import {INHERITANCE_LIMIT} from './result-policy.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
+import {skillTransforms} from './skill-transforms.mjs';
 
 // Shared by the worker and the immediate checkbox preview.
 export function selectionRules(data,records){
@@ -9,7 +10,7 @@ export function selectionRules(data,records){
   const a=families.get(r.from_id),b=families.get(r.to_id);if(!a||!b)continue;
   const union=new Set([...a,...b]);for(const id of union)families.set(id,union);
  }
- for(const r of data.evolution_rules){
+ for(const r of skillTransforms(data)){
   const union=new Set([...(families.get(r.base_id)||[]),...(families.get(r.evolved_id)||[])]);
   for(const id of union)families.set(id,union);
  }

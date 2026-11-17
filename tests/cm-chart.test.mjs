@@ -193,11 +193,11 @@ test('final-corner latter-half includes the final straight, furlong stays spatia
  assert.equal(compileChartSkill(orphan,setup).status,'inactive');
 });
 
-test('strengthened inheritance replaces normal, respects real style gates while retaining inactive and healing inherits for actual possession',()=>{
+test('strengthened inheritance retains the paid normal option and respects real style gates for effects',()=>{
  for(const style of [2,3]){
   const t=prepareChart(actual,actualProfiles,display,{outfitId:'101301',scenarioId:'15',style,courseId:'10808',supportIds:[]},{samples:1,dt:.05});
   const strong=style===2?'91101411':'91101351',wrong=style===2?'91101351':'91101411';
-  assert.ok(t.rows.some(r=>r.id===strong));assert.ok(!t.rows.some(r=>['901351','901411'].includes(r.id)));assert.equal(t.rows.find(r=>r.id===wrong)?.calculationState,'inactive');
+  assert.ok(t.rows.some(r=>r.id===strong));assert.ok(t.rows.some(r=>r.id==='901411'));assert.ok(t.rows.some(r=>r.id==='901351'));assert.equal(t.rows.find(r=>r.id===wrong)?.calculationState,'inactive');
   assert.ok(t.rows.some(r=>r.inherited&&r.categories.includes('heal')));
  }
 });

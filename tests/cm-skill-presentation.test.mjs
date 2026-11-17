@@ -20,4 +20,5 @@ test('current JP setup resolves native evolution, selected support event and inh
  const read=file=>JSON.parse(readFileSync(new URL('../'+file,import.meta.url),'utf8')),data=read(read('data/manifest.json').dataset_path);
  const source=createSkillSourceResolver(data,{outfitId:'101301',scenarioId:'15',supportIds:['30322']});
  assert.match(source({id:'101301211'}),/각성/);assert.match(source({id:'204731'}),/서포트 이벤트/);assert.equal(source({id:'900271'}),'계승 스킬');assert.equal(source({id:'204732'}),'서포트 힌트');
+ assert.equal(source({id:'901411'}),'계승 스킬');assert.match(source({id:'91101411'}),/강화 계승.*조건 충족/);
 });

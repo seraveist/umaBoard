@@ -16,7 +16,7 @@ test('rare-only chart keeps every hidden evolution and jointly spends the real 7
  assert.ok(chart.evolutionOptions.length>=4);
  for(const option of chart.evolutionOptions)assert.ok(chart.rows.some(row=>row.id===option.evolutionBaseId));
  const states=bulkAcquisition(chart.rows,{},'5'),actual={stats:profiles.profiles['15'].stats,spBudget:7000,discountTrait:'none',aptitudes:{distance:'A',surface:'A',style:'S'}};
- const plan=await recommendFinalPlan(data,chart,states,actual);
+ const plan=await recommendFinalPlan(data,chart,states,actual,{onProgress:p=>{if(p.completed===p.total)console.info(`CM7000 ${p.stage}`);}});
  assert.ok(plan.budget.used>0&&plan.budget.used<=7000,JSON.stringify(plan.budget));
  assert.ok(plan.gain>0,`gain=${plan.gain}`);assert.ok(plan.sampling.count>=128);assert.ok(plan.hpSuccessRate>=0&&plan.hpSuccessRate<=1);assert.ok(plan.search.closureComplete);
  assert.equal(plan.purchases.reduce((sum,row)=>sum+row.cost,0),plan.budget.used);

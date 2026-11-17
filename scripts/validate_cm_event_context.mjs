@@ -1,5 +1,6 @@
 import fs from 'node:fs';
-import {compileChartSkill,branchSampler,prepareChart,createChartSetup} from '../assets/cm-chart.mjs';
+import {compileChartSkill,branchSampler,prepareChart,createChartSetup,CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
+if(CM_MODEL_VERSION!=='cm-first-chart-v6')throw new Error('v6 고정 기록입니다. 현재 엔진 검증에는 scripts/validate_cm_v7.mjs를 사용하세요.');
 import {RaceEvaluator} from '../assets/race-evaluation.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {lengthsBetween} from '../assets/physics.mjs';

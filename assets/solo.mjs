@@ -2,23 +2,27 @@ import {planSpurt,SPURT_POLICY} from './spurt-planning.mjs';
 import {buildPhysics,phaseAt} from './physics.mjs';
 import {sampleBranches,branchReady,slopeAt} from './activation.mjs';
 import {effectValue,effectDuration} from './cm-effect-policy.mjs';
+import {advanceRankDurations} from './race-sampling.mjs';
 
 // Paired single-runner trajectories. CM uses the explicit HP-adaptive policy;
 // callers without it retain the legacy forced-spurt projection.
 export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,branchSampler=null,keepTrace=true,fullSpurt=false,scheduleConditions=true}={}){
- const d=setup.course.distance,selected=new Set(compiledSkills.map(s=>s.id));
+ const d=setup.course.distance,selected=new Set([...compiledSkills.map(s=>s.id),...(setup.possessionIds||[])]);
  const sampled=!!branchSampler?.unit,draw=(id,channel)=>branchSampler?.unit?.(id,channel)??q;
  const eligible=compiledSkills.filter(s=>!s.probabilistic||draw(s.id,'activation')<(s.activationProbability??1));
  const pending=eligible.slice().sort((a,b)=>a.id.localeCompare(b.id)).flatMap(s=>s.invocations.map(i=>({...i,id:s.id,preMet:false,done:false,nextTime:0,
   condition:branchSampler?branchSampler(i.condition,s.id,i,false,q):sampleBranches(i.condition,q),
   precondition:branchSampler?branchSampler(i.precondition,s.id,i,true,q):sampleBranches(i.precondition,q,true)})));
- const passive={speed:0,stamina:0,power:0,guts:0,wisdom:0},used=new Set(),counts=[0,0,0,0],events=[],active=[],cooldowns=new Map();
+ const passive={speed:0,stamina:0,power:0,guts:0,wisdom:0},used=new Set(),counts=[0,0,0,0],events=[],active=[],cooldowns=new Map(),accelerationUseSeconds={};
  const state={x:0,prevX:0,t:0,phase:0,hp:1,hpMax:1,used,usedInvocations:new Set(),selected,counts,laterCount:0,healCount:0,passiveCount:0,distance:d,fullSpurtStart:null,evolutionDuration:1};
  const context=setup.raceContext||{},startDelay=sampled?.1*draw('race','start-delay'):.1;
  state.startDelay=startDelay;state.raceContext=context;
+ state.finalCornerStart=setup.course.corners.at(-1)?.start;
+ state.rankDurationRules=[...new Set(pending.flatMap(i=>[...i.condition,...i.precondition].flatMap(b=>(b.external||[]).map(a=>a.field))))].flatMap(field=>{const match=field.match(/^order_rate_(in|out)(\d+)_continue$/);return match?[{field,inside:match[1]==='in',threshold:Math.round(9*Number(match[2])/100)}]:[];});
+ state.rankDurations=Object.fromEntries(state.rankDurationRules.map(r=>[r.field,0]));
  state.postNumber=context.postNumber??(sampled?1+Math.floor(9*draw('race','post-number')):undefined);
  state.popularity=context.popularity??(sampled?1+Math.floor(9*draw('race','popularity')):undefined);
- state.inheritedCount=compiledSkills.filter(s=>s.skill?.inherited).length;
+ state.inheritedCount=setup.inheritanceOrigins?new Set([...selected].filter(id=>Object.hasOwn(setup.inheritanceOrigins,id)).map(id=>setup.inheritanceOrigins[id])).size:compiledSkills.filter(s=>s.skill?.inherited).length;
  let physics=buildPhysics(setup,passive);
  const choice=i=>i.condition[0]?.choiceQ??q;
  // Passives are resolved at the start, including skill-possession predicates.
@@ -81,7 +85,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  delay=Math.max(0,delay);state.startDelay=delay;
  // Distance-scheduled conditions avoid checking every future invocation on
  // every integration frame. Dynamic gates stay awake while their window holds.
- const awake=[],sleepers=[],nextWindow=branches=>Math.min(...branches.flatMap(branch=>branch.windows.filter(([,hi])=>state.prevX<hi).map(([lo])=>Math.max(lo,branch.at))));
+ const awake=[],sleepers=[],nextWindow=branches=>{let next=Infinity;for(const branch of branches)for(const [lo,hi]of branch.windows)if(state.prevX<hi)next=Math.min(next,Math.max(lo,branch.at));return next;};
  const schedule=(inv,x)=>{
   if(!Number.isFinite(x))return;
   let lo=0,hi=sleepers.length;while(lo<hi){const mid=(lo+hi)>>>1;if(sleepers[mid].x<=x)lo=mid+1;else hi=mid;}
@@ -90,6 +94,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv.preMet?inv.condition:inv.precondition));else awake.push(inv);}});
  for(let frame=0;state.x<d&&frame<100000;frame++){
   const t=frame*dt;state.t=t;state.phase=phaseAt(state.x,d);
+  advanceRankDurations(state);
   if(adaptive&&state.phase>=2){if(!spurtPlan)updateSpurt();state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;}
   for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);
   let added=false;
@@ -131,11 +136,18 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    if(!startDash)next=Math.max(physics.minSpeed,next);
    next=Math.min(30,next);
   }
+  // Test the entire effect lifetime, including pre-phase acceleration that
+  // remains active after the phase boundary. No skill/course exclusions.
+  if(t>=delay&&velocity<target&&accelerationBonus>0){
+   const byId=new Map();for(const effect of active)if(effect.kind==='acceleration'&&effect.value>0)byId.set(effect.id,(byId.get(effect.id)||0)+effect.value);
+   for(const [id,value]of byId){let without=Math.min(target,velocity+Math.max(0,acceleration-value)*dt);if(!startDash)without=Math.max(physics.minSpeed,without);without=Math.min(30,without);if(next>without+1e-9)accelerationUseSeconds[id]=(accelerationUseSeconds[id]||0)+dt;}
+  }
   if(fullSpurt&&setup.stats.speed>2000&&state.phase>=2&&(!adaptive||state.maximumSpurt)&&velocity>=physics.spurt-1e-6){fullSpurtStarted=true;if(state.fullSpurtStart===null)state.fullSpurtStart=state.x;}
   // Public umasim approximation: independent extra acceleration; its ceiling is
   // unknown in the source. This mode is explicit and versioned by the CM chart.
   const fullAcceleration=.068*physics.acceleration(state.phase,uphill)/Math.pow(d/1000,1.5)+fullSpurtBonus;
   const nextFull=fullSpurtStarted&&(!adaptive||state.hp>0)?fullSpurtSpeed+Math.max(0,fullAcceleration)*dt:0;
+  if(nextFull>fullSpurtSpeed)for(const effect of active)if(effect.kind==='full_spurt_acceleration'&&effect.value>0)accelerationUseSeconds[effect.id]=(accelerationUseSeconds[effect.id]||0)+dt;
   const speed=t<delay?0:Math.max(0,(velocity+next)/2+currentOffset+(fullSpurtSpeed+nextFull)/2),step=speed*dt;
   const fraction=step>0?Math.min(1,(d-state.x)/step):1;
   state.hp-=physics.consumption(speed,state.phase)*dt*fraction;
@@ -144,7 +156,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
     hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,fullSpeedFeasible:depletion===null&&(!adaptive||maxSpurtAtEntry===true),spurtPlan,maxSpurtAtEntry,spurtPolicy:adaptive?SPURT_POLICY:'forced-projection',
-    events,passive,trace,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},fullSpurtExcluded:!fullSpurt&&physics.fullSpurtExcluded,fullSpurtApproximation:fullSpurt&&fullSpurtStarted,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
+    events,passive,trace,accelerationUseSeconds,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},fullSpurtExcluded:!fullSpurt&&physics.fullSpurtExcluded,fullSpurtApproximation:fullSpurt&&fullSpurtStarted,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
   }
  }
  throw new Error('단독 비교 계산이 수렴하지 않았습니다.');
