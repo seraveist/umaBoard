@@ -129,7 +129,7 @@ test('HP-first pruning rejects only a proven infeasible challenger and preserves
 test('large-pool staged search uses final samples and matches an affordable-subset oracle',async()=>{
  const raws=[skill('big','target_speed',2200),skill('left','target_speed',1500),skill('right','target_speed',1500),...Array.from({length:7},(_,i)=>skill('weak'+i,'target_speed',100))],d=smallData(raws);
  d.purchase_stages.left.base_cost=50;d.purchase_stages.right.base_cost=50;
- const chart={setup:{...setup,scenarioId:'15'},nativeIds:[],rows:raws},plan=await recommendFinalPlan(d,chart,Object.fromEntries(raws.map(r=>[r.id,'0'])),{stats,spBudget:100},{samples:18,searchSamples:9,dt:.02,searchDt:.05,width:2,evaluationLimit:24,diagnostics:false});
+ const chart={setup:{...setup,scenarioId:'15'},nativeIds:[],rows:raws},plan=await recommendFinalPlan(d,chart,Object.fromEntries(raws.map(r=>[r.id,'0'])),{stats,spBudget:100},{exactPlanLimit:0,samples:18,searchSamples:9,dt:.02,searchDt:.05,width:2,evaluationLimit:24,diagnostics:false});
  const oracle=[],evaluator=ev(raws,plan.setup);
  for(let mask=0;mask<2**raws.length;mask++){
   const ids=raws.filter((_,i)=>mask&(1<<i)).map(r=>r.id).sort(),cost=ids.reduce((sum,id)=>sum+d.purchase_stages[id].base_cost,0);if(cost>100)continue;

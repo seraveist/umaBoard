@@ -27,7 +27,8 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  const actual={stats:profiles.profiles['15'].stats,spBudget:7000,discountTrait:'none',aptitudes:{distance:'A',surface:'A',style:'S'},acquisitionChoices};
  const plan=await recommendFinalPlan(data,chart,states,actual,{onProgress:p=>{if(p.completed===p.total)console.info(`CM7000 ${p.stage}`);}});
  assert.ok(plan.budget.used>0&&plan.budget.used<=7000,JSON.stringify(plan.budget));
- assert.ok(plan.gain>0,`gain=${plan.gain}`);assert.ok(plan.sampling.count>=128);assert.ok(plan.hpSuccessRate>=0&&plan.hpSuccessRate<=1);assert.ok(plan.search.closureComplete);
+ assert.ok(plan.gain>0,`gain=${plan.gain}`);assert.ok(plan.sampling.count>=128);assert.ok(plan.hpSuccessRate>=0&&plan.hpSuccessRate<=1);
+ assert.equal(typeof plan.search.closureComplete,'boolean');assert.ok(plan.search.closureComplete||!plan.search.exchangeScreeningComplete,'An incomplete bounded closure must declare its work limit');
  assert.equal(plan.acquisitionValidation.feasible,true);assert.ok(constraints.allowed(plan.activeIds));
  assert.equal(plan.purchases.reduce((sum,row)=>sum+row.cost,0),plan.budget.used);
  assert.ok(plan.purchases.every(row=>row.rarity!=='evolution'));

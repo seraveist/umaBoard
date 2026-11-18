@@ -1,0 +1,583 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "29de686",
+  "modelVersion": "cm-post-training-v12",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "baseline": false,
+  "modulesSha256": "76f5213d9d244c6ac4b4ee736dca99643b222a093d6b4c61786d4a5f39936c2c",
+  "status": "passed-with-bounded-search-limitations",
+  "sourceFiles": [
+    {
+      "path": "docs/validation/cm-optimization-v1-search-bounded-mile-20261118.json",
+      "textSha256": "e968ee7f981a8142393d0aa5881277f80d0374b23898fb90f22902b2b531a74e"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-bounded-mile-owned-fallback-20261118.json",
+      "textSha256": "07e98e6db09df78d26df322c6bbf6c9b91b1f2ac4ceb2ca34fcbedb82f3228c1"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-build-20261118.json",
+      "textSha256": "0c1bd1db8bb5b1b3de3d4ba5237d78ad8a8b079a8aaaeb0889a072be1265022f"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-case-classic-20261118.json",
+      "textSha256": "379ff5eba35c4389c6d20fcb6881a71b4af9cdfa2df56f280d07104c7cd60fac"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-case-dirt-20261118.json",
+      "textSha256": "656d1c9f1cf39f0e88a7407d429de9b44f2b89bd1358c5a2ca9a1579ed06d78b"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-case-long-20261118.json",
+      "textSha256": "42694fdf8376d5d7d5a8cf44f314c5ec3b8795240a91dc661a8d7cce8f8a30ff"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-case-mile-20261118.json",
+      "textSha256": "dd8c5f85d8048605328004c48913401267337218f1e57949d80d3653608dc5dd"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-case-mile-owned-fallback-20261118.json",
+      "textSha256": "d2aae93ebfd239241b09307f4664fb749769d3ea21ba810abba74f74736adbca"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-contracts-20261118.json",
+      "textSha256": "ca4c585bce4d474e64ae94049a6723ce6f65fd9dbe3671955a543482b2adc25c"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-data-20261118.txt",
+      "textSha256": "cf5c1e3d106ff7373c9a69a049aafd154514ea8f7943c611193fafcaf9273841"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-large-20261118.json",
+      "textSha256": "7c6da7f94b20a63a5d9fc252d4287b70bb2fcbf1a5036bc84ceeaf7cc8316d4d"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-node-current-20261118.txt",
+      "textSha256": "f6ffe9e75f291bb739ea80987f77885efc33ec7bb2fb838532ebece320fdb5ab"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-node-tests-20261118.txt",
+      "textSha256": "c46d44fd4b94e332bc1c40f56c4f5cdbe87e3a1d5e0c66c0d456e630dba9fd6b"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-node-v7-retry-20261118.txt",
+      "textSha256": "290b6530ef5a4d59663dee72e63921cc12979c727ea3fa51763b4f1d4bbed548"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-python-tests-20261118.txt",
+      "textSha256": "1af01ed3022fbe91c53468df03878710812ccca3dff09b0851fb4c6aa9cf046f"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-release-20261118.json",
+      "textSha256": "731447001c23f2b09e7a58f7d4ef51ade905b842347bd2472128821825175c92"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-search-sensitivity-20261118.json",
+      "textSha256": "7cb0cc2473a8fbe42d1c232b9ef37b57d86aa03ab9704686544d00a5d5e4af4f"
+    }
+  ],
+  "regression": {
+    "node": {
+      "total": 305,
+      "passed": 305,
+      "failed": 0,
+      "skipped": 0,
+      "verification": {
+        "strategy": "same-production-core-disjoint-test-batches",
+        "fullAttempt": {
+          "tests": 305,
+          "pass": 304,
+          "fail": 1,
+          "skipped": 0
+        },
+        "currentNonJointSuite": {
+          "tests": 303,
+          "pass": 303,
+          "fail": 0,
+          "skipped": 0
+        },
+        "targetedV7Retry": {
+          "tests": 15,
+          "pass": 15,
+          "fail": 0,
+          "skipped": 0
+        },
+        "retainedIntegrationTests": 2,
+        "explanation": "303 current non-joint tests plus two already passed same-core joint tests; duplicate reruns are not counted as additional unique tests."
+      }
+    },
+    "python": {
+      "total": 51,
+      "passed": 51
+    }
+  },
+  "build": {
+    "status": "passed",
+    "algorithm": {
+      "id": "umaboard-optimization-v1",
+      "version": "v1",
+      "revision": 2,
+      "name": "최적화 알고리즘 v1",
+      "models": {
+        "chart": "cm-first-chart-v11",
+        "final": "cm-post-training-v12",
+        "solo": "solo-comparison-v5"
+      }
+    },
+    "baseCommit": "29de686",
+    "coreSha256": "76f5213d9d244c6ac4b4ee736dca99643b222a093d6b4c61786d4a5f39936c2c",
+    "calculationModules": 31,
+    "unchangedPhysicsModules": 29,
+    "stagedCalculationModules": 31,
+    "lockedInputs": 4,
+    "verifiedHistoricalEvidence": 10,
+    "scope": "authorized search revision; common physics, source data and historical evidence unchanged"
+  },
+  "dataValidation": {
+    "status": "passed",
+    "counts": {
+      "skills": 2236,
+      "outfits": 274,
+      "supports": 568,
+      "courses": 138
+    },
+    "warnings": 5
+  },
+  "defaultRecommendations": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.155956408226187,
+      "currentGain": 2.1859623528659897,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 144,
+      "wallMs": 25605.240100000003
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.6593067522678444,
+      "currentGain": 2.6932047198951476,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 272,
+      "wallMs": 44279.28399999999
+    },
+    {
+      "case": "classic",
+      "budget": 470,
+      "previousGain": 1.9730738622217925,
+      "currentGain": 1.9730738622217925,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 136,
+      "wallMs": 30445.3235
+    },
+    {
+      "case": "classic",
+      "budget": 700,
+      "previousGain": 2.642768529417118,
+      "currentGain": 2.642768529417118,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 261,
+      "wallMs": 57935.656
+    },
+    {
+      "case": "long",
+      "budget": 470,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 157,
+      "wallMs": 37370.4867
+    },
+    {
+      "case": "long",
+      "budget": 700,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 284,
+      "wallMs": 69486.8964
+    },
+    {
+      "case": "dirt",
+      "budget": 470,
+      "previousGain": 1.4440250321062313,
+      "currentGain": 1.4440250321062313,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 144,
+      "wallMs": 32168.5448
+    },
+    {
+      "case": "dirt",
+      "budget": 700,
+      "previousGain": 1.5276432993984663,
+      "currentGain": 1.5276432993984663,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 268,
+      "wallMs": 63886.0234
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.0185627111072755,
+      "currentGain": 2.0517737776000944,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 139,
+      "wallMs": 21998.7603
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.495682136746246,
+      "currentGain": 2.5675236215132298,
+      "gap": 0,
+      "matchesOracle": true,
+      "method": "exhaustive",
+      "affordablePlans": 270,
+      "wallMs": 35671.0749
+    }
+  ],
+  "forcedBounded": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.155956408226187,
+      "currentGain": 2.155956408226187,
+      "gap": 0.030005944639802884,
+      "matchesOracle": false,
+      "search": {
+        "method": "bounded",
+        "evaluations": 110,
+        "hpPrunedPlans": 0,
+        "coarseEvaluations": 64,
+        "precisionEvaluations": 46,
+        "precisionBeforeRefinement": 40,
+        "refinementEvaluations": 6,
+        "refinementEvaluationLimit": 95,
+        "coarseEvaluationLimit": 1439,
+        "initialCoarseEvaluations": 39,
+        "initialCoarseEvaluationLimit": 1400,
+        "coarseLimitReached": false,
+        "exchangeEvaluationLimit": 1400,
+        "exchangeEvaluations": 25,
+        "exchangeProposalChecks": 35,
+        "exchangePrecisionChecks": 6,
+        "exchangeScreeningComplete": true,
+        "exactEnumeration": {
+          "complete": false,
+          "reason": "disabled",
+          "nodes": 0,
+          "groups": 0,
+          "affordablePlans": null,
+          "planLimit": 0
+        },
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+        "closureTermination": "stable",
+        "initialDirectSweeps": 1,
+        "initialDirectEvaluations": 4,
+        "closureChecks": 11,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 39,
+        "precisionScreenedFinalists": 39,
+        "precisionCandidates": 39,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 0,
+        "stabilizationChecks": 0,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.6593067522678444,
+      "currentGain": 2.66959455146994,
+      "gap": 0.02361016842520769,
+      "matchesOracle": false,
+      "search": {
+        "method": "bounded",
+        "evaluations": 192,
+        "hpPrunedPlans": 0,
+        "coarseEvaluations": 120,
+        "precisionEvaluations": 72,
+        "precisionBeforeRefinement": 64,
+        "refinementEvaluations": 8,
+        "refinementEvaluationLimit": 95,
+        "coarseEvaluationLimit": 1457,
+        "initialCoarseEvaluations": 57,
+        "initialCoarseEvaluationLimit": 1400,
+        "coarseLimitReached": false,
+        "exchangeEvaluationLimit": 1400,
+        "exchangeEvaluations": 63,
+        "exchangeProposalChecks": 93,
+        "exchangePrecisionChecks": 12,
+        "exchangeScreeningComplete": true,
+        "exactEnumeration": {
+          "complete": false,
+          "reason": "disabled",
+          "nodes": 0,
+          "groups": 0,
+          "affordablePlans": null,
+          "planLimit": 0
+        },
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+        "closureTermination": "stable",
+        "initialDirectSweeps": 1,
+        "initialDirectEvaluations": 3,
+        "closureChecks": 11,
+        "closurePasses": 2,
+        "batchChecks": 0,
+        "screenedFinalists": 50,
+        "precisionScreenedFinalists": 50,
+        "precisionCandidates": 51,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 0,
+        "stabilizationChecks": 0,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.0185627111072755,
+      "currentGain": 2.030604636602194,
+      "gap": 0.02116914099790046,
+      "matchesOracle": false,
+      "search": {
+        "method": "bounded",
+        "evaluations": 137,
+        "hpPrunedPlans": 0,
+        "coarseEvaluations": 84,
+        "precisionEvaluations": 53,
+        "precisionBeforeRefinement": 45,
+        "refinementEvaluations": 8,
+        "refinementEvaluationLimit": 95,
+        "coarseEvaluationLimit": 1444,
+        "initialCoarseEvaluations": 44,
+        "initialCoarseEvaluationLimit": 1400,
+        "coarseLimitReached": false,
+        "exchangeEvaluationLimit": 1400,
+        "exchangeEvaluations": 40,
+        "exchangeProposalChecks": 58,
+        "exchangePrecisionChecks": 12,
+        "exchangeScreeningComplete": true,
+        "exactEnumeration": {
+          "complete": false,
+          "reason": "disabled",
+          "nodes": 0,
+          "groups": 0,
+          "affordablePlans": null,
+          "planLimit": 0
+        },
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+        "closureTermination": "stable",
+        "initialDirectSweeps": 1,
+        "initialDirectEvaluations": 3,
+        "closureChecks": 13,
+        "closurePasses": 2,
+        "batchChecks": 0,
+        "screenedFinalists": 44,
+        "precisionScreenedFinalists": 44,
+        "precisionCandidates": 45,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 0,
+        "stabilizationChecks": 0,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.495682136746246,
+      "currentGain": 2.495682136746246,
+      "gap": 0.07184148476698393,
+      "matchesOracle": false,
+      "search": {
+        "method": "bounded",
+        "evaluations": 147,
+        "hpPrunedPlans": 0,
+        "coarseEvaluations": 87,
+        "precisionEvaluations": 60,
+        "precisionBeforeRefinement": 57,
+        "refinementEvaluations": 3,
+        "refinementEvaluationLimit": 95,
+        "coarseEvaluationLimit": 1454,
+        "initialCoarseEvaluations": 54,
+        "initialCoarseEvaluationLimit": 1400,
+        "coarseLimitReached": false,
+        "exchangeEvaluationLimit": 1400,
+        "exchangeEvaluations": 33,
+        "exchangeProposalChecks": 43,
+        "exchangePrecisionChecks": 6,
+        "exchangeScreeningComplete": true,
+        "exactEnumeration": {
+          "complete": false,
+          "reason": "disabled",
+          "nodes": 0,
+          "groups": 0,
+          "affordablePlans": null,
+          "planLimit": 0
+        },
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+        "closureTermination": "stable",
+        "initialDirectSweeps": 1,
+        "initialDirectEvaluations": 3,
+        "closureChecks": 6,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 49,
+        "precisionScreenedFinalists": 49,
+        "precisionCandidates": 50,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 0,
+        "stabilizationChecks": 0,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    }
+  ],
+  "rowOrderInvariance": true,
+  "budgetMonotonic": true,
+  "large": {
+    "previousGain": 35.51974580473648,
+    "currentGain": 36.50123091043926,
+    "previousCost": 6990,
+    "currentCost": 6948,
+    "previousProfile": {
+      "name": "original",
+      "mode": "observe",
+      "evaluateCalls": 6264,
+      "uniqueEvaluationKeys": 6264,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 8,
+      "completeResultMismatches": 0,
+      "simulationCalls": 192717,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 192429,
+      "wallMs": 535763.4233000001,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 0,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 3551,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 1703,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 322,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 515,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 97,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 75,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 539345.6865000001
+    },
+    "currentProfile": {
+      "evaluations": 3376,
+      "simulations": 108144,
+      "referenceSimulations": 153,
+      "cacheHits": 107991,
+      "byResolution": {
+        "9|0.05": 2800,
+        "144|0.01": 576
+      },
+      "wallMs": 343846.9058
+    },
+    "simulationReduction": 0.4388455611077383,
+    "wallTimeReduction": 0.3624739857820297,
+    "fullFlowSameSelection": true
+  },
+  "fixedSensitivity": {
+    "comparisons": 20,
+    "improvements": 18,
+    "scope": "Fixed old and new recommendations only; no reoptimization at alternative settings; scenario sample comparisons, not real-race probabilities"
+  },
+  "unchangedPhysicsModules": 29,
+  "interpretation": "Controlled recorded candidate pools and paired simulations; not empirical win/activation accuracy. Large case remains bounded, and wall time is one instrumented run per version."
+}

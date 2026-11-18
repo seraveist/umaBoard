@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "modulesSha256": "76f5213d9d244c6ac4b4ee736dca99643b222a093d6b4c61786d4a5f39936c2c",
+  "sections": [
+    {
+      "name": "actual-setup",
+      "path": "assets/cm-final-plan.mjs",
+      "textSha256": "df39fe43f391d66e5396f69fc79c25b9c0876156be58ba10c25cc339a5a86724",
+      "unchangedFrom": "29de686"
+    },
+    {
+      "name": "recorded-price",
+      "path": "assets/cm-final-plan.mjs",
+      "textSha256": "f26c9670290c795b068fae73be53fdae065a188315fcc3ea6a888c91b6e2676b",
+      "unchangedFrom": "29de686"
+    }
+  ],
+  "scope": "Literal source equality of actual-stat setup and recorded-price class; common 29 modules and original data/evidence are verified separately by the release checker."
+}

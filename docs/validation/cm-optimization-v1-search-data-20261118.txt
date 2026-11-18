@@ -1,0 +1,1 @@
+{"status": "passed", "counts": {"skills": 2236, "outfits": 274, "supports": 568, "courses": 138}, "warnings": 5}

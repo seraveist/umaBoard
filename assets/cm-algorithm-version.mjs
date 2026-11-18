@@ -1,5 +1,6 @@
-// Public release name. Keep numerical model IDs for old results and cache keys.
+// Public release name stays v1. A search revision invalidates final-result
+// caches while keeping the unchanged chart/physics model identifiers.
 export const CM_ALGORITHM=Object.freeze({
- id:'umaboard-optimization-v1',version:'v1',name:'최적화 알고리즘 v1',
- models:Object.freeze({chart:'cm-first-chart-v11',final:'cm-post-training-v11',solo:'solo-comparison-v5'})
+ id:'umaboard-optimization-v1',version:'v1',revision:2,name:'최적화 알고리즘 v1',
+ models:Object.freeze({chart:'cm-first-chart-v11',final:'cm-post-training-v12',solo:'solo-comparison-v5'})
 });
