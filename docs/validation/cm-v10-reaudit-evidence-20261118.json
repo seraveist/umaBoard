@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "5699d480ec7fb4db09a3c739b5c1212a46314838",
+  "sources": [
+    {
+      "url": "https://kamigame.jp/umamusume/page/277963970265014629.html",
+      "title": "【ウマ娘】王手の発動条件と有効レース｜取り方は？ - 神ゲー攻略",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "publishedAt": "not displayed",
+      "modifiedAt": "2026-11-16T12:37:19+09:00",
+      "summary": "왕수는 도쿄2000·롱샹 최속, 도쿄2400·한신2000은 약10~20m 지연 준최속. 교토 등 늦은 조건은 우선도가 낮다.",
+      "assessment": "qualitative agreement for Hanshin 2000 near-earliest acceleration; explicitly permits Tokyo 2400 as well as Tokyo 2000 and Longchamp; late Kyoto 2000 is weaker; not an empirical probability calibration"
+    },
+    {
+      "url": "https://note.com/flosche/n/nfe35049e4af7",
+      "title": "第1回マンスリーマッチ1週目　準備メモ｜Flosche Jin / ﾌﾛ-ｼｪ ｼﾞﾝ",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "publishedAt": "2024-03-04",
+      "modifiedAt": null,
+      "summary": "2024-03-04 작성된 주쿄 잔디2000 준비 메모에 왕수·군림과 각각의 하위 스킬을 코스 한정 유효 가속으로 열거한다.",
+      "assessment": "original author course memo, March 2024 Monthly Match not Champions Meeting; lists King and Gunrin as useful Chukyo 2000 accelerations; qualitative only"
+    },
+    {
+      "url": "https://umamusumekouryakubon.jp/2024/05/28/ウマ娘レース場ごとの主要有効加速まとめ/",
+      "title": "【ウマ娘】レース場ごとの終盤加速スキルまとめ – ウマ娘攻略本",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "publishedAt": "2024-05-28T13:59:26+09:00",
+      "modifiedAt": "2026-07-02T21:51:02+09:00",
+      "summary": "검색 발췌와 달리 현재 본문은 동적 순위·캐시 진단 중심이어서 확률 근거로 채택하지 않았다.",
+      "assessment": "not used for validation: retrieved page is a dynamic ranking/debug dump that does not reproduce search excerpt probability tables; no probability figures imported"
+    }
+  ],
+  "ci": {
+    "url": "https://github.com/seraveist/umaBoard/actions/runs/44252470665",
+    "commit": "5699d480ec7fb4db09a3c739b5c1212a46314838",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-18T06:50:20Z"
+  },
+  "focusedTests": {
+    "command": "node --test tests/cm-v10-mechanics.test.mjs tests/cm-activation-probability.test.mjs tests/engine.test.mjs tests/cm-state.test.mjs",
+    "tests": 87,
+    "pass": 87,
+    "fail": 0
+  },
+  "interpretation": "source summaries, no redistributed full articles; qualitative guides do not calibrate measured activation probabilities"
+}
