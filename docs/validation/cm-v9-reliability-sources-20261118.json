@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-18 Asia/Seoul",
+  "frozenEngine": "67b72fd71c3952737b94e3ae0e3e82b2b02fcf8b",
+  "primary": [
+    {
+      "name": "SkillChecker.kt",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/SkillChecker.kt",
+      "read": true,
+      "lines": 616
+    },
+    {
+      "name": "RaceState.kt",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/RaceState.kt",
+      "read": true,
+      "lines": 1026
+    },
+    {
+      "name": "RaceCalculator.kt",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/RaceCalculator.kt",
+      "read": true,
+      "lines": 858
+    },
+    {
+      "name": "SkillData.kt",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/data2/SkillData.kt",
+      "read": true,
+      "lines": 979
+    },
+    {
+      "name": "ActivationConditions.ts",
+      "url": "https://github.com/alpha123/uma-skill-tools/blob/bce6c0888e0f19dac10ac0d27d1e9741c6917657/ActivationConditions.ts",
+      "read": true,
+      "lines": 1030
+    },
+    {
+      "name": "ActivationSamplePolicy.ts",
+      "url": "https://github.com/alpha123/uma-skill-tools/blob/bce6c0888e0f19dac10ac0d27d1e9741c6917657/ActivationSamplePolicy.ts",
+      "read": true,
+      "lines": 228
+    }
+  ],
+  "playerGuides": [
+    {
+      "url": "https://merci-splatoon.com/2607long-1/",
+      "title": "26’7月チャンミ「LONG」チーム編成考察会 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2026-05-10T23:37:29+09:00",
+      "modified": "2026-05-10T23:37:29+09:00",
+      "status": 200,
+      "role": "original player guide; qualitative evidence, not measured activation frequencies"
+    },
+    {
+      "url": "https://merci-splatoon.com/2603cla-1/",
+      "title": "3月チャンミ「CLASSIC」競馬場予想 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2025-12-25T15:49:46+09:00",
+      "modified": "2026-03-06T13:46:49+09:00",
+      "status": 200,
+      "role": "original player guide; qualitative evidence, not measured activation frequencies"
+    },
+    {
+      "url": "https://merci-splatoon.com/2410-cla-1/",
+      "title": "10月チャンピオンズミーティング「CLASSIC」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2024-09-08T08:17:13+09:00",
+      "modified": "2024-10-19T20:10:49+09:00",
+      "status": 200,
+      "role": "original player guide; qualitative evidence, not measured activation frequencies"
+    },
+    {
+      "url": "https://www.orooroktgameblog.net/entry/2024/07/10/123834",
+      "title": "【京都特攻】新衣装ライスシャワー（大豊食祭）の固有スキル・進化スキルなど性能評価【ウマ娘】 - おろぶろぐ",
+      "published": "2024-07-10T03:38:34Z",
+      "modified": null,
+      "status": 200,
+      "role": "original skill explanation"
+    },
+    {
+      "url": "https://merci-splatoon.com/2603cla-3/",
+      "title": "【26’3月CLASSIC】デルマー22差し　本育成編【別冊スティル’sバイブル】 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2026-03-07T23:18:09+09:00",
+      "modified": "2026-10-21T10:16:27+09:00",
+      "status": 200,
+      "role": "original player guide; qualitative evidence, not measured activation frequencies"
+    }
+  ],
+  "courseConditionReferences": [
+    {
+      "url": "https://gamewith.jp/uma-musume/article/show/462174",
+      "course": "Tokyo 2000",
+      "cm": "2024-10"
+    },
+    {
+      "url": "https://gamewith.jp/uma-musume/article/show/512814",
+      "course": "Kyoto 2000",
+      "cm": "2025-09",
+      "caution": "course diagram gives approximate positions; do not substitute for exact master geometry"
+    },
+    {
+      "url": "https://gamewith.jp/uma-musume/article/show/564771",
+      "course": "Nakayama 3600",
+      "cm": "2026-07"
+    },
+    {
+      "url": "https://gamewith.jp/uma-musume/article/show/540079",
+      "course": "Del Mar turf 2200",
+      "cm": "2026-03"
+    },
+    {
+      "url": "https://note.com/yaroshi_1025/n/na2a555873e2d",
+      "course": "Kyoto 2000",
+      "role": "original player build guide; stat context only, stated percentage not an observed sample estimate"
+    }
+  ],
+  "excluded": [
+    {
+      "url": "https://merci-splatoon.com/2509cla-1/",
+      "reason": "404; no evidence taken from this URL"
+    }
+  ],
+  "limitations": [
+    "Public simulators are reverse-engineering implementations, not an official specification.",
+    "No independent replay frequency, win-rate or field-distribution calibration.",
+    "Source-disagreement sensitivity results do not establish the actual game lottery law."
+  ]
+}

@@ -1,0 +1,425 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "67b72fd71c3952737b94e3ae0e3e82b2b02fcf8b",
+  "assetsSha256": "6522c0e8ad66e6f9305f8c0adae62a45580a7fd42a22c2b752927e3846119703",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "interpretation": "implementation and same-assumption sensitivity audit; no empirical encounter calibration",
+  "fieldGroups": 125,
+  "predicateChecks": 1000250,
+  "mismatches": [
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1866.757,
+      "current": 1866.987,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1866.757,
+      "current": 1866.987,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1729.6031538461536,
+      "current": 1729.8331538461537,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": "==",
+          "value": 2
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1729.6331538461536,
+      "current": 1729.8631538461536,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1866.757,
+      "current": 1866.987,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1866.757,
+      "current": 1866.987,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1616.787,
+      "current": 1617.017,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1729.6031538461536,
+      "current": 1729.8331538461537,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "courseId": "11203",
+      "atoms": [
+        {
+          "field": "phase",
+          "operator": ">=",
+          "value": 2
+        },
+        {
+          "field": "corner",
+          "operator": "==",
+          "value": 0
+        },
+        {
+          "field": "straight_front_type",
+          "operator": "==",
+          "value": 2
+        }
+      ],
+      "previous": 1729.6331538461536,
+      "current": 1729.8631538461536,
+      "expected": true,
+      "actual": false
+    }
+  ],
+  "lotteries": [
+    {
+      "courseId": "10507",
+      "id": "201581",
+      "counts": {
+        "0": 617,
+        "1": 1120,
+        "3": 624,
+        "4": 1121,
+        "6": 614
+      },
+      "referenceCounts": {
+        "0": 825,
+        "1": 816,
+        "3": 823,
+        "4": 808,
+        "6": 824
+      }
+    },
+    {
+      "courseId": "10507",
+      "id": "103003111",
+      "counts": {
+        "0": 621,
+        "1": 1122,
+        "3": 611,
+        "4": 1125,
+        "6": 617
+      },
+      "referenceCounts": {
+        "3": 1364,
+        "4": 1364,
+        "6": 1368
+      }
+    },
+    {
+      "courseId": "10604",
+      "id": "201581",
+      "counts": {
+        "0": 1368,
+        "2": 2728
+      },
+      "referenceCounts": {
+        "0": 2048,
+        "2": 2048
+      }
+    }
+  ],
+  "counterBoundary": {
+    "courseId": "10708",
+    "current": [
+      {
+        "id": "000-before-a",
+        "index": 1,
+        "x": 540.0739066769876,
+        "frameStartX": 539.8723106769876,
+        "t": 28.310000000000002,
+        "duration": 5.4
+      },
+      {
+        "id": "000-before-b",
+        "index": 1,
+        "x": 720.0991346769831,
+        "frameStartX": 719.8975386769831,
+        "t": 37.24,
+        "duration": 5.4
+      },
+      {
+        "id": "100591",
+        "index": 1,
+        "x": 1200.0992106770705,
+        "frameStartX": 1199.8976146770704,
+        "t": 61.050000000000004,
+        "duration": 7.2
+      }
+    ],
+    "reference": [
+      {
+        "id": "000-before-a",
+        "index": 1,
+        "x": 540.0739066769876,
+        "frameStartX": 539.8723106769876,
+        "t": 28.310000000000002,
+        "duration": 5.4
+      },
+      {
+        "id": "000-before-b",
+        "index": 1,
+        "x": 720.0991346769831,
+        "frameStartX": 719.8975386769831,
+        "t": 37.24,
+        "duration": 5.4
+      },
+      {
+        "id": "100591",
+        "index": 1,
+        "x": 1200.0992106770705,
+        "frameStartX": 1199.8976146770704,
+        "t": 61.050000000000004,
+        "duration": 7.2
+      },
+      {
+        "id": "201611",
+        "index": 1,
+        "x": 1200.0992106770705,
+        "frameStartX": 1199.8976146770704,
+        "t": 61.050000000000004,
+        "duration": 5.4
+      }
+    ],
+    "currentFinishTime": 84.81323474551249,
+    "referenceFinishTime": 84.81323474551249
+  }
+}

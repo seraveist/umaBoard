@@ -1,0 +1,203 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "67b72fd71c3952737b94e3ae0e3e82b2b02fcf8b",
+  "assetsSha256": "6522c0e8ad66e6f9305f8c0adae62a45580a7fd42a22c2b752927e3846119703",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "interpretation": "implementation and same-assumption sensitivity audit; no empirical encounter calibration",
+  "scope": "independent subset enumeration and stage-cost arithmetic; shared production evaluator and declared objective, not an independent physics oracle",
+  "results": [
+    {
+      "courseId": "10604",
+      "style": 2,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 12,
+      "selectedIds": [
+        "100221",
+        "201112",
+        "202712"
+      ],
+      "cost": 224,
+      "gain": 1.1516302990917078,
+      "match": true
+    },
+    {
+      "courseId": "10604",
+      "style": 2,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201102",
+        "201112",
+        "202712"
+      ],
+      "cost": 440,
+      "gain": 1.8629299992247914,
+      "match": true
+    },
+    {
+      "courseId": "10604",
+      "style": 4,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 11,
+      "selectedIds": [
+        "100221",
+        "201462",
+        "202872"
+      ],
+      "cost": 248,
+      "gain": 1.4296807453163534,
+      "match": true
+    },
+    {
+      "courseId": "10604",
+      "style": 4,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201452",
+        "201462",
+        "202872"
+      ],
+      "cost": 488,
+      "gain": 2.1388543134761195,
+      "match": true
+    },
+    {
+      "courseId": "10807",
+      "style": 2,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 12,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201102",
+        "201112"
+      ],
+      "cost": 296,
+      "gain": 1.1502878479054368,
+      "match": true
+    },
+    {
+      "courseId": "10807",
+      "style": 2,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201102",
+        "201112",
+        "202712"
+      ],
+      "cost": 440,
+      "gain": 1.6636550875826166,
+      "match": true
+    },
+    {
+      "courseId": "10807",
+      "style": 4,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 11,
+      "selectedIds": [
+        "100221",
+        "201462",
+        "202872"
+      ],
+      "cost": 248,
+      "gain": 1.0496427064459206,
+      "match": true
+    },
+    {
+      "courseId": "10807",
+      "style": 4,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201452",
+        "201462",
+        "202872"
+      ],
+      "cost": 488,
+      "gain": 1.8116663778764261,
+      "match": true
+    },
+    {
+      "courseId": "11703",
+      "style": 2,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 12,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201102",
+        "201112"
+      ],
+      "cost": 296,
+      "gain": 1.2510304501096243,
+      "match": true
+    },
+    {
+      "courseId": "11703",
+      "style": 2,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201102",
+        "201112"
+      ],
+      "cost": 296,
+      "gain": 1.2510304501096243,
+      "match": true
+    },
+    {
+      "courseId": "11703",
+      "style": 4,
+      "budget": 300,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 11,
+      "selectedIds": [
+        "100221",
+        "201452",
+        "201462"
+      ],
+      "cost": 208,
+      "gain": 0.9186140789038871,
+      "match": true
+    },
+    {
+      "courseId": "11703",
+      "style": 4,
+      "budget": 500,
+      "enumeratedSubsets": 16,
+      "affordableSubsets": 16,
+      "selectedIds": [
+        "100221",
+        "200362",
+        "201452",
+        "201462",
+        "202872"
+      ],
+      "cost": 488,
+      "gain": 1.3380769589402461,
+      "match": true
+    }
+  ]
+}
