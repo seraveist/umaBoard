@@ -74,13 +74,14 @@ test('repeating alternatives share their cooldown and cannot double-activate in 
  const events=run([repeated]).events;assert.ok(events.length>1);assert.ok(events.every(e=>e.index===1));
  for(let i=1;i<events.length;i++)assert.ok(events[i].t-events[i-1].t>11);
 });
-test('a repeated random trigger has one cached ten-metre chance and corner draws do not choose the same corner twice',()=>{
+test('a repeated random trigger has one cached ten-metre chance and corner draws allow replacement',()=>{
  const repeated=skill('repeat-random',[['target_speed',1000]],[[{field:'phase_random',operator:'==',value:1}]],{cooldown_raw:50000});assert.equal(run([repeated]).events.length,1);
  const corner=skill('corners',[['target_speed',1000]],[[{field:'all_corner_random',operator:'==',value:1}]],{cooldown_raw:300000});
- const c=compileChartSkill(corner,setup);for(let sample=0;sample<24;sample++){
+ const c=compileChartSkill(corner,setup);let duplicate=0;for(let sample=0;sample<64;sample++){
   const windows=branchSampler(setup,[],sample)(c.invocations[0].condition,corner.id,c.invocations[0],false)[0]?.windows||[];
-  assert.equal(windows.length,2);const areas=windows.map(([at])=>setup.course.corners.findIndex(k=>at>=k.start&&at<k.start+k.length));assert.notEqual(areas[0],areas[1]);
+  assert.equal(windows.length,2);const areas=windows.map(([at])=>setup.course.corners.findIndex(k=>at>=k.start&&at<k.start+k.length));duplicate+=Number(areas[0]===areas[1]);
  }
+ assert.ok(duplicate>0&&duplicate<64);
 });
 test('forced rare activation uses the selected pack and cooldown, while unique replay deliberately fires again',()=>{
  const trigger=skill('trigger',[['invoke_rare',10000]],[[{field:'remain_distance',operator:'<',value:800}]]);

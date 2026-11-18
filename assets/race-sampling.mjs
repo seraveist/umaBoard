@@ -2,6 +2,7 @@
 // stratum once. A keyed Feistel permutation separates different dimensions;
 // jitter is separate again. Prefixes stay stable when evaluation is extended.
 import {rankAt,rankChanges,encounterPolicy} from './race-scenarios.mjs';
+import {intersectWindows} from './condition-windows.mjs';
 export const SAMPLING_VERSION='keyed-latin64-v1';
 const mix=n=>{n=Math.imul(n^(n>>>16),0x21f0aaad);n=Math.imul(n^(n>>>15),0x735a2d97);return (n^(n>>>15))>>>0;};
 const hash=text=>{let n=2166136261;for(const c of String(text))n=Math.imul(n^c.charCodeAt(0),16777619);return mix(n);};
@@ -62,7 +63,7 @@ export function scheduleContextBranches(branches,setup){
   if(branch.ranks?.length<9&&context.rankTimeline?.length){
    const points=[...new Set([0,...context.rankTimeline.map(p=>p.distance),setup.course.distance].filter(x=>x<=setup.course.distance))].sort((a,b)=>a-b);
    const bands=points.slice(0,-1).flatMap((lo,i)=>{const rank=rankAt(context.rankTimeline,lo);return rank===undefined||branch.ranks.includes(rank)?[[lo,points[i+1]]]:[];});
-   windows=windows.flatMap(([lo,hi])=>bands.map(([a,b])=>[Math.max(lo,a),Math.min(hi,b)]).filter(([a,b])=>a<b));
+   windows=intersectWindows(windows,bands);
   }
   return windows.length?[{...branch,windows,external:(branch.external||[]).filter(a=>!constant(a))}]:[];
  });

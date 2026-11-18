@@ -17,8 +17,9 @@ import {activeSkillIds,prerequisiteIds} from './skill-context.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
+import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v8';
+export const CM_MODEL_VERSION='cm-first-chart-v9';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -162,15 +163,13 @@ export function branchSampler(setup,nativeIds,sample){
    const count=inv.chartRandomPolicy==='corners'?2:1,windows=[];
    for(let k=0;k<count;k++){
     const areaIndex=Math.min(areas.length-1,Math.floor(value(id,inv.chartRandomPolicy,k*2)*areas.length));
-    const selected=inv.chartRandomPolicy==='corners'?areas.splice(areaIndex,1)[0]:areas[areaIndex];
+    const selected=areas[areaIndex];
     if(!selected)continue;
-    const start=inv.chartRandomPolicy==='corners'
-     ?selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*Math.max(0,selected[1]-selected[0]-10)
-     :Math.min(selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*(selected[1]-selected[0]),selected[1]-2);
+    const start=selected[0]+value(id,inv.chartRandomPolicy,k*2+1)*Math.max(0,selected[1]-selected[0]-10);
     windows.push([start,Math.min(selected[1],start+10)]);
    }
    return scheduleContextBranches(branches.flatMap(branch=>{
-    const clipped=windows.flatMap(([lo,hi])=>branch.windows.map(([a,b])=>[Math.max(lo,a),Math.min(hi,b)]).filter(([a,b])=>a<b)).sort((a,b)=>a[0]-b[0]);
+    const clipped=intersectWindows(branch.windows,windows);
     return clipped.length?[decorate({...branch,random:false,windows:clipped,at:clipped[0][0]},0)]:[];
    }),setup);
   }
@@ -178,10 +177,6 @@ export function branchSampler(setup,nativeIds,sample){
   // alternatives. A weaker fallback must not roll ahead of its stronger form.
   return scheduleContextBranches(branches.map((branch,index)=>{
    const sampled=sampleBranches([branch],value(id,branch.randomKey||inv.index,branch.randomKey?0:index))[0];
-   if(inv.cooldownSeconds&&branch.randomKey){
-    const area=branch.windows.find(([lo,hi])=>sampled.at>=lo&&sampled.at<hi);
-    if(area){sampled.at=Math.max(area[0],Math.min(sampled.at,area[1]-2));sampled.windows=[[sampled.at,Math.min(area[1],sampled.at+10)]];}
-   }
    return decorate(sampled,index);
   }),setup);
  };

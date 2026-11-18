@@ -1,4 +1,5 @@
 import {createChartSetup,sortChartRows,CM_MODEL_VERSION} from './cm-chart.mjs';
+import {selectableCourse} from './reviewed-course-geometry.mjs';
 import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition,buildAcquisitionHierarchy,relatedAcquisitionIds,updateAcquisition,bulkAcquisition} from './cm-state.mjs';
 import {createSkillDetails} from './cm-skill-details.mjs';
 import {INHERITED_LIMIT,inheritedOrigin} from './cm-recommendation.mjs';
@@ -18,7 +19,7 @@ import {finalAcquisitionSnapshot} from './cm-evolution.mjs';
 
 const $=selector=>document.querySelector(selector);
 const STORAGE='umaboard-cm-workspace-v1';
-const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹'};
+const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹','10202':'산타아니타','10203':'델마'};
 const statLabels={speed:'스피드',stamina:'스태미나',power:'파워',guts:'근성',wisdom:'지능'};
 let data,profiles,display,portraits,manifest,worker,hierarchy,finalPlanner,skillSources,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,total=0;
 let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311','30300','30322','30289','30323'];
@@ -70,7 +71,7 @@ function renderDeck(){
  $('#deck-count').textContent=`${deck.filter(Boolean).length} / 6`;
 }
 function option(value,label){const o=el('option','',label);o.value=String(value);return o;}
-function selectableCourses(){return Object.values(data.courses).filter(c=>c.selectable&&!c.run_up_m&&Number(c.track_id)<10202);}
+function selectableCourses(){return Object.values(data.courses).filter(selectableCourse);}
 function populateCourses(preferred){
  const list=selectableCourses().filter(c=>c.track_id===$('#track').value).sort((a,b)=>a.surface-b.surface||a.distance-b.distance||a.id.localeCompare(b.id));
  $('#course').replaceChildren(...list.map(c=>option(c.id,`${c.surface===1?'잔디':'더트'} ${c.distance.toLocaleString('ko-KR')}m${c.course_variant===3?' · 외':c.course_variant===2?' · 내':''}`)));

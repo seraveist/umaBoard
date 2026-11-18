@@ -3,11 +3,15 @@ import {evaluateCondition} from './candidates.mjs';
 import {activationProbability,externalConditionValue} from './race-sampling.mjs';
 import {cmRanks} from './cm-ranks.mjs';
 import {supportedScale,supportedDuration} from './cm-effect-policy.mjs';
+import {containsPosition,intersectWindows,windowCrossed,randomWindow} from './condition-windows.mjs';
 const compare=(a,op,b)=>op==='=='?a===b:op==='!='?a!==b:op==='>'?a>b:op==='>='?a>=b:op==='<'?a<b:op==='<='?a<=b:false;
 const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
 const START_PREDICATES=new Set(['is_exist_skill_id','succession_skill_count','random_lot','random_lot_shared','post_number','popularity','is_badstart','is_goodstart']);
 const DYNAMIC=new Set(['succession_skill_count','random_lot','random_lot_shared','post_number','popularity','accumulatetime','hp_per','is_lastspurt','lastspurt','run_at_full_speed_random','is_activate_other_skill_detail','is_used_skill_id','is_used_skill_id_with_detail_one','is_exist_skill_id','activate_count_all','activate_count_start','activate_count_middle','activate_count_end_after','activate_count_later_half','activate_count_heal','activate_count_param_skill','is_badstart','is_goodstart','temptation_count','is_temptation']);
 const SPATIAL=new Set(['phase','phase_random','phase_firsthalf','phase_firsthalf_random','phase_laterhalf','phase_laterhalf_random','phase_firstquarter','phase_firstquarter_random','phase_corner_random','phase_straight_random','phase_latter_half_straight_random','phase_first_half_straight_random','distance_rate','remain_distance','distance_rate_after_random','corner','corner_random','all_corner_random','is_finalcorner','is_finalcorner_laterhalf','is_finalcorner_random','is_last_straight','is_last_straight_onetime','last_straight_random','straight_random','straight_front_type','slope','up_slope_random','up_slope_random_later_half','down_slope_random','down_slope_random_later_half']);
+// Source predicates use frame-start distance for phase/furlong/remaining distance,
+// and the updated position for geometry. Keep their intervals separate.
+const FRAME_START=new Set(['phase','phase_firsthalf','phase_laterhalf','remain_distance','furlong']);
 const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate']);
 const phaseBounds=(d,p)=>[[0,d/6],[d/6,2*d/3],[2*d/3,5*d/6],[5*d/6,d]][p];
 export function fixedContext(setup){
@@ -36,7 +40,10 @@ function spatialValue(atom,c,x,state){
  if(f==='is_last_straight_onetime'||f==='last_straight_random')return state.is_last_straight;
  if(f==='is_finalcorner_random')return Number(!!c.corners.at(-1)&&x>=c.corners.at(-1).start&&x<c.corners.at(-1).start+c.corners.at(-1).length);
  if(f==='all_corner_random')return Number(state.corner!==0);
- if(f==='corner_random')return state.corner;
+ if(f==='corner_random'){
+  const corner=c.corners[c.corners.length-4+n-1];
+  return corner&&x>=corner.start&&x<corner.start+corner.length?n:-1;
+ }
  if(f==='straight_random')return Number(c.straights.some(s=>x>=s.start&&x<s.end));
  if(f==='up_slope_random')return Number(state.slope===1);
  if(f==='down_slope_random')return Number(state.slope===2);
@@ -75,17 +82,32 @@ function compileCondition(dnf,setup){
   const unknown=group.filter(a=>!(a.field in fixed)&&a.field!=='furlong'&&!SPATIAL.has(a.field)&&!DYNAMIC.has(a.field)&&!OPPONENT.has(a.field)&&!recordedExternal(a));
   if(unknown.length){unsupported.push(...unknown.map(a=>a.field));continue;}
   if(group.some(a=>['random_lot','random_lot_shared'].includes(a.field)&&(a.operator!=='=='||a.value<0||a.value>100))){unsupported.push('확률 조건 구문');continue;}
-  const spatial=group.filter(a=>SPATIAL.has(a.field)||a.field==='furlong'),windows=[];
-  for(let k=0;k<points.length-1;k++){
-   const lo=points[k],hi=points[k+1],x=(lo+hi)/2,state=courseState(setup.course,x);
-   if(spatial.every(a=>compare(spatialValue(a,setup.course,x,state),a.operator,a.value))){
-    if(windows.at(-1)?.[1]===lo)windows.at(-1)[1]=hi;else windows.push([lo,hi]);
-   }
-  }
-  if(!windows.length)continue;
+  if(group.some(a=>a.field==='is_last_straight_onetime'&&(a.operator!=='=='||a.value!==1))){unsupported.push('최종 직선 진입 조건 구문');continue;}
+  const spatial=group.filter(a=>SPATIAL.has(a.field)||a.field==='furlong');
+  const matching=atoms=>{
+   const result=[];for(let k=0;k<points.length-1;k++){
+    const lo=points[k],hi=points[k+1],x=(lo+hi)/2,state=courseState(setup.course,x);
+    if(atoms.every(a=>compare(spatialValue(a,setup.course,x,state),a.operator,a.value))){
+     if(result.at(-1)?.[1]===lo)result.at(-1)[1]=hi;else result.push([lo,hi]);
+    }
+   }return result;
+  };
+  const startAtoms=[...spatial.filter(a=>FRAME_START.has(a.field)),...spatial.filter(a=>a.field==='is_last_straight_onetime').map(()=>({field:'is_last_straight',operator:'==',value:0}))],endAtoms=spatial.filter(a=>!FRAME_START.has(a.field));
+  const frameStartWindows=matching(startAtoms),frameEndWindows=matching(endAtoms);
+  if(!frameStartWindows.length||!frameEndWindows.length)continue;
+  const windows=intersectWindows(frameStartWindows,frameEndWindows);
+  // A crossed boundary can satisfy old-phase/new-corner predicates even when
+  // their same-position intersection has zero length. No course/skill IDs,
+  // coordinate shifts or invented epsilon-width intervals are involved.
+  const crossings=startAtoms.length&&endAtoms.length?frameEndWindows.map(([lo])=>lo).filter(at=>
+   frameStartWindows.some(([lo])=>lo<at)&&!windows.some(([lo,hi])=>lo<=at&&at<=hi)):[];
+  if(!windows.length&&!crossings.length)continue;
   const randomKey=spatial.filter(a=>a.field.includes('random')).map(a=>`${a.field}:${a.operator}:${a.value}`).sort().join('|');
-  branches.push({windows,randomKey,ranks:cmRanks(group),dynamic:group.filter(a=>DYNAMIC.has(a.field)),external:group.filter(a=>OPPONENT.has(a.field)||recordedExternal(a)),assumed:group.filter(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined||a.field==='post_number'&&setup.raceContext?.postNumber==null||a.field==='popularity'&&setup.raceContext?.popularity==null).map(a=>a.field),
-   random:spatial.some(a=>a.field.includes('random')&&a.field!=='run_at_full_speed_random')||group.some(a=>OPPONENT.has(a.field)&&!Object.hasOwn(setup.externalDomains||{},a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))});
+  const randomAtoms=spatial.filter(a=>a.field.includes('random'));
+  const common={randomKey,ranks:cmRanks(group),...(startAtoms.length?{frameStartWindows}:{}),...(endAtoms.length?{frameEndWindows}:{}),...(randomAtoms.length?{drawWindows:matching(randomAtoms)}:{}),dynamic:group.filter(a=>DYNAMIC.has(a.field)),external:group.filter(a=>OPPONENT.has(a.field)||recordedExternal(a)),assumed:group.filter(a=>OPPONENT.has(a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined||a.field==='post_number'&&setup.raceContext?.postNumber==null||a.field==='popularity'&&setup.raceContext?.popularity==null).map(a=>a.field),
+   random:randomAtoms.length>0||group.some(a=>OPPONENT.has(a.field)&&!Object.hasOwn(setup.externalDomains||{},a.field)&&externalConditionValue(a,{x:0,raceContext:setup.raceContext})===undefined&&!['order','order_rate','popularity','post_number','lane_type','is_behind_in'].includes(a.field))};
+  if(windows.length)branches.push({...common,windows});
+  for(const at of crossings)branches.push({...common,windows:[[at,at]],boundaryEvent:true});
  }
  return {branches,unsupported};
 }
@@ -134,14 +156,23 @@ export function compileSkill(skill,setup){
 }
 export function sampleBranches(branches,q,pre=false){
  return branches.map(b=>{
-  const length=b.windows.reduce((sum,[lo,hi])=>sum+hi-lo,0);let offset=length*q;
-  let at=b.windows[0]?.[0]??Infinity;
-  if(b.random&&!pre)for(const[lo,hi]of b.windows){if(offset<=hi-lo){at=Math.min(hi-1e-5,lo+offset);break;}offset-=hi-lo;}
-  return {...b,at,fullSpurtQ:q};
+  if(!b.random||pre)return {...b,at:b.windows[0]?.[0]??Infinity,fullSpurtQ:q};
+  if(!b.drawWindows){
+   // Preserve the existing assumed encounter timing. Only source random
+   // spatial predicates create a cached ten-metre activation opportunity.
+   const {at}=b.boundaryEvent?{at:b.windows[0][0]}:randomWindow(b.windows,q,1e-5);
+   return {...b,at,fullSpurtQ:q};
+  }
+  // Draw from the random predicate's own domain before applying other gates.
+  // A missed ten-metre chance cannot wait indefinitely or reroll inside a gate.
+  const {at,window}=randomWindow(b.drawWindows,q);
+  return {...b,windows:intersectWindows(b.windows,[window]),at,fullSpurtQ:q};
  });
 }
 export function branchReady(branch,state,skillId){
- if(state.x+1e-6<branch.at||!branch.windows.some(([lo,hi])=>state.x+1e-6>=lo&&(state.prevX??state.x)<hi))return false;
+ const previous=state.prevX??state.x;
+ if(state.x+1e-6<branch.at||!windowCrossed(branch.windows,previous,state.x))return false;
+ if(branch.frameStartWindows&&!containsPosition(branch.frameStartWindows,previous)||branch.frameEndWindows&&!containsPosition(branch.frameEndWindows,state.x))return false;
  if(!(branch.external||[]).every(a=>{const value=externalConditionValue(a,state);return value===undefined||compare(value,a.operator,a.field==='order_rate'?Math.round(9*a.value/100):a.value);}))return false;
  return branch.dynamic.every(a=>{
   let value;

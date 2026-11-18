@@ -69,7 +69,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
     active.push({...raw,value,id:i.id,end:state.t+duration});
    }
   }
-  events.push({id:i.id,index:i.index,x:state.x,t:state.t,duration:Number.isFinite(duration)?duration:null,...(forced?{forced:true}:{})});
+  events.push({id:i.id,index:i.index,x:state.x,frameStartX:state.prevX,t:state.t,duration:Number.isFinite(duration)?duration:null,...(forced?{forced:true}:{})});
   for(const effect of i.effects.filter(e=>['invoke_rare','invoke_unique'].includes(e.kind))){
    const rare=effect.kind==='invoke_rare',count=Math.floor(effectValue(effect,{setup,physics,state,q:random}));
    const eligible=compiledSkills.filter(s=>s.id!==i.id&&!stack.has(s.id)&&(rare?['gold','evolution'].includes(s.skill.rarity)&&!used.has(s.id):['unique','unique_low_star','unique_upgraded'].includes(s.skill.rarity))).sort((a,b)=>a.id.localeCompare(b.id));
@@ -85,7 +85,10 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  delay=Math.max(0,delay);state.startDelay=delay;
  // Distance-scheduled conditions avoid checking every future invocation on
  // every integration frame. Dynamic gates stay awake while their window holds.
- const awake=[],sleepers=[],nextWindow=branches=>{let next=Infinity;for(const branch of branches)for(const [lo,hi]of branch.windows)if(state.prevX<hi)next=Math.min(next,Math.max(lo,branch.at));return next;};
+ const awake=[],sleepers=[],nextWindow=branches=>{let next=Infinity;for(const branch of branches){
+  if(branch.frameStartWindows&&!branch.frameStartWindows.some(([,hi])=>state.prevX<hi))continue;
+  for(const [lo,hi]of branch.windows)if(state.prevX<hi)next=Math.min(next,Math.max(lo,branch.at));
+ }return next;};
  const schedule=(inv,x)=>{
   if(!Number.isFinite(x))return;
   let lo=0,hi=sleepers.length;while(lo<hi){const mid=(lo+hi)>>>1;if(sleepers[mid].x<=x)lo=mid+1;else hi=mid;}

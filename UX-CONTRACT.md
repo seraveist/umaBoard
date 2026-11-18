@@ -60,6 +60,10 @@ storage is disclosed and does not prevent calculation. Export is a user-triggere
 JSON download. No external writes/messaging or irreversible mutations.
 
 The dropdown records acquisition without altering the simulated mean gain.
+Course selection uses the same reviewed-coordinate support gate as calculation.
+Reviewed zero-runup US courses use Korean track labels; missing/conflicting or
+positive-runup geometry remains unavailable. This does not change selection,
+keyboard, invalidation or stage-transition behavior. See `docs/CM_ALGORITHMS_V9_QA.md`.
 Under the user's 2026-11-16 update, acquired upper skills also mark every verified
 lower purchase/evolution stage acquired. An unavailable lower stage clears every
 linked upper. Returning a purchased lower stage to a hint clears acquired uppers.

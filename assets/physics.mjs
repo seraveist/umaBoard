@@ -1,5 +1,6 @@
 // Independently implemented equations. Reference versions and omissions: docs/ENGINE_VALIDATION.md.
-export const MODEL_VERSION='solo-comparison-v2';
+import {supportsCourseCoordinates} from './reviewed-course-geometry.mjs';
+export const MODEL_VERSION='solo-comparison-v3';
 export const STAT_KEYS=['speed','stamina','power','guts','wisdom'];
 const SPEED=[[1,.98,.962],[.978,.991,.975],[.938,.998,.994],[.931,1,1]];
 const ACCEL=[[1,1,.996],[.985,1,.996],[.975,1,1],[.945,1,.997]];
@@ -31,7 +32,7 @@ export function uniqueMultiplier(kind,level){
 }
 export function validateSetup(setup){
  if(!setup.course?.selectable)throw new Error('선택할 수 없는 코스입니다.');
- if(setup.course.run_up_m||Number(setup.course.track_id)>=10202)throw new Error('미국 코스의 출발 좌표 보정은 검증 중입니다.');
+ if(!supportsCourseCoordinates(setup.course))throw new Error('이 코스의 출발 좌표·보정은 검증 중입니다.');
  if(![1,2,3,4].includes(setup.style))throw new Error('각질을 확인하세요.');
  if(![1,2,3,4].includes(setup.going))throw new Error('마장 상태를 확인하세요.');
  if(![-2,-1,0,1,2].includes(setup.mood))throw new Error('의욕을 확인하세요.');

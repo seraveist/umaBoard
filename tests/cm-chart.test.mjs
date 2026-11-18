@@ -169,8 +169,8 @@ test('CM rank percentages round the field-size threshold and preserve exact-sixt
  assert.deepEqual(cmRanks([a('order_rate','>',50)]),[6,7,8,9]);
  assert.deepEqual(cmRanks([a('order_rate','>=',65),a('order_rate','<=',70)]),[6]);
  const setup=createChartSetup(actual,actualProfiles,{outfitId:'101301',scenarioId:'15',style:2,courseId:'10808'});
- const ana=actual.skills['900271'];assert.equal(styleRecommendation(ana,compileChartSkill(ana,setup),setup).eligible,false);
- const native=actual.skills['100511'];assert.deepEqual(styleRecommendation(native,compileChartSkill(native,setup),setup).allowedStyles,[2]);
+ const ana=actual.skills['900271'];assert.equal(styleRecommendation(ana,compileChartSkill(ana,setup),setup).eligible,true);
+ const native=actual.skills['100511'];assert.deepEqual(styleRecommendation(native,compileChartSkill(native,setup),setup).allowedStyles,[1,2,3,4]);
  assert.equal(styleRecommendation(ana,compileChartSkill(ana,setup),{...setup,style:3}).eligible,true);
  const middle=actual.skills['202661'];assert.equal(styleRecommendation(middle,compileChartSkill(middle,setup),setup).eligible,true);
  const heal=actual.skills['200352'];assert.equal(styleRecommendation(heal,compileChartSkill(heal,setup),setup).source,'not-applicable');

@@ -1,5 +1,9 @@
 # 1차 단독 비교 엔진
 
+> 2026-11-18 현재 공통 엔진은 `solo-comparison-v3`이다. 거리 조건의 이동 전후 판정과
+> 검토된 미국 코스 지원은 [CM v9 검증](CM_ALGORITHMS_V9_QA.md)을 따른다.
+> 아래는2026-10월의 초기 단독 비교 기록이며, 현재 CM 전체의 기능·테스트 개수는 v9 문서가 기준이다.
+
 2026-10-06. 모델 ID: `solo-comparison-v2`.
 
 2026-10-08 개편의 목표 계약은 [MODEL_CONTRACT.md](MODEL_CONTRACT.md), 제품 기준은 [PROJECT_PLAN.md](PROJECT_PLAN.md)를 따른다.

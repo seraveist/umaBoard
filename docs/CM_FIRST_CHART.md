@@ -46,12 +46,11 @@ admission policy before merging into the same checklist:
   901411→91101411 (Epiphaneia), replacing their weaker versions. One origin per row.
 - Pure recovery inherits are excluded from the default performance Top10, but
   retained in `inheritanceOptions` for actual acquisition and joint evaluation.
-- Apply real fixed course/style gates first, then the internal CM9 phase/rank
-  recommendation policy. Curated exceptions cover Anabolic, Angling, Tsubomi,
-  Kanata and Emperor. Broad middle ranges overlap styles; unknown overtakes/gaps
-  remain eligible. A viable main effect keeps a composite eligible even when an
-  extra effect has a different rank requirement. This policy is a conservative
-  product recommendation, not game eligibility or measured activation probability.
+- Apply actual source course/style conditions and calculation support via
+  `condition-feasibility-v1`. No skill-ID or manually assigned rank-band exclusion
+  precedes scoring. Rank/opponent conditions participate in the shared trajectory
+  evaluation. Eligibility is permission to compare, not a recommendation or a
+  measured activation probability. [v9 audit and limitations](CM_ALGORITHMS_V9_QA.md).
 - Rank with the shared HP / baseline tail-time guard / mean policy, keep at most ten with gain >=0.005 lengths
   (so a displayed 0.00 is not admitted), with stable skill-ID tie breaks. The final
   table remains icon/source ordered. `전체 계승 후보 보기` exposes the full legal
@@ -90,12 +89,23 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v8` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v9` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 
 - `CM_MODEL_VERSION`, integration dt and sample count are explicit result fields.
+- Source predicates keep their reference position: phase/phase halves, remaining
+  distance and furlong use frame-start position; distance rate, geometry and
+  spatial random predicates use updated position. A mixed condition can fire on
+  an actual crossing without shifting course coordinates or widening intervals.
+- Random spatial predicates draw from their own area before deterministic gates.
+  Their cached ten-metre opportunity expires. `all_corner_random` draws two areas
+  with replacement; corner/straight opportunity starts reserve ten metres, while
+  generic random-area starts retain the cited two-metre end guard.
+- US courses require an exact geometry match to the pinned zero-runup source.
+  Fourteen current courses match, including Del Mar2000; five remain unavailable
+  for missing/conflicting coordinates or unimplemented positive runup.
 - Mean aggregates paired trajectory differences within each shared context,
   then averages context means (or applies explicit supplied context weights). Default144
   reproducible stratified samples across9 coverage contexts, dt=0.01s. Fixed-position rows use the same

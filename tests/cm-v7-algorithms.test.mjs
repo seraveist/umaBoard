@@ -72,11 +72,15 @@ test('context scheduling retains the original random draw and excludes impossibl
  assert.equal(optimized.gain,scan.gain);assert.deepEqual(optimized.activationRates,scan.activationRates);
 });
 test('explicit weighted contexts aggregate scenario means and override default coverage',()=>{
- const raw=skill('leader','target_speed',2000,[[a('remain_distance',400,'<='),a('order',1)]]);
- const s={...setup,raceContext:normalizeRaceContext({scenarioSource:'test-observations',scenarios:[{id:'lead',weight:9,context:{rankTimeline:[{distance:0,rank:1}]}},{id:'rear',weight:1,context:{rankTimeline:[{distance:0,rank:8}]}}]})};
+ const raceContext=normalizeRaceContext({scenarioSource:'test-observations',scenarios:[{id:'lead',weight:9,context:{rankTimeline:[{distance:0,rank:1}]}},{id:'rear',weight:1,context:{rankTimeline:[{distance:0,rank:8}]}}]});
+ // Keep the original speed-cap case; add a case with positive contribution
+ // so the weighted usefulness assertion cannot pass vacuously at zero gain.
+ for(const [kind,value,statInput]of [['target_speed',2000,stats],['acceleration',4000,{...stats,speed:1000,guts:600}]]){
+ const raw=skill('leader',kind,value,[[a('remain_distance',400,'<='),a('order',1)]]),s={...setup,stats:statInput,raceContext};
  const result=ev([raw],s).evaluate([raw.id],18,.05);assert.ok(Math.abs(result.activationRates.leader-.9)<1e-12);
  assert.ok(Math.abs(result.gain-result.scenarios.find(r=>r.id==='lead').gain*.9)<1e-9);assert.equal(result.scenarioCoverage.probabilityBasis,'user-provided-weights');
- assert.ok(Math.abs(ev([raw],s).marginal([raw.id],raw.id,18,.05).helpfulSampleRate-.9)<1e-12);
+ if(kind==='acceleration'){assert.ok(result.gain>0);assert.ok(Math.abs(ev([raw],s).marginal([raw.id],raw.id,18,.05).helpfulSampleRate-.9)<1e-12);}
+ }
  assert.throws(()=>normalizeRaceContext({scenarios:[{id:'bad',weight:-1,context:{}}]}));
 });
 test('shared threshold cases evaluate unseen numeric gates consistently rather than satisfying both opposites',()=>{
