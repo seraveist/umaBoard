@@ -37,7 +37,7 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
   assert.ok(plan.purchases.some(p=>p.id===row.baseId));assert.ok(!plan.activeIds.includes(row.baseId));assert.equal(row.additionalSp,0);
  }
  mkdirSync(new URL('../.cache/',import.meta.url),{recursive:true});
- writeFileSync(new URL('../.cache/cm-v9-7000-validation.json',import.meta.url),JSON.stringify({dataVersion:manifest.active_version,input,actual,acquisition:states,acquisitionAssumption:'reviewed-first-event-choices; hypothetical-Lv5; partial-route-coverage-not-a-real-training-replay',chartRows:chart.rows.length,inheritedTopIds:chart.inheritedTopIds,evolutionOptions:chart.evolutionOptions.map(row=>row.id),...plan},null,2));
+ writeFileSync(new URL('../.cache/cm-current-7000-validation.json',import.meta.url),JSON.stringify({dataVersion:manifest.active_version,input,actual,acquisition:states,acquisitionAssumption:'reviewed-first-event-choices; hypothetical-Lv5; partial-route-coverage-not-a-real-training-replay',chartRows:chart.rows.length,inheritedTopIds:chart.inheritedTopIds,evolutionOptions:chart.evolutionOptions.map(row=>row.id),...plan},null,2));
 });
 
 test('latest Daring Tact has seven sourced additions, a real 190+190 chain and three sequential unique invocations',async()=>{

@@ -19,7 +19,7 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v9';
+export const CM_MODEL_VERSION='cm-first-chart-v10';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);

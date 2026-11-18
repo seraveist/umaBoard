@@ -4,6 +4,7 @@ import {activationProbability,externalConditionValue} from './race-sampling.mjs'
 import {cmRanks} from './cm-ranks.mjs';
 import {supportedScale,supportedDuration} from './cm-effect-policy.mjs';
 import {containsPosition,intersectWindows,windowCrossed,randomWindow} from './condition-windows.mjs';
+import {frameStartPosition} from './race-frame.mjs';
 const compare=(a,op,b)=>op==='=='?a===b:op==='!='?a!==b:op==='>'?a>b:op==='>='?a>=b:op==='<'?a<b:op==='<='?a<=b:false;
 const OPPONENT=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count']);
 const START_PREDICATES=new Set(['is_exist_skill_id','succession_skill_count','random_lot','random_lot_shared','post_number','popularity','is_badstart','is_goodstart']);
@@ -12,6 +13,7 @@ const SPATIAL=new Set(['phase','phase_random','phase_firsthalf','phase_firsthalf
 // Source predicates use frame-start distance for phase/furlong/remaining distance,
 // and the updated position for geometry. Keep their intervals separate.
 const FRAME_START=new Set(['phase','phase_firsthalf','phase_laterhalf','remain_distance','furlong']);
+const SLOPE_RANDOM=new Map([['up_slope_random',1],['down_slope_random',2],['up_slope_random_later_half',1],['down_slope_random_later_half',2]]);
 const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate']);
 const phaseBounds=(d,p)=>[[0,d/6],[d/6,2*d/3],[2*d/3,5*d/6],[5*d/6,d]][p];
 export function fixedContext(setup){
@@ -45,9 +47,10 @@ function spatialValue(atom,c,x,state){
   return corner&&x>=corner.start&&x<corner.start+corner.length?n:-1;
  }
  if(f==='straight_random')return Number(c.straights.some(s=>x>=s.start&&x<s.end));
- if(f==='up_slope_random')return Number(state.slope===1);
- if(f==='down_slope_random')return Number(state.slope===2);
- if(['up_slope_random_later_half','down_slope_random_later_half'].includes(f))return Number(c.slopes.some(s=>s.slope*(f.startsWith('up')?1:-1)>0&&x>=s.start+s.length/2&&x<s.start+s.length));
+ // The latter half belongs to the race, not to each individual slope.
+ // Compile the same intersection for either direction, then let the existing
+ // sampler draw from this domain before applying the other activation gates.
+ if(SLOPE_RANDOM.has(f))return Number(state.slope===SLOPE_RANDOM.get(f)&&(!f.endsWith('_later_half')||x>=c.distance/2));
  if(f.startsWith('phase_')){
   const b=phaseBounds(c.distance,n);if(!b)return -1;
   let [lo,hi]=b;
@@ -63,7 +66,7 @@ function boundaries(c,dnf){
  const d=c.distance,points=new Set([0,d/6,d/2,2*d/3,5*d/6,d]);
  for(const k of c.corners){points.add(k.start);points.add(k.start+k.length/2);points.add(k.start+k.length);}
  for(const k of c.straights){points.add(k.start);points.add(k.end);}
- for(const k of c.slopes){points.add(k.start);points.add(k.start+k.length/2);points.add(k.start+k.length);}
+ for(const k of c.slopes){points.add(k.start);points.add(k.start+k.length);}
  for(const group of dnf||[])for(const a of group){
   if(['distance_rate','distance_rate_after_random'].includes(a.field)){points.add(d*a.value/100);if(a.field==='distance_rate')points.add(d*(a.value+1)/100);}
   if(a.field==='furlong'){points.add(200*a.value);points.add(200*(a.value+1));}
@@ -170,7 +173,7 @@ export function sampleBranches(branches,q,pre=false){
  });
 }
 export function branchReady(branch,state,skillId){
- const previous=state.prevX??state.x;
+ const previous=frameStartPosition(state);
  if(state.x+1e-6<branch.at||!windowCrossed(branch.windows,previous,state.x))return false;
  if(branch.frameStartWindows&&!containsPosition(branch.frameStartWindows,previous)||branch.frameEndWindows&&!containsPosition(branch.frameEndWindows,state.x))return false;
  if(!(branch.external||[]).every(a=>{const value=externalConditionValue(a,state);return value===undefined||compare(value,a.operator,a.field==='order_rate'?Math.round(9*a.value/100):a.value);}))return false;

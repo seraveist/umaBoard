@@ -3,10 +3,11 @@ import {buildPhysics,phaseAt} from './physics.mjs';
 import {sampleBranches,branchReady,slopeAt} from './activation.mjs';
 import {effectValue,effectDuration} from './cm-effect-policy.mjs';
 import {advanceRankDurations} from './race-sampling.mjs';
+import {activationFrame} from './race-frame.mjs';
 
 // Paired single-runner trajectories. CM uses the explicit HP-adaptive policy;
 // callers without it retain the legacy forced-spurt projection.
-export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,branchSampler=null,keepTrace=true,fullSpurt=false,scheduleConditions=true}={}){
+export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,branchSampler=null,keepTrace=true,fullSpurt=false,scheduleConditions=true,diagnostics=false}={}){
  const d=setup.course.distance,selected=new Set([...compiledSkills.map(s=>s.id),...(setup.possessionIds||[])]);
  const sampled=!!branchSampler?.unit,draw=(id,channel)=>branchSampler?.unit?.(id,channel)??q;
  const eligible=compiledSkills.filter(s=>!s.probabilistic||draw(s.id,'activation')<(s.activationProbability??1));
@@ -44,7 +45,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;
  };
  if(adaptive){state.lastSpurtActive=false;state.maximumSpurt=false;}
- const positions=[0],trace=[];
+ const positions=[0],trace=[],diagnosticFrames=diagnostics?[]:null;
  // Both compared trajectories share the sampled race start delay.
  let delay=startDelay;
  const keyFor=i=>i.linked?`${i.id}:${i.index}`:i.id;
@@ -52,11 +53,13 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(stack.has(i.id))return;
   stack=new Set([...stack,i.id]);
   i.done=!i.cooldownSeconds;i.nextTime=state.t+(i.cooldownSeconds||0);cooldowns.set(keyFor(i),i.nextTime);
-  used.add(i.id);state.usedInvocations.add(`${i.id}:${i.index}`);if(!i.passiveApplied){counts[state.phase]++;if(state.x>=d/2)state.laterCount++;}
+  const frame=activationFrame(state,d),resolved=diagnostics?[]:null;
+  used.add(i.id);state.usedInvocations.add(`${i.id}:${i.index}`);if(!i.passiveApplied){counts[frame.phase]++;if(frame.laterHalf)state.laterCount++;}
   const duration=effectDuration(i,{setup,state}),random=choice(i);
   for(const raw of i.effects){
    if(raw.kind.startsWith('passive_')||['oonige','model_neutral','temptation_rate'].includes(raw.kind))continue;
-   let value=effectValue(raw,{setup,physics,state,q:random});if(raw.wisdomBoost)value*=physics.wisdomSpeedMultiplier(state.phase);
+   let value=effectValue(raw,{setup,physics,state,q:random});if(raw.wisdomBoost)value*=physics.wisdomSpeedMultiplier(frame.phase);
+   if(diagnostics)resolved.push({kind:raw.kind,value});
    if(raw.kind==='start_multiplier'){delay*=value;continue;}
    if(raw.kind==='start_offset'){delay+=value;continue;}
    if(raw.kind==='evolution_duration'){state.evolutionDuration=Math.max(state.evolutionDuration,value);continue;}
@@ -69,7 +72,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
     active.push({...raw,value,id:i.id,end:state.t+duration});
    }
   }
-  events.push({id:i.id,index:i.index,x:state.x,frameStartX:state.prevX,t:state.t,duration:Number.isFinite(duration)?duration:null,...(forced?{forced:true}:{})});
+  events.push({id:i.id,index:i.index,x:state.x,frameStartX:frame.startX,activationPhase:frame.phase,physicsPhase:state.phase,t:state.t,duration:Number.isFinite(duration)?duration:null,...(forced?{forced:true}:{}),...(diagnostics?{effects:resolved}:{} )});
   for(const effect of i.effects.filter(e=>['invoke_rare','invoke_unique'].includes(e.kind))){
    const rare=effect.kind==='invoke_rare',count=Math.floor(effectValue(effect,{setup,physics,state,q:random}));
    const eligible=compiledSkills.filter(s=>s.id!==i.id&&!stack.has(s.id)&&(rare?['gold','evolution'].includes(s.skill.rarity)&&!used.has(s.id):['unique','unique_low_star','unique_upgraded'].includes(s.skill.rarity))).sort((a,b)=>a.id.localeCompare(b.id));
@@ -97,6 +100,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv.preMet?inv.condition:inv.precondition));else awake.push(inv);}});
  for(let frame=0;state.x<d&&frame<100000;frame++){
   const t=frame*dt;state.t=t;state.phase=phaseAt(state.x,d);
+  const eventStart=events.length;
   advanceRankDurations(state);
   if(adaptive&&state.phase>=2){if(!spurtPlan)updateSpurt();state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;}
   for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);
@@ -130,7 +134,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(startDash)target=.85*physics.bs;
   if(keepTrace&&frame%2===0&&state.x>=2*d/3-120&&(legStart===null||t-legStart<=12.2))trace.push({t,x:state.x,v:velocity+currentOffset+fullSpurtSpeed,target});
   const leg=legStart!==null&&t-legStart<physics.legDuration?physics.legAccel:0;
-  const acceleration=physics.acceleration(state.phase,uphill)+accelerationBonus+leg+(startDash?24:0);
+  const baseAcceleration=physics.acceleration(state.phase,uphill),acceleration=baseAcceleration+accelerationBonus+leg+(startDash?24:0);
   if(entry===null&&state.phase>=2)entry={x:state.x,t,speed:velocity+currentOffset,target,targetGap:Math.max(0,target-velocity-currentOffset)};
   if(entry&&reach===null&&velocity+currentOffset>=target-1e-5)reach={x:state.x,t};
   let next=velocity;
@@ -150,6 +154,14 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   // unknown in the source. This mode is explicit and versioned by the CM chart.
   const fullAcceleration=.068*physics.acceleration(state.phase,uphill)/Math.pow(d/1000,1.5)+fullSpurtBonus;
   const nextFull=fullSpurtStarted&&(!adaptive||state.hp>0)?fullSpurtSpeed+Math.max(0,fullAcceleration)*dt:0;
+  if(diagnostics){
+   const observed={t,x:state.x,phase:state.phase,baseVelocity:velocity,target,baseTarget,targetBonus,currentOffset,fullSpurtSpeed,
+    baseAcceleration,skillAcceleration:accelerationBonus,legAcceleration:leg,slope,hp:state.hp,
+    lastSpurt:state.lastSpurtActive??state.phase>=2,spurtStart:spurtPlan?.start??null,spurtSpeed:spurtPlan?.speed??physics.spurt,
+    nextVelocity:next,fullSpurtAcceleration:fullSpurtStarted?fullAcceleration:0};
+   diagnosticFrames.push(observed);
+   for(let k=eventStart;k<events.length;k++)events[k].observation={...observed,targetGap:Math.max(0,target-velocity)};
+  }
   if(nextFull>fullSpurtSpeed)for(const effect of active)if(effect.kind==='full_spurt_acceleration'&&effect.value>0)accelerationUseSeconds[effect.id]=(accelerationUseSeconds[effect.id]||0)+dt;
   const speed=t<delay?0:Math.max(0,(velocity+next)/2+currentOffset+(fullSpurtSpeed+nextFull)/2),step=speed*dt;
   const fraction=step>0?Math.min(1,(d-state.x)/step):1;
@@ -159,7 +171,9 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
     hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,fullSpeedFeasible:depletion===null&&(!adaptive||maxSpurtAtEntry===true),spurtPlan,maxSpurtAtEntry,spurtPolicy:adaptive?SPURT_POLICY:'forced-projection',
-    events,passive,trace,accelerationUseSeconds,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},fullSpurtExcluded:!fullSpurt&&physics.fullSpurtExcluded,fullSpurtApproximation:fullSpurt&&fullSpurtStarted,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
+    events,passive,trace,accelerationUseSeconds,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},triggerCounts:{inPhase:[...counts],laterHalf:state.laterCount},
+    ...(diagnostics?{diagnostics:{frames:diagnosticFrames,interpretation:'observed-computation-state-not-an-independent-reference'}}:{}),
+    fullSpurtExcluded:!fullSpurt&&physics.fullSpurtExcluded,fullSpurtApproximation:fullSpurt&&fullSpurtStarted,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};
   }
  }
  throw new Error('단독 비교 계산이 수렴하지 않았습니다.');
