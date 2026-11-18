@@ -1,0 +1,330 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "runtimeCommit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+  "completionCommit": "d4f0928",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "modelVersion": "cm-first-chart-v11",
+  "interpretation": "archived-input replay under current v11; same-runtime comparisons are regression checks, historical-model changes are reported separately; not real-race probability calibration",
+  "sourceFiles": [
+    {
+      "path": "docs/validation/cm-v8-20261118.json",
+      "sha256": "d7be4f2d7f9bb8236e73b387dd0824d59ad5247006b2c7c5a17e495975bc43ea"
+    },
+    {
+      "path": "docs/validation/cm-v9-20261118.json",
+      "sha256": "3ca7feeb3cce016ddd07de4fe30f9bf4a48c6582e36d08623f471c6adfaf0b56"
+    },
+    {
+      "path": "docs/validation/cm-v8-holdout-20261118.json",
+      "sha256": "44a1aa197d7c5c33e72cedffe3ce652f55951ac43a721a5581b1f2b1339295ee"
+    },
+    {
+      "path": "docs/validation/cm-v10-plans-20261118.json",
+      "sha256": "6b80793a1aa5b519eb6a5bf5414cd3aa5cf9f52277626e023a6aebe4afcb16cb"
+    },
+    {
+      "path": "docs/validation/cm-v11-bounded-20261118.json",
+      "sha256": "ad341ee5ec4c00a805986414592fb28df86b1d6792ec3d4cdb452962061e5b2e"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-plans-20261118.json",
+      "sha256": "7774b50e1dc28e697a38ce5cfa7fcd1b494cc7d695d24f0b7256859ffdda6c2d"
+    },
+    {
+      "path": "docs/validation/cm-v9-browser-20261118.json",
+      "sha256": "ad7f8c57488f77f580b8dd452e1d3215b9e7e9fd26f2280eca5a6b4bb96a6506"
+    },
+    {
+      "path": "docs/validation/cm-v11-candidates-20261118.json",
+      "sha256": "0d32887dfca130bbf05b4dc31ff1afa43fd823b1c369cf1f5b6abd26313b8912"
+    },
+    {
+      "path": "docs/validation/cm-v11-testbed-inventory-20261118.json",
+      "sha256": "2c2534c900c81979b2ce82965adb125e4eb270a4ed2861b9cae547e2b4e627a4"
+    },
+    {
+      "path": "docs/validation/cm-v11-testbed-matrix-20261118.json",
+      "sha256": "3c7c3213e0002316a4b188c526b200bc789537753d6b83148b95556aa6d2436a"
+    },
+    {
+      "path": "docs/validation/cm-v11-testbed-plans-20261118.json",
+      "sha256": "7f6d8cafea4f48ef3d7d5a0dd2f549802f533a27d425fd460ddb5f8f249823ac"
+    },
+    {
+      "path": "docs/validation/cm-v11-testbed-large-20261118.json",
+      "sha256": "3789bb89b462823f0b210c78cc55bb21d1ca197f2739a31b6623f028d366c352"
+    },
+    {
+      "path": "docs/validation/cm-v11-testbed-wide-20261118.json",
+      "sha256": "bee311c7fe7fcdff48b6997519e3dd0cc823e0ecbeb1616d3d21d6cf99a77950"
+    },
+    {
+      "path": "docs/validation/cm-7000-20261117.json",
+      "sha256": "8c2a9ea1a3e8b08082f26fca9195b5d82eeb796e98e15d513622dcf38d1bf442"
+    },
+    {
+      "path": "docs/validation/cm-v6-20261117.json",
+      "sha256": "03feae576cf300dcdaaaaa4db6d0afa68d75e38d06dd1fe74c77bc0d3b8046b4"
+    },
+    {
+      "path": "docs/validation/cm-event-evidence-20261117.json",
+      "sha256": "384a294b9d484997e6ffb2f83f0f135b5b30d0f209ccf059db5874cb31a6e12b"
+    },
+    {
+      "path": "docs/validation/cm-event-context-20261117.json",
+      "sha256": "d33236b244436bd13127e8421caa5133aa73a7791c0d8217708089abe754171c"
+    },
+    {
+      "path": "docs/validation/cm-v7-20261118.json",
+      "sha256": "d0bc04f27922ba7ac116594b34808d7016430924527a0af343d798aced0999e5"
+    },
+    {
+      "path": "docs/validation/cm-v7-guide-audit-20261118.json",
+      "sha256": "5ec66f2b429da705fa7841d4da64f464551bde89bdd186b2bfd60cebe5f91a99"
+    },
+    {
+      "path": "docs/validation/cm-v10-matrix-20261118.json",
+      "sha256": "8f43b6bd375a92d8adbd0821a0997cfd4736fe60690996212ddb744b90a695f0"
+    },
+    {
+      "path": "docs/validation/cm-v11-conditional-20261118.json",
+      "sha256": "151d9c63647c6f919c2ee502e348d79f5e6c00440f96c24c8c564eb2e431054e"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-guides-20261118.json",
+      "sha256": "51ff1415eaaef92760fb431e8411d0cc0506bddebb633e366a31b860e3f42107"
+    }
+  ],
+  "courseCount": 25,
+  "conditionCount": 37,
+  "matrixRecords": 801,
+  "matrixSameRuntime": {
+    "records": 76,
+    "matching": 76,
+    "rateComparisons": {
+      "activationRates": 76,
+      "usefulAccelerationRates": 76
+    }
+  },
+  "matrixGroups": {
+    "v6-timing": {
+      "records": 8,
+      "matching": 1,
+      "changed": 7,
+      "maxAbsoluteGainChange": 2.1699578414123053
+    },
+    "v6-convergence": {
+      "records": 18,
+      "matching": 3,
+      "changed": 15,
+      "maxAbsoluteGainChange": 2.072934451727174
+    },
+    "public-event": {
+      "records": 36,
+      "matching": 23,
+      "changed": 13,
+      "maxAbsoluteGainChange": 0.0010916551430312227
+    },
+    "early-context": {
+      "records": 14,
+      "matching": 5,
+      "changed": 9,
+      "maxAbsoluteGainChange": 0.013342416591230088
+    },
+    "acceleration-family": {
+      "records": 126,
+      "matching": 86,
+      "changed": 40,
+      "maxAbsoluteGainChange": 0.004412536623334962
+    },
+    "guide-courses": {
+      "records": 75,
+      "matching": 54,
+      "changed": 21,
+      "maxAbsoluteGainChange": 0.0201594416833637
+    },
+    "first-chart": {
+      "records": 4,
+      "matching": 3,
+      "changed": 1,
+      "maxAbsoluteGainChange": 0.0000023512242415257845
+    },
+    "guide-context": {
+      "records": 16,
+      "matching": 0,
+      "changed": 16,
+      "maxAbsoluteGainChange": 0.005801142580879937
+    },
+    "evolution-context": {
+      "records": 4,
+      "matching": 0,
+      "changed": 4,
+      "maxAbsoluteGainChange": 0.00440668479732409
+    },
+    "longchamp-context": {
+      "records": 4,
+      "matching": 0,
+      "changed": 4,
+      "maxAbsoluteGainChange": 0.011023414171883239
+    },
+    "fixed-rank-context": {
+      "records": 5,
+      "matching": 2,
+      "changed": 3,
+      "maxAbsoluteGainChange": 0.00007541563759205783
+    },
+    "heldout-courses": {
+      "records": 163,
+      "matching": 163,
+      "changed": 0,
+      "maxAbsoluteGainChange": 0
+    },
+    "v10-race-matrix": {
+      "records": 192,
+      "matching": 192,
+      "changed": 0,
+      "maxAbsoluteGainChange": 0
+    },
+    "additional-course-controls": {
+      "records": 60,
+      "matching": 60,
+      "changed": 0,
+      "maxAbsoluteGainChange": 0
+    },
+    "v11-conditional": {
+      "records": 24,
+      "matching": 24,
+      "changed": 0,
+      "maxAbsoluteGainChange": 0
+    },
+    "v11-guide-controls": {
+      "records": 52,
+      "matching": 52,
+      "changed": 0,
+      "maxAbsoluteGainChange": 0
+    }
+  },
+  "unsupportedMatrixRecords": 0,
+  "planRecords": 141,
+  "planSameRuntime": {
+    "records": 18,
+    "matching": 18,
+    "rateComparisons": {
+      "activationRates": 18,
+      "usefulAccelerationRates": 18
+    }
+  },
+  "planGroups": {
+    "legacy32": 32,
+    "heldout-risk-plans": 12,
+    "previously-blocked-delmar-recipe": 4,
+    "v10-regular": 24,
+    "v10-gold": 36,
+    "v10-goldCore": 6,
+    "v10-rice": 8,
+    "v11-bounded": 6,
+    "v11-reaudit": 8,
+    "browser-input-replay": 1,
+    "stat-restoration": 4
+  },
+  "planHpIncomplete": [
+    {
+      "index": 118,
+      "group": "v10-rice",
+      "courseId": "10811",
+      "budget": 300,
+      "stamina": 2000,
+      "hpSuccessRate": 0.6944444444444444
+    },
+    {
+      "index": 119,
+      "group": "v10-rice",
+      "courseId": "10811",
+      "budget": 300,
+      "stamina": 2000,
+      "hpSuccessRate": 0.8541666666666666
+    },
+    {
+      "index": 120,
+      "group": "v10-rice",
+      "courseId": "10811",
+      "budget": 500,
+      "stamina": 2000,
+      "hpSuccessRate": 0.6944444444444444
+    },
+    {
+      "index": 121,
+      "group": "v10-rice",
+      "courseId": "10811",
+      "budget": 500,
+      "stamina": 2000,
+      "hpSuccessRate": 0.8541666666666666
+    },
+    {
+      "index": 132,
+      "group": "v11-reaudit",
+      "courseId": "10506",
+      "budget": 500,
+      "stamina": 1000,
+      "hpSuccessRate": 0.9513888888888888
+    },
+    {
+      "index": 133,
+      "group": "v11-reaudit",
+      "courseId": "10506",
+      "budget": 900,
+      "stamina": 1000,
+      "hpSuccessRate": 0.9513888888888888
+    },
+    {
+      "index": 137,
+      "group": "stat-restoration",
+      "courseId": "10810",
+      "budget": 200,
+      "stamina": 1199,
+      "hpSuccessRate": 0
+    },
+    {
+      "index": 138,
+      "group": "stat-restoration",
+      "courseId": "10810",
+      "budget": 200,
+      "stamina": 1200,
+      "hpSuccessRate": 0
+    }
+  ],
+  "fixedSelectionWitnesses": [
+    {
+      "index": 128,
+      "group": "v11-reaudit",
+      "courseId": "10903",
+      "budget": 500,
+      "kind": "archived-oracle",
+      "gainGap": 0.006220234851014972,
+      "cost": 499,
+      "recommendedCost": 480
+    }
+  ],
+  "ineligibleFixedSelections": [],
+  "large": {
+    "gain": 35.51974580473648,
+    "cost": 6990,
+    "candidates": 220,
+    "exactSameSelection": true,
+    "exactSameGain": true
+  },
+  "wide": {
+    "gain": 31.489465212766035,
+    "cost": 6978,
+    "candidates": 215,
+    "sameHistoricalSelection": true,
+    "knownWitnesses": [
+      {
+        "name": "archivedOffModel",
+        "gainGap": 0.011184932493431887,
+        "cost": 6996
+      }
+    ]
+  }
+}
