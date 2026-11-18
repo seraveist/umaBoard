@@ -16,10 +16,18 @@ export function sampleUnit(sample,key,seed=0){
 export function normalizeRaceContext(value={}){
  if(value===null||typeof value!=='object'||Array.isArray(value))throw new Error('레이스 조건을 확인하세요.');
  const context={...value};
+ const evidence=context.scenarioEvidence;
+ if(evidence!==undefined&&(evidence===null||typeof evidence!=='object'||Array.isArray(evidence)||!['assumed','observed-counts'].includes(evidence.kind)||typeof evidence.source!=='string'||!evidence.source.trim()))throw new Error('전개 가중치의 근거를 확인하세요.');
  if(context.scenarios!==undefined){
+  if(evidence?.kind==='observed-counts'&&Array.isArray(context.scenarios))context.scenarios=context.scenarios.map(s=>s&&({...s,weight:s.weight??s.observations}));
   if(!Array.isArray(context.scenarios)||!context.scenarios.length||context.scenarios.length>32||context.scenarios.some(s=>!s||typeof s.id!=='string'||!s.id||!Number.isFinite(s.weight)||s.weight<0||s.context?.scenarios!==undefined)||new Set(context.scenarios.map(s=>s.id)).size!==context.scenarios.length||!context.scenarios.some(s=>s.weight>0))throw new Error('전개별 이름과 가중치를 확인하세요.');
   context.scenarios=context.scenarios.map(s=>({...s,context:normalizeRaceContext(s.context)}));
  }
+ if(evidence?.kind==='observed-counts'){
+  const list=context.scenarios,total=list?.reduce((sum,s)=>sum+s.observations,0),scale=list?Math.max(...list.map(s=>s.weight)):1,weight=list?.reduce((sum,s)=>sum+s.weight/scale,0);
+  if(!list||list.some(s=>!Number.isSafeInteger(s.observations)||s.observations<0)||!Number.isSafeInteger(evidence.sampleSize)||evidence.sampleSize<=0||total!==evidence.sampleSize||list.some(s=>Math.abs(s.weight/scale/weight-s.observations/total)>1e-10))throw new Error('관측 횟수·전체 경기 수·전개 가중치가 일치하는지 확인하세요.');
+ }
+ if(evidence)context.scenarioEvidence={...evidence};
  for(const field of ['postNumber','popularity']){
   const n=context[field];
   if(n!==undefined&&n!==null&&(!Number.isInteger(n)||n<1||n>9))throw new Error('게이트와 인기는 1~9 사이로 입력하세요.');

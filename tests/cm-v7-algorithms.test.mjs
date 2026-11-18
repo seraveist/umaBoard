@@ -74,9 +74,9 @@ test('context scheduling retains the original random draw and excludes impossibl
 test('explicit weighted contexts aggregate scenario means and override default coverage',()=>{
  const raw=skill('leader','target_speed',2000,[[a('remain_distance',400,'<='),a('order',1)]]);
  const s={...setup,raceContext:normalizeRaceContext({scenarioSource:'test-observations',scenarios:[{id:'lead',weight:9,context:{rankTimeline:[{distance:0,rank:1}]}},{id:'rear',weight:1,context:{rankTimeline:[{distance:0,rank:8}]}}]})};
- const result=ev([raw],s).evaluate([raw.id],18,.05);assert.equal(result.activationRates.leader,.9);
+ const result=ev([raw],s).evaluate([raw.id],18,.05);assert.ok(Math.abs(result.activationRates.leader-.9)<1e-12);
  assert.ok(Math.abs(result.gain-result.scenarios.find(r=>r.id==='lead').gain*.9)<1e-9);assert.equal(result.scenarioCoverage.probabilityBasis,'user-provided-weights');
- assert.equal(ev([raw],s).marginal([raw.id],raw.id,18,.05).helpfulSampleRate,.9);
+ assert.ok(Math.abs(ev([raw],s).marginal([raw.id],raw.id,18,.05).helpfulSampleRate-.9)<1e-12);
  assert.throws(()=>normalizeRaceContext({scenarios:[{id:'bad',weight:-1,context:{}}]}));
 });
 test('shared threshold cases evaluate unseen numeric gates consistently rather than satisfying both opposites',()=>{
@@ -109,12 +109,12 @@ test('backup acceleration value and usefulness naturally fall when the primary a
  assert.ok(uncertain.usefulAccelerationRates[backup.id]>0);assert.ok(uncertain.usefulAccelerationRates[backup.id]<.2);
  assert.ok(ev([main,backup]).marginal([main.id,backup.id],backup.id,18,.02).gain<.005);
 });
-test('default optimizer protects contribution across contexts and reports actual ablation gains',async()=>{
+test('optimizer ranks model mean with whole-run tail protection and reports actual ablation gains',async()=>{
  const safe=skill('safe','target_speed',1000),fragile=skill('fragile','target_speed',15000,[[a('remain_distance',400,'<='),a('order',1)]]),d=smallData([safe,fragile]);
  const chart={setup:{...setup,scenarioId:'15'},nativeIds:[],rows:[safe,fragile]};
  const plan=await recommendFinalPlan(d,chart,{safe:'0',fragile:'0'},{stats,spBudget:100},{searchSamples:9,samples:18,dt:.05});
- assert.deepEqual(plan.activeIds,['safe']);assert.equal(plan.scenarioCoverage.complete,true);assert.equal(plan.search.globalOptimal,true);
- assert.ok(Math.abs(plan.marginalContributions.safe.gain-plan.gain)<1e-8);assert.ok(plan.physicsSensitivity);
+ assert.deepEqual(plan.activeIds,['fragile']);assert.equal(plan.scenarioCoverage.complete,true);assert.equal(plan.search.globalOptimal,true);
+ assert.equal(plan.performance.risk.withinLimit,true);assert.ok(Math.abs(plan.marginalContributions.fragile.gain-plan.gain)<1e-8);assert.ok(plan.physicsSensitivity);
 });
 test('HP-first pruning rejects only a proven infeasible challenger and preserves complete feasible scores',()=>{
  const low={...setup,course:{...course,distance:5000,straights:[{start:0,end:5000}]},stats:{...stats,speed:3000,stamina:1,guts:1}};
@@ -131,6 +131,6 @@ test('large-pool staged search uses final samples and matches an affordable-subs
   const ids=raws.filter((_,i)=>mask&(1<<i)).map(r=>r.id).sort(),cost=ids.reduce((sum,id)=>sum+d.purchase_stages[id].base_cost,0);if(cost>100)continue;
   const score=evaluator.evaluate(ids,18,.02);assert.equal(score.feasible,true);oracle.push({ids,cost,...score});
  }
- oracle.sort((a,b)=>b.robustGain-a.robustGain||b.gain-a.gain||a.cost-b.cost||a.ids.join(',').localeCompare(b.ids.join(',')));
+ oracle.sort((a,b)=>Number(b.performance.risk.withinLimit)-Number(a.performance.risk.withinLimit)||b.gain-a.gain||a.performance.tailFinishTime-b.performance.tailFinishTime||a.cost-b.cost||a.ids.join(',').localeCompare(b.ids.join(',')));
  assert.equal(plan.search.method,'bounded');assert.deepEqual(plan.activeIds,oracle[0].ids);assert.equal(plan.gain,oracle[0].gain);assert.equal(plan.search.screeningSamples,plan.sampling.count);assert.equal(plan.search.closureComplete,true);
 });

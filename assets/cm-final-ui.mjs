@@ -7,7 +7,7 @@ import {evolutionOptions,evolutionGroups} from './cm-evolution.mjs';
 import {skillIconId} from './cm-icons.mjs';
 import {calculationSummary,marginalSummary} from './cm-model-presentation.mjs';
 
-export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true}){
+export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true,onRecordError=()=>{}}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
  let chart=null,states={},scope='',worker=null,requestId=0,result=null,busy=false;
  const values=()=>{const discountTrait=$('#discount-trait').value;return {stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,raceContext:{postNumber:$('#actual-post').value?Number($('#actual-post').value):null,popularity:$('#actual-popularity').value?Number($('#actual-popularity').value):null},discountTrait,fastLearner:discountTrait==='fast-learner',aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value])),excludedEvolutionIds:[...form.querySelectorAll('[data-evolution-option]:not(:checked)')].map(node=>node.value)};};
@@ -64,10 +64,10 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-scenario-count').textContent=`${plan.scenarioEvolutionCount} / 2`;
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
-  $('#final-search-note').textContent=plan.search.globalOptimal?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':plan.scenarioCoverage.probabilityBasis==='user-provided-weights'?'입력 전개 가중 평균을 비교한 범위 내 추천입니다.':'전개별 최소 기여와 평균을 비교한 범위 내 추천입니다.';
+  $('#final-search-note').textContent=plan.search.globalOptimal?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
   $('#final-owned-summary').textContent=`습득 스킬 ${plan.ownedIds.length}개`;
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
-  $('#final-calculation-note').textContent=`${calculationSummary(plan)} · 전개 최소 ${plan.robustGain.toFixed(2)}마신${plan.physicsSensitivity?` · 전개 스퍼트 근사 사용/제외 차이 ${plan.physicsSensitivity.difference.toFixed(2)}마신`:''}`;
+  $('#final-calculation-note').textContent=`${calculationSummary(plan)} · 전개별 추가 기여 최소 ${plan.robustGain.toFixed(2)}마신${plan.performance?` · 부진 구간 단축 ${plan.performance.tailImprovement.toFixed(3)}초`:''}${plan.physicsSensitivity?` · 전개 스퍼트 근사 사용/제외 차이 ${plan.physicsSensitivity.difference.toFixed(2)}마신`:''}`;
   $('#final-excluded').hidden=!plan.excluded.length;$('#final-excluded-summary').textContent=`제외 ${plan.excluded.length}개`;
   $('#final-excluded-list').replaceChildren(...plan.excluded.map(row=>el('li','',`${data.skills[row.id].name_jp} · ${row.reason}`)));
   $('#final-export').disabled=false;inputSummary();if(inputs.contains(document.activeElement))$('#final-inputs>summary').focus({preventScroll:true});inputs.open=false;if(onResult()!==false)$('#final-result-title').focus();
@@ -89,7 +89,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    if(reply.requestId!==requestId)return;
    if(reply.type==='progress'){$('#final-progress-label').textContent=reply.progress.stage==='candidates'?'실제 스탯으로 후보 비교 중':reply.progress.stage==='search'?'보유 SP에 맞는 조합 탐색 중':'추천 조합 정밀 비교 중';$('#final-progress-bar').max=Math.max(1,reply.progress.total);$('#final-progress-bar').value=reply.progress.completed;}
    if(reply.type==='result'){result=reply.result;stop();render(result);message();}
-   if(reply.type==='error'){stop();error(reply.message);message();}
+   if(reply.type==='error'){stop();error(reply.message);message();if(reply.code==='ACQUISITION_CONFLICT')onRecordError(reply.details?.conflict?.skillIds||[],reply.message);}
   };
   worker.onerror=event=>{event.preventDefault();if(job!==requestId)return;stop();error('추천 계산을 시작하지 못했습니다. 다시 시도해 주세요.');};
   worker.postMessage({type:'load',payload:data});worker.postMessage({type:'recommend',requestId:job,payload:{chart,states,input}});
@@ -101,7 +101,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
  });
  return {
   setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;setValues(read(scope)?.values);$('#final-submit').disabled=false;message();},
-  setStates(value){if(!chart)return;states={...value};stale();},
+  setStates(value){if(!chart)return;states={...value};clearError();stale();},
   invalidate(){stale();chart=null;fields.disabled=true;$('#final-submit').disabled=true;}
  };
 }

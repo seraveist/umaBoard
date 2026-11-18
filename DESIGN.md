@@ -194,3 +194,7 @@ the existing spacing, focus, border and muted-text tokens.
 - Keep v7 context coverage/physics sensitivity in the existing calculation
   disclosure; show package contribution as muted detail under applied skills.
   Preserve the table and stage layout. Comparison percentages are not empirical rates.
+- Keep v8 tail-time risk details collapsed. Event-reward conflicts use the same
+  concise draft status, native select focus and danger border; return mobile
+  users to skill records without changing their choices. Narrow gain headings
+  may wrap inside their fixed column instead of colliding with acquisition controls.

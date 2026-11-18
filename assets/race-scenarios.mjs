@@ -1,5 +1,6 @@
 // Shared counterfactual race contexts. Default cases are a coverage design,
 // NOT measured frequencies. Supplied weighted observed contexts are supported.
+import {RACE_OBJECTIVE} from './race-objective.mjs';
 export const ENCOUNTER_POLICY='coherent-coverage-v1';
 export const CONTEXT_FIELDS=new Set(['order','order_rate','is_overtake','change_order_onetime','blocked_side_continuetime','blocked_front_continuetime','blocked_front','distance_diff_top','bashin_diff_behind','bashin_diff_infront','overtake_target_time','infront_near_lane_time','behind_near_lane_time','near_count','near_infront_count','is_move_lane','is_behind_in','is_surrounded','lane_type','distance_diff_top_float','distance_diff_rate','order_rate_out40_continue','order_rate_in20_continue','order_rate_out50_continue','order_rate_in50_continue','order_rate_out20_continue','order_rate_in40_continue','order_rate_out70_continue','order_rate_in80_continue','overtake_target_no_order_up_time','compete_fight_count','temptation_count','is_temptation','running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','is_activate_any_skill','is_activate_heal_skill','temptation_opponent_count_behind','visiblehorse']);
 const domainCache=new WeakMap();
@@ -31,7 +32,7 @@ export function raceScenario(setup,sample){
  const base=setup.raceContext||{},count=scenarioCount(setup);
  if(setup.encounterPolicy!==ENCOUNTER_POLICY)return {id:'conditional',weight:1,context:base,basis:'conditional'};
  const supplied=base.scenarios?.filter(s=>s.weight>0),index=sample%count;
- const entry=supplied?.[index],context={...base,...entry?.context};delete context.scenarios;
+ const entry=supplied?.[index],context={...base,...entry?.context};delete context.scenarios;delete context.scenarioEvidence;delete context.scenarioSource;
  const domains=setup.externalDomains||{},conditions={...context.conditions};
  // Unobserved numeric gates receive shared threshold stress values. These
  // values are never interpreted as empirical event probabilities.
@@ -52,9 +53,11 @@ export function rankChanges(points,x,from=0){
  return up;
 }
 export function encounterPolicy(setup){
- const supplied=setup.raceContext?.scenarios;
+ const supplied=setup.raceContext?.scenarios,evidence=setup.raceContext?.scenarioEvidence;
  return {version:setup.encounterPolicy??'conditional-v6',cases:scenarioCount(setup),
-  aggregation:supplied?.length?'provided-weighted-mean':'worst-case-then-coverage-mean',
-  probabilityBasis:supplied?.length?'user-provided-weights':setup.raceContext?.rankTimeline?.length?'recorded-ranks-other-gates-stressed':'coverage-not-measured-probabilities',
-  source:setup.raceContext?.scenarioSource??null};
+  aggregation:RACE_OBJECTIVE,
+  probabilityBasis:supplied?.length?(evidence?.kind==='observed-counts'?'recorded-count-weights':'user-provided-weights'):setup.raceContext?.rankTimeline?.length?'recorded-ranks-other-gates-stressed':'coverage-not-measured-probabilities',
+  role:supplied?.length?(evidence?.kind==='observed-counts'?'declared-observations':'assumed-weighted-contexts'):'stress-comparison',
+  observationCount:evidence?.kind==='observed-counts'?evidence.sampleSize:null,independentlyValidated:false,
+  source:evidence?.source??setup.raceContext?.scenarioSource??null};
 }

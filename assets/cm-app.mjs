@@ -151,7 +151,7 @@ function renderRows(){
  visible.forEach((row,index)=>{
   let node=tableNodes.get(row.id);if(!node){node=newRow(row);tableNodes.set(row.id,node);}
   const gain=node.querySelector('[data-gain]'),value=Number.isFinite(row.gain)&&Math.abs(row.gain)<.005?0:row.gain;
-  gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):'미지원';gain.classList.toggle('is-zero',value===0);
+  gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):row.calculationState==='incompatible-reference'?'비교 불가':'미지원';gain.classList.toggle('is-zero',value===0);
   gain.title=contributionTitle(row);
   const select=node.querySelector('select'),state=acquisitionValue(states[acquisitionId(row)]);if(select.value!==state)select.value=state;
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
@@ -174,6 +174,7 @@ function recordState(id,value){
 }
 function saveAcquisitionStates(next,warning=''){
  states=next;
+ for(const node of tableNodes.values()){const select=node.querySelector('select');select.removeAttribute('aria-invalid');select.removeAttribute('aria-describedby');}
  if(!draft.plans[currentPlan])draft.plans[currentPlan]={states:{}};
  draft.plans[currentPlan].states=states;draft.plans[currentPlan].savedAt=new Date().toISOString();
  draft.plans=trimChecklistPlans(draft.plans);
@@ -203,7 +204,7 @@ function beginCalculation(event){
 function exportChecklist(){
  if(!result)return;
  const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+  acquisition:finalAcquisitionSnapshot(data,result,states),comparisonBasis:result.comparisonBasis,objectivePolicy:result.objectivePolicy,evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,performance:row.performance,comparisonBasis:row.comparisonBasis,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
@@ -236,7 +237,11 @@ async function start(){
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
   data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);
-  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
+  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),onRecordError:(ids,message)=>{
+   if(workflow.stage!=='finish')return;workflow.showPostView('record');$('#draft-status').textContent=message;let first=null;
+   for(const id of ids){const select=tableNodes.get(id)?.querySelector('select');if(select){select.setAttribute('aria-invalid','true');select.setAttribute('aria-describedby','draft-status');if(select.isConnected)first??=select;}}
+   (first||$('#skill-search')).focus();
+  },read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;
   if(saved&&Array.isArray(saved.supportIds))deck=saved.supportIds.slice(0,6);

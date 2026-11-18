@@ -12,8 +12,13 @@ import {selfEffectSkill} from './cm-effect-policy.mjs';
 import {ENCOUNTER_POLICY,contextDomains} from './race-scenarios.mjs';
 import {inheritanceOrigins} from './skill-transforms.mjs';
 import {buildAcquisitionHierarchy} from './cm-state.mjs';
+import {normalizeRiskPolicy,RACE_OBJECTIVE} from './race-objective.mjs';
+import {activeSkillIds,prerequisiteIds} from './skill-context.mjs';
+import {selectionRules} from './selection.mjs';
+import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
+import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v7';
+export const CM_MODEL_VERSION='cm-first-chart-v8';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -37,7 +42,9 @@ export function createChartSetup(data,catalog,input){
  }
  const bloom=Number(input.bloom??5),level=Number(input.uniqueLevel??uniqueLevel(bloom));
  if(!Number.isInteger(bloom)||bloom<outfit.base_stars||bloom>5||!Number.isInteger(level)||level<1||level>6)throw new Error('보유 육성마의 개화와 고유기 레벨을 확인하세요.');
- const setup={outfitId:outfit.id,bloom,uniqueLevel:level,style:Number(input.style),scenarioId:profile.id,supportIds:supports,
+ const comparisonSkillIds=input.comparisonSkillIds??[];
+ if(!Array.isArray(comparisonSkillIds)||comparisonSkillIds.length>120||comparisonSkillIds.some(id=>typeof id!=='string')||new Set(comparisonSkillIds).size!==comparisonSkillIds.length)throw new Error('비교 기준으로 확보한 스킬을 확인하세요.');
+ const setup={outfitId:outfit.id,bloom,uniqueLevel:level,style:Number(input.style),scenarioId:profile.id,supportIds:supports,comparisonSkillIds:[...comparisonSkillIds],riskPolicy:normalizeRiskPolicy(input.riskPolicy),acquisitionChoices:input.acquisitionChoices,
   course:withCourseMetadata(data.courses[String(input.courseId)]),going:Number(input.going??1),weather:Number(input.weather??1),season:Number(input.season??3),time:Number(input.time??2),
   raceContext:normalizeRaceContext(input.raceContext),samplingSeed:input.samplingSeed??0,spurtPolicy:SPURT_POLICY,encounterPolicy:ENCOUNTER_POLICY,externalDomains:contextDomains(data),mood:2,stats:{...profile.stats},aptitudes:{distance:'A',surface:'A',style:'A'},chartPolicy:CM_MODEL_VERSION};
  validateSetup(setup);
@@ -190,29 +197,39 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  if(nativeSkills.some(s=>s.status==='unsupported'))throw new Error('이 육성마의 고유기는 아직 계산을 지원하지 않습니다. 다른 육성마를 선택하세요.');
  const nativeIds=nativeRecords.map(s=>s.id);
  const hierarchy=buildAcquisitionHierarchy(data);setup.possessionGraph=Object.fromEntries([...hierarchy.lower].map(([id,low])=>[id,[...low]]));setup.inheritanceOrigins=inheritanceOrigins(data);
+ for(const id of setup.comparisonSkillIds)if(!records.has(id)||compiled.get(id).status==='unsupported')throw new Error('비교 기준 스킬의 획득 경로나 계산 지원을 확인하세요.');
+ const referenceIds=activeSkillIds([...nativeIds,...setup.comparisonSkillIds],setup.possessionGraph),rules=selectionRules(data,records);
+ if(referenceIds.some((id,index)=>referenceIds.slice(0,index).some(other=>!rules.compatible(id,other)))||!scenarioSelectionAllowed(data,referenceIds,setup.scenarioId)||new Set(referenceIds.filter(id=>data.skills[id].inherited).map(id=>setup.inheritanceOrigins[id]??id)).size>6)throw new Error('비교 기준 스킬의 진화·계승 제한이 충돌합니다.');
+ const constraints=createAcquisitionConstraints(data,setup);assertAcquisitionFeasible(constraints,referenceIds);
+ setup.ownedSkillIds=[...new Set(setup.comparisonSkillIds.flatMap(id=>[id,...prerequisiteIds(setup.possessionGraph,id)]))];
+ const comparisonBasis={kind:setup.comparisonSkillIds.length?'secured-skill-context':'native-only',skillIds:[...referenceIds],interpretation:'declared-reference-not-an-automatically-optimal-build'};
  const evolutionBases=new Set([...records.values()].filter(s=>s.rarity==='evolution').flatMap(s=>data.evolution_rules.filter(r=>r.evolved_id===s.id).map(r=>r.base_id)));
  const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&(supported(compiled.get(s.id))||s.inherited||s.rarity==='evolution'||evolutionBases.has(s.id))).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
   rarity:s.rarity,inherited:s.inherited,inheritanceOriginId:setup.inheritanceOrigins[s.id]||null,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   calculationState:compiled.get(s.id).status,assumptions:compiled.get(s.id).assumed,activationProbability:compiled.get(s.id).activationProbability,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
- const evaluator=new RaceEvaluator(setup,compiled,nativeIds,nativeIds,branchSampler);
- return {setup,rows,nativeIds,modelVersion:CM_MODEL_VERSION,samples,dt,
+ const evaluator=new RaceEvaluator(setup,compiled,referenceIds,nativeIds,branchSampler);
+ return {setup,rows,nativeIds,referenceIds,comparisonBasis,modelVersion:CM_MODEL_VERSION,samples,dt,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&!supported(s)).map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
    if(compiled.get(row.id).status==='unsupported')return {...row,gain:null,timeGain:null,hpGain:null,samples:0};
+   const ids=activeSkillIds([...referenceIds,row.id],setup.possessionGraph);
+   if(ids.some((id,index)=>ids.slice(0,index).some(other=>!rules.compatible(id,other)))||!scenarioSelectionAllowed(data,ids,setup.scenarioId)||new Set(ids.filter(id=>data.skills[id].inherited).map(id=>setup.inheritanceOrigins[id]??id)).size>6||!constraints.allowed(ids))return {...row,gain:null,timeGain:null,hpGain:null,samples:0,comparisonBasis,calculationState:'incompatible-reference',calculationNotes:[...row.calculationNotes,'비교 기준과 획득·진화·계승 제한 충돌']};
    // Even fixed triggers can change the HP-based spurt decision. Use the same
    // race samples for every row instead of presuming a deterministic outcome.
    const count=samples;
-   const stats=evaluator.evaluate([...nativeIds,row.id],count,dt);
-   return {...row,gain:stats.gain,robustGain:stats.robustGain,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
+   const stats=evaluator.evaluate(ids,count,dt);
+   return {...row,gain:stats.gain,robustGain:stats.robustGain,feasible:stats.feasible,hpSuccessRate:stats.hpSuccessRate,hpShortfall:stats.hpShortfall,performance:stats.performance,scenarioSensitivity:stats.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,comparisonBasis,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
   }};
 }
 
 export async function generateChart(data,profiles,display,input,{onProgress=()=>{},cancelled=()=>false,batchSize=30,cache=new Map(),...options}={}){
- const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:{...task.setup,supportIds:undefined,scenarioId:undefined},samples:task.samples,dt:task.dt});
+ // Reward-route feasibility depends on the exact deck/scenario, even when
+ // physics stats match. Never share a cached incompatibility across providers.
+ const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:task.setup,samples:task.samples,dt:task.dt});
  const evaluate=row=>{
   const key=setupKey+'|'+row.id;
-  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate});}
+  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,feasible:value.feasible,hpSuccessRate:value.hpSuccessRate,hpShortfall:value.hpShortfall,performance:value.performance,scenarioSensitivity:value.scenarioSensitivity,objectivePolicy:value.objectivePolicy,comparisonBasis:value.comparisonBasis,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate,calculationState:value.calculationState,calculationNotes:value.calculationNotes});}
   return {...row,...cache.get(key)};
  };
  const inherited=task.rows.filter(row=>row.inherited),scored=[];
@@ -234,6 +251,6 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
   }
  }
  while(cache.size>3000)cache.delete(cache.keys().next().value);
- return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,evolutionOptions,inheritanceOptions:scored,nativeIds:task.nativeIds,samples:task.samples,dt:task.dt,excluded:task.excluded,
+ return {modelVersion:CM_MODEL_VERSION,setup:task.setup,rows,evolutionOptions,inheritanceOptions:scored,nativeIds:task.nativeIds,referenceIds:task.referenceIds,comparisonBasis:task.comparisonBasis,objectivePolicy:RACE_OBJECTIVE,samples:task.samples,dt:task.dt,excluded:task.excluded,
   samplingPolicy:samplingPolicy(task.setup),inheritedTopIds:top.map(row=>row.id),ordering:'skill-icon-family-upper-first',orderingVerified:rows.every(row=>row.orderVerified),fullSpurtPolicy:'umasim-public-unbounded-approximation'};
 }

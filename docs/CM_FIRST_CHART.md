@@ -25,8 +25,13 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
   `curated/cm-scenario-profiles.json`. It is not an all-2500 absolute-limit claim.
 - Mood best, distance/surface/style aptitude A. Unique level comes from the owned
   outfit record; absent records default visibly to final bloom-five level six.
-- Baseline: the outfit's native unique only. Every candidate is added alone.
+- Default UI baseline: the outfit's native unique only. Every candidate is added alone.
   There is no SP search and no deck speed-locking in the first-chart path.
+- The evaluation API also accepts explicit `comparisonSkillIds`: a feasible,
+  obtainable secured-skill context, including matching evolution options. Rows
+  then measure the additional package contribution against that context, expose
+  `comparisonBasis`, and mark incompatible candidates as incomparable. Recording
+  checklist ownership does not silently change the ordinary UI chart baseline.
 - Native unique unsupported: stop with a recoverable choice error. A physically
   inactive unique is valid and contributes zero. Never silently drop an unknown
   native effect while claiming to have applied it.
@@ -47,7 +52,7 @@ admission policy before merging into the same checklist:
   remain eligible. A viable main effect keeps a composite eligible even when an
   extra effect has a different rank requirement. This policy is a conservative
   product recommendation, not game eligibility or measured activation probability.
-- Rank by unrounded arithmetic mean, keep at most ten with gain >=0.005 lengths
+- Rank with the shared HP / baseline tail-time guard / mean policy, keep at most ten with gain >=0.005 lengths
   (so a displayed 0.00 is not admitted), with stable skill-ID tie breaks. The final
   table remains icon/source ordered. `전체 계승 후보 보기` exposes the full legal
   inheritance pool, including fixed-inactive/unknown scores. Recorded outside-Top10
@@ -85,7 +90,7 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v7` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v8` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
@@ -116,6 +121,11 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
   weighted contexts with provenance in `scenarioSource`. Means use scenario means,
   not accidental unequal sample counts; zero-weight cases are omitted. Recorded
   ranks and other external values remain executable. Unknown effects stay excluded.
+- Optional `scenarioEvidence:{kind:'observed-counts',source,sampleSize}` requires
+  an integer `observations` count for every supplied context. Weights must be
+  proportional to counts; omitted weights derive from counts. These are declared
+  records with `independentlyValidated:false`, not automatically verified race logs.
+  Assumed weights and default stress contexts remain separately labelled.
 - `activationRate` is activation within these comparison samples. The separate
   `usefulAccelerationRate` requires positive additional acceleration during any
   part of the effect's lifetime, including an effect laid before the late phase.
@@ -143,7 +153,8 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
 - HP is internal only in the first chart. Recovery can show 0.00 lengths without
   being removed. No pre-training required-stamina number is displayed.
 
-The [v7 algorithm audit](CM_ALGORITHMS_V7_QA.md) records current results and limits.
+The [v8 algorithm audit](CM_ALGORITHMS_V8_QA.md) records current results and limits.
+The [v7 algorithm audit](CM_ALGORITHMS_V7_QA.md) remains a historical snapshot.
 The [v6 audit](CM_ACTIVATION_PROBABILITY_QA.md) remains a historical snapshot.
 
 ## Display and performance

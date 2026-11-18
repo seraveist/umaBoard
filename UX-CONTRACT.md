@@ -141,3 +141,13 @@ skills expose their whole-effect ablation contribution in the current package.
 Activation sample rate and useful-acceleration sample rate are separate. Normal
 and strengthened inheritance share one origin/slot and the original paid stage;
 recording a strengthened effect asserts that its actual requirements are met.
+
+The v8 objective and risk preference stay in the existing calculation disclosure
+and export. Comparison-sample percentages remain distinct from measured rates.
+Reviewed mutually exclusive gold event rewards invalidate the entire recorded
+availability before simulation. Structured errors preserve all records, search,
+filters and actual inputs, select the mobile skill-record view, mark the minimal
+conflicting selects with `aria-invalid`, describe them through `draft-status`,
+and focus the first visible conflict (or search when filtered out). The shared
+draft footer shows the concise correction message. A record edit clears these
+markers and stale recommendations; the app never chooses an event on the user's behalf.

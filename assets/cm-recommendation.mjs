@@ -1,5 +1,6 @@
 import {phaseAt} from './physics.mjs';
 import {INHERITED_EVOLUTIONS} from './skill-transforms.mjs';
+import {compareRacePlans} from './race-objective.mjs';
 
 export const INHERITED_LIMIT=6;
 export const INHERITED_TOP=10;
@@ -38,5 +39,5 @@ export function inheritedPerformanceSkill(compiled){
 export function selectInheritedTop(rows){
  const seen=new Set();
  return rows.filter(row=>row.inherited&&row.recommendation?.eligible&&Number.isFinite(row.gain)&&row.gain>=.005)
-  .sort((a,b)=>(b.robustGain??b.gain)-(a.robustGain??a.gain)||b.gain-a.gain||a.id.localeCompare(b.id)).filter(row=>{const key=row.inheritanceOriginId??inheritedOrigin(row.id);if(seen.has(key))return false;seen.add(key);return true;}).slice(0,INHERITED_TOP);
+  .sort(compareRacePlans).filter(row=>{const key=row.inheritanceOriginId??inheritedOrigin(row.id);if(seen.has(key))return false;seen.add(key);return true;}).slice(0,INHERITED_TOP);
 }

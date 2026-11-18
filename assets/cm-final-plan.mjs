@@ -13,8 +13,10 @@ import {evolutionOptions,evolutionGroups,finalAcquisitionSnapshot} from './cm-ev
 import {skillTransforms,inheritanceOrigins} from './skill-transforms.mjs';
 import {inheritedCount} from './cm-state.mjs';
 import {ENCOUNTER_POLICY,contextDomains,scenarioCount} from './race-scenarios.mjs';
+import {normalizeRiskPolicy,compareRacePlans,RACE_OBJECTIVE} from './race-objective.mjs';
+import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v7';
+export const FINAL_MODEL_VERSION='cm-post-training-v8';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -22,7 +24,7 @@ const pause=()=>new Promise(resolve=>setTimeout(resolve,0));
 
 export function createFinalSetup(chart,input){
  if(!chart?.setup||!Array.isArray(chart.rows)||!Array.isArray(chart.nativeIds))throw new Error('먼저 1차 마신표를 완성해 주세요.');
- const setup={...chart.setup,spurtPolicy:SPURT_POLICY,encounterPolicy:ENCOUNTER_POLICY,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes},raceContext:normalizeRaceContext(input.raceContext??chart.setup.raceContext)};
+ const setup={...chart.setup,spurtPolicy:SPURT_POLICY,encounterPolicy:ENCOUNTER_POLICY,stats:{...input.stats},aptitudes:{...chart.setup.aptitudes,...input.aptitudes},raceContext:normalizeRaceContext(input.raceContext??chart.setup.raceContext),riskPolicy:normalizeRiskPolicy(input.riskPolicy??chart.setup.riskPolicy),acquisitionChoices:input.acquisitionChoices??chart.setup.acquisitionChoices};
  for(const key of STAT_KEYS)if(!Number.isInteger(setup.stats[key])||setup.stats[key]<1||setup.stats[key]>3000)throw new Error('실제 능력치는 1~3000 사이의 정수로 입력하세요.');
  if(!Number.isSafeInteger(input.spBudget)||input.spBudget<0||input.spBudget>100000)throw new Error('보유 SP는 0~100000 사이의 정수로 입력하세요.');
  const discountTrait=resolveDiscountTrait(input);
@@ -86,6 +88,8 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   const base=states[row.evolutionBaseId||data.evolution_rules.find(r=>r.evolved_id===row.id)?.base_id];
   states[row.id]=!setup.excludedEvolutionIds.includes(row.id)&&(base==='owned'||hint(base)!==null)?(base==='owned'?'0':base):'unavailable';
  }
+ const acquisitionConstraints=createAcquisitionConstraints(data,setup);
+ const acquisitionValidation=assertAcquisitionFeasible(acquisitionConstraints,Object.entries(states).filter(([,value])=>value!=='unavailable').map(([id])=>id));
  const records=new Map(planningRows.map(row=>[row.id,data.skills[row.id]]));
  if([...records.values()].some(skill=>!skill))throw new Error('체크리스트의 스킬 데이터를 확인할 수 없습니다. 1차 마신표를 다시 만들어 주세요.');
  if(inheritedCount(planningRows,states)>6)throw new Error('계승 스킬 확보는 최대 6개입니다. 체크리스트를 확인하세요.');
@@ -97,7 +101,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  setup.ownedSkillIds=owned;setup.possessionGraph=Object.fromEntries([...hierarchy.lower].map(([id,low])=>[id,[...low]]));setup.inheritanceOrigins=inheritanceOrigins(data);
  const compiled=new Map([...records].map(([id,skill])=>[id,compileChartSkill(skill,setup)]));
  if(required.some(id=>compiled.get(id).status==='unsupported'))throw new Error('이미 습득한 스킬의 실제 스탯 계산을 지원하지 않습니다. 체크리스트를 확인해 주세요.');
- const legal=ids=>ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>data.skills[id].inherited).length<=6;
+ const legal=ids=>ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>data.skills[id].inherited).length<=6&&acquisitionConstraints.allowed([...owned,...ids]);
  if(!legal(required))throw new Error('이미 습득한 스킬의 진화 제한 또는 중복 관계가 충돌합니다. 체크리스트를 확인해 주세요.');
  const retained=ids=>required.every(id=>ids.includes(id)||ids.some(high=>lower.get(high)?.has(id)));
  const excluded=[];
@@ -114,8 +118,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   if(result.hpRejected){hpPrunedPlans++;return null;}
   return {ids,cost:priced.used,...result};
  };
- const robust=!setup.raceContext?.scenarios?.length;
- const order=(a,b)=>Number(b.feasible)-Number(a.feasible)||(!a.feasible&&!b.feasible?b.hpSuccessRate-a.hpSuccessRate||a.hpShortfall-b.hpShortfall:0)||(robust?b.robustGain-a.robustGain:0)||b.gain-a.gain||a.cost-b.cost||idKey(a.ids).localeCompare(idKey(b.ids));
+ const order=compareRacePlans;
  const evaluated=new Map();
  const quick=ids=>{const key=idKey(active(ids));if(!evaluated.has(key))evaluated.set(key,evaluate(ids,searchSamples,searchDt));return evaluated.get(key);};
  const baseline=quick(required),singles=[];
@@ -280,6 +283,6 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   physicsSensitivity={publicApproximationGain:best.gain,withoutExtraSpurtGain:alternate.gain,difference:best.gain-alternate.gain,interpretation:'model-sensitivity-not-an-error-bound'};
  }
  return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,activeIds:best.ids,purchases,evolutions:groups,scenarioEvolutionCount,finalSkills,
-  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,robustGain:best.robustGain,scenarios:best.scenarios,scenarioCoverage:best.scenarioCoverage,marginalContributions,physicsSensitivity,usefulAccelerationRates:best.usefulAccelerationRates,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpSuccesses:best.hpSuccesses,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
+  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,robustGain:best.robustGain,performance:best.performance,scenarioSensitivity:best.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,acquisitionValidation,scenarios:best.scenarios,scenarioCoverage:best.scenarioCoverage,marginalContributions,physicsSensitivity,usefulAccelerationRates:best.usefulAccelerationRates,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpSuccesses:best.hpSuccesses,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
   candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,hpPrunedPlans,shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureChecks,closurePasses:closed.passes,batchChecks:closed.batchChecks,screenedFinalists,screeningSamples:samples,stabilizationPasses:stabilized?.passes??0,stabilizationChecks:stabilized?.checks??0,stabilizationBatchChecks:stabilized?.batchChecks??0,stabilizationComplete:stabilized?.complete??true,globalOptimal:method==='exhaustive',optimalityScope:method==='exhaustive'?'affordable-recorded-candidates-at-declared-sampling-resolution':'bounded-search',searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }
