@@ -47,6 +47,11 @@ Runtime ownership is model B: `assets/cm.css :root` owns the tokens above and
 this document mirrors them. Controls/table/dialog consume the same variables.
 `tests/cm-ui.test.mjs` verifies the token and state contract.
 
+The public calculation release is `최적화 알고리즘 v1`, shown once beneath the
+page title through the existing `section-meta` type treatment. The shared
+`cm-algorithm-version.mjs` owns this name and export metadata. Internal v11 model
+IDs, numerical behavior, draft keys and existing visual tokens remain unchanged.
+
 ## Colors
 
 White work surfaces on cool pale gray; deep racing green marks the primary

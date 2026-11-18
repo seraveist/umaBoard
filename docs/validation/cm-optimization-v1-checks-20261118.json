@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "status": "passed",
+  "worktreeBaseCommit": "01db88b428cd353dfed9cd1ef8469e6b783ee0c3",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "name": "최적화 알고리즘 v1",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "coreVerification": {
+    "status": "passed",
+    "algorithm": {
+      "id": "umaboard-optimization-v1",
+      "version": "v1",
+      "name": "최적화 알고리즘 v1",
+      "models": {
+        "chart": "cm-first-chart-v11",
+        "final": "cm-post-training-v11",
+        "solo": "solo-comparison-v5"
+      }
+    },
+    "sourceCommit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+    "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+    "calculationModules": 30,
+    "stagedCalculationModules": 30,
+    "lockedInputs": 4,
+    "verifiedHistoricalEvidence": 10,
+    "scope": "unchanged calculation module closure and historical data/evidence; frontend may differ"
+  },
+  "frontendAssetsSha256": "e9c0c9dbeb221a027ad94616cb736b5eb07398c1c11d6582bb5e8646ed669f3b",
+  "runtimeFiles": [
+    {
+      "path": "index.html",
+      "textSha256": "aa9d12408b30698ac56c803dbfe8cb9066d996d2ba8819a3c3cfdc90294af3a7"
+    },
+    {
+      "path": "assets/cm-app.mjs",
+      "textSha256": "40221bd329c0c30b78ecb941c04cf14d6492f9f713ab0e6895132dea0a1f38fa"
+    },
+    {
+      "path": "assets/cm-final-ui.mjs",
+      "textSha256": "110bbcac7b0cadff77e6f7ec9dbb1e06cafbece7e43ec9c13ad3c9795d8db9b5"
+    },
+    {
+      "path": "assets/cm-algorithm-version.mjs",
+      "textSha256": "241792d05267367e3dde0961a514b6b3a6377e64b8a15f15e40a0bc2428d5790"
+    }
+  ],
+  "tests": {
+    "node": {
+      "total": 297,
+      "passed": 297,
+      "failed": 0,
+      "skipped": 0
+    },
+    "python": {
+      "total": 51,
+      "passed": 51
+    },
+    "focusedFollowup": {
+      "total": 8,
+      "passed": 8,
+      "note": "overlaps full suite; not added to total"
+    },
+    "browser": {
+      "checks": 13,
+      "passed": 13,
+      "pageErrors": 0
+    },
+    "static": {
+      "errors": 0,
+      "total": 0,
+      "unresolved": 0,
+      "violations": 0,
+      "warnings": 0
+    },
+    "activeData": {
+      "status": "passed",
+      "existingWarnings": 5
+    },
+    "build": {
+      "status": "passed",
+      "assetsVersion": "1bca576519109341"
+    }
+  },
+  "largeRegression": {
+    "courseId": "10808",
+    "candidateCount": 220,
+    "selectedIdsMatch": true,
+    "gainMatch": true,
+    "gain": 35.51974580473648,
+    "budget": {
+      "total": 7000,
+      "used": 6990,
+      "remaining": 10
+    },
+    "hpSuccessRate": 1,
+    "assumption": "hypothetical Lv5 and reviewed first-event choices; not an observed training run"
+  }
+}

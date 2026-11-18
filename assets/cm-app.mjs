@@ -16,8 +16,10 @@ import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.m
 import {createWorkflow} from './cm-workflow.mjs';
 import {restoreChecklistPlan,trimChecklistPlans} from './cm-plan-storage.mjs';
 import {finalAcquisitionSnapshot} from './cm-evolution.mjs';
+import {CM_ALGORITHM} from './cm-algorithm-version.mjs';
 
 const $=selector=>document.querySelector(selector);
+$('#algorithm-version').textContent=CM_ALGORITHM.name;
 const STORAGE='umaboard-cm-workspace-v1';
 const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹','10202':'산타아니타','10203':'델마'};
 const statLabels={speed:'스피드',stamina:'스태미나',power:'파워',guts:'근성',wisdom:'지능'};
@@ -43,7 +45,7 @@ function ownedProfile(id=outfitId){
  return {bloom:5,uniqueLevel:6};
 }
 function setupInput(){return {raceContext:{postNumber:$('#race-post').value?Number($('#race-post').value):null,popularity:$('#race-popularity').value?Number($('#race-popularity').value):null},outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
-function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
+function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();$('#export-checklist').disabled=true;workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
  $('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;
@@ -203,9 +205,9 @@ function beginCalculation(event){
  notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:input});
 }
 function exportChecklist(){
- if(!result)return;
- const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  acquisition:finalAcquisitionSnapshot(data,result,states),comparisonBasis:result.comparisonBasis,objectivePolicy:result.objectivePolicy,evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,performance:row.performance,comparisonBasis:row.comparisonBasis,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+ if(!result||busy||$('#export-checklist').disabled)return;
+ const payload={schemaVersion:1,algorithm:CM_ALGORITHM,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
+  acquisition:finalAcquisitionSnapshot(data,result,states),comparisonBasis:result.comparisonBasis,objectivePolicy:result.objectivePolicy,evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,calculationState:row.calculationState,hpSuccessRate:row.hpSuccessRate,hpShortfall:row.hpShortfall,performance:row.performance,comparisonBasis:row.comparisonBasis,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){

@@ -5,6 +5,7 @@
 | 항목 | 기준 |
 | --- | --- |
 | 작업 브랜치 | `feat/cm-first-chart` |
+| 공개 알고리즘 명칭 | 최적화 알고리즘 v1 — 내부 계산 모델 v11과 저장 호환 유지 |
 | 완료 상태 | [알고리즘 1차 완성본](CM_ALGORITHM_V1_COMPLETION.md) — v11 유지, 알려진 한계를 수용하고 수치 조정은 종료 |
 | v6 보완 전 기준 커밋 | [`3cc94e1`](https://github.com/seraveist/umaBoard/commit/3cc94e1ff6b4527ae55cb0cb099d3aea07f02848) |
 | 검토 PR | [#3](https://github.com/seraveist/umaBoard/pull/3) |
@@ -20,7 +21,12 @@
 날짜가 있는 QA 문서는 해당 시점의 검증 기록이다. 과거 문서의 v2/v3 모델이나
 이전 데이터·테스트 개수를 현재 상태로 해석하지 않는다.
 
-최신 기존 레이스 재실행: [고정 v11 테스트베드 재검증](CM_TESTBED_REVALIDATION_V11.md).
+최신 프론트엔드 연결 검수: [최적화 알고리즘 v1](CM_OPTIMIZATION_V1_FRONTEND_QA.md).
+원래 운영 커밋의 계산 의존 모듈30개·입력4개·증거10개를 그대로 고정하고 공개 명칭과 JSON 메타데이터를 연결했다.
+설정 변경 뒤 이전 마신표를 내려받을 수 있던 상태를 차단하고 내보내기에 계산 상태·표본 HP 정보를 보존한다.
+현재 계산 및 Pages 빌드의 유지 확인 명령은 `node scripts/check_cm_algorithm_v1.mjs --build`다.
+
+직전 기존 레이스 재실행: [고정 v11 테스트베드 재검증](CM_TESTBED_REVALIDATION_V11.md).
 실제25코스·37조건의 마신표/문맥801건·추천141건과7000SP 입력2건을 다시 실행했다.
 같은 v11의 마신표/문맥76건·추천18건은 표본 HP 충족과 발동/유효 가속 빈도도 재현됐고,
 과거 성공 결과가 있는137추천은 같은 조합을 선택했다. 기존 작은 탐색 차이2건과HP 부족 입력8건은 보존했다.

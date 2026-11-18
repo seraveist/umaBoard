@@ -6,6 +6,7 @@ import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 import {evolutionOptions,evolutionGroups} from './cm-evolution.mjs';
 import {skillIconId} from './cm-icons.mjs';
 import {calculationSummary,marginalSummary} from './cm-model-presentation.mjs';
+import {CM_ALGORITHM} from './cm-algorithm-version.mjs';
 
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true,onRecordError=()=>{}}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
@@ -97,7 +98,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
  $('#final-cancel').addEventListener('click',()=>{stop();message('추천 중지');$('#final-submit').focus();});
  $('#final-export').addEventListener('click',()=>{
   if(!result||$('#final-export').disabled)return;
-  const blob=new Blob([JSON.stringify({schemaVersion:1,dataVersion:manifest.active_version,createdAt:new Date().toISOString(),...result},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`umaBoard-최종스킬-${result.setup.course.distance}m.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const blob=new Blob([JSON.stringify({schemaVersion:1,dataVersion:manifest.active_version,createdAt:new Date().toISOString(),...result,algorithm:CM_ALGORITHM},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`umaBoard-최종스킬-${result.setup.course.distance}m.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
  return {
   setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;setValues(read(scope)?.values);$('#final-submit').disabled=false;message();},

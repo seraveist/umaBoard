@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "sourceCommit": "01db88b428cd353dfed9cd1ef8469e6b783ee0c3",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "scope": "Before frontend changes; actual isolated browser and production workers",
+  "errors": [],
+  "restoredStatCandidate": "204142",
+  "actualStamina": 1800,
+  "result": {
+    "gain": 0.1481436749595168,
+    "budget": {
+      "total": 200,
+      "used": 144,
+      "remaining": 56
+    },
+    "selectedIds": [
+      "100221",
+      "204142"
+    ]
+  },
+  "knownFindings": {
+    "invalidFieldErrorDescribed": "final-error",
+    "staleChartExportDisabled": false
+  }
+}

@@ -2,7 +2,9 @@
 
 Cumulative implementation status, accepted scope and prioritized follow-up work:
 [`docs/CM_PROGRESS_AND_NEXT_STEPS.md`](docs/CM_PROGRESS_AND_NEXT_STEPS.md),
-2026-11-18, CM models v7; shared contexts, executable conditions and package contributions.
+2026-11-18, optimization algorithm v1 with unchanged CM models v11; shared contexts,
+executable conditions and package contributions. `docs/CM_OPTIMIZATION_V1_FRONTEND_QA.md`
+records the public name, preserved calculation closure and frontend integration audit.
 
 The current user-approved contracts are `docs/CM_FIRST_CHART.md` and
 `docs/CM_POST_TRAINING.md`. They supersede the

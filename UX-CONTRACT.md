@@ -13,6 +13,13 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 | Toast | stable inline cm-notice live region | DESIGN | status / error | browser |
 | Skill details | cm-skill-details.mjs | DESIGN | hover / focus / tap | browser |
 
+Public release identity comes from `cm-algorithm-version.mjs`: optimization v1
+uses unchanged v11 chart/final model IDs and existing draft/cache schemas.
+Both JSON downloads add the same `algorithm` identity. The chart download also
+retains each row's calculation state and sampled HP outcome. Setup edits disable
+the previous chart download until a complete replacement is available. These UI
+and export rules do not alter candidate admission, sampling, pricing or search.
+
 Under the user's quiet-copy update, omit general instructions, policy prose,
 list-footer repetition and routine save/restore/export/completion success copy.
 Keep semantic labels, source routes, actual numbers and necessary error,
