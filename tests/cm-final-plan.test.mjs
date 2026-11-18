@@ -125,7 +125,7 @@ test('a bounded search starts with complete affordable packs even when singleton
  const {data,chart}=fixture(),states={};
  for(let i=0;i<16;i++){const id='pack'+i;data.skills[id]=skill(id,400);data.purchase_stages[id]={status:'verified',base_cost:10};chart.rows.push({...data.skills[id],name:id});states[id]='0';}
  const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1});
- assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'bounded');
+ assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'compressed-bounded');
 });
 
 test('Fast Learner adds ten percentage points to every recorded hint discount before one integer floor',()=>{

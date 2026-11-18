@@ -60,7 +60,7 @@ test('bounded whole-plan closure can cross a worsening downgrade to fund a bette
  const stats={speed:1500,stamina:1600,power:1500,guts:1200,wisdom:1200},aptitudes={distance:'A',surface:'A',style:'A'};
  const chart={modelVersion:'fixture',nativeIds:[],setup:{course:{id:'c',selectable:true,distance:2200,distance_type:3,surface:1,turn:1,track_id:'10008',course_set_status:[],corners:[],straights:[{start:0,end:2200}],slopes:[]},stats,aptitudes,scenarioId:'15',style:2,mood:2,going:1},rows:skills};
  const result=await recommendFinalPlan(data,chart,Object.fromEntries(skills.map(s=>[s.id,'0'])),{stats,aptitudes,spBudget:200},{exactPlanLimit:0,searchSamples:9,samples:9,dt:.02,searchDt:.05,evaluationLimit:40,diagnostics:false});
- assert.equal(result.search.method,'bounded');assert.deepEqual(result.activeIds,['independent','tier-low']);assert.equal(result.budget.used,170);
+ assert.equal(result.search.method,'compressed-bounded');assert.deepEqual(result.activeIds,['independent','tier-low']);assert.equal(result.budget.used,170);
  assert.ok(result.search.exchangeProposalChecks>0);assert.ok(result.search.exchangePrecisionChecks>0);
  assert.ok(result.search.initialCoarseEvaluations<=result.search.initialCoarseEvaluationLimit);
  assert.ok(result.search.exchangeEvaluations<=result.search.exchangeEvaluationLimit);assert.equal(result.search.stabilizationChecks,0);

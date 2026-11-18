@@ -1,5 +1,6 @@
 import {dependencyPacks} from './skill-dependencies.mjs';
 import {enumerateAffordablePlans,fundingEdits,budgetExchangeProposals} from './cm-search.mjs';
+import {createPlanSignature,selectRepresentatives,selectNearBest,comparePlanPriorities} from './cm-plan-compression.mjs';
 import {RaceEvaluator} from './race-evaluation.mjs';
 import {normalizeRaceContext,samplingPolicy} from './race-sampling.mjs';
 import {compileChartSkill,branchSampler,CM_DT,CM_SAMPLES} from './cm-chart.mjs';
@@ -17,7 +18,7 @@ import {ENCOUNTER_POLICY,contextDomains,scenarioCount} from './race-scenarios.mj
 import {normalizeRiskPolicy,compareRacePlans,RACE_OBJECTIVE} from './race-objective.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v12';
+export const FINAL_MODEL_VERSION='cm-post-training-v13';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');
@@ -75,13 +76,14 @@ export class RecordedPurchaseModel{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.01,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  setup.externalDomains=contextDomains(data);
- if(!Number.isInteger(samples)||samples<1||samples>512||!Number.isInteger(searchSamples)||searchSamples<1||searchSamples>512||!Number.isFinite(dt)||dt<=0||dt>.1||!Number.isFinite(searchDt)||searchDt<=0||searchDt>.1||!Number.isInteger(width)||width<2||!Number.isInteger(evaluationLimit)||evaluationLimit<1||!Number.isInteger(maxCandidates)||maxCandidates<1||!Number.isSafeInteger(exactPlanLimit)||exactPlanLimit<0||exactPlanLimit>4096)throw new Error('추천 탐색 설정을 확인하세요.');
+ if(!Number.isInteger(samples)||samples<1||samples>512||!Number.isInteger(searchSamples)||searchSamples<1||searchSamples>512||!Number.isFinite(dt)||dt<=0||dt>.1||!Number.isFinite(searchDt)||searchDt<=0||searchDt>.1||!Number.isInteger(width)||width<2||!Number.isInteger(evaluationLimit)||evaluationLimit<1||!Number.isInteger(maxCandidates)||maxCandidates<1||!Number.isSafeInteger(exactPlanLimit)||exactPlanLimit<0||exactPlanLimit>4096||!Number.isFinite(gainTolerance)||gainTolerance<0||gainTolerance>1)throw new Error('추천 탐색 설정을 확인하세요.');
  // Even a low-cost preview must visit every declared context before comparing
  // plans; sample counts cannot silently omit a difficult or weighted case.
  samples=Math.max(samples,scenarioCount(setup));searchSamples=Math.max(searchSamples,scenarioCount(setup));
+ const contexts=scenarioCount(setup),stageSamples=fraction=>Math.min(samples,Math.max(contexts,Math.ceil(samples*fraction/contexts)*contexts)),pilotSamples=gainTolerance?stageSamples(.25):samples,middleSamples=gainTolerance?stageSamples(.5):samples;
  const options=evolutionOptions(data,chart),origins=inheritanceOrigins(data),planningRows=[...new Map([...chart.rows,...(chart.inheritanceOptions||[]),...options].map(row=>[row.id,row])).values()].map(row=>({...row,inheritanceOriginId:origins[row.id]??null}));
  const states=finalAcquisitionSnapshot(data,chart,acquisition);
  for(const row of options){
@@ -115,14 +117,18 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const price=ids=>{const value=purchase.selection(ids);return value.complete?value.used:null;};
  const enumeration=enumerateAffordablePlans(candidates.map(row=>row.id),{required,normalize,conflict:(a,b)=>lower.get(a)?.has(b)||lower.get(b)?.has(a)||!rules.compatible(a,b),legal:ids=>retained(ids)&&legal(ids),price,budget:setup.spBudget,planLimit:exactPlanLimit});
  const method=enumeration.complete?'exhaustive':'bounded';
- const evaluator=new RaceEvaluator(setup,compiled,required,chart.nativeIds,branchSampler);let evaluations=0,hpPrunedPlans=0,coarseEvaluations=0,precisionEvaluations=0;
+ const signature=createPlanSignature(compiled,lower,setup.course.distance),fullScores=new Map(),scoreCache=new Map();
+ const evaluator=new RaceEvaluator(setup,compiled,required,chart.nativeIds,branchSampler);let evaluations=0,hpPrunedPlans=0,coarseEvaluations=0,precisionEvaluations=0,pilotEvaluations=0,middleEvaluations=0;
  const evaluate=(ids,count,step,stopOnHpFailure=false,phase='precision')=>{
   ids=normalize(ids);if(!retained(ids)||!legal(ids))return null;
   const priced=purchase.selection(ids);if(!priced.complete||priced.used>setup.spBudget)return null;
+  const cacheKey=`${idKey(ids)}|${count}|${step}`;if(scoreCache.has(cacheKey))return scoreCache.get(cacheKey);
   const result=evaluator.evaluate(ids,count,step,{stopOnHpFailure});evaluations++;
-  if(phase==='coarse')coarseEvaluations++;else precisionEvaluations++;
+  if(phase==='coarse')coarseEvaluations++;else if(count===samples&&step===dt)precisionEvaluations++;else if(phase==='pilot')pilotEvaluations++;else middleEvaluations++;
   if(result.hpRejected){hpPrunedPlans++;return null;}
-  return {ids,cost:priced.used,...result};
+  const score={ids,cost:priced.used,...result};scoreCache.set(cacheKey,score);
+  if(count===samples&&step===dt)fullScores.set(idKey(ids),score);
+  return score;
  };
  const order=compareRacePlans;
  const evaluated=new Map(),coarseLimit=Math.max(evaluationLimit,1+3*candidates.length);let quickLimit=coarseLimit,coarseLimitReached=false;
@@ -254,7 +260,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  };
  const variantsFor=ids=>[...ids.filter(id=>!required.includes(id)).map(id=>normalize(ids.filter(other=>other!==id))),...candidates.filter(row=>!ids.includes(row.id)).map(row=>extend(ids,row.id)),...scenarioPacks.map(pack=>replaceScenario(ids,pack))];
  const refineNeighborhood=async(seed,step,seeds,stage)=>{
-  let best=seed,complete=false,checks=0,passes=0,batchChecks=0,directEvaluations=0;
+  let best=seed,complete=false,checks=0,passes=0,batchChecks=0,directEvaluations=0,toleranceStopped=false;
   const memo=new Map(seeds.filter(Boolean).map(row=>[idKey(row.ids),row]));
   const precise=ids=>{const key=idKey(active(ids));if(!memo.has(key)){memo.set(key,evaluate(ids,samples,step,best.feasible));checks++;}return memo.get(key);};
   for(let pass=0;pass<12;pass++){
@@ -283,9 +289,11 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
    if(improvements.size>1&&idKey(batch)!==idKey(best.ids)){
     batchChecks++;const value=precise(batch);if(value&&order(value,next)<0)next=value;
    }
-   if(idKey(next.ids)===idKey(best.ids)){complete=exchangeScreeningComplete;break;}best=next;
+   if(idKey(next.ids)===idKey(best.ids)){complete=exchangeScreeningComplete;break;}
+   const micro=gainTolerance>0&&comparePlanPriorities(next,best)===0&&next.gain-best.gain<gainTolerance&&next.cost>=best.cost&&signature(next.ids)===signature(best.ids);
+   best=next;if(micro){toleranceStopped=true;break;}
   }
-  return {best,complete,checks,passes,batchChecks,directEvaluations};
+  return {best,complete,checks,passes,batchChecks,directEvaluations,toleranceStopped};
  };
  const ranked=method==='exhaustive'?enumeration.plans:[...evaluated.values()].filter(Boolean).sort(order);let finalists=ranked,screenedFinalists=0,precisionScreenedFinalists=0;
  if(method!=='exhaustive'){
@@ -300,8 +308,9 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   // can still disagree with the final integration step.
   screenedFinalists=finalists.length;precisionScreenedFinalists=finalists.length;
  }
- const refined=[],precisionMemo=new Map();let precisionSeedCandidates=0,precisionSeedCount=0;
+ const refined=[],precisionMemo=new Map(),pilotMemo=new Map();let precisionSeedCandidates=0,precisionSeedCount=0,protectedFinalIds=[];
  const finalScore=ids=>{const key=idKey(active(ids));if(!precisionMemo.has(key))precisionMemo.set(key,evaluate(ids,samples,dt));return precisionMemo.get(key);};
+ const pilotScore=ids=>{const key=idKey(normalize(ids));if(!pilotMemo.has(key))pilotMemo.set(key,evaluate(ids,pilotSamples,dt,false,'pilot'));return pilotMemo.get(key);};
  if(method!=='exhaustive'){
   // A coarse shortlist can miss an effective timing or promote redundant
   // effects. Rebuild complete proposals from ALL recorded candidates using
@@ -315,14 +324,34 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
   const gain=[...preciseSingles].sort(gainOrder),efficiency=[...preciseSingles].sort((a,b)=>b.gain/Math.max(1,b.cost)-a.gain/Math.max(1,a.cost)||gainOrder(a,b));
   exchangeAdditions=[...new Set([...efficiency,...gain].map(row=>row.id))];
-  const constructive=await greedySeeds([efficiency,gain],finalScore,'stabilization');if(!constructive)return null;
+  const constructive=await greedySeeds([efficiency,gain],gainTolerance?pilotScore:finalScore,'stabilization');if(!constructive)return null;
   precisionSeedCandidates=preciseSingles.length;precisionSeedCount=constructive.length;
+  protectedFinalIds=constructive.map(row=>row.ids);
   finalists=[...new Map([...finalists,...constructive].map(row=>[idKey(row.ids),row])).values()];
  }
  // Compound proposals share a separate coarse-work allowance across ALL
  // closure passes; full-sample whole-plan scoring is only used for finalists.
  const initialCoarseEvaluations=coarseEvaluations;quickLimit=initialCoarseEvaluations+evaluationLimit;
  if(!finalists.some(row=>idKey(row.ids)===idKey(required)))finalists.push(baseline);
+ const compression={enabled:gainTolerance>0,tolerance:gainTolerance,pilotSamples,middleSamples,middleApplied:gainTolerance>0&&method==='exhaustive',fullSamples:samples,rawPlans:finalists.length,pilotRepresentatives:null,middleRepresentatives:null,fullPlans:null,merged:0,signaturePolicy:'critical-skill-identities-explicit-possession-and-source-count-roles'};
+ if(gainTolerance){
+  const first=[];
+  for(let i=0;i<finalists.length;i++){
+   if(cancelled())return null;
+   const value=pilotScore(finalists[i].ids);if(value)first.push(value);
+   onProgress({stage:'screening',completed:i+1,total:finalists.length});if(i%4===3)await pause();
+  }
+  const pilot=selectRepresentatives(first,{tolerance:gainTolerance,signature,limit:method==='exhaustive'?Math.max(24,width*8):width*2,requiredIds:required,protectedIds:protectedFinalIds}),middle=[];
+  compression.pilotRepresentatives=pilot.selected.length;compression.merged+=pilot.merged;
+  if(method==='exhaustive')for(let i=0;i<pilot.selected.length;i++){
+   if(cancelled())return null;
+   const value=evaluate(pilot.selected[i].ids,middleSamples,dt,false,'middle');if(value)middle.push(value);
+   onProgress({stage:'screening',completed:i+1,total:pilot.selected.length});if(i%4===3)await pause();
+  }
+  const selected=method==='exhaustive'?selectRepresentatives(middle,{tolerance:gainTolerance,signature,limit:width*2,requiredIds:required,protectedIds:protectedFinalIds}):{representatives:pilot.representatives,selected:pilot.selected,merged:0};
+  compression.middleRepresentatives=selected.representatives.length;compression.merged+=selected.merged;
+  finalists=selected.selected;compression.fullPlans=finalists.length;
+ }
  for(let i=0;i<finalists.length;i++){
   if(cancelled())return null;
   refined.push(finalScore(finalists[i].ids));onProgress({stage:'final',completed:i+1,total:finalists.length});await pause();
@@ -331,8 +360,8 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  // Reuse them in closure even when the challenger could be HP-pruned: a
  // complete result remains valid under that optimization flag.
  const precisionBeforeRefinement=precisionEvaluations;
- const closed=method==='exhaustive'?{best:refined.sort(order)[0],complete:true,checks:0,passes:0,batchChecks:0,directEvaluations:0}:await refineNeighborhood(refined.sort(order)[0],dt,[...precisionMemo.values()],'closure');if(!closed)return null;
- const best=closed.best,closureComplete=closed.complete,closureChecks=closed.checks;
+ const closed=method==='exhaustive'&&!gainTolerance?{best:refined.sort(order)[0],complete:true,checks:0,passes:0,batchChecks:0,directEvaluations:0,toleranceStopped:false}:await refineNeighborhood(refined.sort(order)[0],dt,[...fullScores.values()],'closure');if(!closed)return null;
+ const selection=selectNearBest([...fullScores.values()],gainTolerance),best=gainTolerance?selection.selected:closed.best,closureComplete=!gainTolerance&&closed.complete,closureChecks=closed.checks;
  const priced=purchase.selection(best.ids),allocated=new Set();
  const groups=evolutionGroups(data,setup,planningRows.filter(row=>best.ids.includes(row.id)&&!owned.includes(row.id)&&row.rarity==='evolution'));
  const purchaseIds=new Set(best.ids.filter(id=>!chart.nativeIds.includes(id)&&!owned.includes(id)).map(id=>data.skills[id].rarity==='evolution'?(planningRows.find(row=>row.id===id)?.evolutionBaseId||data.evolution_rules.find(r=>r.evolved_id===id)?.base_id):id).filter(id=>!owned.includes(id)));
@@ -355,6 +384,6 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   physicsSensitivity={publicApproximationGain:best.gain,withoutExtraSpurtGain:alternate.gain,difference:best.gain-alternate.gain,interpretation:'model-sensitivity-not-an-error-bound'};
  }
  return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,activeIds:best.ids,purchases,evolutions:groups,scenarioEvolutionCount,finalSkills,
-  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,robustGain:best.robustGain,performance:best.performance,scenarioSensitivity:best.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,acquisitionValidation,scenarios:best.scenarios,scenarioCoverage:best.scenarioCoverage,marginalContributions,physicsSensitivity,usefulAccelerationRates:best.usefulAccelerationRates,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpSuccesses:best.hpSuccesses,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
-  candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,hpPrunedPlans,coarseEvaluations,precisionEvaluations,precisionBeforeRefinement,refinementEvaluations:precisionEvaluations-precisionBeforeRefinement,refinementEvaluationLimit:method==='exhaustive'?0:candidates.length+scenarioPacks.length+12*(width+1),coarseEvaluationLimit:quickLimit,initialCoarseEvaluations,initialCoarseEvaluationLimit:coarseLimit,coarseLimitReached,exchangeEvaluationLimit:evaluationLimit,exchangeEvaluations,exchangeProposalChecks,exchangePrecisionChecks,exchangeScreeningComplete,exactEnumeration:{complete:enumeration.complete,reason:enumeration.reason,nodes:enumeration.nodes,groups:enumeration.groups,affordablePlans:enumeration.complete?enumeration.plans.length:null,planLimit:exactPlanLimit},shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureScope:'initial-exact-neighborhood-then-screened-refinement',closureTermination:closed.complete?'stable':closed.passes>=12?'pass-limit':'coarse-work-limit',initialDirectSweeps:method==='exhaustive'?0:1,initialDirectEvaluations:closed.directEvaluations,closureChecks,closurePasses:closed.passes,batchChecks:closed.batchChecks,screenedFinalists,precisionScreenedFinalists,precisionCandidates:refined.length,precisionSeedCandidates,precisionSeedCount,precisionScreeningComplete:method==='exhaustive'||precisionScreenedFinalists===screenedFinalists,screeningSamples:samples,stabilizationPasses:0,stabilizationChecks:0,stabilizationBatchChecks:0,stabilizationComplete:true,globalOptimal:method==='exhaustive',optimalityScope:method==='exhaustive'?'affordable-recorded-candidates-at-declared-sampling-resolution':'bounded-search',searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
+  budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,robustGain:best.robustGain,performance:best.performance,scenarioSensitivity:best.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,selectionPolicy:gainTolerance?'epsilon-mean-cost-with-priority-preservation-v1':RACE_OBJECTIVE,acquisitionValidation,scenarios:best.scenarios,scenarioCoverage:best.scenarioCoverage,marginalContributions,physicsSensitivity,usefulAccelerationRates:best.usefulAccelerationRates,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpSuccesses:best.hpSuccesses,hpShortfall:best.hpShortfall,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
+  candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method:gainTolerance?(enumeration.complete?'compressed-enumeration':'compressed-bounded'):method,evaluations,hpPrunedPlans,coarseEvaluations,pilotEvaluations,middleEvaluations,precisionEvaluations,compression,approximation:{gainTolerance,knownBestGain:selection.anchor.gain,knownMeanLoss:selection.knownMeanLoss,eligibleMeasuredPlans:selection.eligible,fullyEvaluatedPlans:fullScores.size,scope:'fixed-best-measured-priority-class-not-global-error-certificate'},precisionBeforeRefinement,refinementEvaluations:precisionEvaluations-precisionBeforeRefinement,refinementEvaluationLimit:method==='exhaustive'&&!gainTolerance?0:candidates.length+scenarioPacks.length+12*(width+1),coarseEvaluationLimit:quickLimit,initialCoarseEvaluations,initialCoarseEvaluationLimit:coarseLimit,coarseLimitReached,exchangeEvaluationLimit:evaluationLimit,exchangeEvaluations,exchangeProposalChecks,exchangePrecisionChecks,exchangeScreeningComplete,exactEnumeration:{complete:enumeration.complete,reason:enumeration.reason,nodes:enumeration.nodes,groups:enumeration.groups,affordablePlans:enumeration.complete?enumeration.plans.length:null,planLimit:exactPlanLimit},shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureScope:'initial-exact-neighborhood-then-screened-refinement',closureTermination:closed.toleranceStopped?'gain-tolerance':gainTolerance?'compressed-search':closed.complete?'stable':closed.passes>=12?'pass-limit':'coarse-work-limit',initialDirectSweeps:method==='exhaustive'&&!gainTolerance?0:1,initialDirectEvaluations:closed.directEvaluations,closureChecks,closurePasses:closed.passes,batchChecks:closed.batchChecks,screenedFinalists,precisionScreenedFinalists,precisionCandidates:refined.length,precisionSeedCandidates,precisionSeedCount,precisionScreeningComplete:gainTolerance?refined.length===compression.rawPlans:method==='exhaustive'||precisionScreenedFinalists===screenedFinalists,finalValidationComplete:refined.length===(gainTolerance?compression.fullPlans:finalists.length),seedEvaluationSamples:samples,constructiveEvaluationSamples:pilotSamples,screeningSamples:gainTolerance?(method==='exhaustive'?middleSamples:pilotSamples):samples,stabilizationPasses:0,stabilizationChecks:0,stabilizationBatchChecks:0,stabilizationComplete:true,globalOptimal:method==='exhaustive'&&!gainTolerance,optimalityScope:gainTolerance?'epsilon-compressed-search':method==='exhaustive'?'affordable-recorded-candidates-at-declared-sampling-resolution':'bounded-search',searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }

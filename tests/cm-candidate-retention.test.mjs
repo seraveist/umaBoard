@@ -52,8 +52,15 @@ test('an inactive prerequisite remains owned and only the recorded upgrade is ch
  const low=skill('101',[[atom('base_speed',2300)]]),high=skill('102',[[atom('base_speed',2300)]],'gold'),d=fixture(high);
  d.skills[low.id]=low;d.purchase_stages[low.id]={status:'verified',base_cost:100};d.purchase_stages[high.id].prerequisite_id=low.id;
  const chart=await generateChart(d,profiles,{},input,{samples:1,dt:.05});assert.ok(chart.rows.some(r=>r.id===low.id));
- const actual={stats:{...stats,speed:2300},spBudget:80},p=await recommendFinalPlan(d,chart,{101:'owned',102:'2'},actual,quick);
+ const actual={stats:{...stats,speed:2300},spBudget:80},p=await recommendFinalPlan(d,chart,{101:'owned',102:'2'},actual,{...quick,gainTolerance:0});
  assert.equal(p.acquisition['101'],'owned');assert.equal(p.budget.used,80);assert.ok(p.activeIds.includes('102'));assert.ok(!p.activeIds.includes('101'));
+ // This fixture gives the two tiers identical effects. The exact price
+ // contract above remains useful, while epsilon selection should keep the
+ // already-paid tier when the upgrade adds less than the declared tolerance.
+ const compressed=await recommendFinalPlan(d,chart,{101:'owned',102:'2'},actual,quick);
+ assert.equal(compressed.acquisition['101'],'owned');assert.equal(compressed.acquisition['102'],'2');
+ assert.equal(compressed.budget.used,0);assert.ok(compressed.activeIds.includes('101'));assert.ok(!compressed.activeIds.includes('102'));
+ assert.ok(p.gain-compressed.gain<=.01+1e-10);
 });
 
 test('real scenario-8 chart retains the white stamina gate and actual stats control buying without manual row restoration',async()=>{

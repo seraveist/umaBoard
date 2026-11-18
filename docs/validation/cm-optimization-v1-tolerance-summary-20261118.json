@@ -1,0 +1,666 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "dbbe246",
+  "modelVersion": "cm-post-training-v13",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "baseline": false,
+  "modulesSha256": "b00adbd3dd3f964aaaf55bdecc6bd9758a35d6e02cd67928999e4315ada987ee",
+  "status": "passed-at-declared-resolution-with-sampling-sensitivity",
+  "gainTolerance": 0.01,
+  "sourceFiles": [
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-bounded-mile-20261118.json",
+      "textSha256": "b53c0e40e8c3d709bdf2289409f9247bdeed3e6c4473dd52e11bbeff492309f6"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-bounded-mile-owned-fallback-20261118.json",
+      "textSha256": "e511a4d0782a58cc559b3f720f60a44eddbd0f3e4a199db17960502fd9cd1679"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-build-20261118.json",
+      "textSha256": "12fdfab3e558b65050a79e0b61b92fe065ad51d43d82234bf092179308f10727"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-case-classic-20261118.json",
+      "textSha256": "78f6daf498ff89f58179c386616e050a7e7b95055d5bf9e4ec8ea2efccba5c65"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-case-dirt-20261118.json",
+      "textSha256": "e572cbb9c24387b8ffc545133d1d253f958e8fe284c1b96014f43e0c62d77d0c"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-case-long-20261118.json",
+      "textSha256": "1e71cfb42ccbb8a1e84611ed611fe679343d15818c34ea4cf065c90980a15d55"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-case-mile-20261118.json",
+      "textSha256": "2c14f46ca60f07dcfa2fea818660b38f6b1907792255088d724e1573306dbf8d"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-case-mile-owned-fallback-20261118.json",
+      "textSha256": "b8ac99099960efe8f094049a72aeedb01230306131a1b45462fd0567edb792e0"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-data-20261118.txt",
+      "textSha256": "cf5c1e3d106ff7373c9a69a049aafd154514ea8f7943c611193fafcaf9273841"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-large-20261118.json",
+      "textSha256": "786e5976ca65a76c2dde664a52279dc8704aeccc50552598b62af841c05e4808"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-node-current-20261118.txt",
+      "textSha256": "272aa89c3b74da7347ad311dbbd5c5c47b40d3288c5f03af6a2a903656ec0e50"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-node-tests-20261118.txt",
+      "textSha256": "6f783d03a0c07f19088f91c5b2e8006770cde6683e4f0413ed18613349dbcba1"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-python-tests-20261118.txt",
+      "textSha256": "bd11ac7f48e6e16c43994c80f55fb9a2f4d2ea2e45605be2cfaf3d633fe29e70"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-release-20261118.json",
+      "textSha256": "c7d0ed468ff24c5c99862b62c233d2c25bd17ae66b538ff5d9d1a6d28009e7b2"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-tolerance-sensitivity-20261118.json",
+      "textSha256": "226b7c8f015c26c7267903766217ba7ae7c9466693cf9001249ee332330a9597"
+    }
+  ],
+  "regression": {
+    "node": {
+      "tests": 311,
+      "pass": 311,
+      "fail": 0,
+      "skipped": 0,
+      "verification": {
+        "strategy": "same-production-core-disjoint-test-batches",
+        "fullAttempt": {
+          "tests": 311,
+          "pass": 310,
+          "fail": 1,
+          "skipped": 0
+        },
+        "currentNonJointSuite": {
+          "tests": 309,
+          "pass": 309,
+          "fail": 0,
+          "skipped": 0
+        },
+        "retainedIntegrationTests": 2,
+        "explanation": "The first attempt kept one obsolete exact-cost selection assumption. Current price and epsilon contracts pass; integrations passed on the identical production core. Reruns are not counted as additional tests."
+      }
+    },
+    "python": {
+      "total": 51,
+      "passed": 51
+    }
+  },
+  "build": {
+    "status": "passed",
+    "algorithm": {
+      "id": "umaboard-optimization-v1",
+      "version": "v1",
+      "revision": 3,
+      "name": "최적화 알고리즘 v1",
+      "models": {
+        "chart": "cm-first-chart-v11",
+        "final": "cm-post-training-v13",
+        "solo": "solo-comparison-v5"
+      }
+    },
+    "baseCommit": "dbbe246",
+    "coreSha256": "b00adbd3dd3f964aaaf55bdecc6bd9758a35d6e02cd67928999e4315ada987ee",
+    "calculationModules": 32,
+    "unchangedParentModules": 30,
+    "unchangedPhysicsModules": 29,
+    "stagedCalculationModules": 32,
+    "lockedInputs": 4,
+    "verifiedHistoricalEvidence": 10,
+    "scope": "authorized tolerance/compression revision; common physics, source data and historical evidence unchanged"
+  },
+  "dataValidation": {
+    "status": "passed",
+    "counts": {
+      "skills": 2236,
+      "outfits": 274,
+      "supports": 568,
+      "courses": 138
+    },
+    "warnings": 5
+  },
+  "defaultRecommendations": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.1859623528659897,
+      "currentGain": 2.1772361120446284,
+      "meanLoss": 0.008726240821361309,
+      "previousCost": 467,
+      "currentCost": 457,
+      "priorityComparison": 0,
+      "oracleGap": 0.008726240821361309,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 33,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 144,
+        "pilotRepresentatives": 52,
+        "middleRepresentatives": 52,
+        "fullPlans": 27,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.6932047198951476,
+      "currentGain": 2.6932047198951476,
+      "meanLoss": 0,
+      "previousCost": 695,
+      "currentCost": 695,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 40,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 272,
+        "pilotRepresentatives": 60,
+        "middleRepresentatives": 60,
+        "fullPlans": 33,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "classic",
+      "budget": 470,
+      "previousGain": 1.9730738622217925,
+      "currentGain": 1.9730738622217925,
+      "meanLoss": 0,
+      "previousCost": 454,
+      "currentCost": 454,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 32,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 136,
+        "pilotRepresentatives": 52,
+        "middleRepresentatives": 52,
+        "fullPlans": 27,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "classic",
+      "budget": 700,
+      "previousGain": 2.642768529417118,
+      "currentGain": 2.642768529417118,
+      "meanLoss": 0,
+      "previousCost": 677,
+      "currentCost": 677,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 35,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 261,
+        "pilotRepresentatives": 55,
+        "middleRepresentatives": 55,
+        "fullPlans": 30,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "long",
+      "budget": 470,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "meanLoss": 0,
+      "previousCost": 119,
+      "currentCost": 119,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 157,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 157,
+        "pilotRepresentatives": 157,
+        "middleRepresentatives": 157,
+        "fullPlans": 157,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "long",
+      "budget": 700,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "meanLoss": 0,
+      "previousCost": 119,
+      "currentCost": 119,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 284,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 284,
+        "pilotRepresentatives": 284,
+        "middleRepresentatives": 284,
+        "fullPlans": 284,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "dirt",
+      "budget": 470,
+      "previousGain": 1.4440250321062313,
+      "currentGain": 1.4440250321062313,
+      "meanLoss": 0,
+      "previousCost": 446,
+      "currentCost": 446,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 29,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 144,
+        "pilotRepresentatives": 58,
+        "middleRepresentatives": 58,
+        "fullPlans": 27,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "dirt",
+      "budget": 700,
+      "previousGain": 1.5276432993984663,
+      "currentGain": 1.5270626605360613,
+      "meanLoss": 0.000580638862405003,
+      "previousCost": 689,
+      "currentCost": 590,
+      "priorityComparison": 0,
+      "oracleGap": 0.000580638862405003,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 31,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 268,
+        "pilotRepresentatives": 54,
+        "middleRepresentatives": 54,
+        "fullPlans": 27,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.0517737776000944,
+      "currentGain": 2.0517737776000944,
+      "meanLoss": 0,
+      "previousCost": 462,
+      "currentCost": 462,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 32,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 139,
+        "pilotRepresentatives": 55,
+        "middleRepresentatives": 55,
+        "fullPlans": 27,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.5675236215132298,
+      "currentGain": 2.5675236215132298,
+      "meanLoss": 0,
+      "previousCost": 700,
+      "currentCost": 700,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 40,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 270,
+        "pilotRepresentatives": 61,
+        "middleRepresentatives": 61,
+        "fullPlans": 33,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    }
+  ],
+  "forcedBounded": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.155956408226187,
+      "currentGain": 2.155956408226187,
+      "meanLoss": 0,
+      "previousCost": 443,
+      "currentCost": 443,
+      "priorityComparison": 0,
+      "oracleGap": 0.030005944639802884,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 36,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 39,
+        "pilotRepresentatives": 23,
+        "middleRepresentatives": 39,
+        "fullPlans": 23,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.66959455146994,
+      "currentGain": 2.66959455146994,
+      "meanLoss": 0,
+      "previousCost": 691,
+      "currentCost": 691,
+      "priorityComparison": 0,
+      "oracleGap": 0.02361016842520769,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 44,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 51,
+        "pilotRepresentatives": 22,
+        "middleRepresentatives": 51,
+        "fullPlans": 22,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.030604636602194,
+      "currentGain": 2.030604636602194,
+      "meanLoss": 0,
+      "previousCost": 448,
+      "currentCost": 448,
+      "priorityComparison": 0,
+      "oracleGap": 0.02116914099790046,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 41,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 45,
+        "pilotRepresentatives": 25,
+        "middleRepresentatives": 45,
+        "fullPlans": 25,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.495682136746246,
+      "currentGain": 2.4863448233346075,
+      "meanLoss": 0.009337313411638348,
+      "previousCost": 700,
+      "currentCost": 665,
+      "priorityComparison": 0,
+      "oracleGap": 0.08117879817862228,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 42,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 50,
+        "pilotRepresentatives": 26,
+        "middleRepresentatives": 50,
+        "fullPlans": 26,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      }
+    }
+  ],
+  "rowOrderInvariance": true,
+  "budgetMonotonic": true,
+  "budgetComparisonMeanTolerance": 0.01,
+  "large": {
+    "previousGain": 36.50123091043926,
+    "currentGain": 36.50123091043926,
+    "meanLoss": 0,
+    "previousCost": 6948,
+    "currentCost": 6948,
+    "previousProfile": {
+      "evaluations": 3376,
+      "simulations": 108144,
+      "referenceSimulations": 153,
+      "cacheHits": 107991,
+      "byResolution": {
+        "9|0.05": 2800,
+        "144|0.01": 576
+      },
+      "wallMs": 343846.9058
+    },
+    "currentProfile": {
+      "evaluations": 3437,
+      "simulations": 87768,
+      "referenceSimulations": 153,
+      "cacheHits": 87615,
+      "byResolution": {
+        "9|0.05": 2800,
+        "144|0.01": 367,
+        "36|0.01": 270
+      },
+      "wallMs": 281538.56090000004
+    },
+    "simulationReduction": 0.18841544607190408,
+    "wallTimeReduction": 0.1812095553253048,
+    "fullFlowSameSelection": true,
+    "search": {
+      "method": "compressed-bounded",
+      "evaluations": 3437,
+      "hpPrunedPlans": 0,
+      "coarseEvaluations": 2800,
+      "pilotEvaluations": 270,
+      "middleEvaluations": 0,
+      "precisionEvaluations": 367,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.01,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 90,
+        "pilotRepresentatives": 82,
+        "middleRepresentatives": 90,
+        "fullPlans": 82,
+        "merged": 0,
+        "signaturePolicy": "critical-skill-identities-explicit-possession-and-source-count-roles"
+      },
+      "approximation": {
+        "gainTolerance": 0.01,
+        "knownBestGain": 36.50123091043926,
+        "knownMeanLoss": 0,
+        "eligibleMeasuredPlans": 1,
+        "fullyEvaluatedPlans": 367,
+        "scope": "fixed-best-measured-priority-class-not-global-error-certificate"
+      },
+      "precisionBeforeRefinement": 297,
+      "refinementEvaluations": 70,
+      "refinementEvaluationLimit": 311,
+      "coarseEvaluationLimit": 2800,
+      "initialCoarseEvaluations": 1400,
+      "initialCoarseEvaluationLimit": 1400,
+      "coarseLimitReached": true,
+      "exchangeEvaluationLimit": 1400,
+      "exchangeEvaluations": 1400,
+      "exchangeProposalChecks": 1352,
+      "exchangePrecisionChecks": 6,
+      "exchangeScreeningComplete": false,
+      "exactEnumeration": {
+        "complete": false,
+        "reason": "enumeration-work-limit",
+        "nodes": 0,
+        "groups": 185,
+        "affordablePlans": null,
+        "planLimit": 512
+      },
+      "shortlisted": 135,
+      "scenarioPacks": 7,
+      "closureComplete": false,
+      "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+      "closureTermination": "compressed-search",
+      "initialDirectSweeps": 1,
+      "initialDirectEvaluations": 63,
+      "closureChecks": 217,
+      "closurePasses": 2,
+      "batchChecks": 1,
+      "screenedFinalists": 88,
+      "precisionScreenedFinalists": 88,
+      "precisionCandidates": 82,
+      "precisionSeedCandidates": 220,
+      "precisionSeedCount": 2,
+      "precisionScreeningComplete": false,
+      "finalValidationComplete": true,
+      "seedEvaluationSamples": 144,
+      "constructiveEvaluationSamples": 36,
+      "screeningSamples": 36,
+      "stabilizationPasses": 0,
+      "stabilizationChecks": 0,
+      "stabilizationBatchChecks": 0,
+      "stabilizationComplete": true,
+      "globalOptimal": false,
+      "optimalityScope": "epsilon-compressed-search",
+      "searchSamples": 9,
+      "searchDt": 0.05,
+      "samples": 144,
+      "dt": 0.01
+    }
+  },
+  "fixedSensitivity": {
+    "comparisons": 20,
+    "worstMeanLoss": 0.06767238360391303,
+    "overToleranceComparisons": [
+      {
+        "key": "mile",
+        "budget": 470,
+        "variant": {
+          "name": "alternate-seed",
+          "samples": 288,
+          "dt": 0.01,
+          "seed": 1
+        },
+        "meanLoss": 0.051646296832718264
+      },
+      {
+        "key": "mile",
+        "budget": 470,
+        "variant": {
+          "name": "larger-sample",
+          "samples": 576,
+          "dt": 0.01,
+          "seed": 0
+        },
+        "meanLoss": 0.06767238360391303
+      }
+    ],
+    "hpRegressions": 0,
+    "failedRiskGuards": 0,
+    "scope": "Fixed old and new recommendations only; no reoptimization at alternative settings; scenario sample comparisons, not real-race probabilities"
+  },
+  "unchangedPhysicsModules": 29,
+  "interpretation": "Tolerance is anchored to measured plans; paired archived fixtures do not certify global error or empirical accuracy. Wall time is one isolated instrumented observation per version; functional tests may run concurrently."
+}

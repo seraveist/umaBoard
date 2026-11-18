@@ -108,6 +108,6 @@ test('a coarse-missed spatial opportunity remains in the full-resolution final c
  const skills=[...Array.from({length:9},(_,i)=>raw(`speed-${i}`,[atom('distance_rate',85,'>=')],'target_speed',1000+i*100)),narrow];
  const data={skills:Object.fromEntries(skills.map(r=>[r.id,r])),purchase_stages:Object.fromEntries(skills.map(r=>[r.id,{status:'verified',base_cost:100}])),relations:[],evolution_rules:[],scenario_exclusive_groups:[]};
  const c={modelVersion:'cm-first-chart-v10',nativeIds:[],setup:s,rows:skills.map(r=>({...r,name:r.id})),evolutionOptions:[]},states=Object.fromEntries(skills.map(r=>[r.id,'0']));
- const p=await recommendFinalPlan(data,c,states,{stats:s.stats,aptitudes:s.aptitudes,spBudget:100},{exactPlanLimit:0,searchSamples:9,samples:9,searchDt:.05,dt:.005,evaluationLimit:40,diagnostics:false});
+ const p=await recommendFinalPlan(data,c,states,{stats:s.stats,aptitudes:s.aptitudes,spBudget:100},{gainTolerance:0,exactPlanLimit:0,searchSamples:9,samples:9,searchDt:.05,dt:.005,evaluationLimit:40,diagnostics:false});
  assert.equal(p.search.method,'bounded');assert.deepEqual(p.activeIds,['z-narrow']);
 });

@@ -36,6 +36,7 @@ if(baseline){
  for(const f of parent.modules){const t=execFileSync('git',['show','29de686:'+f.path],{cwd:root,encoding:'utf8'}).replace(/\r\n/g,'\n');assert.equal(hash(t),f.textSha256);const path=new URL(f.path,frozen);fs.mkdirSync(new URL('./',path),{recursive:true});fs.writeFileSync(path,t);}
 }
 const runtime=await import(baseline?new URL('assets/cm-final-plan.mjs',frozen):new URL('../assets/cm-final-plan.mjs',import.meta.url));
+if(!baseline)assert.equal(runtime.FINAL_MODEL_VERSION,'cm-post-training-v12','This historical audit requires dbbe246. Use validate_cm_v1_tolerance.mjs for the 0.01-length policy.');
 const evaluation=baseline?(await import(new URL('assets/race-evaluation.mjs',frozen))).RaceEvaluator:RaceEvaluator;
 const sourcePaths=[...parent.modules.map(f=>f.path),...(!baseline?['assets/cm-search.mjs']:[])].sort();
 const sourceHashes=sourcePaths.map(path=>({path,sha256:hash(text(path))}));
