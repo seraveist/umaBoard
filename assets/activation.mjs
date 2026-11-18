@@ -15,15 +15,17 @@ const SPATIAL=new Set(['phase','phase_random','phase_firsthalf','phase_firsthalf
 const FRAME_START=new Set(['phase','phase_firsthalf','phase_laterhalf','remain_distance','furlong']);
 const SLOPE_RANDOM=new Map([['up_slope_random',1],['down_slope_random',2],['up_slope_random_later_half',1],['down_slope_random_later_half',2]]);
 const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate']);
+const STAT_CONDITIONS=['base_speed','base_stamina','base_power','base_guts','base_wiz'];
+export const hasStatCondition=skill=>skill.invocations.some(inv=>[...(inv.condition||[]),...(inv.precondition||[])].some(group=>group.some(atom=>STAT_CONDITIONS.includes(atom.field))));
 const phaseBounds=(d,p)=>[[0,d/6],[d/6,2*d/3],[2*d/3,5*d/6],[5*d/6,d]][p];
-export function fixedContext(setup){
+export function fixedContext(setup,{includeStats=true}={}){
  const c=setup.course;
  return {course_distance:c.distance,distance_type:c.distance_type,ground_type:c.surface,track_id:Number(c.track_id),rotation:c.turn,
   ground_condition:setup.going,running_style:setup.style,season:setup.season,weather:setup.weather,time:setup.time,motivation:setup.mood+3,
   grade:100,is_basis_distance:Number(c.distance%400===0),is_abroad:Number(Number(c.track_id)>=10201),
   is_dirtgrade:Number(['10101','10103','10104','10105'].includes(c.track_id)),corner_count:c.corners.length,always:1,
   ...(c.tight_track===undefined?{}:{is_tight_track:c.tight_track}),
-  ...Object.fromEntries(STAT_KEYS.map((key,i)=>[['base_speed','base_stamina','base_power','base_guts','base_wiz'][i],setup.stats[key]]))};
+  ...(includeStats?Object.fromEntries(STAT_KEYS.map((key,i)=>[STAT_CONDITIONS[i],setup.stats[key]])):{})};
 }
 function courseState(c,x){
  const corners=c.corners,at=corners.findIndex(k=>x>=k.start&&x<k.start+k.length),last=corners.at(-1);
@@ -188,7 +190,7 @@ export function branchReady(branch,state,skillId){
    case 'random_lot':case 'random_lot_shared':return a.operator==='=='&&(a.field==='random_lot_shared'?(branch.sharedLotQ??.5):(branch.lotQ??.5))<a.value/100;
    case 'is_lastspurt':value=Number(state.lastSpurtActive??state.phase>=2);break;
    case 'lastspurt':value=(state.maximumSpurt??state.phase>=2)?2:3;break;
-   case 'run_at_full_speed_random':value=Number(state.fullSpurtStart!==null&&state.fullSpurtStart!==undefined&&state.x>=state.fullSpurtStart+(state.distance-state.fullSpurtStart)*(branch.fullSpurtQ??.5));break;
+   case 'run_at_full_speed_random':value=Number(state.fullSpurtStart!==null&&state.fullSpurtStart!==undefined&&previous>=state.fullSpurtStart+(state.distance-state.fullSpurtStart)*(branch.fullSpurtQ??.5));break;
    case 'is_activate_other_skill_detail':value=(state.usedInvocations?state.usedInvocations.has(`${skillId}:${a.value}`):state.used.has(skillId))?a.value:0;break;
    case 'is_used_skill_id':value=state.used.has(String(a.value))?a.value:0;break;
    case 'is_used_skill_id_with_detail_one':value=state.used.has(String(a.value))?a.value:0;break;

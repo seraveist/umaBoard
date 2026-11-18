@@ -65,6 +65,12 @@ admission policy before merging into the same checklist:
 - Ordinary checklist rows are not removed just because recommendation suitability
   is low. All speed/acceleration rows export internal suitability for later use.
   No SP or acquisition-probability optimization is performed here.
+- Candidate acquisition ignores the five mutable base-stat predicates while
+  retaining fixed course/style gates and actual acquisition routes. Current
+  stats still govern comparison compilation. Inactive acquisitions remain
+  recordable, and stat-dependent unsupported branches retain metadata with a
+  null comparison until actual stats allow a supported branch. Hints/ownership
+  survive the transition and the final planner recompiles from actual stats.
 
 Acquisition state is separate from simulation selection. `owned` is already
 purchased, `unavailable` cannot be purchased, `0`–`5` is an available unpurchased
@@ -89,7 +95,7 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
-Current model `cm-first-chart-v9` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v11` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
@@ -99,6 +105,7 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
   distance and furlong use frame-start position; distance rate, geometry and
   spatial random predicates use updated position. A mixed condition can fire on
   an actual crossing without shifting course coordinates or widening intervals.
+  The dynamic full-speed-random threshold also uses frame-start position.
 - Random spatial predicates draw from their own area before deterministic gates.
   Their cached ten-metre opportunity expires. `all_corner_random` draws two areas
   with replacement; corner/straight opportunity starts reserve ten metres, while

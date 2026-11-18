@@ -1,5 +1,5 @@
 import {buildCandidates,possibleInContext} from './candidates.mjs';
-import {compileSkill,fixedContext,sampleBranches} from './activation.mjs';
+import {compileSkill,fixedContext,hasStatCondition,sampleBranches} from './activation.mjs';
 import {validateSetup,uniqueLevel} from './physics.mjs';
 import {characterIdentity,activeAcquisitionRoute} from './acquisition-rules.mjs';
 import {withCourseMetadata} from './cm-course-metadata.mjs';
@@ -19,11 +19,10 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v10';
+export const CM_MODEL_VERSION='cm-first-chart-v11';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
-const supported=skill=>['supported','assumed'].includes(skill?.status);
 const ASSUME=new Set(['temptation_count','is_temptation','running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','is_activate_any_skill','is_activate_heal_skill','temptation_opponent_count_behind','visiblehorse']);
 export function radicalInverse(n,base){let x=0,f=1/base;for(;n>0;n=Math.floor(n/base),f/=base)x+=n%base*f;return x;}
 
@@ -85,22 +84,21 @@ export function compileChartSkill(skill,setup){
 }
 
 export function buildChartCandidates(data,setup){
- const candidates=buildCandidates(data,{...setup,purchase:true,preserveEvolutionBases:true,context:fixedContext(setup)});
+ // Stats are a comparison input, not an acquisition gate. A first-chart cap
+ // must not erase a record that becomes active at actual post-training stats.
+ const context=fixedContext(setup,{includeStats:false});
+ const candidates=buildCandidates(data,{...setup,purchase:true,preserveEvolutionBases:true,context});
  const possessionCandidates=buildCandidates(data,{...setup,purchase:true,preserveEvolutionBases:true,context:{}}).inheritance;
  const records=new Map([...candidates.learned,...candidates.factorCandidates,...candidates.inheritance,...possessionCandidates].map(s=>[s.id,s]));
  const add=(id,route,allowInactive=false)=>{
-  const raw=data.skills[id];if(!raw?.jp_available||!allowInactive&&!possibleInContext(raw,fixedContext(setup)))return;
+  const raw=data.skills[id];if(!raw?.jp_available||!allowInactive&&!possibleInContext(raw,context))return;
   if(!records.has(id))records.set(id,{...raw,routes:[],choice_groups:[]});
   const s=records.get(id),routes=s.routes||[];if(route&&!routes.some(r=>JSON.stringify(r)===JSON.stringify(route)))records.set(id,{...s,routes:[...routes,route]});
  };
- // Actual stats may exceed the first chart's base scenario caps. Retain
- // evolution metadata behind stat gates; still apply fixed course/style gates.
- const evolutionContext={...fixedContext(setup)};
- for(const key of ['base_speed','base_stamina','base_power','base_guts','base_wiz'])delete evolutionContext[key];
  for(const rule of data.evolution_rules){
   const matches=rule.owner_type==='outfit'&&rule.owner_id===setup.outfitId||rule.owner_type==='scenario'&&rule.owner_id===setup.scenarioId;
   const raw=data.skills[rule.evolved_id];
-  if(!matches||!raw?.jp_available||!possibleInContext(raw,evolutionContext))continue;
+  if(!matches||!raw?.jp_available||!possibleInContext(raw,context))continue;
   const routes=data.acquisition_routes.filter(route=>route.skill_id===rule.base_id&&activeAcquisitionRoute(data,setup,route));
   if(!routes.length&&!records.has(rule.base_id))continue;
   for(const route of routes)add(rule.base_id,route,true);
@@ -199,13 +197,16 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  setup.ownedSkillIds=[...new Set(setup.comparisonSkillIds.flatMap(id=>[id,...prerequisiteIds(setup.possessionGraph,id)]))];
  const comparisonBasis={kind:setup.comparisonSkillIds.length?'secured-skill-context':'native-only',skillIds:[...referenceIds],interpretation:'declared-reference-not-an-automatically-optimal-build'};
  const evolutionBases=new Set([...records.values()].filter(s=>s.rarity==='evolution').flatMap(s=>data.evolution_rules.filter(r=>r.evolved_id===s.id).map(r=>r.base_id)));
- const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&(supported(compiled.get(s.id))||s.inherited||s.rarity==='evolution'||evolutionBases.has(s.id))).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
+ // Keep inactive acquisitions and stat-dependent alternatives in the shared
+ // checklist. Actual stats may change both activation and the supported branch;
+ // unsupported current comparisons remain null, never a fabricated zero gain.
+ const rows=sortChartRows([...records.values()].filter(s=>!native(s)&&(compiled.get(s.id).status!=='unsupported'||hasStatCondition(s)||s.inherited||s.rarity==='evolution'||evolutionBases.has(s.id))).map(s=>({id:s.id,name:s.name_jp,description:s.description_jp,
   rarity:s.rarity,inherited:s.inherited,inheritanceOriginId:setup.inheritanceOrigins[s.id]||null,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   calculationState:compiled.get(s.id).status,assumptions:compiled.get(s.id).assumed,activationProbability:compiled.get(s.id).activationProbability,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
  const evaluator=new RaceEvaluator(setup,compiled,referenceIds,nativeIds,branchSampler);
  return {setup,rows,nativeIds,referenceIds,comparisonBasis,modelVersion:CM_MODEL_VERSION,samples,dt,
-  excluded:[...compiled.values()].filter(s=>!native(s.skill)&&!supported(s)).map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
+  excluded:[...compiled.values()].filter(s=>!native(s.skill)&&s.status==='unsupported').map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
    if(compiled.get(row.id).status==='unsupported')return {...row,gain:null,timeGain:null,hpGain:null,samples:0};
    const ids=activeSkillIds([...referenceIds,row.id],setup.possessionGraph);

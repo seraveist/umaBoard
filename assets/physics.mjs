@@ -1,6 +1,6 @@
 // Independently implemented equations. Reference versions and omissions: docs/ENGINE_VALIDATION.md.
 import {supportsCourseCoordinates} from './reviewed-course-geometry.mjs';
-export const MODEL_VERSION='solo-comparison-v4';
+export const MODEL_VERSION='solo-comparison-v5';
 export const STAT_KEYS=['speed','stamina','power','guts','wisdom'];
 const SPEED=[[1,.98,.962],[.978,.991,.975],[.938,.998,.994],[.931,1,1]];
 const ACCEL=[[1,1,.996],[.985,1,.996],[.975,1,1],[.945,1,.997]];
