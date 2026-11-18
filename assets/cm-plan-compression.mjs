@@ -24,7 +24,39 @@ export function selectNearBest(rows,tolerance){
  return {anchor,selected,knownMeanLoss:anchor.gain-selected.gain,eligible:eligible.length};
 }
 
-export function createPlanSignature(compiled,lower,distance){
+// A cheaper epsilon choice can unlock purchases that did not fit beside the
+// exact-mean incumbent. Reopen that complete plan before returning it. Every
+// round still uses the same global set of fully measured scores as its anchor.
+export async function recoverNearBest({rows,tolerance,refine,canRefine=()=>true,maxPasses=12}){
+ const visited=new Set();let selection=selectNearBest(rows(),tolerance),passes=0,reason='no-cheaper-alternative';
+ while(tolerance&&selection.selected.cost<selection.anchor.cost){
+  const k=key(selection.selected.ids);
+  if(visited.has(k)){reason='visited-selection';break;}
+  if(passes>=maxPasses){reason='pass-limit';break;}
+  if(!canRefine()){reason='precision-work-limit';break;}
+  visited.add(k);
+  if(await refine(selection.selected)===null)return null;
+  passes++;const next=selectNearBest(rows(),tolerance);
+  if(key(next.selected.ids)===k){selection=next;reason='stable-selection';break;}
+  selection=next;reason='no-cheaper-alternative';
+ }
+ return {...selection,recovery:{passes,reason}};
+}
+
+// Keep a bounded mean ranking and each scenario's strongest alternative.
+// Conditional value in one context must not disappear behind a mean tie.
+export function selectProfileLeaders(rows,limit,tolerance){
+ const ranked=rows.filter(Boolean).sort(compareRacePlans),chosen=new Map(ranked.slice(0,limit).map(row=>[key(row.ids),row])),leaders=new Map();
+ for(const row of ranked)for(const scenario of row.scenarios||[]){
+  const old=leaders.get(scenario.id);
+  if(!old||scenario.gain>old.gain||scenario.gain===old.gain&&compareRacePlans(row,old.row)<0)leaders.set(scenario.id,{row,gain:scenario.gain});
+ }
+ for(const {row}of leaders.values())chosen.set(key(row.ids),row);
+ const near=selectNearBest(ranked,tolerance);if(near)chosen.set(key(near.selected.ids),near.selected);
+ return [...chosen.values()].sort(compareRacePlans);
+}
+
+export function createPlanSignature(compiled,lower,distance,{scope='identity'}={}){
  const explicit=new Set(),fields=new Set();
  for(const skill of compiled.values())for(const inv of skill.invocations)for(const branch of [...inv.condition,...inv.precondition])for(const atom of branch.dynamic){
   if(['is_exist_skill_id','is_used_skill_id','is_used_skill_id_with_detail_one'].includes(atom.field))explicit.add(String(atom.value));
@@ -33,7 +65,9 @@ export function createPlanSignature(compiled,lower,distance){
  const roles=new Map();
  for(const [id,skill]of compiled){
   const invocations=skill.invocations.filter(inv=>!inv.linked),effects=invocations.flatMap(inv=>inv.effects),dependent=skill.invocations.some(inv=>[...inv.condition,...inv.precondition].some(branch=>branch.dynamic.some(a=>fields.has(a.field))));
-  const critical=skill.skill.inherited||skill.skill.rarity==='evolution'||dependent||effects.some(e=>e.kind==='heal'||e.kind.startsWith('passive_')||['acceleration','full_spurt_acceleration'].includes(e.kind));
+  const uses=[...new Set(skill.invocations.flatMap(inv=>[...inv.condition,...inv.precondition].flatMap(branch=>branch.dynamic.filter(a=>fields.has(a.field)).map(a=>a.field))))];
+  const referenced=skill.invocations.some(inv=>[...inv.condition,...inv.precondition].some(branch=>branch.dynamic.some(a=>['is_exist_skill_id','is_used_skill_id','is_used_skill_id_with_detail_one','is_activate_other_skill_detail'].includes(a.field))));
+  const critical=dependent||referenced||skill.invocations.flatMap(inv=>inv.effects).some(e=>e.kind==='heal'||e.kind.startsWith('passive_'))||scope==='identity'&&(skill.skill.inherited||skill.skill.rarity==='evolution'||effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)));
   const counts=[...fields].sort().map(field=>{
    if(field==='succession_skill_count')return Number(!!skill.skill.inherited);
    if(field==='activate_count_heal')return Number(effects.some(e=>e.kind==='heal'&&e.value>0));
@@ -44,12 +78,14 @@ export function createPlanSignature(compiled,lower,distance){
    // Unrecognized count predicates conservatively retain contributor IDs.
    return range?Number(invocations.some(inv=>inv.condition.some(branch=>branch.windows.some(([lo,hi])=>lo<range[1]&&hi>range[0])))):invocations.length?id:0;
   });
-  roles.set(id,{critical,counts});
+  roles.set(id,{critical,counts,uses});
  }
  return ids=>{
-  const possession=new Set(ids.flatMap(id=>[id,...(lower.get(id)||[])])),critical=ids.filter(id=>roles.get(id)?.critical).sort(),references=[...explicit].filter(id=>possession.has(id)).sort(),counts=[...fields].sort().map((field,index)=>{
+  const used=new Set(ids.flatMap(id=>roles.get(id)?.uses||[]));
+  const possession=new Set(ids.flatMap(id=>[id,...(lower.get(id)||[])])),critical=ids.filter(id=>roles.get(id)?.critical).sort(),references=[...explicit].filter(id=>possession.has(id)).sort(),counts=[...fields].sort().flatMap((field,index)=>{
+   if(scope!=='identity'&&!used.has(field))return [];
    const values=ids.map(id=>roles.get(id)?.counts[index]??0);
-   return values.every(value=>typeof value==='number')?values.reduce((sum,n)=>sum+n,0):values.filter(Boolean).sort();
+   return [[field,values.every(value=>typeof value==='number')?values.reduce((sum,n)=>sum+n,0):values.filter(Boolean).sort()]];
   });
   return JSON.stringify([critical,references,counts]);
  };

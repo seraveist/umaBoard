@@ -7,9 +7,12 @@ const key=ids=>[...new Set(ids)].sort().join(',');
 const mean=values=>values.reduce((a,b)=>a+b,0)/values.length;
 // Scenario weights apply to scenario means, not accidental sample counts.
 export class RaceEvaluator{
- constructor(setup,compiled,referenceIds,nativeIds,samplerFactory){
+ constructor(setup,compiled,referenceIds,nativeIds,samplerFactory,{sampleCacheLimit=65536}={}){
   this.setup=setup;this.compiled=compiled;this.referenceIds=referenceIds;this.nativeIds=nativeIds;
   this.samplerFactory=samplerFactory;this.references=new Map();this.runs=new Map();
+  // Keyed sampling has stable prefixes. Retain compact observations rather
+  // than replaying those runs when a complete plan advances to more samples.
+  this.sampleCacheLimit=sampleCacheLimit;this.sampleCache=new Map();this.cachedSamples=0;this.sampleCacheHits=0;
  }
  run(ids,sample,dt,reference=false){
  ids=activeSkillIds(ids,this.setup.possessionGraph);
@@ -28,19 +31,32 @@ export class RaceEvaluator{
  }
  evaluate(ids,count,dt,{stopOnHpFailure=false}={}){
   if(!Number.isInteger(count)||count<1||count>2048||!Number.isFinite(dt)||dt<=0||dt>.1)throw new Error('계산 표본 설정을 확인하세요.');
+  const cacheKey=key(activeSkillIds(ids,this.setup.possessionGraph))+'|'+dt;
+  let records=this.sampleCache.get(cacheKey);
+  if(!records)records=[];
+  if(this.sampleCacheLimit){this.sampleCache.delete(cacheKey);this.sampleCache.set(cacheKey,records);}
   const gains=[],groups=new Map();let hp=Infinity;
   for(let sample=0;sample<count;sample++){
-   const before=this.run(this.referenceIds,sample,dt,true),after=this.run(ids,sample,dt),gain=lengthsBetween(after,before);
+   let observation=records[sample];
+   if(observation)this.sampleCacheHits++;
+   else{
+    const before=this.run(this.referenceIds,sample,dt,true),after=this.run(ids,sample,dt);
+    observation={gain:lengthsBetween(after,before),scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
+    if(this.sampleCacheLimit){records.push(observation);this.cachedSamples++;
+     while(this.cachedSamples>this.sampleCacheLimit&&this.sampleCache.size>1){const oldest=this.sampleCache.keys().next().value;this.cachedSamples-=this.sampleCache.get(oldest).length;this.sampleCache.delete(oldest);}
+    }
+   }
+   const after=observation,gain=after.gain;
    // With an all-sample-feasible incumbent, one failed sample proves this
    // challenger cannot win the declared HP-first objective. No statistical
    // confidence assumption or skill-specific penalty is needed.
    if(stopOnHpFailure&&!after.fullSpeedFeasible)return {hpRejected:true,samplesEvaluated:sample+1};
    gains.push(gain);hp=Math.min(hp,after.hpRemaining);
    const g=groups.get(after.scenario.id)||{id:after.scenario.id,weight:after.scenario.weight,gains:[],finishes:[],references:[],time:0,hp:0,hpGain:0,shortfall:0,successes:0,activation:{},usefulAcceleration:{}};
-   g.finishes.push(after.finishTime);g.references.push(before.finishTime);
-   g.gains.push(gain);g.time+=before.finishTime-after.finishTime;g.hp+=after.hpRemaining;g.hpGain+=after.hpRemaining-before.hpRemaining;g.shortfall+=Math.max(0,-after.hpRemaining);g.successes+=Number(after.fullSpeedFeasible);
-   for(const id of new Set(after.events.map(e=>e.id)))g.activation[id]=(g.activation[id]||0)+1;
-   for(const id of Object.keys(after.accelerationUseSeconds||{}))g.usefulAcceleration[id]=(g.usefulAcceleration[id]||0)+1;
+   g.finishes.push(after.finishTime);g.references.push(after.referenceFinishTime);
+   g.gains.push(gain);g.time+=after.timeGain;g.hp+=after.hpRemaining;g.hpGain+=after.hpGain;g.shortfall+=Math.max(0,-after.hpRemaining);g.successes+=Number(after.fullSpeedFeasible);
+   for(const id of after.activation)g.activation[id]=(g.activation[id]||0)+1;
+   for(const id of after.usefulAcceleration)g.usefulAcceleration[id]=(g.usefulAcceleration[id]||0)+1;
    groups.set(g.id,g);
   }
   const scenarios=[...groups.values()].map(g=>({...g,count:g.gains.length,gain:mean(g.gains)}));

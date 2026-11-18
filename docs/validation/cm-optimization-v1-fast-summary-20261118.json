@@ -1,0 +1,745 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "baa9d98",
+  "modelVersion": "cm-post-training-v14",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "baseline": false,
+  "modulesSha256": "4e9e1cbd3c0effe7503b1738835e67ab6ace0ed84ed4cb05e1118d03e1bb86db",
+  "status": "passed-at-declared-resolution-with-sampling-sensitivity",
+  "gainTolerance": 0.1,
+  "sourceFiles": [
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-bounded-mile-20261118.json",
+      "textSha256": "5dcc30ecad4bc36af953942d8eba85e1a43971e61e9da5522a50ab164f1258ac"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-bounded-mile-owned-fallback-20261118.json",
+      "textSha256": "97a86bf0b70eded1c8e980943e8e01914758de75a29e86f6d861eb27ee9026e3"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-build-20261118.json",
+      "textSha256": "e3f1b96a83c54e637ead8284199d551214136a966f45b2d1bd5d9aa7e6d60420"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-cache-equivalence-20261118.json",
+      "textSha256": "1d936c74d34d7a16f20ec13f2b48ab31a08fce28ad1b2dceec4105fcfa8d7c01"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-case-classic-20261118.json",
+      "textSha256": "d633e5683b4dffd3ba784be6866749d2bae12594436cd3819272df16b594a6c9"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-case-dirt-20261118.json",
+      "textSha256": "570e6a926c79e5225af4e98e6bcbbcf8040ac0496e0865c4119c2a0416e1424e"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-case-long-20261118.json",
+      "textSha256": "8313539ce300cf32151d722cd312679eea59bb93ad868ac9fc284c73b5068ce3"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-case-mile-20261118.json",
+      "textSha256": "3144c15c4c1a1fb9f650d04df8df2480ca9d12057155efbc79bcba63d56bcefa"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-case-mile-owned-fallback-20261118.json",
+      "textSha256": "0bced904731f8b8bbbfe5de3458c23c504e699ed7418096b124550aa670472bf"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-data-20261118.txt",
+      "textSha256": "cf5c1e3d106ff7373c9a69a049aafd154514ea8f7943c611193fafcaf9273841"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-large-20261118.json",
+      "textSha256": "378798377095fabdc7d81aea59a4e3c81ce4bf85e6056850aee20cb1828d15dd"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-node-micro-contract-20261118.txt",
+      "textSha256": "302385a702367465f30fa9270bef0c6cce86b2eaafd51b05b6a6cf9e375a5868"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-node-preflight-20261118.txt",
+      "textSha256": "7c7714c082ab40bf45f2f2cd96fe5211be9ebada02964d618efb45fc5bf964aa"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-node-tests-20261118.txt",
+      "textSha256": "9dc34a2654496d47054d87471bc61d010c8256e7f6b290370be0151e1b3efe61"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-prototype-adaptive-large-20261118.json",
+      "textSha256": "62cb1b35665c25bb73c8cd0223a632ec3febdf4be6d3e47b9ca9f00749dd8832"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-prototype-bounded-full-prefix-large-20261118.json",
+      "textSha256": "9fedeab1dedf1a12ad4dd53a58e3abe9ae8c4095c9e6bf28d04a2dda1201db37"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-prototype-full-recovery-large-20261118.json",
+      "textSha256": "e5db35ff43c0a963c5fc2eb3992ea7ef20324834dc93b14e76d44f0a76fde72a"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-prototype-no-refill-large-20261118.json",
+      "textSha256": "45150f00b09bdb1fbd179ad678a1ce72b9e4f91fd3557d70c30c7c752f016561"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-prototype-reduced-search-large-20261118.json",
+      "textSha256": "3c474d4c1f40a0cbdc40bd07e6fb26654becf17bd60f53244fe2645b4f0aa337"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-python-tests-20261118.txt",
+      "textSha256": "3d5a7fd23007220a9171afd2b61e0f1b07ae41589cc3e3606814f681ecf9d73b"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-release-20261118.json",
+      "textSha256": "06e0aa1ce319c402f8f076c2656fc3b3363e5be0a841656969e0698138083db8"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-fast-sensitivity-20261118.json",
+      "textSha256": "1c59c413a01d3ecc4864e7862bea79bba7c48509f382c31f2dbffddf0bbaa18c"
+    }
+  ],
+  "regression": {
+    "node": {
+      "tests": 320,
+      "pass": 320,
+      "fail": 0,
+      "skipped": 0,
+      "verification": {
+        "strategy": "full-suite-plus-strengthened-current-micro-contract",
+        "strengthenedMicroContract": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        "uniqueTests": 320,
+        "explanation": "After the full suite started, the micro-gain fixture was strengthened to assert that each individual gain is below 0.1. Its updated targeted test also passed on the same production core; it is not counted as an additional unique test."
+      }
+    },
+    "python": {
+      "total": 51,
+      "passed": 51
+    }
+  },
+  "cacheEquivalence": {
+    "comparisons": 65,
+    "referenceCommit": "baa9d98",
+    "status": "passed"
+  },
+  "build": {
+    "status": "passed",
+    "algorithm": {
+      "id": "umaboard-optimization-v1",
+      "version": "v1",
+      "revision": 4,
+      "name": "최적화 알고리즘 v1",
+      "models": {
+        "chart": "cm-first-chart-v11",
+        "final": "cm-post-training-v14",
+        "solo": "solo-comparison-v5"
+      }
+    },
+    "baseCommit": "baa9d98",
+    "coreSha256": "4e9e1cbd3c0effe7503b1738835e67ab6ace0ed84ed4cb05e1118d03e1bb86db",
+    "calculationModules": 32,
+    "unchangedParentModules": 29,
+    "unchangedPhysicsModules": 28,
+    "stagedCalculationModules": 32,
+    "lockedInputs": 4,
+    "verifiedHistoricalEvidence": 10,
+    "scope": "authorized tolerance/compression revision; common physics, source data and historical evidence unchanged"
+  },
+  "dataValidation": {
+    "status": "passed",
+    "counts": {
+      "skills": 2236,
+      "outfits": 274,
+      "supports": 568,
+      "courses": 138
+    },
+    "warnings": 5
+  },
+  "defaultRecommendations": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.1772361120446284,
+      "currentGain": 2.144084356213632,
+      "meanLoss": 0.03315175583099661,
+      "previousCost": 457,
+      "currentCost": 429,
+      "priorityComparison": 0,
+      "oracleGap": 0.04187799665235792,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 20,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 144,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.6932047198951476,
+      "currentGain": 2.5934516724526144,
+      "meanLoss": 0.09975304744253322,
+      "previousCost": 695,
+      "currentCost": 656,
+      "priorityComparison": 0,
+      "oracleGap": 0.09975304744253322,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 21,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 272,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "classic",
+      "budget": 470,
+      "previousGain": 1.9730738622217925,
+      "currentGain": 1.9128312418514304,
+      "meanLoss": 0.0602426203703621,
+      "previousCost": 454,
+      "currentCost": 443,
+      "priorityComparison": 0,
+      "oracleGap": 0.0602426203703621,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 19,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 136,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 5,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "classic",
+      "budget": 700,
+      "previousGain": 2.642768529417118,
+      "currentGain": 2.642768529417118,
+      "meanLoss": 0,
+      "previousCost": 677,
+      "currentCost": 677,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 20,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 261,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 2,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "long",
+      "budget": 470,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "meanLoss": 0,
+      "previousCost": 119,
+      "currentCost": 119,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 83,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 157,
+        "pilotRepresentatives": 81,
+        "middleRepresentatives": 81,
+        "fullPlans": 81,
+        "merged": 76,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "long",
+      "budget": 700,
+      "previousGain": 0.0013682756162135472,
+      "currentGain": 0.0013682756162135472,
+      "meanLoss": 0,
+      "previousCost": 119,
+      "currentCost": 119,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 109,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 284,
+        "pilotRepresentatives": 107,
+        "middleRepresentatives": 107,
+        "fullPlans": 107,
+        "merged": 177,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "dirt",
+      "budget": 470,
+      "previousGain": 1.4440250321062313,
+      "currentGain": 1.4440250321062313,
+      "meanLoss": 0,
+      "previousCost": 446,
+      "currentCost": 446,
+      "priorityComparison": 0,
+      "oracleGap": 0,
+      "matchesOracle": true,
+      "fullyEvaluatedPlans": 15,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 144,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 14,
+        "fullPlans": 14,
+        "merged": 85,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "dirt",
+      "budget": 700,
+      "previousGain": 1.5270626605360613,
+      "currentGain": 1.4440250321062313,
+      "meanLoss": 0.08303762842982998,
+      "previousCost": 590,
+      "currentCost": 446,
+      "priorityComparison": 0,
+      "oracleGap": 0.08361826729223498,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 14,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 268,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 185,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.0517737776000944,
+      "currentGain": 2.0185627111072755,
+      "meanLoss": 0.03321106649281891,
+      "previousCost": 462,
+      "currentCost": 434,
+      "priorityComparison": 0,
+      "oracleGap": 0.03321106649281891,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 19,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 139,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 5,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.5675236215132298,
+      "currentGain": 2.467688729396043,
+      "meanLoss": 0.09983489211718677,
+      "previousCost": 700,
+      "currentCost": 661,
+      "priorityComparison": 0,
+      "oracleGap": 0.09983489211718677,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 20,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": true,
+        "fullSamples": 144,
+        "rawPlans": 270,
+        "pilotRepresentatives": 49,
+        "middleRepresentatives": 13,
+        "fullPlans": 13,
+        "merged": 6,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    }
+  ],
+  "forcedBounded": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "previousGain": 2.155956408226187,
+      "currentGain": 2.144084356213632,
+      "meanLoss": 0.011872052012555034,
+      "previousCost": 443,
+      "currentCost": 429,
+      "priorityComparison": 0,
+      "oracleGap": 0.04187799665235792,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 21,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 40,
+        "pilotRepresentatives": 13,
+        "middleRepresentatives": null,
+        "fullPlans": 13,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "previousGain": 2.66959455146994,
+      "currentGain": 2.5934516724526144,
+      "meanLoss": 0.07614287901732553,
+      "previousCost": 691,
+      "currentCost": 656,
+      "priorityComparison": 0,
+      "oracleGap": 0.09975304744253322,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 26,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 51,
+        "pilotRepresentatives": 14,
+        "middleRepresentatives": null,
+        "fullPlans": 14,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "previousGain": 2.030604636602194,
+      "currentGain": 2.0185627111072755,
+      "meanLoss": 0.012041925494918448,
+      "previousCost": 448,
+      "currentCost": 434,
+      "priorityComparison": 0,
+      "oracleGap": 0.03321106649281891,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 22,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 45,
+        "pilotRepresentatives": 13,
+        "middleRepresentatives": null,
+        "fullPlans": 13,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "previousGain": 2.4863448233346075,
+      "currentGain": 2.4863448233346075,
+      "meanLoss": 0,
+      "previousCost": 665,
+      "currentCost": 665,
+      "priorityComparison": 0,
+      "oracleGap": 0.08117879817862228,
+      "matchesOracle": false,
+      "fullyEvaluatedPlans": 24,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 50,
+        "pilotRepresentatives": 14,
+        "middleRepresentatives": null,
+        "fullPlans": 14,
+        "merged": 1,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      }
+    }
+  ],
+  "rowOrderInvariance": true,
+  "budgetMonotonic": true,
+  "budgetComparisonMeanTolerance": 0.1,
+  "large": {
+    "previousGain": 36.50123091043926,
+    "currentGain": 36.92841407162783,
+    "meanLoss": -0.4271831611885659,
+    "bestKnownWitnessGain": 36.955414906038285,
+    "witnessLoss": 0.027000834410458197,
+    "previousCost": 6948,
+    "currentCost": 6972,
+    "previousProfile": {
+      "evaluations": 3437,
+      "simulations": 87768,
+      "referenceSimulations": 153,
+      "cacheHits": 87615,
+      "byResolution": {
+        "9|0.05": 2800,
+        "144|0.01": 367,
+        "36|0.01": 270
+      },
+      "wallMs": 281538.56090000004
+    },
+    "currentProfile": {
+      "evaluations": 3026,
+      "simulations": 54099,
+      "referenceSimulations": 153,
+      "cacheHits": 53946,
+      "byResolution": {
+        "9|0.05": 1912,
+        "36|0.01": 600,
+        "72|0.01": 26,
+        "144|0.01": 104,
+        "9|0.01": 384
+      },
+      "wallMs": 213739.0044
+    },
+    "simulationReduction": 0.38361361771944213,
+    "wallTimeReduction": 0.24081801186758867,
+    "fullFlowSameSelection": true,
+    "search": {
+      "method": "compressed-bounded",
+      "evaluations": 3026,
+      "hpPrunedPlans": 0,
+      "coarseEvaluations": 1912,
+      "pilotEvaluations": 984,
+      "middleEvaluations": 26,
+      "precisionEvaluations": 104,
+      "compression": {
+        "enabled": true,
+        "tolerance": 0.1,
+        "pilotSamples": 36,
+        "middleSamples": 72,
+        "middleApplied": false,
+        "fullSamples": 144,
+        "rawPlans": 90,
+        "pilotRepresentatives": 51,
+        "middleRepresentatives": null,
+        "fullPlans": 51,
+        "merged": 0,
+        "signaturePolicy": "whole-plan-profiles-with-hp-and-active-reference-count-protection"
+      },
+      "approximation": {
+        "gainTolerance": 0.1,
+        "knownBestGain": 36.92841407162783,
+        "knownMeanLoss": 0,
+        "eligibleMeasuredPlans": 1,
+        "fullyEvaluatedPlans": 104,
+        "scope": "fixed-best-measured-priority-class-not-global-error-certificate"
+      },
+      "precisionBeforeRefinement": 55,
+      "refinementEvaluations": 49,
+      "refinementEvaluationLimit": 311,
+      "precisionBudgetReached": false,
+      "selectionRecovery": {
+        "passes": 1,
+        "reason": "no-cheaper-alternative",
+        "screeningSamples": 9,
+        "middleSamples": 36,
+        "precisionWidth": 12,
+        "evaluations": 384,
+        "evaluationLimit": 512,
+        "budgetReached": false
+      },
+      "coarseEvaluationLimit": 1912,
+      "initialCoarseEvaluations": 1400,
+      "initialCoarseEvaluationLimit": 1400,
+      "coarseLimitReached": true,
+      "exchangeEvaluationLimit": 512,
+      "exchangeEvaluations": 512,
+      "exchangeProposalChecks": 439,
+      "exchangePrecisionChecks": 8,
+      "exchangeScreeningComplete": false,
+      "exactEnumeration": {
+        "complete": false,
+        "reason": "enumeration-work-limit",
+        "nodes": 0,
+        "groups": 185,
+        "affordablePlans": null,
+        "planLimit": 512
+      },
+      "shortlisted": 135,
+      "scenarioPacks": 7,
+      "closureComplete": false,
+      "closureScope": "prefix-screened-neighborhood-and-compound-refinement",
+      "closureTermination": "compressed-search",
+      "initialDirectSweeps": 1,
+      "initialDirectEvaluations": 41,
+      "closureChecks": 49,
+      "closurePasses": 3,
+      "batchChecks": 2,
+      "previewChecks": 478,
+      "previewRetained": 42,
+      "previewBatchChecks": 1,
+      "sampleReuse": {
+        "hits": 5013,
+        "stored": 54099,
+        "limit": 65536
+      },
+      "screenedFinalists": 88,
+      "precisionScreenedFinalists": 88,
+      "precisionCandidates": 51,
+      "precisionSeedCandidates": 220,
+      "precisionSeedCount": 2,
+      "precisionScreeningComplete": false,
+      "finalValidationComplete": true,
+      "seedEvaluationSamples": 36,
+      "seedResolutions": {
+        "36": 194,
+        "72": 22,
+        "144": 4
+      },
+      "seedScreeningPolicy": "stable-prefix-split-disagreement",
+      "constructiveEvaluationSamples": 36,
+      "screeningSamples": 36,
+      "stabilizationPasses": 0,
+      "stabilizationChecks": 0,
+      "stabilizationBatchChecks": 0,
+      "stabilizationComplete": true,
+      "globalOptimal": false,
+      "optimalityScope": "epsilon-compressed-search",
+      "searchSamples": 9,
+      "searchDt": 0.05,
+      "samples": 144,
+      "dt": 0.01
+    }
+  },
+  "fixedSensitivity": {
+    "comparisons": 20,
+    "worstMeanLoss": 0.12497258189671001,
+    "overToleranceComparisons": [
+      {
+        "key": "mile",
+        "budget": 700,
+        "variant": {
+          "name": "alternate-seed",
+          "samples": 288,
+          "dt": 0.01,
+          "seed": 1
+        },
+        "meanLoss": 0.11679466588228848
+      },
+      {
+        "key": "mile",
+        "budget": 700,
+        "variant": {
+          "name": "larger-sample",
+          "samples": 576,
+          "dt": 0.01,
+          "seed": 0
+        },
+        "meanLoss": 0.1249051114495443
+      },
+      {
+        "key": "mile-owned-fallback",
+        "budget": 700,
+        "variant": {
+          "name": "alternate-seed",
+          "samples": 288,
+          "dt": 0.01,
+          "seed": 1
+        },
+        "meanLoss": 0.11688849004715296
+      },
+      {
+        "key": "mile-owned-fallback",
+        "budget": 700,
+        "variant": {
+          "name": "larger-sample",
+          "samples": 576,
+          "dt": 0.01,
+          "seed": 0
+        },
+        "meanLoss": 0.12497258189671001
+      }
+    ],
+    "hpRegressions": 0,
+    "failedRiskGuards": 0,
+    "scope": "Fixed old and new recommendations only; no reoptimization at alternative settings; scenario sample comparisons, not real-race probabilities"
+  },
+  "unchangedPhysicsModules": 28,
+  "interpretation": "Tolerance is anchored to measured plans; paired archived fixtures do not certify global error or empirical accuracy. Wall time is one isolated instrumented observation per version; functional tests may run concurrently."
+}

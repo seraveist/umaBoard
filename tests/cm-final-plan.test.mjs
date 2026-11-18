@@ -124,8 +124,20 @@ test('current JP rare prices use entered hints instead of the old automatic whit
 test('a bounded search starts with complete affordable packs even when singletons consume its evaluation allowance',async()=>{
  const {data,chart}=fixture(),states={};
  for(let i=0;i<16;i++){const id='pack'+i;data.skills[id]=skill(id,400);data.purchase_stages[id]={status:'verified',base_cost:10};chart.rows.push({...data.skills[id],name:id});states[id]='0';}
- const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1});
- assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'compressed-bounded');
+ const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1,gainTolerance:0});
+ assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'bounded');
+});
+
+test('compression retains the combined benefit of many edits individually smaller than the gain tolerance',async()=>{
+ const {data,chart}=fixture(),states={};
+ for(let i=0;i<16;i++){const id='micro'+i;data.skills[id]=skill(id,200);data.purchase_stages[id]={status:'verified',base_cost:10};chart.rows.push({...data.skills[id],name:id});states[id]='0';}
+ const actual={...input,spBudget:160},exact=await recommendFinalPlan(data,chart,states,actual,{...quick,evaluationLimit:1,gainTolerance:0,diagnostics:false});
+ const single=await recommendFinalPlan(data,chart,{micro0:'0'},{...input,spBudget:10},{...quick,gainTolerance:0,diagnostics:false});
+ assert.ok(single.gain>0&&single.gain<.1,`single gain=${single.gain}`);
+ const compressed=await recommendFinalPlan(data,chart,states,actual,{...quick,evaluationLimit:1,diagnostics:false});
+ assert.ok(exact.gain>.1);assert.ok(compressed.purchases.length>0);
+ assert.ok(exact.gain-compressed.gain<=.1+1e-10);assert.ok(compressed.budget.used<=160);
+ assert.equal(compressed.search.precisionSeedCandidates,16);assert.equal(compressed.search.precisionSeedCount,2);
 });
 
 test('Fast Learner adds ten percentage points to every recorded hint discount before one integer floor',()=>{

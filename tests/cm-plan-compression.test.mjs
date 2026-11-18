@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {selectNearBest,compressPlans,selectRepresentatives,createPlanSignature,comparePlanPriorities} from '../assets/cm-plan-compression.mjs';
+import {selectNearBest,recoverNearBest,selectProfileLeaders,compressPlans,selectRepresentatives,createPlanSignature,comparePlanPriorities} from '../assets/cm-plan-compression.mjs';
 const row=(id,gain,cost,extra={})=>({ids:[id],gain,cost,feasible:true,hpSuccessRate:1,hpShortfall:0,performance:{tailFinishTime:100,risk:{withinLimit:true,tailDelay:-1}},scenarios:[{id:'a',gain,hpSuccessRate:1}],...extra});
 
 test('a fixed best-measured anchor prevents chained tolerance loss and order-dependent epsilon ties',()=>{
@@ -40,4 +40,39 @@ test('protected complete construction seeds and baseline are retained even below
  const rows=Array.from({length:40},(_,i)=>row(String(i),40-i,100+i));
  const result=selectRepresentatives(rows,{tolerance:.01,signature:()=>'',limit:2,requiredIds:['39'],protectedIds:[['38']]});
  assert.ok(result.selected.some(r=>r.ids[0]==='39'));assert.ok(result.selected.some(r=>r.ids[0]==='38'));
+});
+
+test('whole-plan profile classes compress alternative acceleration IDs while preserving recovery and active count dependencies',()=>{
+ const inv=(kind,dynamic=[])=>({linked:false,effects:[{kind,value:.2}],condition:[{dynamic,windows:[[1200,1800]]}],precondition:[]});
+ const skill=(id,kind,dynamic=[])=>({skill:{id,rarity:'white'},invocations:[inv(kind,dynamic)]});
+ const compiled=new Map([['a',skill('a','acceleration')],['b',skill('b','acceleration')],['heal',skill('heal','heal')],['count',skill('count','target_speed',[{field:'activate_count_all',operator:'>=',value:2}])]]);
+ const exact=createPlanSignature(compiled,new Map(),1800),profile=createPlanSignature(compiled,new Map(),1800,{scope:'complete-plan-profile'});
+ assert.notEqual(exact(['a']),exact(['b']));assert.equal(profile(['a']),profile(['b']));
+ assert.equal(profile(['a']),profile(['a','b']));
+ assert.notEqual(profile(['a']),profile(['heal']));
+ assert.notEqual(profile(['count','a']),profile(['count','a','b']));
+ const compressed=compressPlans([row('a',1,100),row('b',.95,80)],.1,profile);
+ assert.equal(compressed.merged,1);assert.equal(compressed.representatives.length,2);
+});
+
+test('a cheaper tolerance choice reopens the budget and finds a newly affordable combined plan',async()=>{
+ const high=row('high',1,100),cheap=row('cheap',.95,60),filled={...row('filled',1.25,100),ids:['cheap','addition']},scores=[high,cheap],seeds=[];
+ const result=await recoverNearBest({rows:()=>scores,tolerance:.1,refine:seed=>{seeds.push(seed.ids);scores.push(filled);}});
+ assert.deepEqual(seeds,[['cheap']]);assert.equal(result.selected,filled);assert.equal(result.anchor,filled);
+ assert.equal(result.recovery.passes,1);assert.equal(result.knownMeanLoss,0);
+});
+
+test('budget recovery keeps a fixed measured anchor, preserves HP and obeys cancellation and work limits',async()=>{
+ const high=row('high',1,100),cheap=row('cheap',.95,60),scores=[high,cheap];
+ const result=await recoverNearBest({rows:()=>scores,tolerance:.1,refine:()=>{scores.push(row('better',1.04,80),row('unsafe',9,1,{feasible:false,hpSuccessRate:.99}));}});
+ assert.equal(result.selected,cheap);assert.equal(result.anchor.ids[0],'better');assert.ok(Math.abs(result.knownMeanLoss-.09)<1e-12);assert.equal(result.recovery.reason,'stable-selection');
+ const limited=await recoverNearBest({rows:()=>[high,cheap],tolerance:.1,canRefine:()=>false,refine:()=>assert.fail()});assert.equal(limited.recovery.reason,'precision-work-limit');
+ assert.equal(await recoverNearBest({rows:()=>[high,cheap],tolerance:.1,refine:()=>null}),null);
+});
+
+test('progressive profile screening retains conditional scenario leaders and an affordable near-best plan',()=>{
+ const a=row('mean',3,100,{scenarios:[{id:'x',gain:3},{id:'y',gain:3}]}),conditional=row('conditional',2,90,{scenarios:[{id:'x',gain:5},{id:'y',gain:-1}]}),cheap=row('cheap',2.95,20,{scenarios:[{id:'x',gain:2.95},{id:'y',gain:2.95}]});
+ const chosen=selectProfileLeaders([a,conditional,cheap],1,.1);
+ assert.ok(chosen.includes(a));assert.ok(chosen.includes(conditional));assert.ok(chosen.includes(cheap));
+ assert.deepEqual(selectProfileLeaders([cheap,conditional,a],1,.1),chosen);
 });
