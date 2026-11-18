@@ -1,0 +1,306 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "auditedHead": "5cce5384f9ff403f9dae9a7199e8354582fc85c9",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "name": "최적화 알고리즘 v1",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "scope": "Frozen bounded optimizer profiling; optional isolated per-evaluator full-result memo experiment. Production files unchanged.",
+  "status": "passed",
+  "input": {
+    "outfitId": "102201",
+    "scenarioId": "15",
+    "style": 2,
+    "courseId": "10906",
+    "supportIds": [
+      "30161",
+      "30093"
+    ],
+    "going": 2,
+    "weather": 1,
+    "season": 2,
+    "time": 2
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1800,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "spBudget": 500,
+    "discountTrait": "none"
+  },
+  "states": {
+    "200362": "3",
+    "201101": "0",
+    "201102": "owned",
+    "201111": "5",
+    "201112": "1",
+    "201341": "3",
+    "201342": "4",
+    "201901": "5",
+    "201902": "1",
+    "202711": "0",
+    "202712": "2"
+  },
+  "baseline": {
+    "result": {
+      "ids": [
+        "100221",
+        "200362",
+        "201102",
+        "201111",
+        "201342",
+        "202712"
+      ],
+      "cost": 497,
+      "gain": 2.013326879458783,
+      "hpSuccessRate": 1,
+      "feasible": true,
+      "performance": {
+        "meanFinishTime": 105.36503005292968,
+        "tailFinishTime": 105.53152208994808,
+        "referenceTailFinishTime": 105.69729030084791,
+        "tailImprovement": 0.1657682108998273,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.1657682108998273,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200362": 0.9513888888888888,
+        "201102": 0.9513888888888888,
+        "201111": 0.9444444444444444,
+        "201342": 0.9583333333333334,
+        "202712": 0.7361111111111112
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200362": 0,
+        "201102": 0,
+        "201111": 0,
+        "201342": 0.5833333333333334,
+        "202712": 0.7361111111111112
+      },
+      "search": {
+        "method": "bounded",
+        "evaluations": 127,
+        "hpPrunedPlans": 0,
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 8,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 39,
+        "precisionScreenedFinalists": 39,
+        "precisionCandidates": 40,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 1,
+        "stabilizationChecks": 8,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    "profile": {
+      "name": "original",
+      "mode": "observe",
+      "evaluateCalls": 127,
+      "uniqueEvaluationKeys": 127,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 1,
+      "completeResultMismatches": 0,
+      "simulationCalls": 13023,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 12735,
+      "wallMs": 11728.141799999996,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 0,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 18,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 21,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 48,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 10,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 27,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 2,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 11897.5851
+    }
+  },
+  "experiment": {
+    "result": {
+      "ids": [
+        "100221",
+        "200362",
+        "201102",
+        "201111",
+        "201342",
+        "202712"
+      ],
+      "cost": 497,
+      "gain": 2.013326879458783,
+      "hpSuccessRate": 1,
+      "feasible": true,
+      "performance": {
+        "meanFinishTime": 105.36503005292968,
+        "tailFinishTime": 105.53152208994808,
+        "referenceTailFinishTime": 105.69729030084791,
+        "tailImprovement": 0.1657682108998273,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.1657682108998273,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200362": 0.9513888888888888,
+        "201102": 0.9513888888888888,
+        "201111": 0.9444444444444444,
+        "201342": 0.9583333333333334,
+        "202712": 0.7361111111111112
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200362": 0,
+        "201102": 0,
+        "201111": 0,
+        "201342": 0.5833333333333334,
+        "202712": 0.7361111111111112
+      },
+      "search": {
+        "method": "bounded",
+        "evaluations": 127,
+        "hpPrunedPlans": 0,
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 8,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 39,
+        "precisionScreenedFinalists": 39,
+        "precisionCandidates": 40,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 1,
+        "stabilizationChecks": 8,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    "profile": {
+      "name": "isolated-generic-memo",
+      "mode": "memo",
+      "evaluateCalls": 127,
+      "uniqueEvaluationKeys": 127,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 1,
+      "completeResultMismatches": 0,
+      "simulationCalls": 12879,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 12591,
+      "wallMs": 12118.302400000017,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 1,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 18,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 21,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 48,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 10,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 27,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 2,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 12298.5683
+    },
+    "entirePlanEqual": true
+  }
+}

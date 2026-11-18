@@ -1,0 +1,209 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "auditedHead": "5cce5384f9ff403f9dae9a7199e8354582fc85c9",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "name": "최적화 알고리즘 v1",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "scope": "Completed branch v1 only; no main merge, external calibration or production changes",
+  "status": "completed-with-search-limitations",
+  "sourceFiles": [
+    {
+      "path": "docs/validation/cm-optimization-v1-self-bounded-classic-20261118.json",
+      "textSha256": "ca323d870b6e7e9d03e9c17d05944b8fcc9168a2a396c25b255f51d94335a51f"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-bounded-dirt-20261118.json",
+      "textSha256": "3a8c8dd75c1c2b66f2104baa47f17479dd4f9b1d55604e97b6aaeff14a80535a"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-bounded-long-20261118.json",
+      "textSha256": "87d178a00d90f7c6fb17036d1cae1065f1a0955f00eaa03d6dc0b38c1e98f7f5"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-bounded-mile-20261118.json",
+      "textSha256": "37e061ab793f2f99d8bbb98cad7d6a6a3337b6b086c64ad11895ea3d73253934"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-bounded-mile-owned-fallback-20261118.json",
+      "textSha256": "0e4aa82672b6895f5fbd17f4ea6d4ce160c447bc08dbc61dba9676de4dc714a6"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-neutral-census-20261118.json",
+      "textSha256": "85c80ca378107664d1ad49e4916094cda089d9fb061a277b3473efc00c322d68"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-owned-removal-20261118.json",
+      "textSha256": "84d52e4fa645c5b14ea6f10f5ef61bb197c8bde48fa6f882314df8c3634a2b7e"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-profile-classic-20261118.json",
+      "textSha256": "55f247a07381e432a7aeaeca36d79f0a62bc18ed8be30ef8a8e01cd7a19fb7ba"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-profile-large-20261118.json",
+      "textSha256": "ec03323bd00824c09a78675c1f901204e53b6ecd674cd99a7a9c3ad4000f218b"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-profile-mile-20261118.json",
+      "textSha256": "1a070f44f79dfd561b8809a7f795e31693d7ef191174877fb7c8cd493eaaf800"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-regression-20261118.txt",
+      "textSha256": "23c5df8710e2cfe8500105023d15ae3bf08d726280434103aea48f96864dc0c3"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-witness-20261118.json",
+      "textSha256": "c90c0d780a90def7fbf6a2585ecd014aeaba470b9fd1b6f1bc3af33c458de9ba"
+    },
+    {
+      "path": "docs/validation/cm-optimization-v1-self-witness-mile-owned-fallback-20261118.json",
+      "textSha256": "b9f16b74f049a2511f85060abc195083f42c4c59e55e405feae5bed8c74a26ed"
+    }
+  ],
+  "focusedRegression": {
+    "total": 166,
+    "passed": 166,
+    "failed": 0,
+    "log": "docs/validation/cm-optimization-v1-self-regression-20261118.txt"
+  },
+  "baseBounded": {
+    "recommendations": 8,
+    "matches": 6
+  },
+  "ownershipControl": {
+    "recommendations": 2,
+    "matches": 0
+  },
+  "enumeration": {
+    "masks": 5120,
+    "uniqueAffordablePlans": 1355
+  },
+  "misses": [
+    {
+      "case": "mile",
+      "budget": 470,
+      "gainGap": 0.030005944639802884,
+      "currentCost": 443,
+      "oracleCost": 467
+    },
+    {
+      "case": "mile",
+      "budget": 700,
+      "gainGap": 0.03389796762730324,
+      "currentCost": 671,
+      "oracleCost": 695
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 470,
+      "gainGap": 0.03321106649281891,
+      "currentCost": 434,
+      "oracleCost": 462
+    },
+    {
+      "case": "mile-owned-fallback",
+      "budget": 700,
+      "gainGap": 0.07184148476698393,
+      "currentCost": 700,
+      "oracleCost": 700
+    }
+  ],
+  "rowPermutation": {
+    "probes": 5,
+    "allSame": true
+  },
+  "budgetPairs": {
+    "probes": 5,
+    "allNondegrading": true
+  },
+  "fixedWitnessComparisons": {
+    "records": 16,
+    "betterUnderObjective": 14,
+    "interpretation": "fixed selections, not new optima or a probability estimate"
+  },
+  "ownedUpgradeRemoval": {
+    "records": 5,
+    "restoredNeighborImproves": 0
+  },
+  "largeProfile": {
+    "gain": 35.51974580473648,
+    "cost": 6990,
+    "profile": {
+      "name": "original",
+      "mode": "observe",
+      "evaluateCalls": 6264,
+      "uniqueEvaluationKeys": 6264,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 8,
+      "completeResultMismatches": 0,
+      "simulationCalls": 192717,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 192429,
+      "wallMs": 535763.4233000001,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 0,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 3551,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 1703,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 322,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 515,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 97,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 75,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 539345.6865000001
+    }
+  },
+  "neutralCensus": {
+    "date": "2026-11-18 Asia/Seoul",
+    "auditedHead": "5cce5384f9ff403f9dae9a7199e8354582fc85c9",
+    "algorithm": {
+      "id": "umaboard-optimization-v1",
+      "version": "v1",
+      "name": "최적화 알고리즘 v1",
+      "models": {
+        "chart": "cm-first-chart-v11",
+        "final": "cm-post-training-v11",
+        "solo": "solo-comparison-v5"
+      }
+    },
+    "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+    "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+    "scope": "Conservative search-stage neutrality census at the actual benchmark stats; no candidates removed and no use of singleton-gain pruning",
+    "status": "passed",
+    "candidateCount": 220,
+    "inactiveEmptyInvocationIds": [],
+    "conservativeNeutralLeafIds": []
+  },
+  "productionNumericsUnchanged": true
+}
