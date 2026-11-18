@@ -134,6 +134,22 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const limit=Math.max(maxCandidates,Math.ceil(setup.spBudget/35));
  const pool=[...new Set([...byGain.slice(0,Math.ceil(limit/2)),...byEfficiency.slice(0,Math.ceil(limit/2)),...heals,...singles.filter(row=>data.skills[row.id].inherited),...singles.filter(row=>data.skills[row.id].rarity==='evolution')].map(row=>row.id))];
  const extend=(ids,id)=>[...ids.filter(other=>required.includes(other)||rules.compatible(id,other)||lower.get(id)?.has(other)),id];
+ // The same constructive search can use either screening or final precision.
+ // Always simulate the whole proposed purchase set; singleton gains only
+ // determine exploration order and are never added into a package score.
+ const greedySeeds=async(rankings,score,stage=null)=>{
+  const seeds=[],total=rankings.reduce((sum,rows)=>sum+rows.length,0);let completed=0;
+  for(const ranking of rankings){
+   let seed=score(required);
+   for(const row of ranking){
+    if(cancelled())return null;
+    const next=score(extend(seed.ids,row.id));if(next&&order(next,seed)<0)seed=next;
+    completed++;if(completed%8===0||completed===total){if(stage)onProgress({stage,completed,total});await pause();}
+   }
+   seeds.push(seed);
+  }
+  return seeds;
+ };
  const scenarioIds=candidates.filter(row=>data.evolution_rules.some(r=>r.evolved_id===row.id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).map(row=>row.id);
  const scenarioPacks=[[],...scenarioIds.map(id=>[id])];
  for(let a=0;a<scenarioIds.length;a++)for(let b=a+1;b<scenarioIds.length;b++)if(rules.compatible(scenarioIds[a],scenarioIds[b])&&scenarioSelectionAllowed(data,[scenarioIds[a],scenarioIds[b]],setup.scenarioId))scenarioPacks.push([scenarioIds[a],scenarioIds[b]]);
@@ -159,16 +175,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
    const value=quick(pack.reduce(extend,required));if(value)seeds.push(value);
    if(evaluated.size%16===0)await pause();
   }
-  for(const ranking of [byEfficiency,byGain]){
-   let seed=baseline;
-   for(const row of ranking){
-    if(cancelled())return null;
-    const replace=seed.ids.filter(other=>required.includes(other)||rules.compatible(row.id,other)||lower.get(row.id)?.has(other));
-    const next=quick([...replace,row.id]);if(next&&order(next,seed)<0)seed=next;
-    if(evaluated.size%8===0){await pause();}
-   }
-   seeds.push(seed);
-  }
+  const constructive=await greedySeeds([byEfficiency,byGain],quick);if(!constructive)return null;seeds.push(...constructive);
   // Every valid scenario pair is considered, independently of shortlist rank.
   // This can buy the pair's rare parents as part of the same remaining-SP plan.
   for(const seed of seeds.slice())for(const pack of scenarioPacks){
@@ -237,7 +244,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
   return {best,complete,checks,passes,batchChecks,visited:[...memo.values()].filter(Boolean).sort(order)};
  };
- const ranked=[...evaluated.values()].filter(Boolean).sort(order);let finalists=ranked,screenedFinalists=0,stabilized=null;
+ const ranked=[...evaluated.values()].filter(Boolean).sort(order);let finalists=ranked,screenedFinalists=0,precisionScreenedFinalists=0,stabilized=null;
  if(method!=='exhaustive'){
   const retainedPlans=new Map(ranked.slice(0,Math.max(24,width*8)).map(row=>[idKey(row.ids),row])),patterns=new Set();
   for(const row of ranked){
@@ -251,13 +258,34 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
   screenedFinalists=scores.length;scores.sort(order);
   stabilized=await refineNeighborhood(scores[0],searchDt,scores,'stabilization');if(!stabilized)return null;
-  finalists=stabilized.visited.slice(0,6);
+  // Coarse integration can miss a narrow opportunity or move a spurt gate.
+  // Preserve every screened complete plan until the declared final precision;
+  // the optimized coarse neighbors supplement rather than replace them.
+  finalists=[...new Map([...scores,...stabilized.visited.slice(0,6)].map(row=>[idKey(row.ids),row])).values()];
+  precisionScreenedFinalists=scores.length;
  }
- const refined=[];
+ const refined=[],precisionMemo=new Map();let precisionSeedCandidates=0,precisionSeedCount=0;
+ const finalScore=ids=>{const key=idKey(active(ids));if(!precisionMemo.has(key))precisionMemo.set(key,evaluate(ids,samples,dt));return precisionMemo.get(key);};
+ if(method!=='exhaustive'){
+  // A coarse shortlist can miss an effective timing or promote redundant
+  // effects. Rebuild complete proposals from ALL recorded candidates using
+  // the declared final sample matrix and integration step, then compare them
+  // with the retained screening plans under the unchanged objective.
+  const preciseSingles=[];
+  for(let i=0;i<candidates.length;i++){
+   if(cancelled())return null;
+   const row=candidates[i],value=finalScore([...required,row.id]);if(value)preciseSingles.push({...value,id:row.id});
+   if(i%5===4||i===candidates.length-1){onProgress({stage:'screening',completed:i+1,total:candidates.length});await pause();}
+  }
+  const gain=[...preciseSingles].sort(gainOrder),efficiency=[...preciseSingles].sort((a,b)=>b.gain/Math.max(1,b.cost)-a.gain/Math.max(1,a.cost)||gainOrder(a,b));
+  const constructive=await greedySeeds([efficiency,gain],finalScore,'stabilization');if(!constructive)return null;
+  precisionSeedCandidates=preciseSingles.length;precisionSeedCount=constructive.length;
+  finalists=[...new Map([...finalists,...constructive].map(row=>[idKey(row.ids),row])).values()];
+ }
  if(!finalists.some(row=>idKey(row.ids)===idKey(required)))finalists.push(baseline);
  for(let i=0;i<finalists.length;i++){
   if(cancelled())return null;
-  refined.push(evaluate(finalists[i].ids,samples,dt));onProgress({stage:'final',completed:i+1,total:finalists.length});await pause();
+  refined.push(finalScore(finalists[i].ids));onProgress({stage:'final',completed:i+1,total:finalists.length});await pause();
  }
  const closed=await refineNeighborhood(refined.sort(order)[0],dt,refined,'closure');if(!closed)return null;
  const best=closed.best,closureComplete=closed.complete,closureChecks=closed.checks;
@@ -284,5 +312,5 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  }
  return {modelVersion:FINAL_MODEL_VERSION,chartModelVersion:chart.modelVersion,setup,acquisition:finalAcquisitionSnapshot(data,chart,states),nativeIds:[...chart.nativeIds],ownedIds:owned,activeIds:best.ids,purchases,evolutions:groups,scenarioEvolutionCount,finalSkills,
   budget:{total:setup.spBudget,used:priced.used,remaining:setup.spBudget-priced.used},gain:best.gain,robustGain:best.robustGain,performance:best.performance,scenarioSensitivity:best.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,acquisitionValidation,scenarios:best.scenarios,scenarioCoverage:best.scenarioCoverage,marginalContributions,physicsSensitivity,usefulAccelerationRates:best.usefulAccelerationRates,timeGain:best.timeGain,hpRemaining:best.hp,fullSpeedFeasible:best.feasible,hpSuccessRate:best.hpSuccessRate,hpSuccesses:best.hpSuccesses,hpMean:best.hpMean,activationRates:best.activationRates,sampling:best.sampling,samplingPolicy:samplingPolicy(setup),
-  candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,hpPrunedPlans,shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureChecks,closurePasses:closed.passes,batchChecks:closed.batchChecks,screenedFinalists,screeningSamples:samples,stabilizationPasses:stabilized?.passes??0,stabilizationChecks:stabilized?.checks??0,stabilizationBatchChecks:stabilized?.batchChecks??0,stabilizationComplete:stabilized?.complete??true,globalOptimal:method==='exhaustive',optimalityScope:method==='exhaustive'?'affordable-recorded-candidates-at-declared-sampling-resolution':'bounded-search',searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
+  candidateCount:candidates.length,excluded,calculationNotes:[...new Set(best.ids.flatMap(id=>compiled.get(id)?.calculationNotes||[]))],effectPolicy:'self-performance-only',search:{method,evaluations,hpPrunedPlans,shortlisted:pool.length,scenarioPacks:scenarioPacks.length,closureComplete,closureChecks,closurePasses:closed.passes,batchChecks:closed.batchChecks,screenedFinalists,precisionScreenedFinalists,precisionCandidates:refined.length,precisionSeedCandidates,precisionSeedCount,precisionScreeningComplete:method==='exhaustive'||precisionScreenedFinalists===screenedFinalists,screeningSamples:samples,stabilizationPasses:stabilized?.passes??0,stabilizationChecks:stabilized?.checks??0,stabilizationBatchChecks:stabilized?.batchChecks??0,stabilizationComplete:stabilized?.complete??true,globalOptimal:method==='exhaustive',optimalityScope:method==='exhaustive'?'affordable-recorded-candidates-at-declared-sampling-resolution':'bounded-search',searchSamples,searchDt,samples,dt},fullSpurtPolicy:chart.fullSpurtPolicy};
 }

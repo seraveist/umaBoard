@@ -7,6 +7,8 @@ import {bulkAcquisition} from '../assets/cm-state.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {possibleInContext} from '../assets/candidates.mjs';
 import {acquisitionEventGroups,createAcquisitionConstraints} from '../assets/acquisition-constraints.mjs';
+import {RaceEvaluator} from '../assets/race-evaluation.mjs';
+import {compareRacePlans} from '../assets/race-objective.mjs';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
 const input={outfitId:'101301',bloom:5,uniqueLevel:6,style:2,courseId:'10808',going:1,weather:2,season:3,time:2,scenarioId:'15',supportIds:['30275','30311','30300','30322','30289','30323']};
@@ -36,6 +38,15 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  for(const row of [...plan.evolutions.outfit,...plan.evolutions.scenario]){
   assert.ok(plan.purchases.some(p=>p.id===row.baseId));assert.ok(!plan.activeIds.includes(row.baseId));assert.equal(row.additionalSp,0);
  }
+ // An independently found legal plan exposed a coarse-search miss. Recompute
+ // its result with the current engine, rather than fitting a gain constant.
+ const witness=read('docs/validation/cm-v10-search-witness-20261118.json');assert.equal(witness.dataVersion,manifest.active_version);assert.deepEqual(witness.input,input);assert.deepEqual(witness.actual,actual);
+ const witnessPrice=new RecordedPurchaseModel(data,[...chart.rows,...chart.evolutionOptions,...chart.inheritanceOptions],states,actual).selection(witness.activeIds);
+ assert.ok(witnessPrice.complete&&witnessPrice.used<=actual.spBudget);assert.ok(constraints.allowed(witness.activeIds));
+ const required=[...plan.nativeIds,...plan.ownedIds],compiled=new Map([...new Set([...required,...witness.activeIds])].map(id=>[id,compileChartSkill(data.skills[id],plan.setup)]));
+ const alternative=new RaceEvaluator(plan.setup,compiled,required,plan.nativeIds,branchSampler).evaluate(witness.activeIds,144,.01);
+ assert.ok(compareRacePlans({ids:plan.activeIds,cost:plan.budget.used,...plan},{ids:witness.activeIds,cost:witnessPrice.used,...alternative})<=0);
+ assert.equal(plan.search.precisionScreeningComplete,true);assert.equal(plan.search.precisionSeedCandidates,plan.candidateCount);assert.equal(plan.search.precisionSeedCount,2);
  mkdirSync(new URL('../.cache/',import.meta.url),{recursive:true});
  writeFileSync(new URL('../.cache/cm-current-7000-validation.json',import.meta.url),JSON.stringify({dataVersion:manifest.active_version,input,actual,acquisition:states,acquisitionAssumption:'reviewed-first-event-choices; hypothetical-Lv5; partial-route-coverage-not-a-real-training-replay',chartRows:chart.rows.length,inheritedTopIds:chart.inheritedTopIds,evolutionOptions:chart.evolutionOptions.map(row=>row.id),...plan},null,2));
 });

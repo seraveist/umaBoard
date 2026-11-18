@@ -7,6 +7,7 @@ import {activationFrame} from '../assets/race-frame.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {selectableCourse} from '../assets/reviewed-course-geometry.mjs';
 import {lengthsBetween} from '../assets/physics.mjs';
+import {recommendFinalPlan} from '../assets/cm-final-plan.mjs';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json');
 const atom=(field,value,operator='==')=>({field,value,operator});
@@ -97,4 +98,16 @@ test('delaying equal acceleration cannot increase its value in an isolated const
   for(let i=1;i<values.length;i++)assert.ok(values[i]<=values[i-1]+1e-8,JSON.stringify({speed,power,values}));
   assert.ok(Math.abs(values.at(-1))<1e-8);
  }
+});
+
+test('a coarse-missed spatial opportunity remains in the full-resolution final comparison',async()=>{
+ const coarse=run(setup,[],{dt:.05}),i=coarse.positions.findIndex(x=>x>1360),lo=coarse.positions[i],hi=coarse.positions[i+1],start=lo+(hi-lo)*.2,end=lo+(hi-lo)*.8;
+ const course={...flat,corners:[{start,length:end-start}],straights:[{start:0,end:start},{start:end,end:2000,frontType:1}]},s={...setup,course,scenarioId:'15'};
+ const narrow=raw('z-narrow',[atom('phase',2,'>='),atom('is_finalcorner',1),atom('corner',0,'!=')]);
+ assert.equal(run(s,[narrow],{dt:.05}).events.length,0);assert.equal(run(s,[narrow],{dt:.005}).events.length,1);
+ const skills=[...Array.from({length:9},(_,i)=>raw(`speed-${i}`,[atom('distance_rate',85,'>=')],'target_speed',1000+i*100)),narrow];
+ const data={skills:Object.fromEntries(skills.map(r=>[r.id,r])),purchase_stages:Object.fromEntries(skills.map(r=>[r.id,{status:'verified',base_cost:100}])),relations:[],evolution_rules:[],scenario_exclusive_groups:[]};
+ const c={modelVersion:'cm-first-chart-v10',nativeIds:[],setup:s,rows:skills.map(r=>({...r,name:r.id})),evolutionOptions:[]},states=Object.fromEntries(skills.map(r=>[r.id,'0']));
+ const p=await recommendFinalPlan(data,c,states,{stats:s.stats,aptitudes:s.aptitudes,spBudget:100},{searchSamples:9,samples:9,searchDt:.05,dt:.005,evaluationLimit:40,diagnostics:false});
+ assert.equal(p.search.method,'bounded');assert.deepEqual(p.activeIds,['z-narrow']);
 });
