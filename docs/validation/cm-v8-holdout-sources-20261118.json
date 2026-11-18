@@ -1,0 +1,331 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "interpretation": "source claims separated from model output; no observed race frame dataset",
+  "sources": [
+    {
+      "id": "niigata-player",
+      "type": "primary-player-guide",
+      "event": "2025-10",
+      "url": "https://merci-splatoon.com/2510sprint-1/",
+      "title": "25’10月チャンピオンズミーティング「SPRINT」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2025-09-09T12:42:48+09:00",
+      "modified": "2025-09-09T12:42:48+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "니가타1200은 평탄하며 가속을 여러 개 준비하도록 권장한다.",
+        "소믈리에는 비추천이라는 저자의 의견이 있다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "chukyo-player",
+      "type": "primary-player-guide",
+      "event": "2024-08",
+      "url": "https://merci-splatoon.com/2408-dir-1/",
+      "title": "8月チャンピオンズミーティング「DIRT」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2024-07-19T22:14:08+09:00",
+      "modified": "2024-08-14T12:01:30+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "중경1800의 종반 시작은 최종 코너 입구와 거의 같다.",
+        "후방 각질에 저편·홍염·아나볼릭 등을 후보로 제시한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "kyoto-long-player",
+      "type": "primary-player-guide",
+      "event": "2025-04",
+      "url": "https://merci-splatoon.com/2504long-1/",
+      "title": "25’4月チャンピオンズミーティング「LONG」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2025-03-21T23:13:46+09:00",
+      "modified": "2025-06-13T19:22:30+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "교토3200에서 원본 군림은 무효지만 오르페의 진화는 유효하다.",
+        "괴물·무아몽중·육박하는 그림자 등을 각질별 주요 가속으로 제시한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "hanshin-mile-player",
+      "type": "primary-player-guide",
+      "event": "2025-03",
+      "url": "https://merci-splatoon.com/2503mile-1/",
+      "title": "25’3月チャンピオンズミーティング「MILE」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2025-02-28T15:23:30+09:00",
+      "modified": "2025-03-06T20:16:58+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "한신1600의 꽃봉오리를 전 각질 후보로 제시한다.",
+        "그림자는 늦고 소믈리에는 낮은 유효 확률의 후보라는 설명이다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "hanshin-classic-player",
+      "type": "primary-player-guide",
+      "event": "2025-01",
+      "url": "https://merci-splatoon.com/2501-cla-1/",
+      "title": "25’1月チャンピオンズミーティング「CLASSIC」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2024-12-22T22:05:33+09:00",
+      "modified": "2025-06-13T23:01:02+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "한신2400에서 왕수·군림·홍염·저편 등을 유효 후보로 제시한다.",
+        "그림자는 무효로 설명한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "delmar-player",
+      "type": "primary-player-guide",
+      "event": "2026-04",
+      "url": "https://merci-splatoon.com/2604dirt-1/",
+      "title": "26’4月チャンミ「DIRT」　環境考察・育成解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2026-03-28T00:08:24+09:00",
+      "modified": "2026-03-29T02:49:30+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "델마2000에서 그림자는 무효, 후방 저편은 유효한 후보로 설명한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "niigata-labo",
+      "type": "primary-player-guide",
+      "event": "2025-10",
+      "url": "https://umamusumelabo.com/ikusei/chanmi-sasiikusei-202510",
+      "title": "【ウマ娘】10月チャンミSPRINT（短距離）用・差しウマ娘育成論（新潟芝1200m）│ウマ娘ラボ",
+      "published": null,
+      "modified": null,
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "차시는 꽃봉오리를 우선 준비하도록 권장한다.",
+        "목표 능력치1850/700/1700/1400/1200을 제시한다.",
+        "소믈리에는 상한을 노리는 선택지라며 다른 자료와 선호가 다르다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "chukyo-rear",
+      "type": "primary-player-guide",
+      "event": "2024-08",
+      "url": "https://merci-splatoon.com/2408-dir-2/",
+      "title": "【8月チャンミDIRT】「差しエース」の作り方 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "published": "2024-07-20T20:59:47+09:00",
+      "modified": "2024-07-27T13:39:25+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "홍염1~5위·저편5~6위 등 순위 조건에 맞춰 팀 편성에 따라 가속 구성을 다르게 권장한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "chukyo-conditions",
+      "type": "guide-course-table",
+      "event": "2024-08",
+      "url": "https://gamewith.jp/uma-musume/article/show/455879",
+      "title": "【ウマ娘】チャンミダートのコース攻略とおすすめスキル｜2024年8月 - ゲームウィズ",
+      "published": null,
+      "modified": "2024-07-31T13:31:48+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "중경 더트1800, 좌/여름/맑음/양호/낮."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "hanshin-classic-conditions",
+      "type": "guide-course-table",
+      "event": "2025-01",
+      "url": "https://gamewith.jp/uma-musume/article/show/477855",
+      "title": "【ウマ娘】チャンミ中距離のコース攻略とおすすめスキル｜2025年1月 - ゲームウィズ",
+      "published": null,
+      "modified": "2025-01-24T19:48:43+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "한신 잔디2400, 우외/겨울/비/무거움/낮."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "kyoto-long-conditions",
+      "type": "guide-course-table",
+      "event": "2025-04",
+      "url": "https://gamewith.jp/uma-musume/article/show/488825",
+      "title": "【ウマ娘】チャンミ長距離のコース攻略とおすすめスキル｜2025年4月 - ゲームウィズ",
+      "published": null,
+      "modified": "2025-04-23T20:08:39+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "교토 잔디3200, 우외/봄/맑음/양호/낮."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "hanshin-mile-conditions",
+      "type": "guide-course-table",
+      "event": "2025-03",
+      "url": "https://gamewith.jp/uma-musume/article/show/484085",
+      "title": "【ウマ娘】チャンミマイルのコース攻略とおすすめスキル｜2025年3月 - ゲームウィズ",
+      "published": null,
+      "modified": "2025-03-24T19:49:45+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "한신 잔디1600, 우외/봄/맑음/양호/낮."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "delmar-conditions",
+      "type": "guide-course-table",
+      "event": "2026-04",
+      "url": "https://gamewith.jp/uma-musume/article/show/550627",
+      "title": "【ウマ娘】チャンミダートのおすすめキャラと育成｜2026年4月 - ゲームウィズ",
+      "published": null,
+      "modified": "2026-06-29T22:54:18+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "델마 더트2000, 좌/봄/낮/양호."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "delmar-independent",
+      "type": "primary-player-guide",
+      "event": "2026-04",
+      "url": "https://wingofheart.hatenablog.com/entry/2026/03/30/210312",
+      "title": "【ウマ娘】4月のデルマーダート2000mチャンミの環境調査 - ウィングオブハート",
+      "published": "2026-03-30T12:03:12Z",
+      "modified": null,
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "델마2000은 평탄하며 좌/봄/맑음/양호라고 설명한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "niigata-conditions",
+      "type": "guide-course-table",
+      "event": "2025-10",
+      "url": "https://gamewith.jp/uma-musume/article/show/518724",
+      "title": "【ウマ娘】チャンミ短距離のコース攻略とおすすめスキル｜2025年10月 - ゲームウィズ",
+      "published": null,
+      "modified": "2025-10-29T05:07:04+09:00",
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "니가타 잔디1200, 좌내/가을/흐림/양호/낮."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "niigata-rear-inheritance",
+      "type": "primary-player-guide",
+      "event": "2025-10",
+      "url": "https://note.com/umamusume_sui/n/n15e65900ca94",
+      "title": "【ウマ娘】10月チャンミ（新潟1200m）因子周回｜おすすめ継承ウマ娘＆必須スキルまとめ【2025】｜れい＠ウマ娘チャンミLOH攻略＆ガチャ＆新情報note📒",
+      "published": null,
+      "modified": null,
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "꽃봉오리는 후방 각질에서도 후보이며 각질 분포에 따라 유효도가 변한다고 명시한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "official-boundary-history",
+      "type": "official-historical-bug-notice",
+      "event": "2024-07-30",
+      "url": "https://umamusume.jp/news/detail?id=2058",
+      "title": "News｜ウマ娘 プリティーダービー 公式ポータルサイト｜Cygames",
+      "published": null,
+      "modified": null,
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "정확히 최종 코너 시작 지점에 발동한 스킬을 횟수에 세지 않는 당시 버그를 공지했다.",
+        "2024년 당시의 공지이며 현재 같은 버그가 남아 있다는 근거로 사용하지 않는다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "chukyo-independent",
+      "type": "primary-player-guide",
+      "event": "2024-08",
+      "url": "https://note.com/herohero_3/n/n53da2125bb1c",
+      "title": "8月チャンミ（中京1800）準備録と小噺｜へろへろ",
+      "published": null,
+      "modified": null,
+      "retrieved": "2026-11-18 Asia/Seoul",
+      "read": "full markdown retrieved; relevant sections inspected",
+      "claims": [
+        "종반과 최종 코너 경계가1200m로 같으며 후방의 저편을 후보로 제시한다."
+      ],
+      "measuredActivationDataset": null
+    },
+    {
+      "id": "official-niigata",
+      "type": "official-announcement",
+      "url": "https://x.com/uma_musu/status/1972134376717828119",
+      "published": "2025-09-28T03:00:50Z",
+      "claims": [
+        "2025년10월23일 CM은 니가타 잔디1200 좌내/가을/흐림/양호/낮이라고 발표했다."
+      ]
+    },
+    {
+      "id": "upstream-checker",
+      "type": "primary-simulator-source-not-game-ground-truth",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/SkillChecker.kt",
+      "claims": [
+        "all_corner_random의 두 추첨에서 선택된 코너를 삭제하지 않는다. 즉 중복 추첨이 가능하다."
+      ],
+      "retrieved": "2026-11-18 Asia/Seoul"
+    },
+    {
+      "id": "upstream-state",
+      "supportingControlFlowURL": "https://github.com/mee1080/umasim/blob/e5d940ce8f73bbb756ae3cffd0a081c34b8124da/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/RaceCalculator.kt",
+      "type": "primary-simulator-source-not-game-ground-truth",
+      "url": "https://github.com/mee1080/umasim/blob/e5d940ce8f73bbb756ae3cffd0a081c34b8124da/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/RaceState.kt",
+      "claims": [
+        "phase는 startPosition, 코너는 position을 사용한다. 현재 엔진의 단일 좌표 공간 교집합과 다른 경계 의미를 갖는다."
+      ],
+      "retrieved": "2026-11-18 Asia/Seoul"
+    },
+    {
+      "id": "upstream-data",
+      "type": "primary-simulator-source-not-game-ground-truth",
+      "url": "https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/data2/SkillData.kt",
+      "claims": [
+        "여러 조건부 배율을 최대 충족으로 근사하며40/41에도1.2를 사용한다.",
+        "35의 중산2500m 보너스는 기술된 스킬 효과를 위한 분기이며 왕수/군림 평가용 코스 예외가 아니다."
+      ],
+      "retrieved": "2026-11-18 Asia/Seoul"
+    },
+    {
+      "id": "upstream-courses",
+      "type": "primary-simulator-source-not-game-ground-truth",
+      "url": "https://github.com/mee1080/umasim/blob/e5d940ce8f73bbb756ae3cffd0a081c34b8124da/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/data/rawData.kt",
+      "claims": [
+        "중경1800의 최종 코너1200m, 한신2400의 최종 코너1600m가 엔진 데이터와 일치한다. 잘못된 코스ID로 인한0점은 아니다."
+      ],
+      "retrieved": "2026-11-18 Asia/Seoul"
+    }
+  ]
+}
