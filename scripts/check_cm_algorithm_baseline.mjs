@@ -1,0 +1,22 @@
+// Verify the exact first-completion snapshot, not a new gameplay accuracy claim.
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
+import {FINAL_MODEL_VERSION} from '../assets/cm-final-plan.mjs';
+import {MODEL_VERSION} from '../assets/physics.mjs';
+const root=new URL('../',import.meta.url),read=p=>JSON.parse(fs.readFileSync(new URL(p,root),'utf8'));
+const baseline=read('docs/validation/cm-algorithm-v1-baseline-20261118.json');
+const textHash=p=>createHash('sha256').update(fs.readFileSync(new URL(p,root),'utf8').replace(/\r\n/g,'\n')).digest('hex');
+const h=createHash('sha256');
+for(const n of fs.readdirSync(new URL('assets/',root)).filter(n=>/\.(mjs|css)$/.test(n)).sort())h.update(n+'\n'+fs.readFileSync(new URL('assets/'+n,root),'utf8').replace(/\r\n/g,'\n')+'\n');
+assert.equal(h.digest('hex'),baseline.runtime.assetsSha256,'The runtime differs from the completed snapshot.');
+assert.deepEqual({chart:CM_MODEL_VERSION,final:FINAL_MODEL_VERSION,solo:MODEL_VERSION},baseline.runtime.models);
+for(const entry of [...baseline.inputs,...baseline.evidence])assert.equal(textHash(entry.path),entry.textSha256,`Snapshot input/evidence changed: ${entry.path}`);
+const manifest=read('data/manifest.json');
+assert.equal(manifest.active_version,baseline.data.activeVersion);
+assert.equal(manifest.calculation_status,baseline.data.calculationStatus);
+assert.equal(manifest.curation_status,baseline.data.curationStatus);
+assert.deepEqual(manifest.counts,baseline.data.counts);
+for(const entry of baseline.evidence)assert.equal(read(entry.path).assetsSha256,baseline.runtime.assetsSha256,`Evidence refers to another runtime: ${entry.path}`);
+console.log(JSON.stringify({status:'passed',baseline:baseline.id,models:baseline.runtime.models,assetsSha256:baseline.runtime.assetsSha256,lockedInputs:baseline.inputs.length,verifiedEvidence:baseline.evidence.length,interpretation:'snapshot identity and evidence integrity only; recorded regression/accuracy checks are separate'}));

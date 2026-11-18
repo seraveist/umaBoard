@@ -95,6 +95,10 @@ order, retaining at most six; remaining inherited rows stay unavailable.
 
 ## Numerical/model policy
 
+The [first completed algorithm baseline](CM_ALGORITHM_V1_COMPLETION.md) freezes
+v11 with its documented approximations and bounded-search limitations. Completion
+does not mean empirical activation or win-rate calibration.
+
 Current model `cm-first-chart-v11` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
