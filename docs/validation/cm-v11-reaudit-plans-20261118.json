@@ -1,0 +1,1571 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "interpretation": "frozen implementation audit; finite-pool selection oracle shares physics/objective; assumed encounters are not calibrated probabilities",
+  "scope": "four further race inputs, eleven actual recorded rows including one owned lower; ten purchasable candidates, heterogeneous hints and two budgets; independent stage-cost/subset oracle shares production physics and objective",
+  "records": [
+    {
+      "key": "mile",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10903",
+        "supportIds": [
+          "30153",
+          "30093"
+        ],
+        "going": 1,
+        "weather": 1,
+        "season": 4,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1700,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 500
+      },
+      "states": {
+        "200362": "3",
+        "201031": "0",
+        "201032": "owned",
+        "201041": "5",
+        "201042": "1",
+        "201341": "3",
+        "201342": "4",
+        "201901": "5",
+        "201902": "1",
+        "202671": "0",
+        "202672": "2"
+      },
+      "candidateIds": [
+        "202671",
+        "202672",
+        "201901",
+        "201902",
+        "201341",
+        "201342",
+        "201031",
+        "201032",
+        "201041",
+        "201042",
+        "200362"
+      ],
+      "ownedId": "201032",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 128,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "201032",
+          "201041",
+          "201341",
+          "201902"
+        ],
+        "budget": {
+          "total": 500,
+          "used": 480,
+          "remaining": 20
+        },
+        "acquisition": {
+          "200362": "3",
+          "201031": "0",
+          "201032": "owned",
+          "201041": "5",
+          "201042": "1",
+          "201341": "3",
+          "201342": "4",
+          "201901": "5",
+          "201902": "1",
+          "202671": "0",
+          "202672": "2"
+        },
+        "gain": 2.061350536312091,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 74.87077539928642,
+          "tailFinishTime": 75.03281186397345,
+          "referenceTailFinishTime": 75.16755543339825,
+          "tailImprovement": 0.13474356942479915,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.13474356942479915,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "201032": 0.9444444444444444,
+          "201041": 0.9513888888888888,
+          "201341": 0.9513888888888888,
+          "201902": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "201032": 0,
+          "201041": 0,
+          "201341": 0.7430555555555556,
+          "201902": 0.5555555555555556
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 148,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 6,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 48,
+          "precisionScreenedFinalists": 48,
+          "precisionCandidates": 49,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 6,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201032",
+          "201042",
+          "201341",
+          "202672"
+        ],
+        "cost": 499,
+        "gain": 2.067570771163106,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 74.87018284394915,
+          "tailFinishTime": 75.03200502374494,
+          "referenceTailFinishTime": 75.16755543339825,
+          "tailImprovement": 0.13555040965330534,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.13555040965330534,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201032": 0.9444444444444444,
+          "201042": 0.9444444444444444,
+          "201341": 0.9513888888888888,
+          "202672": 0.5416666666666666
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201032": 0,
+          "201042": 0,
+          "201341": 0.7638888888888888,
+          "202672": 0.5416666666666666
+        }
+      },
+      "matchesOracleObjective": false,
+      "oracleComparison": 0.006220234851014972,
+      "gainGap": 0.006220234851014972
+    },
+    {
+      "key": "mile",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10903",
+        "supportIds": [
+          "30153",
+          "30093"
+        ],
+        "going": 1,
+        "weather": 1,
+        "season": 4,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1700,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 900
+      },
+      "states": {
+        "200362": "3",
+        "201031": "0",
+        "201032": "owned",
+        "201041": "5",
+        "201042": "1",
+        "201341": "3",
+        "201342": "4",
+        "201901": "5",
+        "201902": "1",
+        "202671": "0",
+        "202672": "2"
+      },
+      "candidateIds": [
+        "202671",
+        "202672",
+        "201901",
+        "201902",
+        "201341",
+        "201342",
+        "201031",
+        "201032",
+        "201041",
+        "201042",
+        "200362"
+      ],
+      "ownedId": "201032",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 308,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201032",
+          "201041",
+          "201341",
+          "201901",
+          "202672"
+        ],
+        "budget": {
+          "total": 900,
+          "used": 835,
+          "remaining": 65
+        },
+        "acquisition": {
+          "200362": "3",
+          "201031": "0",
+          "201032": "owned",
+          "201041": "5",
+          "201042": "1",
+          "201341": "3",
+          "201342": "4",
+          "201901": "5",
+          "201902": "1",
+          "202671": "0",
+          "202672": "2"
+        },
+        "gain": 2.9361115944764684,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 74.78615044339125,
+          "tailFinishTime": 74.98361369726383,
+          "referenceTailFinishTime": 75.16755543339825,
+          "tailImprovement": 0.18394173613441467,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.18394173613441467,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201032": 0.9444444444444444,
+          "201041": 0.9513888888888888,
+          "201341": 0.9513888888888888,
+          "201901": 0.5694444444444444,
+          "202672": 0.5416666666666666
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201032": 0,
+          "201041": 0,
+          "201341": 0.7222222222222222,
+          "201901": 0.5625,
+          "202672": 0.5277777777777778
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 197,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 6,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 53,
+          "precisionScreenedFinalists": 53,
+          "precisionCandidates": 53,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 6,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201032",
+          "201041",
+          "201341",
+          "201901",
+          "202672"
+        ],
+        "cost": 835,
+        "gain": 2.9361115944764684,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 74.78615044339125,
+          "tailFinishTime": 74.98361369726383,
+          "referenceTailFinishTime": 75.16755543339825,
+          "tailImprovement": 0.18394173613441467,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.18394173613441467,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201032": 0.9444444444444444,
+          "201041": 0.9513888888888888,
+          "201341": 0.9513888888888888,
+          "201901": 0.5694444444444444,
+          "202672": 0.5416666666666666
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201032": 0,
+          "201041": 0,
+          "201341": 0.7222222222222222,
+          "201901": 0.5625,
+          "202672": 0.5277777777777778
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "classic",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10906",
+        "supportIds": [
+          "30161",
+          "30093"
+        ],
+        "going": 2,
+        "weather": 1,
+        "season": 2,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1800,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 500
+      },
+      "states": {
+        "200362": "3",
+        "201101": "0",
+        "201102": "owned",
+        "201111": "5",
+        "201112": "1",
+        "201341": "3",
+        "201342": "4",
+        "201901": "5",
+        "201902": "1",
+        "202711": "0",
+        "202712": "2"
+      },
+      "candidateIds": [
+        "202711",
+        "202712",
+        "201901",
+        "201902",
+        "201341",
+        "201342",
+        "201101",
+        "201102",
+        "201111",
+        "201112",
+        "200362"
+      ],
+      "ownedId": "201102",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 118,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201102",
+          "201111",
+          "201342",
+          "202712"
+        ],
+        "budget": {
+          "total": 500,
+          "used": 497,
+          "remaining": 3
+        },
+        "acquisition": {
+          "200362": "3",
+          "201101": "0",
+          "201102": "owned",
+          "201111": "5",
+          "201112": "1",
+          "201341": "3",
+          "201342": "4",
+          "201901": "5",
+          "201902": "1",
+          "202711": "0",
+          "202712": "2"
+        },
+        "gain": 2.013326879458783,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 105.36503005292968,
+          "tailFinishTime": 105.53152208994808,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.1657682108998273,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.1657682108998273,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201102": 0.9513888888888888,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201102": 0,
+          "201111": 0,
+          "201342": 0.5833333333333334,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 127,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 8,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 39,
+          "precisionScreenedFinalists": 39,
+          "precisionCandidates": 40,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 8,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201102",
+          "201111",
+          "201342",
+          "202712"
+        ],
+        "cost": 497,
+        "gain": 2.013326879458783,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 105.36503005292968,
+          "tailFinishTime": 105.53152208994808,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.1657682108998273,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.1657682108998273,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201102": 0.9513888888888888,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201102": 0,
+          "201111": 0,
+          "201342": 0.5833333333333334,
+          "202712": 0.7361111111111112
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "classic",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10906",
+        "supportIds": [
+          "30161",
+          "30093"
+        ],
+        "going": 2,
+        "weather": 1,
+        "season": 2,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1800,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 900
+      },
+      "states": {
+        "200362": "3",
+        "201101": "0",
+        "201102": "owned",
+        "201111": "5",
+        "201112": "1",
+        "201341": "3",
+        "201342": "4",
+        "201901": "5",
+        "201902": "1",
+        "202711": "0",
+        "202712": "2"
+      },
+      "candidateIds": [
+        "202711",
+        "202712",
+        "201901",
+        "201902",
+        "201341",
+        "201342",
+        "201101",
+        "201102",
+        "201111",
+        "201112",
+        "200362"
+      ],
+      "ownedId": "201102",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 303,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201901",
+          "202712"
+        ],
+        "budget": {
+          "total": 900,
+          "used": 877,
+          "remaining": 23
+        },
+        "acquisition": {
+          "200362": "3",
+          "201101": "0",
+          "201102": "owned",
+          "201111": "5",
+          "201112": "1",
+          "201341": "3",
+          "201342": "4",
+          "201901": "5",
+          "201902": "1",
+          "202711": "0",
+          "202712": "2"
+        },
+        "gain": 2.9246305440817015,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 105.2751897969851,
+          "tailFinishTime": 105.48711845106106,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.2101718497868461,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.2101718497868461,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201901": 0.5625,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0,
+          "201342": 0.5277777777777778,
+          "201901": 0.5555555555555556,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 156,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 7,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 47,
+          "precisionScreenedFinalists": 47,
+          "precisionCandidates": 48,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 7,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201901",
+          "202712"
+        ],
+        "cost": 877,
+        "gain": 2.9246305440817015,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 105.2751897969851,
+          "tailFinishTime": 105.48711845106106,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.2101718497868461,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.2101718497868461,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201901": 0.5625,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0,
+          "201342": 0.5277777777777778,
+          "201901": 0.5555555555555556,
+          "202712": 0.7361111111111112
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "long",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10506",
+        "supportIds": [
+          "30152",
+          "30161",
+          "30016"
+        ],
+        "going": 2,
+        "weather": 2,
+        "season": 4,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1000,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 500
+      },
+      "states": {
+        "200351": "3",
+        "200352": "owned",
+        "200362": "3",
+        "201171": "0",
+        "201172": "2",
+        "201181": "5",
+        "201182": "1",
+        "202481": "0",
+        "202482": "2",
+        "202711": "5",
+        "202712": "1"
+      },
+      "candidateIds": [
+        "202481",
+        "202482",
+        "202711",
+        "202712",
+        "200351",
+        "200352",
+        "201171",
+        "201172",
+        "201181",
+        "201182",
+        "200362"
+      ],
+      "ownedId": "200352",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 113,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200351"
+        ],
+        "budget": {
+          "total": 500,
+          "used": 119,
+          "remaining": 381
+        },
+        "acquisition": {
+          "200351": "3",
+          "200352": "owned",
+          "200362": "3",
+          "201171": "0",
+          "201172": "2",
+          "201181": "5",
+          "201182": "1",
+          "202481": "0",
+          "202482": "2",
+          "202711": "5",
+          "202712": "1"
+        },
+        "gain": 0.0013682756162135472,
+        "hpSuccessRate": 0.9513888888888888,
+        "performance": {
+          "meanFinishTime": 121.70691259532396,
+          "tailFinishTime": 121.8617599110591,
+          "referenceTailFinishTime": 121.86177038027068,
+          "tailImprovement": 0.000010469211588315375,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.000010469211588315375,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200351": 0.9513888888888888
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200351": 0
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 123,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 1,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 41,
+          "precisionScreenedFinalists": 41,
+          "precisionCandidates": 41,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 1,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200351"
+        ],
+        "cost": 119,
+        "gain": 0.0013682756162135472,
+        "feasible": false,
+        "hpSuccessRate": 0.9513888888888888,
+        "hpShortfall": 0.7140639275032199,
+        "performance": {
+          "meanFinishTime": 121.70691259532396,
+          "tailFinishTime": 121.8617599110591,
+          "referenceTailFinishTime": 121.86177038027068,
+          "tailImprovement": 0.000010469211588315375,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.000010469211588315375,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200351": 0.9513888888888888
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200351": 0
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "long",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 2,
+        "courseId": "10506",
+        "supportIds": [
+          "30152",
+          "30161",
+          "30016"
+        ],
+        "going": 2,
+        "weather": 2,
+        "season": 4,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1000,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 900
+      },
+      "states": {
+        "200351": "3",
+        "200352": "owned",
+        "200362": "3",
+        "201171": "0",
+        "201172": "2",
+        "201181": "5",
+        "201182": "1",
+        "202481": "0",
+        "202482": "2",
+        "202711": "5",
+        "202712": "1"
+      },
+      "candidateIds": [
+        "202481",
+        "202482",
+        "202711",
+        "202712",
+        "200351",
+        "200352",
+        "201171",
+        "201172",
+        "201181",
+        "201182",
+        "200362"
+      ],
+      "ownedId": "200352",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 298,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200351"
+        ],
+        "budget": {
+          "total": 900,
+          "used": 119,
+          "remaining": 781
+        },
+        "acquisition": {
+          "200351": "3",
+          "200352": "owned",
+          "200362": "3",
+          "201171": "0",
+          "201172": "2",
+          "201181": "5",
+          "201182": "1",
+          "202481": "0",
+          "202482": "2",
+          "202711": "5",
+          "202712": "1"
+        },
+        "gain": 0.0013682756162135472,
+        "hpSuccessRate": 0.9513888888888888,
+        "performance": {
+          "meanFinishTime": 121.70691259532396,
+          "tailFinishTime": 121.8617599110591,
+          "referenceTailFinishTime": 121.86177038027068,
+          "tailImprovement": 0.000010469211588315375,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.000010469211588315375,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200351": 0.9513888888888888
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200351": 0
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 221,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 5,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 51,
+          "precisionScreenedFinalists": 51,
+          "precisionCandidates": 56,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 2,
+          "stabilizationChecks": 15,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200351"
+        ],
+        "cost": 119,
+        "gain": 0.0013682756162135472,
+        "feasible": false,
+        "hpSuccessRate": 0.9513888888888888,
+        "hpShortfall": 0.7140639275032199,
+        "performance": {
+          "meanFinishTime": 121.70691259532396,
+          "tailFinishTime": 121.8617599110591,
+          "referenceTailFinishTime": 121.86177038027068,
+          "tailImprovement": 0.000010469211588315375,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.000010469211588315375,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200351": 0.9513888888888888
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200351": 0
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "dirt",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 4,
+        "courseId": "11709",
+        "supportIds": [
+          "30250",
+          "30164",
+          "30016"
+        ],
+        "going": 1,
+        "weather": 1,
+        "season": 1,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1700,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 500
+      },
+      "states": {
+        "200351": "3",
+        "200352": "4",
+        "200362": "3",
+        "200641": "5",
+        "200642": "1",
+        "201101": "0",
+        "201102": "2",
+        "201111": "5",
+        "201112": "owned",
+        "202871": "0",
+        "202872": "2"
+      },
+      "candidateIds": [
+        "202871",
+        "202872",
+        "200641",
+        "200642",
+        "200351",
+        "200352",
+        "201101",
+        "201102",
+        "201111",
+        "201112",
+        "200362"
+      ],
+      "ownedId": "201112",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 113,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201101",
+          "201111"
+        ],
+        "budget": {
+          "total": 500,
+          "used": 375,
+          "remaining": 125
+        },
+        "acquisition": {
+          "200351": "3",
+          "200352": "4",
+          "200362": "3",
+          "200641": "5",
+          "200642": "1",
+          "201101": "0",
+          "201102": "2",
+          "201111": "5",
+          "201112": "owned",
+          "202871": "0",
+          "202872": "2"
+        },
+        "gain": 1.2948742690501012,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 94.97857709423505,
+          "tailFinishTime": 95.10249303682593,
+          "referenceTailFinishTime": 95.22282434733317,
+          "tailImprovement": 0.12033131050723966,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.12033131050723966,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 129,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 6,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 43,
+          "precisionScreenedFinalists": 43,
+          "precisionCandidates": 43,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 6,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "201101",
+          "201111"
+        ],
+        "cost": 375,
+        "gain": 1.2948742690501012,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 94.97857709423505,
+          "tailFinishTime": 95.10249303682593,
+          "referenceTailFinishTime": 95.22282434733317,
+          "tailImprovement": 0.12033131050723966,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.12033131050723966,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    },
+    {
+      "key": "dirt",
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "15",
+        "style": 4,
+        "courseId": "11709",
+        "supportIds": [
+          "30250",
+          "30164",
+          "30016"
+        ],
+        "going": 1,
+        "weather": 1,
+        "season": 1,
+        "time": 2
+      },
+      "actual": {
+        "stats": {
+          "speed": 2200,
+          "stamina": 1700,
+          "power": 1800,
+          "guts": 1700,
+          "wisdom": 1800
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 900
+      },
+      "states": {
+        "200351": "3",
+        "200352": "4",
+        "200362": "3",
+        "200641": "5",
+        "200642": "1",
+        "201101": "0",
+        "201102": "2",
+        "201111": "5",
+        "201112": "owned",
+        "202871": "0",
+        "202872": "2"
+      },
+      "candidateIds": [
+        "202871",
+        "202872",
+        "200641",
+        "200642",
+        "200351",
+        "200352",
+        "201101",
+        "201102",
+        "201111",
+        "201112",
+        "200362"
+      ],
+      "ownedId": "201112",
+      "enumeratedMasks": 1024,
+      "affordableDistinctPlans": 294,
+      "recommendation": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "200642",
+          "201101",
+          "201111",
+          "202871"
+        ],
+        "budget": {
+          "total": 900,
+          "used": 861,
+          "remaining": 39
+        },
+        "acquisition": {
+          "200351": "3",
+          "200352": "4",
+          "200362": "3",
+          "200641": "5",
+          "200642": "1",
+          "201101": "0",
+          "201102": "2",
+          "201111": "5",
+          "201112": "owned",
+          "202871": "0",
+          "202872": "2"
+        },
+        "gain": 1.5276432993984663,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 94.95620060850212,
+          "tailFinishTime": 95.08880621056116,
+          "referenceTailFinishTime": 95.22282434733317,
+          "tailImprovement": 0.13401813677201346,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.13401813677201346,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "200642": 0.9444444444444444,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "202871": 0.8472222222222222
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "200642": 0.10416666666666667,
+          "201101": 0,
+          "201111": 0,
+          "202871": 0.7430555555555556
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 146,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 4,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 48,
+          "precisionScreenedFinalists": 48,
+          "precisionCandidates": 48,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 4,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "selectedIds": [
+          "100221",
+          "200362",
+          "200642",
+          "201101",
+          "201111",
+          "202871"
+        ],
+        "cost": 861,
+        "gain": 1.5276432993984663,
+        "feasible": true,
+        "hpSuccessRate": 1,
+        "hpShortfall": 0,
+        "performance": {
+          "meanFinishTime": 94.95620060850212,
+          "tailFinishTime": 95.08880621056116,
+          "referenceTailFinishTime": 95.22282434733317,
+          "tailImprovement": 0.13401813677201346,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.13401813677201346,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "200642": 0.9444444444444444,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "202871": 0.8472222222222222
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "200642": 0.10416666666666667,
+          "201101": 0,
+          "201111": 0,
+          "202871": 0.7430555555555556
+        }
+      },
+      "matchesOracleObjective": true,
+      "oracleComparison": 0,
+      "gainGap": 0
+    }
+  ]
+}

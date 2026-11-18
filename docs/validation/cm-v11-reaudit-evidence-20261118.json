@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "sources": [
+    {
+      "url": "https://umamusumelabo.com/event/champions-meeting/chanmi-mile-202512",
+      "title": "【ウマ娘】12月チャンミMILE攻略。コースの必須知識とおすすめウマ娘まとめ（阪神芝1600m）│ウマ娘ラボ",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": "2025-11-11",
+      "modified": null,
+      "assessment": "Authored 2025-11-11 Hanshin1600 guide: early random acceleration is useful; source course/ranking guidance is qualitative, not measured activation calibration."
+    },
+    {
+      "url": "https://game8.jp/umamusume/573883",
+      "title": "【ウマ娘】チャンミ12月有馬記念のTier表とおすすめスキル・長距離｜ゲームエイト",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": null,
+      "assessment": "Current Arima2500 guide: long-distance Monster useful, final-corner acceleration/King ineffective. Approximate geometry and old event conditions are not treated as exact simulation inputs."
+    },
+    {
+      "url": "https://note.com/yaroshi_1025/n/n3f8cb30a75e3",
+      "title": "【ウマ娘】2025年7月阪神2200本戦(チャンピオンズミーティング)｜やろし",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": "2025-07-31",
+      "modified": null,
+      "assessment": "Retrospective 2025-07-31 player report: used only to discover the original pre-race article; not used as a population or win-rate dataset."
+    },
+    {
+      "url": "https://kamigame.jp/umamusume/page/443708416242747935.html",
+      "title": "【ウマ娘】2026年12月チャンミ長距離のコース解説と有効加速｜必要スタミナ - 神ゲー攻略",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-11-13T11:57:30+09:00",
+      "assessment": "Upcoming December2026 Nakayama2500 guide; pre-event course analysis only. Its corner acceleration comment is distinct from final-corner acceleration."
+    },
+    {
+      "url": "https://note.com/yaroshi_1025/n/nfef746db41ab",
+      "title": "【ウマ娘】2025年7月阪神2200先行脚質攻略(チャンピオンズミーティングCLASSIC)｜やろし",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": "2025-07-09",
+      "modified": null,
+      "assessment": "Authored 2025-07-09 Hanshin2200 analysis says downhill white accelerations have about10% usefulness with hearsay wording. This is not adopted as a measured probability target."
+    },
+    {
+      "url": "https://kamigame.jp/umamusume/page/412836682623139079.html",
+      "title": "【ウマ娘】4月チャンミダートのコース解説｜有効加速とおすすめキャラ - 神ゲー攻略",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-06-16T18:18:55+09:00",
+      "assessment": "Del Mar2000 dirt course guide: final-corner accelerations including King have little usefulness. Original condition descriptions, not win-rate calibration."
+    },
+    {
+      "url": "https://merci-splatoon.com/2507cla-1/",
+      "title": "25’7月チャンピオンズミーティング「CLASSIC」攻略解説 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "retrievedAt": "2026-11-18 Asia/Seoul",
+      "published": "2025-06-14T10:24:04+09:00",
+      "modified": "2025-06-24T07:40:49+09:00",
+      "assessment": "Authored June2025 Hanshin2200 strategy: King/final-corner acceleration not strictly zero but lower priority versus native evolved acceleration. Useful qualitative distinction."
+    }
+  ],
+  "ci": {
+    "id": 44262723887,
+    "commit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/seraveist/umaBoard/actions/runs/44262723887",
+    "updatedAt": "2026-11-18T08:06:46Z"
+  },
+  "focusedTests": {
+    "command": "node --test tests/cm-candidate-retention.test.mjs tests/cm-v10-mechanics.test.mjs tests/cm-activation-probability.test.mjs tests/cm-final-plan.test.mjs",
+    "tests": 54,
+    "pass": 54,
+    "fail": 0
+  },
+  "fullSuiteBasis": "unchanged frozen production commit remote CI and preceding v11 checks: Node295/Python51; not rerun in this audit",
+  "interpretation": "source summaries only; no empirical probability confidence score or full-article redistribution"
+}
