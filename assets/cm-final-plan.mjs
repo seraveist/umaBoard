@@ -81,7 +81,8 @@ export class RecordedPurchaseModel{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+ onPhase('prepare');
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  setup.externalDomains=contextDomains(data);
  if(!Number.isInteger(samples)||samples<1||samples>512||!Number.isInteger(searchSamples)||searchSamples<1||searchSamples>512||!Number.isFinite(dt)||dt<=0||dt>.1||!Number.isFinite(searchDt)||searchDt<=0||searchDt>.1||!Number.isInteger(width)||width<2||!Number.isInteger(evaluationLimit)||evaluationLimit<1||!Number.isInteger(maxCandidates)||maxCandidates<1||!Number.isSafeInteger(exactPlanLimit)||exactPlanLimit<0||exactPlanLimit>4096||!Number.isFinite(gainTolerance)||gainTolerance<0||gainTolerance>1)throw new Error('추천 탐색 설정을 확인하세요.');
@@ -105,12 +106,29 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  for(const id of chart.nativeIds){if(!nativeUnique(data.skills[id]))throw new Error('본체 고유기 정보를 확인하세요.');records.set(id,data.skills[id]);}
  const rules=selectionRules(data,records),purchase=new RecordedPurchaseModel(data,planningRows,states,setup);
  const lower=new Map([...records.keys()].map(id=>[id,new Set(relatedAcquisitionIds(hierarchy,id))]));
- const active=ids=>[...new Set(ids)].filter(id=>!ids.some(high=>high!==id&&lower.get(high)?.has(id))).sort();
+ const active=ids=>{
+  const selected=new Set(ids);
+  for(const high of ids)for(const low of lower.get(high)||[])selected.delete(low);
+  return [...selected].sort();
+ };
  const owned=[...purchase.owned].filter(id=>records.has(id)),baselineIds=active([...chart.nativeIds,...owned]);
  setup.ownedSkillIds=owned;setup.possessionGraph=Object.fromEntries([...hierarchy.lower].map(([id,low])=>[id,[...low]]));setup.inheritanceOrigins=inheritanceOrigins(data);
  const compiled=new Map([...records].map(([id,skill])=>[id,compileChartSkill(skill,setup)]));
  if(baselineIds.some(id=>compiled.get(id).status==='unsupported'))throw new Error('이미 습득한 스킬의 실제 스탯 계산을 지원하지 않습니다. 체크리스트를 확인해 주세요.');
- const legal=ids=>ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>data.skills[id].inherited).length<=6&&acquisitionConstraints.allowed([...owned,...ids]);
+ const compatibleSelection=ids=>ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>data.skills[id].inherited).length<=6&&acquisitionConstraints.allowed([...owned,...ids]);
+ // Cache only request-local scalar decisions. The purchased-stage breakdown is materialized for the winner.
+ const normalized=new WeakMap();
+ function memoDecision(decide){
+  const decisions=new Map();
+  return ids=>{
+   const key=normalized.get(ids)===ids?ids.join(','):idKey(ids);
+   if(decisions.has(key))return decisions.get(key);
+   const value=decide(ids);
+   if(decisions.size>=8192)decisions.delete(decisions.keys().next().value);
+   decisions.set(key,value);return value;
+  };
+ }
+ const legal=memoDecision(compatibleSelection);
  const targetIds=setup.maintainTargetAcceleration?(chart.accelerationPlan?.ids||[]):[];
  const targetAvailable=id=>(states[id]==='owned'||hint(states[id])!==null)&&supported(compiled.get(id));
  const maintainedTargetIds=targetIds.filter(targetAvailable),unavailableTargetIds=targetIds.filter(id=>!targetAvailable(id));
@@ -134,20 +152,28 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   if(!purchase.selection([row.id]).complete){excluded.push({id:row.id,reason:'구매 비용 확인 필요'});return false;}
   const ids=active([...required,row.id]);return retained(ids)&&legal(ids)&&!required.includes(row.id);
  });
- const normalize=ids=>active([...required,...ids]);
- const price=ids=>{const value=purchase.selection(ids);return value.complete?value.used:null;};
+ const normalize=ids=>{
+  if(!normalized.has(ids)){
+   const result=active([...required,...ids]);
+   normalized.set(ids,result);normalized.set(result,result);
+  }
+  return normalized.get(ids);
+ };
+ const price=memoDecision(ids=>{
+  const value=purchase.selection(ids);return value.complete?value.used:null;
+ });
  const enumeration=enumerateAffordablePlans(candidates.map(row=>row.id),{required,normalize,conflict:(a,b)=>lower.get(a)?.has(b)||lower.get(b)?.has(a)||!rules.compatible(a,b),legal:ids=>retained(ids)&&legal(ids),price,budget:setup.spBudget,planLimit:exactPlanLimit});
  const method=enumeration.complete?'exhaustive':'bounded';
  const signature=createPlanSignature(compiled,lower,setup.course.distance,{scope:gainTolerance?'complete-plan-profile':'identity'}),fullScores=new Map(),scoreCache=new Map();
  const evaluator=new RaceEvaluator(setup,compiled,baselineIds,chart.nativeIds,branchSampler);let evaluations=0,hpPrunedPlans=0,coarseEvaluations=0,precisionEvaluations=0,pilotEvaluations=0,middleEvaluations=0;
  const evaluate=(ids,count,step,stopOnHpFailure=false,phase='precision')=>{
   ids=normalize(ids);if(!retained(ids)||!legal(ids))return null;
-  const priced=purchase.selection(ids);if(!priced.complete||priced.used>setup.spBudget)return null;
+  const cost=price(ids);if(cost===null||cost>setup.spBudget)return null;
   const cacheKey=`${idKey(ids)}|${count}|${step}`;if(scoreCache.has(cacheKey))return scoreCache.get(cacheKey);
   const result=evaluator.evaluate(ids,count,step,{stopOnHpFailure,scenarioPriorities:count===samples&&step===dt});evaluations++;
   if(phase==='coarse')coarseEvaluations++;else if(count===samples&&step===dt)precisionEvaluations++;else if(phase==='pilot')pilotEvaluations++;else middleEvaluations++;
   if(result.hpRejected){hpPrunedPlans++;return null;}
-  const score={ids,cost:priced.used,...result};scoreCache.set(cacheKey,score);
+  const score={ids,cost,...result};scoreCache.set(cacheKey,score);
   if(count===samples&&step===dt)fullScores.set(idKey(ids),score);
   return score;
  };
@@ -157,6 +183,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   if(coarseEvaluations>=quickLimit){coarseLimitReached=true;return null;}
   evaluated.set(key,evaluate(ids,searchSamples,searchDt,false,'coarse'));
  }return evaluated.get(key);};
+ onPhase('coarseSearch');
  const baseline=quick(required),singles=[];
  onProgress({stage:'candidates',completed:0,total:candidates.length});await pause();
  if(method!=='exhaustive')for(let i=0;i<candidates.length;i++){
@@ -288,8 +315,8 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   let batch=best.ids;
   for(const value of [...rows].sort((a,b)=>a.cost-b.cost||order(a,b))){
    const removed=new Set(best.ids.filter(id=>!value.ids.includes(id))),added=value.ids.filter(id=>!best.ids.includes(id));
-   const ids=normalize([...batch.filter(id=>!removed.has(id)),...added]),priced=purchase.selection(ids);
-   if(retained(ids)&&legal(ids)&&priced.complete&&priced.used<=setup.spBudget)batch=ids;
+   const ids=normalize([...batch.filter(id=>!removed.has(id)),...added]),cost=price(ids);
+   if(retained(ids)&&legal(ids)&&cost!==null&&cost<=setup.spBudget)batch=ids;
   }
   return batch;
  };
@@ -383,6 +410,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   const value=evaluate(ids,refillSamples,dt,false,'pilot');refillMemo.set(key,value);if(value)refillEvaluations++;
   return value;
  };
+ onPhase('precisionSeeds');
  const seedResolutions={};
  const seedScore=ids=>{
   let value=gainTolerance?pilotScore(ids):finalScore(ids);
@@ -417,6 +445,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  if(!finalists.some(row=>idKey(row.ids)===idKey(required)))finalists.push(baseline);
  // With at most sixteen affordable sets, a direct final pass also finds cheap
  // alternatives that a short prefix can hide. Larger pools keep staged scoring.
+ onPhase('finalists');
  const directMatrix=enumeration.complete&&(!gainTolerance||enumeration.plans.length<=16);
  const compression={enabled:gainTolerance>0,tolerance:gainTolerance,pilotSamples,middleSamples,middleApplied:!directMatrix&&gainTolerance>0&&method==='exhaustive',fullSamples:samples,rawPlans:finalists.length,pilotRepresentatives:null,middleRepresentatives:null,fullPlans:directMatrix?finalists.length:null,merged:0,signaturePolicy:'whole-plan-profiles-with-hp-and-active-reference-count-protection'};
  if(gainTolerance&&!directMatrix){
@@ -444,6 +473,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  // All entries are complete evaluations at the same sample matrix and dt.
  // Reuse them in closure even when the challenger could be HP-pruned: a
  // complete result remains valid under that optimization flag.
+ onPhase('refinement');
  const precisionBeforeRefinement=precisionEvaluations;
  const allAffordablePlansMeasured=enumeration.complete&&fullScores.size===enumeration.plans.length;
  const closed=allAffordablePlansMeasured?{best:refined.sort(order)[0],complete:true,checks:0,passes:0,batchChecks:0,directEvaluations:0,toleranceStopped:false}:await refineNeighborhood(refined.sort(order)[0],dt,[...fullScores.values()],'closure');if(!closed)return null;
@@ -459,6 +489,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  }});if(!selection)return null;
  const best=selection.selected,closureComplete=!gainTolerance&&closed.complete,closureChecks=closed.checks;
  // Re-rank already completed plans within each scenario. No extra races or searches.
+ onPhase('diagnostics');
  const scenarioAlternatives=[];
  if(best.scenarioCoverage.complete&&best.scenarios.length>1){
   const byScenario=new Map(best.scenarios.map(s=>[s.id,[]]));

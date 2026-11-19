@@ -1,6 +1,6 @@
 import {planSpurt,SPURT_POLICY} from './spurt-planning.mjs';
 import {buildPhysics,phaseAt} from './physics.mjs';
-import {sampleBranches,branchReady,slopeAt} from './activation.mjs';
+import {sampleBranches,branchReady,slopeAt,compare} from './activation.mjs';
 import {effectValue,effectDuration} from './cm-effect-policy.mjs';
 import {advanceRankHistory,advanceFrontBlock} from './race-sampling.mjs';
 import {activationFrame} from './race-frame.mjs';
@@ -63,6 +63,9 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  // Both compared trajectories share the sampled race start delay.
  let delay=startDelay;
  const keyFor=i=>i.linked?`${i.id}:${i.index}`:i.id;
+ let effectsChanged=false,nextExpiry=Infinity;
+ let targetBonus=0,accelerationBonus=0,fullSpurtBonus=0;
+ const accelerationById=new Map(),fullSpurtEffects=[];
  const fire=(i,forced=false,stack=new Set())=>{
   if(stack.has(i.id))return;
   stack=new Set([...stack,i.id]);
@@ -83,7 +86,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
     state.hp=Math.min(state.hpMax,state.hp+state.hpMax*value);updateSpurt();
    }else{
     if(raw.kind==='speed_with_decel')velocity+=value;
-    active.push({...raw,value,id:i.id,end:state.t+duration});
+    active.push({...raw,value,id:i.id,end:state.t+duration});effectsChanged=true;
    }
   }
   events.push({id:i.id,index:i.index,x:state.x,frameStartX:frame.startX,activationPhase:frame.phase,physicsPhase:state.phase,t:state.t,duration:Number.isFinite(duration)?duration:null,...(forced?{forced:true}:{}),...(diagnostics?{effects:resolved}:{} )});
@@ -100,19 +103,63 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  };
  for(const i of pending)if(!i.done&&i.effects.some(e=>['start_multiplier','start_offset'].includes(e.kind))&&i.precondition.some(b=>branchReady(b,state,i.id))&&i.condition.some(b=>branchReady(b,state,i.id)))fire(i);
  delay=Math.max(0,delay);state.startDelay=delay;
+ for(const effect of active)nextExpiry=Math.min(nextExpiry,effect.end);
  // Distance-scheduled conditions avoid checking every future invocation on
  // every integration frame. Dynamic gates stay awake while their window holds.
- const awake=[],sleepers=[],nextWindow=branches=>{let next=Infinity;for(const branch of branches){
-  if(branch.frameStartWindows&&!branch.frameStartWindows.some(([,hi])=>state.prevX<hi))continue;
-  for(const [lo,hi]of branch.windows)if(state.prevX<hi)next=Math.min(next,Math.max(lo,branch.at));
- }return next;};
+ const awake=[],sleepers=[];
+ // Schedule lower bounds only. branchReady still evaluates the original predicates
+ // on the original movement endpoints, including a frame crossing several boundaries.
+ const wakeRules=new WeakMap();
+ const wakeRule=branch=>{
+  if(wakeRules.has(branch))return wakeRules.get(branch);
+  let earliest=branch.at;
+  for(const atom of branch.dynamic){
+   const full=atom.field==='run_at_full_speed_random';
+   if(!full&&atom.field!=='is_lastspurt'&&atom.field!=='lastspurt')continue;
+   if(!compare(atom.field==='lastspurt'?3:0,atom.operator,atom.value)){
+    earliest=full&&(!fullSpurt||!physics.fullSpurtEligible)?Infinity:Math.max(earliest,2*d/3);
+   }
+  }
+  const rankChange=context.coherentRanks&&context.rankTimeline?.length&&branch.external?.some(atom=>
+   (atom.field==='change_order_onetime'||atom.field==='is_overtake')&&!context.encounterWindows?.[atom.field]&&
+   !Object.hasOwn(context.conditions||{},atom.field)&&!compare(0,atom.operator,atom.value));
+  const rule={earliest,rankChange,startEnd:branch.frameStartWindows?branch.frameStartWindows.reduce((end,w)=>Math.max(end,w[1]),-Infinity):Infinity};
+  wakeRules.set(branch,rule);return rule;
+ };
+ const nextWindow=inv=>{
+  const branches=inv.preMet?inv.condition:inv.precondition;
+  if(inv.wakeBranches===branches&&state.prevX<inv.wakeUntil)return inv.wakeAt;
+  let next=Infinity,until=Infinity;
+  for(const branch of branches){
+   const rule=wakeRule(branch);
+   let earliest=rule.earliest,end=rule.startEnd;
+   if(rule.rankChange){
+    const change=context.rankTimeline.find(point=>point.distance>state.prevX)?.distance??Infinity;
+    earliest=Math.max(earliest,change);end=Math.min(end,change);
+   }
+   for(const [lo,hi] of branch.windows){
+    const expires=Math.min(hi,end),at=Math.max(lo,earliest);
+    if(state.prevX>=expires)continue;
+    if(at<next){next=at;until=expires;}
+    else if(at===next)until=Math.max(until,expires);
+   }
+  }
+  inv.wakeBranches=branches;inv.wakeUntil=until;inv.wakeAt=next;return next;
+ };
  const schedule=(inv,x)=>{
   if(!Number.isFinite(x))return;
   let lo=0,hi=sleepers.length;while(lo<hi){const mid=(lo+hi)>>>1;if(sleepers[mid].x<=x)lo=mid+1;else hi=mid;}
   sleepers.splice(lo,0,{inv,x});
  };
- pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv.preMet?inv.condition:inv.precondition));else awake.push(inv);}});
+ pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv));else awake.push(inv);}});
  // Snapshot once per frame so skill ID order cannot satisfy a trigger in the same tick.
+ const slopeBoundaries=[...new Set(setup.course.slopes.flatMap(s=>[s.start,s.start+s.length]))].sort((a,b)=>a-b);
+ const courseScale=Math.pow(d/1000,1.5);
+ const flatAccel=[],hillAccel=[];
+ for(let phase=0;phase<4;phase++){
+  flatAccel.push(physics.acceleration(phase,false));hillAccel.push(physics.acceleration(phase,true));
+ }
+ let slope=slopeAt(setup.course,0),slopeIndex=0;
  let previousEvents=0,previousHeals=0;
  for(let frame=0;state.x<d&&frame<100000;frame++){
   const t=frame*dt;state.t=t;state.phase=phaseAt(state.x,d);
@@ -123,7 +170,10 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(rankBands.size)advanceRankHistory(state);
   if(timeFrontBlock)advanceFrontBlock(state,blockWindows);
   if(adaptive&&state.phase>=2){if(!spurtPlan)updateSpurt();state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;}
-  for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);
+  if(t+1e-8>=nextExpiry){
+   for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);
+   effectsChanged=true;
+  }
   let added=false;
   while(sleepers.length&&sleepers[0].x<=state.x+1e-6){awake.push(sleepers.shift().inv);added=true;}
   if(added)awake.sort((a,b)=>a.order-b.order);
@@ -132,19 +182,34 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    if(i.done){awake.splice(index,1);continue;}
    if(cooldowns.has(keyFor(i))&&(!i.cooldownSeconds||t<=cooldowns.get(keyFor(i))+1e-8)){index++;continue;}
    if(!i.preMet)i.preMet=i.precondition.some(b=>branchReady(b,state,i.id));
-   const wake=nextWindow(i.preMet?i.condition:i.precondition);
+   const wake=scheduleConditions?nextWindow(i):0;
    if(scheduleConditions&&(!Number.isFinite(wake)||wake>state.x+1e-6)){awake.splice(index,1);schedule(i,wake);continue;}
    if(i.preMet&&i.condition.some(b=>branchReady(b,state,i.id)))fire(i);
    if(i.done)awake.splice(index,1);else index++;
   }
-  let targetBonus=0,accelerationBonus=0,fullSpurtBonus=0;currentOffset=0;
-  for(const effect of active){
-   if(effect.kind==='target_speed'||effect.kind==='speed_with_decel')targetBonus+=effect.value;
-   else if(effect.kind==='current_speed')currentOffset+=effect.value;
-   else if(effect.kind==='acceleration')accelerationBonus+=effect.value;
-   else if(effect.kind==='full_spurt_acceleration')fullSpurtBonus+=effect.value/10;
+  // Re-sum in original activation order only when the active list changes.
+  if(effectsChanged){
+   nextExpiry=Infinity;targetBonus=0;accelerationBonus=0;fullSpurtBonus=0;currentOffset=0;
+   accelerationById.clear();fullSpurtEffects.length=0;
+   for(const effect of active){
+    nextExpiry=Math.min(nextExpiry,effect.end);
+    if(effect.kind==='target_speed'||effect.kind==='speed_with_decel')targetBonus+=effect.value;
+    else if(effect.kind==='current_speed')currentOffset+=effect.value;
+    else if(effect.kind==='acceleration'){
+     accelerationBonus+=effect.value;
+     if(effect.value>0)accelerationById.set(effect.id,(accelerationById.get(effect.id)||0)+effect.value);
+    }else if(effect.kind==='full_spurt_acceleration'){
+     fullSpurtBonus+=effect.value/10;
+     if(effect.value>0)fullSpurtEffects.push(effect);
+    }
+   }
+   effectsChanged=false;
   }
-  const slope=slopeAt(setup.course,state.x),uphill=slope>0;
+  if(slopeIndex<slopeBoundaries.length&&state.x>=slopeBoundaries[slopeIndex]){
+   do{slopeIndex++;}while(slopeIndex<slopeBoundaries.length&&state.x>=slopeBoundaries[slopeIndex]);
+   slope=slopeAt(setup.course,state.x);
+  }
+  const uphill=slope>0;
   if(state.phase>=2&&legStart===null)legStart=t;
   const baseTarget=adaptive&&state.phase>=2?(state.hp<=0?physics.minSpeed:state.lastSpurtActive?spurtPlan.speed:physics.lateCruise):physics.target(state.phase);
   let target=baseTarget+targetBonus-(uphill?slope*200/physics.modified.power:0);
@@ -154,7 +219,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(startDash)target=.85*physics.bs;
   if(keepTrace&&frame%2===0&&state.x>=2*d/3-120&&(legStart===null||t-legStart<=12.2))trace.push({t,x:state.x,v:velocity+currentOffset+fullSpurtSpeed,target});
   const leg=legStart!==null&&t-legStart<physics.legDuration?physics.legAccel:0;
-  const baseAcceleration=physics.acceleration(state.phase,uphill),acceleration=baseAcceleration+accelerationBonus+leg+(startDash?24:0);
+  const baseAcceleration=(uphill?hillAccel:flatAccel)[state.phase],acceleration=baseAcceleration+accelerationBonus+leg+(startDash?24:0);
   if(entry===null&&state.phase>=2)entry={x:state.x,t,speed:velocity+currentOffset,target,targetGap:Math.max(0,target-velocity-currentOffset)};
   if(entry&&reach===null&&velocity+currentOffset>=target-1e-5)reach={x:state.x,t};
   let next=velocity;
@@ -166,13 +231,12 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   // Test the entire effect lifetime, including pre-phase acceleration that
   // remains active after the phase boundary. No skill/course exclusions.
   if(t>=delay&&velocity<target&&accelerationBonus>0){
-   const byId=new Map();for(const effect of active)if(effect.kind==='acceleration'&&effect.value>0)byId.set(effect.id,(byId.get(effect.id)||0)+effect.value);
-   for(const [id,value]of byId){let without=Math.min(target,velocity+Math.max(0,acceleration-value)*dt);if(!startDash)without=Math.max(physics.minSpeed,without);without=Math.min(30,without);if(next>without+1e-9)accelerationUseSeconds[id]=(accelerationUseSeconds[id]||0)+dt;}
+   for(const [id,value]of accelerationById){let without=Math.min(target,velocity+Math.max(0,acceleration-value)*dt);if(!startDash)without=Math.max(physics.minSpeed,without);without=Math.min(30,without);if(next>without+1e-9)accelerationUseSeconds[id]=(accelerationUseSeconds[id]||0)+dt;}
   }
   if(fullSpurt&&physics.fullSpurtEligible&&state.phase>=2&&(!adaptive||state.maximumSpurt)&&velocity>=physics.spurt-1e-6){fullSpurtStarted=true;if(state.fullSpurtStart===null)state.fullSpurtStart=state.x;}
   // Public umasim approximation: independent extra acceleration; its ceiling is
   // unknown in the source. This mode is explicit and versioned by the CM chart.
-  const fullAcceleration=.068*physics.acceleration(state.phase,uphill)/Math.pow(d/1000,1.5)+fullSpurtBonus;
+  const fullAcceleration=.068*baseAcceleration/courseScale+fullSpurtBonus;
   const nextFull=fullSpurtStarted&&(!adaptive||state.hp>0)?fullSpurtSpeed+Math.max(0,fullAcceleration)*dt:0;
   if(diagnostics){
    const observed={t,x:state.x,phase:state.phase,baseVelocity:velocity,target,baseTarget,targetBonus,currentOffset,fullSpurtSpeed,
@@ -182,7 +246,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    diagnosticFrames.push(observed);
    for(let k=eventStart;k<events.length;k++)events[k].observation={...observed,targetGap:Math.max(0,target-velocity)};
   }
-  if(nextFull>fullSpurtSpeed)for(const effect of active)if(effect.kind==='full_spurt_acceleration'&&effect.value>0)accelerationUseSeconds[effect.id]=(accelerationUseSeconds[effect.id]||0)+dt;
+  if(nextFull>fullSpurtSpeed)for(const effect of fullSpurtEffects)accelerationUseSeconds[effect.id]=(accelerationUseSeconds[effect.id]||0)+dt;
   const speed=t<delay?0:Math.max(0,(velocity+next)/2+currentOffset+(fullSpurtSpeed+nextFull)/2),step=speed*dt;
   const fraction=step>0?Math.min(1,(d-state.x)/step):1;
   state.hp-=physics.consumption(speed,state.phase)*dt*fraction;

@@ -3,7 +3,6 @@ import {lengthsBetween} from './physics.mjs';
 import {raceScenario,scenarioCount,encounterPolicy} from './race-scenarios.mjs';
 import {performanceSummary} from './race-objective.mjs';
 import {activeSkillIds,withoutSkill} from './skill-context.mjs';
-const key=ids=>[...new Set(ids)].sort().join(',');
 const mean=values=>values.reduce((a,b)=>a+b,0)/values.length;
 // Only split popularity where an executable source predicate changes truth.
 function popularityBands(compiled,id,ids){
@@ -43,16 +42,18 @@ export class RaceEvaluator{
   // than replaying those runs when a complete plan advances to more samples.
   this.sampleCacheLimit=sampleCacheLimit;this.sampleCache=new Map();this.cachedSamples=0;this.sampleCacheHits=0;
  }
- run(ids,sample,dt,reference=false){
- ids=activeSkillIds(ids,this.setup.possessionGraph);
- const cache=reference?this.references:this.runs,k=`${key(ids)}|${sample}|${dt}`;
+ prepare(ids){
+  const active=activeSkillIds(ids,this.setup.possessionGraph),skills=active.map(id=>this.compiled.get(id));
+  if(skills.some(s=>!s||s.status==='unsupported'))throw new Error('지원하지 않는 스킬은 주행에 포함할 수 없습니다.');
+  const possession=new Set([...active,...(this.setup.ownedSkillIds||[])]),pending=[...possession];
+  while(pending.length){const id=pending.pop();for(const low of this.setup.possessionGraph?.[id]||[])if(!possession.has(low)){possession.add(low);pending.push(low);}}
+  return {key:active.join(','),skills,possessionIds:[...possession]};
+ }
+ run(ids,sample,dt,reference=false,plan=this.prepare(ids)){
+  const cache=reference?this.references:this.runs,k=`${plan.key}|${sample}|${dt}`;
   if(!cache.has(k)){
-   const skills=ids.map(id=>this.compiled.get(id));
-   if(skills.some(s=>!s||s.status==='unsupported'))throw new Error('지원하지 않는 스킬은 주행에 포함할 수 없습니다.');
-   const possession=new Set([...ids,...(this.setup.ownedSkillIds||[])]),pending=[...possession];
-   while(pending.length){const id=pending.pop();for(const low of this.setup.possessionGraph?.[id]||[])if(!possession.has(low)){possession.add(low);pending.push(low);}}
-   const scenario=raceScenario(this.setup,sample),setup={...this.setup,raceContext:scenario.context,possessionIds:[...possession]};
-   const run=simulateSolo(setup,skills,.5,{dt,keepTrace:false,fullSpurt:setup.fullSpurtMode!=='off',branchSampler:this.samplerFactory(setup,this.nativeIds,sample)});
+   const scenario=raceScenario(this.setup,sample),setup={...this.setup,raceContext:scenario.context,possessionIds:plan.possessionIds};
+   const run=simulateSolo(setup,plan.skills,.5,{dt,keepTrace:false,fullSpurt:setup.fullSpurtMode!=='off',branchSampler:this.samplerFactory(setup,this.nativeIds,sample)});
    cache.set(k,{...run,scenario:{id:scenario.id,label:scenario.label,weight:scenario.weight,basis:scenario.basis}});
    while(cache.size>(reference?1536:192))cache.delete(cache.keys().next().value);
   }
@@ -60,7 +61,7 @@ export class RaceEvaluator{
  }
  evaluate(ids,count,dt,{stopOnHpFailure=false,chartSkillId,scenarioPriorities=false}={}){
   if(!Number.isInteger(count)||count<1||count>2048||!Number.isFinite(dt)||dt<=0||dt>.1)throw new Error('계산 표본 설정을 확인하세요.');
-  const cacheKey=key(activeSkillIds(ids,this.setup.possessionGraph))+'|'+dt;
+  const plan=this.prepare(ids),reference=this.prepare(this.referenceIds),cacheKey=plan.key+'|'+dt;
   let records=this.sampleCache.get(cacheKey);
   if(!records)records=[];
   if(this.sampleCacheLimit){this.sampleCache.delete(cacheKey);this.sampleCache.set(cacheKey,records);}
@@ -69,7 +70,7 @@ export class RaceEvaluator{
    let observation=records[sample];
    if(observation)this.sampleCacheHits++;
    else{
-    const before=this.run(this.referenceIds,sample,dt,true),after=this.run(ids,sample,dt);
+    const before=this.run(this.referenceIds,sample,dt,true,reference),after=this.run(ids,sample,dt,false,plan);
     observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpShortfall:after.hpShortfall,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
     if(this.sampleCacheLimit){records.push(observation);this.cachedSamples++;
      while(this.cachedSamples>this.sampleCacheLimit&&this.sampleCache.size>1){const oldest=this.sampleCache.keys().next().value;this.cachedSamples-=this.sampleCache.get(oldest).length;this.sampleCache.delete(oldest);}
@@ -112,9 +113,10 @@ export class RaceEvaluator{
  }
  marginal(ids,id,count,dt){
   const gains=[],scenarios=new Map(),comparison=withoutSkill(ids,id,[...this.referenceIds,...(this.setup.ownedSkillIds||[])],this.setup.possessionGraph);
+  const plan=this.prepare(ids),withoutPlan=this.prepare(comparison.ids);
   const bands=popularityBands(this.compiled,id,ids),draws=[];
   for(let sample=0;sample<count;sample++){
-   const withSkill=this.run(ids,sample,dt,true),without=this.run(comparison.ids,sample,dt);
+   const withSkill=this.run(ids,sample,dt,true,plan),without=this.run(comparison.ids,sample,dt,false,withoutPlan);
    const gain=lengthsBetween(withSkill,without);gains.push(gain);
    if(bands.length)draws.push({rank:withSkill.activation?.popularity,gain,scenario:withSkill.scenario.id});
    const g=scenarios.get(withSkill.scenario.id)||{id:withSkill.scenario.id,weight:withSkill.scenario.weight,gains:[],helps:0};g.gains.push(gain);g.helps+=Number(gain>.005);scenarios.set(g.id,g);

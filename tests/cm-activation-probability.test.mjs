@@ -197,3 +197,27 @@ test('guts affects maximum sprint speed while late cruising is independent; both
  assert.equal(physics(2010,-2,1000).fullSpurtEligible,false);
  assert.equal(physics(2010,-2,1000,{speed:100}).fullSpurtEligible,true);
 });
+
+test('scheduled rank crossings and spurt gates retain exact frames, overrides and OR alternatives',()=>{
+ const list=[
+  skill('rank-change','target_speed',3000,[[atom('change_order_onetime',0,'!=')]]),
+  skill('overtake','acceleration',2500,[[atom('is_overtake',1,'==')]]),
+  skill('early-or-late','target_speed',1200,[[atom('is_lastspurt',1,'==')],[atom('distance_rate',15)]]),
+  skill('full','target_speed',1400,[[atom('run_at_full_speed_random',1,'==')]]),
+  skill('before-full','heal',100,[[atom('run_at_full_speed_random',0,'==')]]),
+  skill('late','target_speed',1600,[[atom('lastspurt',2,'==')]])
+ ];
+ const rankTimeline=[{distance:0,rank:4},{distance:400,rank:5},{distance:400,rank:3},{distance:400.01,rank:2},{distance:940,rank:6}];
+ for(const fullSpurt of [false,true])for(const fixed of [false,true]){
+  const raceContext={coherentRanks:true,rankTimeline,...(fixed?{conditions:{change_order_onetime:1},encounterWindows:{is_overtake:[{start:80,end:120,value:1}]}}:{})};
+  const s={...setup,spurtPolicy:SPURT_POLICY,stats:{...setup.stats,speed:2200},raceContext,externalDomains:{change_order_onetime:[0,1],is_overtake:[0,1]}};
+  const compiled=list.map(raw=>compileChartSkill(raw,s)),options={dt:.05,keepTrace:false,fullSpurt,branchSampler:branchSampler(s,[],0)};
+  const fast=simulateSolo(s,compiled,.5,options),oracle=simulateSolo(s,compiled,.5,{...options,scheduleConditions:false});
+  assert.deepEqual(fast,oracle);
+  const first=id=>fast.events.find(e=>e.id===id)?.x;
+  assert.ok(fixed?first('rank-change')<1:first('rank-change')>=400);
+  assert.ok(fixed?first('overtake')>=80&&first('overtake')<120:first('overtake')>=400);
+  assert.ok(first('early-or-late')<800);assert.ok(first('before-full')<1);
+  assert.equal(Number.isFinite(first('full')),fullSpurt);
+ }
+});

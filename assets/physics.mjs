@@ -52,6 +52,8 @@ export function buildPhysics(setup,passive={}){
  const legAccel=rawPower>1200?Math.sqrt((rawPower-1200)*130)*.001*LEG_STYLE[course.distance_type-1][style-1]:0;
  const staminaDistance=course.distance<=2100?0:course.distance<=2200?.5:course.distance<=2400?1:course.distance<=2600?1.5:1.8;
  const fullSpurtEligible=stats.speed>2000&&stats.speed*coeff+(passive.speed||0)>2000;
+ const lateHpFactor=1+200/Math.sqrt(600*modified.guts);
+ const goingHpFactor=course.surface===1?(going>=3?1.02:1):going===3?1.01:going===4?1.02:1;
  return {modified,bs,spurt,lateCruise:bs*speedCoefficients[2]+lateAdd,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
   hpMax:course.distance+.8*modified.stamina*(oonige?.86:HP_STYLE[style-1]),
   legAccel,legDuration:3*LEG_TIME[course.distance_type-1],
@@ -62,7 +64,7 @@ export function buildPhysics(setup,passive={}){
   wisdomSpeedMultiplier(phase){return 1+wisdomSkillBase(stats.wisdom*coeff+(passive.wisdom||0))*WISDOM_SKILL[style-1][phase];},
   target(phase){return phase>=2?spurt:bs*speedCoefficients[phase];},
   acceleration(phase,uphill){return (uphill?.0004:.0006)*Math.sqrt(500*modified.power)*accelCoefficients[Math.min(phase,2)]*SURFACE_ACCEL[aptitudes.surface]*DISTANCE_ACCEL[aptitudes.distance];},
-  consumption(speed,phase){return 20*(speed-bs+12)**2/144*(course.surface===1?(going>=3?1.02:1):going===3?1.01:going===4?1.02:1)*(phase>=2?1+200/Math.sqrt(600*modified.guts):1);}
+  consumption(speed,phase){return 20*(speed-bs+12)**2/144*goingHpFactor*(phase>=2?lateHpFactor:1);}
  };
 }
 export function positionAt(run,time){

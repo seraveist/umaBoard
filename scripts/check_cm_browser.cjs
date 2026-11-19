@@ -40,6 +40,15 @@ async function main() {
   const browser = await chromium.launch({channel:'chrome', headless:true});
   const context = await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
   await context.addInitScript(({key,draft}) => {
+    const NativeWorker=window.Worker;
+    window.Worker=class extends NativeWorker{
+      constructor(...args){
+        super(...args);
+        this.addEventListener('message',({data})=>{
+          if(data.type==='result'&&data.timings)window.cmSearchTimings=data.timings;
+        });
+      }
+    };
     if (!localStorage.getItem(key)) localStorage.setItem(key,JSON.stringify(draft));
   }, {key:storageKey,draft});
   const page = await context.newPage();
@@ -79,11 +88,17 @@ async function main() {
       return !document.querySelector('#final-export').disabled;
     },null,{timeout:38*60*1000});
     metrics.recommendSeconds=(Date.now()-start)/1000;
+    metrics.phaseMilliseconds=await page.evaluate(()=>window.cmSearchTimings);
+    assert.ok(metrics.phaseMilliseconds?.diagnostics>=0);
     const download=page.waitForEvent('download');
     await page.locator('#final-export').click();
     const file=await (await download).path(),plan=read(file);
     assert.equal(plan.dataVersion,manifest.active_version);
     assert.ok(plan.acquisitionValidation.feasible && plan.scenarioCoverage.complete);
+    if (!small && manifest.active_version===launch.active_version) {
+      assert.equal(plan.budget.used,6984);assert.equal(plan.hpSuccesses,144);
+      assert.ok(Math.abs(plan.gain-34.8926350616523)<1e-9);
+    }
     assert.ok(plan.ownedIds.includes('201312'));
     assert.ok(plan.budget.used<=7000 && plan.budget.used>0);
     assert.ok(plan.search.approximation.knownMeanLoss<=.1+1e-10);

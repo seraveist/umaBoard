@@ -59,6 +59,11 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  assert.ok(plan.search.previousPlanCompared);
  const required=[...plan.nativeIds,...plan.ownedIds],compiled=new Map([...new Set([...required,...witness.activeIds,...previous.ids])].map(id=>[id,compileChartSkill(data.skills[id],plan.setup)]));
  const evaluator=new RaceEvaluator(plan.setup,compiled,required,plan.nativeIds,branchSampler),alternative=evaluator.evaluate(witness.activeIds,144,.01),reference=evaluator.evaluate(previous.ids,144,.01);
+ // Same search and objective as the v1.6.3 main release, including all nine encounter scenarios.
+ assert.deepEqual(plan.activeIds,previous.ids);assert.equal(plan.budget.used,6948);
+ const launchGains=[33.32078600452083,35.05915019419816,37.79836792066868,35.37822059708595,37.501898084109996,36.41911722310746,33.88992356294575,37.36449872340615,33.47756403887586];
+ assert.deepEqual(plan.scenarios.map(s=>s.id),launchGains.map((_,i)=>'coverage-'+(i+1)));
+ plan.scenarios.forEach((s,i)=>{assert.ok(Math.abs(s.gain-launchGains[i])<1e-9);assert.equal(s.hpSuccessRate,1);});
  assert.ok(Math.abs(reference.gain-35.57883626099098)<1e-9,'fixed-plan replay on the revision 6 and 6.1 matrix');
  const previousPrice=new RecordedPurchaseModel(data,[...chart.rows,...chart.evolutionOptions,...chart.inheritanceOptions],states,actual).selection(previous.ids);
  assert.ok(previousPrice.complete&&previousPrice.used<=actual.spBudget&&constraints.allowed(previous.ids));
