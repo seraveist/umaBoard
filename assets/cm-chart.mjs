@@ -184,6 +184,29 @@ export function branchSampler(setup,nativeIds,sample){
  return sampler;
 }
 
+// One factory belongs to one final-plan evaluator. Each sample has a fixed race
+// context and seed. Possession and live race state are tested later by branchReady.
+export function createFinalBranchSampler(){
+ const samples=new Map();
+ return (setup,nativeIds,sample)=>{
+  if(samples.has(sample))return samples.get(sample);
+  const draw=branchSampler(setup,nativeIds,sample),conditions=new WeakMap(),preconditions=new WeakMap(),units=new Map();
+  const sampler=(branches,id,inv,pre)=>{
+   const cache=pre?preconditions:conditions;
+   if(!cache.has(inv))cache.set(inv,draw(branches,id,inv,pre));
+   return cache.get(inv);
+  };
+  sampler.unit=(id,channel)=>{
+   let draws=units.get(id);if(!draws){draws=new Map();units.set(id,draws);}
+   if(!draws.has(channel))draws.set(channel,draw.unit(id,channel));
+   return draws.get(channel);
+  };
+  sampler.policy=draw.policy;
+  if(samples.size>=256)samples.delete(samples.keys().next().value);
+  samples.set(sample,sampler);return sampler;
+ };
+}
+
 export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=CM_DT}={}){
  if(!Number.isInteger(samples)||samples<1||samples>512||!(dt>0&&dt<=.1))throw new Error('계산 표본 설정이 올바르지 않습니다.');
  const setup=createChartSetup(data,profiles,input),records=buildChartCandidates(data,setup),compiled=new Map([...records].map(([id,s])=>[id,compileChartSkill(s,setup)]));

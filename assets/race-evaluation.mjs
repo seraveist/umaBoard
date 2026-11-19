@@ -35,8 +35,10 @@ function popularitySummary(bands,draws,groups){
 }
 // Scenario weights apply to scenario means, not accidental sample counts.
 export class RaceEvaluator{
- constructor(setup,compiled,referenceIds,nativeIds,samplerFactory,{sampleCacheLimit=65536}={}){
+ constructor(setup,compiled,referenceIds,nativeIds,samplerFactory,{sampleCacheLimit=65536,compactComparisons=false}={}){
   this.setup=setup;this.compiled=compiled;this.referenceIds=referenceIds;this.nativeIds=nativeIds;
+  this.compactComparisons=compactComparisons;
+  this.scenarios=new Map();this.scenarioCount=scenarioCount(setup);
   this.samplerFactory=samplerFactory;this.references=new Map();this.runs=new Map();
   // Keyed sampling has stable prefixes. Retain compact observations rather
   // than replaying those runs when a complete plan advances to more samples.
@@ -49,12 +51,16 @@ export class RaceEvaluator{
   while(pending.length){const id=pending.pop();for(const low of this.setup.possessionGraph?.[id]||[])if(!possession.has(low)){possession.add(low);pending.push(low);}}
   return {key:active.join(','),skills,possessionIds:[...possession]};
  }
- run(ids,sample,dt,reference=false,plan=this.prepare(ids)){
+ run(ids,sample,dt,reference=false,plan=this.prepare(ids),comparisonTime=null){
   const cache=reference?this.references:this.runs,k=`${plan.key}|${sample}|${dt}`;
   if(!cache.has(k)){
-   const scenario=raceScenario(this.setup,sample),setup={...this.setup,raceContext:scenario.context,possessionIds:plan.possessionIds};
-   const run=simulateSolo(setup,plan.skills,.5,{dt,keepTrace:false,fullSpurt:setup.fullSpurtMode!=='off',branchSampler:this.samplerFactory(setup,this.nativeIds,sample)});
-   cache.set(k,{...run,scenario:{id:scenario.id,label:scenario.label,weight:scenario.weight,basis:scenario.basis}});
+   const index=sample%this.scenarioCount;
+   if(!this.scenarios.has(index))this.scenarios.set(index,raceScenario(this.setup,sample));
+   const scenario=this.scenarios.get(index),setup={...this.setup,raceContext:scenario.context,possessionIds:plan.possessionIds};
+   const run=simulateSolo(setup,plan.skills,.5,{dt,keepTrace:false,comparisonTime:this.compactComparisons?comparisonTime:null,fullSpurt:setup.fullSpurtMode!=='off',branchSampler:this.samplerFactory(setup,this.nativeIds,sample)});
+   const measured={...run,scenario:{id:scenario.id,label:scenario.label,weight:scenario.weight,basis:scenario.basis}};
+   if(this.compactComparisons&&comparisonTime!==null)return measured;
+   cache.set(k,measured);
    while(cache.size>(reference?1536:192))cache.delete(cache.keys().next().value);
   }
   return cache.get(k);
@@ -70,7 +76,7 @@ export class RaceEvaluator{
    let observation=records[sample];
    if(observation)this.sampleCacheHits++;
    else{
-    const before=this.run(this.referenceIds,sample,dt,true,reference),after=this.run(ids,sample,dt,false,plan);
+    const before=this.run(this.referenceIds,sample,dt,true,reference),after=this.run(ids,sample,dt,false,plan,before.finishTime);
     observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpShortfall:after.hpShortfall,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
     if(this.sampleCacheLimit){records.push(observation);this.cachedSamples++;
      while(this.cachedSamples>this.sampleCacheLimit&&this.sampleCache.size>1){const oldest=this.sampleCache.keys().next().value;this.cachedSamples-=this.sampleCache.get(oldest).length;this.sampleCache.delete(oldest);}
@@ -116,7 +122,7 @@ export class RaceEvaluator{
   const plan=this.prepare(ids),withoutPlan=this.prepare(comparison.ids);
   const bands=popularityBands(this.compiled,id,ids),draws=[];
   for(let sample=0;sample<count;sample++){
-   const withSkill=this.run(ids,sample,dt,true,plan),without=this.run(comparison.ids,sample,dt,false,withoutPlan);
+   const withSkill=this.run(ids,sample,dt,true,plan),without=this.run(comparison.ids,sample,dt,false,withoutPlan,withSkill.finishTime);
    const gain=lengthsBetween(withSkill,without);gains.push(gain);
    if(bands.length)draws.push({rank:withSkill.activation?.popularity,gain,scenario:withSkill.scenario.id});
    const g=scenarios.get(withSkill.scenario.id)||{id:withSkill.scenario.id,weight:withSkill.scenario.weight,gains:[],helps:0};g.gains.push(gain);g.helps+=Number(gain>.005);scenarios.set(g.id,g);

@@ -7,7 +7,7 @@ import {activationFrame} from './race-frame.mjs';
 
 // Paired single-runner trajectories. CM uses the explicit HP-adaptive policy;
 // callers without it retain the legacy forced-spurt projection.
-export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,branchSampler=null,keepTrace=true,fullSpurt=false,scheduleConditions=true,diagnostics=false}={}){
+export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,branchSampler=null,keepTrace=true,comparisonTime=null,fullSpurt=false,scheduleConditions=true,diagnostics=false}={}){
  const d=setup.course.distance,selected=new Set([...compiledSkills.map(s=>s.id),...(setup.possessionIds||[])]);
  const sampled=!!branchSampler?.unit,draw=(id,channel)=>branchSampler?.unit?.(id,channel)??q;
  const eligible=compiledSkills.filter(s=>!s.probabilistic||draw(s.id,'activation')<(s.activationProbability??1));
@@ -59,10 +59,12 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;
  };
  if(adaptive){state.lastSpurtActive=false;state.maximumSpurt=false;}
- const positions=[0],trace=[],diagnosticFrames=diagnostics?[]:null;
+ const comparisonFrame=comparisonTime===null?-1:Math.floor(comparisonTime/dt);
+ const positions=comparisonTime===null?[0]:[],trace=[],diagnosticFrames=diagnostics?[]:null;
  // Both compared trajectories share the sampled race start delay.
  let delay=startDelay;
  const keyFor=i=>i.linked?`${i.id}:${i.index}`:i.id;
+ const cooling=[];let nextCooldown=Infinity;
  let effectsChanged=false,nextExpiry=Infinity;
  let targetBonus=0,accelerationBonus=0,fullSpurtBonus=0;
  const accelerationById=new Map(),fullSpurtEffects=[];
@@ -70,6 +72,8 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(stack.has(i.id))return;
   stack=new Set([...stack,i.id]);
   i.done=!i.cooldownSeconds;i.nextTime=state.t+(i.cooldownSeconds||0);cooldowns.set(keyFor(i),i.nextTime);
+  // A forced activation can replace a shared cooldown with a shorter one.
+  if(cooling.length)nextCooldown=Math.min(nextCooldown,i.nextTime+1e-8);
   const frame=activationFrame(state,d),resolved=diagnostics?[]:null;
   used.add(i.id);state.usedInvocations.add(`${i.id}:${i.index}`);if(!i.passiveApplied){counts[frame.phase]++;if(frame.laterHalf)state.laterCount++;}
   const duration=effectDuration(i,{setup,state}),random=choice(i);
@@ -151,7 +155,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   let lo=0,hi=sleepers.length;while(lo<hi){const mid=(lo+hi)>>>1;if(sleepers[mid].x<=x)lo=mid+1;else hi=mid;}
   sleepers.splice(lo,0,{inv,x});
  };
- pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv));else awake.push(inv);}});
+ pending.forEach((inv,index)=>{inv.order=index;inv.cooldownKey=keyFor(inv);if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv));else awake.push(inv);}});
  // Snapshot once per frame so skill ID order cannot satisfy a trigger in the same tick.
  const slopeBoundaries=[...new Set(setup.course.slopes.flatMap(s=>[s.start,s.start+s.length]))].sort((a,b)=>a-b);
  const courseScale=Math.pow(d/1000,1.5);
@@ -175,12 +179,26 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    effectsChanged=true;
   }
   let added=false;
+  if(t>nextCooldown){
+   nextCooldown=Infinity;
+   for(let k=cooling.length-1;k>=0;k--){
+    const inv=cooling[k],until=cooldowns.get(inv.cooldownKey)+1e-8;
+    if(t>until){cooling.splice(k,1);awake.push(inv);added=true;}
+    else nextCooldown=Math.min(nextCooldown,until);
+   }
+  }
   while(sleepers.length&&sleepers[0].x<=state.x+1e-6){awake.push(sleepers.shift().inv);added=true;}
   if(added)awake.sort((a,b)=>a.order-b.order);
   for(let index=0;index<awake.length;){
    const i=awake[index];
    if(i.done){awake.splice(index,1);continue;}
-   if(cooldowns.has(keyFor(i))&&(!i.cooldownSeconds||t<=cooldowns.get(keyFor(i))+1e-8)){index++;continue;}
+   const until=cooldowns.get(i.cooldownKey);
+   if(until!==undefined&&(!i.cooldownSeconds||t<=until+1e-8)){
+    if(!scheduleConditions){index++;continue;}
+    awake.splice(index,1);
+    if(i.cooldownSeconds){cooling.push(i);nextCooldown=Math.min(nextCooldown,until+1e-8);}
+    continue;
+   }
    if(!i.preMet)i.preMet=i.precondition.some(b=>branchReady(b,state,i.id));
    const wake=scheduleConditions?nextWindow(i):0;
    if(scheduleConditions&&(!Number.isFinite(wake)||wake>state.x+1e-6)){awake.splice(index,1);schedule(i,wake);continue;}
@@ -254,9 +272,12 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    peakHpDebt=Math.max(peakHpDebt,-state.hp);
    if(depletion===null)depletion=state.x+step*fraction;
   }
-  state.prevX=state.x;state.x=Math.min(d,state.x+step);positions.push(state.x);velocity=next;fullSpurtSpeed=nextFull;
+  state.prevX=state.x;state.x=Math.min(d,state.x+step);
+  if(comparisonTime===null)positions.push(state.x);
+  else if(frame===comparisonFrame||(state.x>=d&&frame<comparisonFrame))positions.push(state.prevX,state.x);
+  velocity=next;fullSpurtSpeed=nextFull;
   if(state.x>=d){
-   return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
+   return {status:'ok',distance:d,dt,positions,...(comparisonTime===null?{}:{comparisonTime,firstFrame:Math.min(frame,comparisonFrame)}),finishTime:t+dt*fraction,entry,reach,
     hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,entryHpShortfall,peakHpDebt,hpShortfall:Math.max(entryHpShortfall,peakHpDebt),fullSpeedFeasible:depletion===null&&(!adaptive||maxSpurtAtEntry===true),spurtPlan,maxSpurtAtEntry,spurtPolicy:adaptive?SPURT_POLICY:'forced-projection',
     events,passive,trace,accelerationUseSeconds,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},triggerCounts:{inPhase:[...counts],laterHalf:state.laterCount},
     ...(diagnostics?{diagnostics:{frames:diagnosticFrames,interpretation:'observed-computation-state-not-an-independent-reference'}}:{}),

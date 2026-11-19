@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan} from '../assets/cm-final-plan.mjs';
+import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan,FinalRaceSession} from '../assets/cm-final-plan.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
 
 const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,turn:1,track_id:'10008',course_set_status:[],corners:[],straights:[{start:0,end:2200}],slopes:[]};
@@ -264,5 +264,21 @@ test('an earlier plan is rescored with current hints, ownership and budget; stal
  const paid=await check({other:'owned'},0);assert.equal(paid.search.previousPlanCompared,true);assert.equal(paid.budget.used,0);
  for(const [states,budget,ids] of [[{},200,previousPlanIds],[{other:'0'},60,previousPlanIds],[{other:'5'},100,['removed-skill']]]){
   const plan=await check(states,budget,ids);assert.equal(plan.search.previousPlanCompared,false);assert.ok(plan.budget.used<=budget);
+ }
+});
+
+test('an edited budget and hint reuse measurements while repricing and searching the current record',async()=>{
+ const {data,chart}=fixture(),session=new FinalRaceSession();
+ const before=await recommendFinalPlan(data,chart,{white:'0',other:'0'},input,{...quick,session});
+ const record={white:'5',other:'2',unavailable:'0'},edited={...input,spBudget:170,previousPlanIds:before.activeIds};
+ const warm=await recommendFinalPlan(data,chart,record,edited,{...quick,session});
+ const cold=await recommendFinalPlan(data,chart,record,edited,quick);
+ assert.ok(session.metrics.scoreHits>0);
+ delete warm.search.sampleReuse;delete cold.search.sampleReuse;assert.deepEqual(warm,cold);
+ assert.ok(warm.budget.used<=170);assert.ok(warm.activeIds.includes('unavailable'));
+ for(const [states,settings] of [[{...record,white:'owned'},edited],[{...record,white:'owned'},{...edited,stats:{...stats,speed:1700}}]]){
+  const run=await recommendFinalPlan(data,chart,states,settings,{...quick,session});
+  assert.equal(session.metrics.scoreHits,0);assert.equal(session.metrics.diagnosticHits,0);
+  const fresh=await recommendFinalPlan(data,chart,states,settings,quick);assert.deepEqual(run,fresh);
  }
 });

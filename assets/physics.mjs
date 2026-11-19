@@ -70,8 +70,10 @@ export function buildPhysics(setup,passive={}){
 export function positionAt(run,time){
  if(time<=0)return 0;
  if(time>=run.finishTime)return run.distance;
- const index=Math.min(Math.floor(time/run.dt),run.positions.length-2),span=Math.min(run.dt,run.finishTime-index*run.dt),fraction=(time-index*run.dt)/span;
- return run.positions[index]+(run.positions[index+1]-run.positions[index])*fraction;
+ if(run.comparisonTime!=null&&time!==run.comparisonTime)throw new Error('비교 주행에 저장되지 않은 시점입니다.');
+ const offset=run.firstFrame??0,index=Math.min(Math.floor(time/run.dt),offset+run.positions.length-2),span=Math.min(run.dt,run.finishTime-index*run.dt),fraction=(time-index*run.dt)/span;
+ const local=index-offset;
+ return run.positions[local]+(run.positions[local+1]-run.positions[local])*fraction;
 }
 export function lengthsBetween(better,reference){
  // Compare positions at the first finisher's time; neither trajectory is extrapolated beyond the line.

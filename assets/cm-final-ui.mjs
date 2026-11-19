@@ -33,8 +33,8 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
  };
  const setValues=value=>{$('#maintain-strategy').checked=value?.maintainStrategicSkills!==false;$('#maintain-target').checked=value?.maintainTargetAcceleration!==false;for(const key of STAT_KEYS)$('#actual-'+key).value=value?.stats?.[key]??'';$('#actual-sp').value=value?.spBudget??'';$('#discount-trait').value=resolveDiscountTrait({discountTrait:Object.hasOwn(DISCOUNT_TRAITS,value?.discountTrait)?value.discountTrait:undefined,fastLearner:value?.fastLearner===true});for(const key of ['distance','surface','style'])$('#actual-'+key+'-aptitude').value=value?.aptitudes?.[key]??'A';for(const [id,key]of [['actual-post','postNumber'],['actual-popularity','popularity']])$('#'+id).value=(value?.raceContext??chart.setup.raceContext)?.[key]??'';setEvolutionOptions(value?.excludedEvolutionIds);aptitudeSummary();inputSummary();};
  const message=(text='')=>{$('#final-status').textContent=text;};
- const stop=()=>{requestId++;worker?.terminate();worker=null;busy=false;$('#final-submit').disabled=!chart;$('#final-submit').textContent='최종 스킬 추천';$('#final-cancel').hidden=true;$('#final-progress').hidden=true;form.setAttribute('aria-busy','false');};
- const stale=()=>{stop();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
+ const stop=(discardWorker=busy)=>{requestId++;if(discardWorker){worker?.terminate();worker=null;}busy=false;$('#final-submit').disabled=!chart;$('#final-submit').textContent='최종 스킬 추천';$('#final-cancel').hidden=true;$('#final-progress').hidden=true;form.setAttribute('aria-busy','false');};
+ const stale=(discardWorker=busy)=>{stop(discardWorker);$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
  const error=(text,input)=>{inputs.open=true;$('#final-error').textContent=text;if(input){input.setAttribute('aria-invalid','true');input.focus();}};
  const clearError=()=>{$('#final-error').textContent='';for(const input of form.querySelectorAll('[aria-invalid]'))input.removeAttribute('aria-invalid');};
  const save=()=>{inputSummary();if(scope&&!write(scope,{values:values(),previousPlanIds}))message('저장 실패 · 결과를 내려받아 주세요.');};
@@ -100,15 +100,21 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
   stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message();save();
   const job=requestId;
-  try{worker=new Worker(new URL('./cm-final-worker.mjs',import.meta.url),{type:'module'});}catch{stop();error('추천 계산을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.');return;}
+  try{
+   if(!worker){
+    worker=new Worker(new URL('./cm-final-worker.mjs',import.meta.url),{type:'module'});
+    worker.postMessage({type:'load',payload:{data,chart}});
+   }
+  }catch{stop(true);error('추천 계산을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.');return;}
   worker.onmessage=({data:reply})=>{
    if(reply.requestId!==requestId)return;
    if(reply.type==='progress'){$('#final-progress-label').textContent=reply.progress.stage==='candidates'?'실제 스탯으로 후보 비교 중':reply.progress.stage==='search'?'보유 SP에 맞는 조합 탐색 중':'추천 조합 정밀 비교 중';$('#final-progress-bar').max=Math.max(1,reply.progress.total);$('#final-progress-bar').value=reply.progress.completed;}
-   if(reply.type==='result'){result=reply.result;previousPlanIds=result.activeIds;stop();render(result);message();save();}
+   if(reply.type==='result'){result=reply.result;previousPlanIds=result.activeIds;stop(false);render(result);message();save();}
    if(reply.type==='error'){stop();error(reply.message);message();if(reply.code==='ACQUISITION_CONFLICT')onRecordError(reply.details?.conflict?.skillIds||[],reply.message);}
   };
-  worker.onerror=event=>{event.preventDefault();if(job!==requestId)return;stop();error('추천 계산을 시작하지 못했습니다. 다시 시도해 주세요.');};
-  worker.postMessage({type:'load',payload:data});worker.postMessage({type:'recommend',requestId:job,payload:{chart,states,input}});
+  const activeWorker=worker;
+  worker.onerror=event=>{event.preventDefault();if(worker!==activeWorker)return;const running=busy;stop(true);if(running)error('추천 계산을 시작하지 못했습니다. 다시 시도해 주세요.');};
+  worker.postMessage({type:'recommend',requestId:job,payload:{states,input}});
  });
  $('#final-cancel').addEventListener('click',()=>{stop();message('추천 중지');$('#final-submit').focus();});
  $('#final-export').addEventListener('click',()=>{
@@ -116,8 +122,8 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const blob=new Blob([JSON.stringify({schemaVersion:1,dataVersion:manifest.active_version,createdAt:new Date().toISOString(),...result,algorithm:CM_ALGORITHM},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`umaBoard-최종스킬-${result.setup.course.distance}m.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
  return {
-  setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;const saved=read(scope);previousPlanIds=Array.isArray(saved?.previousPlanIds)?saved.previousPlanIds:[];setValues(saved?.values);$('#final-submit').disabled=false;message();},
+  setChart(value,acquisition,key){stop(true);clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;const saved=read(scope);previousPlanIds=Array.isArray(saved?.previousPlanIds)?saved.previousPlanIds:[];setValues(saved?.values);$('#final-submit').disabled=false;message();},
   setStates(value){if(!chart)return;states={...value};clearError();stale();},
-  invalidate(){stale();chart=null;fields.disabled=true;$('#final-submit').disabled=true;}
+  invalidate(){stale(true);chart=null;fields.disabled=true;$('#final-submit').disabled=true;}
  };
 }

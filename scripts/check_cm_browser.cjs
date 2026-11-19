@@ -41,12 +41,35 @@ async function main() {
   const context = await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
   await context.addInitScript(({key,draft}) => {
     const NativeWorker=window.Worker;
+    let loadPacket,recommendPacket,finalUrl;
+    window.compareFreshRecommendation=()=>new Promise((resolve,reject)=>{
+      const start=performance.now(),fresh=new NativeWorker(finalUrl,{type:'module'});
+      const finish=()=>{clearTimeout(timeout);fresh.terminate();};
+      const timeout=setTimeout(()=>{finish();reject(Error('Fresh recommendation timed out'));},38*60*1000);
+      fresh.onerror=e=>{finish();reject(Error(e.message));};
+      fresh.onmessage=({data})=>{
+        if(data.type==='error'){finish();reject(Error(data.message));}
+        if(data.type==='result'){const seconds=(performance.now()-start)/1000;finish();resolve({result:data.result,seconds,timings:data.timings,cache:data.cache});}
+      };
+      fresh.postMessage(loadPacket);fresh.postMessage(recommendPacket);
+    });
     window.Worker=class extends NativeWorker{
       constructor(...args){
         super(...args);
+        this.finalPlanner=String(args[0]).includes('cm-final-worker.mjs');
+        if(this.finalPlanner)finalUrl=args[0];
         this.addEventListener('message',({data})=>{
-          if(data.type==='result'&&data.timings)window.cmSearchTimings=data.timings;
+          if(this.finalPlanner&&data.type==='result'){
+            window.cmSearchTimings=data.timings;window.cmCompleted={plan:data.result,cache:data.cache};
+          }
         });
+      }
+      postMessage(message,...options){
+        if(this.finalPlanner){
+          if(message.type==='load')loadPacket=message;
+          if(message.type==='recommend')recommendPacket=message;
+        }
+        return super.postMessage(message,...options);
       }
     };
     if (!localStorage.getItem(key)) localStorage.setItem(key,JSON.stringify(draft));
@@ -106,6 +129,30 @@ async function main() {
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     assert.deepEqual(errors,[]);
     await page.screenshot({path:path.join(out,'recommendation.png')});
+    await page.locator('#post-view-record').click();
+    await page.locator('select[data-skill-id="201311"]').selectOption('2');
+    if(!await page.locator('#final-inputs').evaluate(node=>node.open))await page.locator('#final-inputs>summary').click();
+    await page.locator('#actual-sp').fill('6900');
+    assert.equal(await page.locator('#final-export').isDisabled(),true);
+    start=Date.now();
+    await page.locator('#final-submit').click();
+    await page.waitForFunction(()=>{
+      const message=document.querySelector('#final-error').textContent.trim();if(message)throw Error(message);
+      return !document.querySelector('#final-export').disabled;
+    },null,{timeout:38*60*1000});
+    const warmSeconds=(Date.now()-start)/1000;
+    const warm=await page.evaluate(()=>window.cmCompleted);
+    const cold=await page.evaluate(()=>window.compareFreshRecommendation());
+    assert.ok(warm.cache.scoreHits>0);assert.equal(cold.cache.scoreHits,0);
+    assert.equal(warm.plan.budget.total,6900);assert.equal(warm.plan.acquisition['201311'],'2');
+    // Execution counters describe actual replay. All recommendation fields and
+    // logical search budgets must be identical for this edited request.
+    delete warm.plan.search.sampleReuse;delete cold.result.search.sampleReuse;
+    assert.deepEqual(warm.plan,cold.result);
+    metrics.edited={sp:6900,hint:2,warmSeconds,coldSeconds:cold.seconds,cache:warm.cache,
+      warmPhaseMilliseconds:await page.evaluate(()=>window.cmSearchTimings),coldPhaseMilliseconds:cold.timings,
+      usedSP:warm.plan.budget.used,gain:warm.plan.gain,hpSuccesses:warm.plan.hpSuccesses,equivalent:true};
+    assert.deepEqual(errors,[]);
     Object.assign(metrics,{model:plan.modelVersion,samples:plan.sampling.count,usedSP:plan.budget.used,gain:plan.gain,hpSuccesses:plan.hpSuccesses,observedCompressionLoss:plan.search.approximation.knownMeanLoss,status:'passed'});
   } catch (error) {
     await page.screenshot({path:path.join(out,'failure.png')}).catch(()=>{});
