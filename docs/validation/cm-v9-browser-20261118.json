@@ -1,0 +1,177 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "uiObservedAssetsVersion": "364821de2094db01",
+  "scope": "real Worker UI course/form/navigation/export verification; final two added predicate fixes verified by unit tests and current-engine replay",
+  "input": {
+    "outfitId": "101301",
+    "bloom": 5,
+    "uniqueLevel": 6,
+    "style": 2,
+    "scenarioId": "15",
+    "supportIds": [
+      "30275",
+      "30311",
+      "30300",
+      "30322",
+      "30289",
+      "30323"
+    ],
+    "going": 1,
+    "weather": 1,
+    "season": 1,
+    "time": 2,
+    "courseId": "11709"
+  },
+  "actual": {
+    "stats": {
+      "speed": 2100,
+      "stamina": 2000,
+      "power": 1700,
+      "guts": 1400,
+      "wisdom": 1500
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "raceContext": {
+      "postNumber": null,
+      "popularity": null
+    },
+    "riskPolicy": {
+      "tailMass": 0.25,
+      "maxTailDelay": 0
+    },
+    "spBudget": 300,
+    "discountTrait": "none"
+  },
+  "states": {
+    "200362": "5",
+    "200512": "5",
+    "201312": "5"
+  },
+  "expected": {
+    "modelVersion": "cm-post-training-v9",
+    "activeIds": [
+      "100131",
+      "200362",
+      "200512",
+      "201312"
+    ],
+    "budget": {
+      "total": 300,
+      "used": 282,
+      "remaining": 18
+    },
+    "gain": 1.068859399479258,
+    "hpSuccessRate": 1,
+    "sampling": {
+      "count": 144,
+      "dt": 0.01,
+      "min": 0.2857294527922022,
+      "max": 2.1163041512977543,
+      "standardDeviation": 0.29186330939038396,
+      "halfDifference": 0.01927737167169563,
+      "interpretation": "scenario-sample-spread-not-a-confidence-bound"
+    }
+  },
+  "chart": {
+    "modelVersion": "cm-first-chart-v9",
+    "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+    "visibleRows": 255,
+    "runUpMetres": 0
+  },
+  "observedChecks": {
+    "invalidSP": {
+      "value": -1,
+      "message": "보유 SP를 0~100000 사이의 정수로 입력하세요.",
+      "recordsPreserved": 3
+    },
+    "narrow": {
+      "width": 390,
+      "documentScrollWidth": 380
+    },
+    "default": {
+      "width": 1280,
+      "documentScrollWidth": 1270
+    },
+    "consoleErrorsAndWarnings": [],
+    "changedSPRequiresRecompute": true,
+    "recomputeAtOriginalSP": true,
+    "temporaryViewportRestored": true
+  },
+  "currentEngineReplay": {
+    "assetsSha256": "6522c0e8ad66e6f9305f8c0adae62a45580a7fd42a22c2b752927e3846119703",
+    "gain": 1.068859399479258,
+    "activationRates": {
+      "100131": 0.4444444444444444,
+      "200362": 0.9375,
+      "200512": 0.9375,
+      "201312": 0.9513888888888888
+    },
+    "usefulAccelerationRates": {
+      "100131": 0,
+      "200362": 0,
+      "200512": 0,
+      "201312": 0
+    },
+    "performance": {
+      "meanFinishTime": 95.2429749075976,
+      "tailFinishTime": 95.34952384862811,
+      "referenceTailFinishTime": 95.44135214753062,
+      "tailImprovement": 0.09182829890251298,
+      "risk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.09182829890251298,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      }
+    },
+    "hpSuccessRate": 1,
+    "scenarioSensitivity": {
+      "minimum": 1.0121935619483906,
+      "maximum": 1.112452587487212,
+      "spread": 0.10025902553882138,
+      "interpretation": "case-mean-range-not-a-probability-or-confidence-interval"
+    },
+    "activeIds": [
+      "100131",
+      "200362",
+      "200512",
+      "201312"
+    ],
+    "budget": {
+      "total": 300,
+      "used": 282,
+      "remaining": 18
+    },
+    "search": {
+      "method": "exhaustive",
+      "evaluations": 16,
+      "hpPrunedPlans": 0,
+      "shortlisted": 3,
+      "scenarioPacks": 1,
+      "closureComplete": true,
+      "closureChecks": 0,
+      "closurePasses": 1,
+      "batchChecks": 0,
+      "screenedFinalists": 0,
+      "screeningSamples": 144,
+      "stabilizationPasses": 0,
+      "stabilizationChecks": 0,
+      "stabilizationBatchChecks": 0,
+      "stabilizationComplete": true,
+      "globalOptimal": true,
+      "optimalityScope": "affordable-recorded-candidates-at-declared-sampling-resolution",
+      "searchSamples": 9,
+      "searchDt": 0.05,
+      "samples": 144,
+      "dt": 0.01
+    }
+  }
+}

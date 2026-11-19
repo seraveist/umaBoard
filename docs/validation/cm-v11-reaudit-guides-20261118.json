@@ -1,0 +1,2506 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "frozenCommit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "interpretation": "frozen implementation audit; finite-pool selection oracle shares physics/objective; assumed encounters are not calibrated probabilities",
+  "scope": "isolated real accelerations on four race courses; native-only reference, default and alternate no-extra-spurt model; seed/step controls; no empirical probability claims",
+  "records": [
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.9921565869538868,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 74.99844701537192,
+        "tailFinishTime": 75.15234586053764,
+        "referenceTailFinishTime": 75.19153423891021,
+        "tailImprovement": 0.03918837837257172,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03918837837257172,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "202671",
+          "index": 1,
+          "x": 1150.3412291077475,
+          "frameStartX": 1150.1120161210943,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.31,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.09451408319646,
+        "tailFinishTime": 75.19153423891021,
+        "referenceTailFinishTime": 75.19153423891021,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 1.020749571164433,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 74.99567820661129,
+        "tailFinishTime": 75.15140627190749,
+        "referenceTailFinishTime": 75.19153423891021,
+        "tailImprovement": 0.040127967002717924,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.040127967002717924,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1147.8227890777227,
+          "frameStartX": 1147.5941566557017,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.2,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 1.0581658979992585,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 74.99268039212197,
+        "tailFinishTime": 75.14877811691548,
+        "referenceTailFinishTime": 75.1914340565648,
+        "tailImprovement": 0.042655939649321795,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.042655939649321795,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0.6111111111111112
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0.6111111111111112
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "202671",
+          "index": 1,
+          "x": 1116.1552049674574,
+          "frameStartX": 1115.9355001235913,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 55.82,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.09513908319644,
+        "tailFinishTime": 75.1914340565648,
+        "referenceTailFinishTime": 75.1914340565648,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.9607869960733226,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.00210939338751,
+        "tailFinishTime": 75.15368262028996,
+        "referenceTailFinishTime": 75.1914340565648,
+        "tailImprovement": 0.03775143627484567,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03775143627484567,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5416666666666666
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5416666666666666
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1093.920218695189,
+          "frameStartX": 1093.7082513541845,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 54.79,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0.9916312892668935,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 74.99373584090587,
+        "tailFinishTime": 75.14804613614868,
+        "referenceTailFinishTime": 75.187342291304,
+        "tailImprovement": 0.03929615515532703,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03929615515532703,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "202671",
+          "index": 1,
+          "x": 1150.2651806558831,
+          "frameStartX": 1150.150567565231,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.300000000000004,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.879999999999961
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.0897516805963,
+        "tailFinishTime": 75.187342291304,
+        "referenceTailFinishTime": 75.187342291304,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 1.0201746094600859,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 74.99097183146974,
+        "tailFinishTime": 75.1471261940713,
+        "referenceTailFinishTime": 75.187342291304,
+        "tailImprovement": 0.04021609723270103,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.04021609723270103,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1147.7467406258584,
+          "frameStartX": 1147.6324178175225,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.19,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.879999999999961
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8838838201592031,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.05838570776667,
+        "tailFinishTime": 75.20549249345362,
+        "referenceTailFinishTime": 75.24174451200153,
+        "tailImprovement": 0.03625201854791271,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03625201854791271,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "202671",
+          "index": 1,
+          "x": 1150.3412291077475,
+          "frameStartX": 1150.1120161210943,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.31,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.14462189219658,
+        "tailFinishTime": 75.24174451200153,
+        "referenceTailFinishTime": 75.24174451200153,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10903",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.91220234863781,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 75.0556228086288,
+        "tailFinishTime": 75.20281479637441,
+        "referenceTailFinishTime": 75.24174451200153,
+        "tailImprovement": 0.038929715627119776,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.038929715627119776,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1147.8227890777227,
+          "frameStartX": 1147.5941566557017,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 57.2,
+          "duration": 2.88
+        },
+        "usefulSeconds": 2.8799999999999826
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.9202598737386233,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.46138556892083,
+        "tailFinishTime": 105.63222467245073,
+        "referenceTailFinishTime": 105.68821859864485,
+        "tailImprovement": 0.05599392619411958,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.05599392619411958,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0.7569444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0.7569444444444444
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202711",
+          "index": 1,
+          "x": 1571.5266187202003,
+          "frameStartX": 1571.2979549228257,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.55,
+          "duration": 1.98
+        },
+        "usefulSeconds": 1.9800000000000015
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201341",
+      "name": "決意の直滑降",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0.5039617032271964,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.50253504058003,
+        "tailFinishTime": 105.67772385046787,
+        "referenceTailFinishTime": 105.68821859864485,
+        "tailImprovement": 0.010494748176981261,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.010494748176981261,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201341": 0.9513888888888888
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201341": 0.4375
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "201341",
+          "index": 1,
+          "x": 1594.6595304024797,
+          "frameStartX": 1594.4255887448116,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 81.49,
+          "duration": 6.6
+        },
+        "usefulSeconds": 2.099999999999999
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8820627981531655,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.46515081053818,
+        "tailFinishTime": 105.64854230973825,
+        "referenceTailFinishTime": 105.68821859864485,
+        "tailImprovement": 0.03967628890660535,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03967628890660535,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1578.1808275363378,
+          "frameStartX": 1577.9506331594782,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.76,
+          "duration": 3.96
+        },
+        "usefulSeconds": 2.2699999999999956
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8941365833814476,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.46458673562815,
+        "tailFinishTime": 105.63268678855019,
+        "referenceTailFinishTime": 105.68849637642262,
+        "tailImprovement": 0.05580958787243162,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.05580958787243162,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0.7361111111111112
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0.7361111111111112
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202711",
+          "index": 1,
+          "x": 1571.5266187202003,
+          "frameStartX": 1571.2979549228257,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.53,
+          "duration": 1.98
+        },
+        "usefulSeconds": 1.9800000000000015
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201341",
+      "name": "決意の直滑降",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0.48910605718714856,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.50469093702061,
+        "tailFinishTime": 105.66850980591168,
+        "referenceTailFinishTime": 105.68849637642262,
+        "tailImprovement": 0.01998657051093744,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.01998657051093744,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201341": 0.9513888888888888
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201341": 0.4861111111111111
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "201341",
+          "index": 1,
+          "x": 1972.671581502692,
+          "frameStartX": 1972.4188768144525,
+          "activationPhase": 3,
+          "physicsPhase": 3,
+          "t": 96.63,
+          "duration": 6.6
+        },
+        "usefulSeconds": 1.0300000000000007
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8318284540712271,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.4707299307493,
+        "tailFinishTime": 105.64937833915393,
+        "referenceTailFinishTime": 105.68849637642262,
+        "tailImprovement": 0.03911803726869323,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03911803726869323,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5416666666666666
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5416666666666666
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1504.0968459695775,
+          "frameStartX": 1503.886330707452,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 77.44,
+          "duration": 3.96
+        },
+        "usefulSeconds": 3.9599999999999596
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0.9208853246392464,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.45828465723736,
+        "tailFinishTime": 105.62922914262359,
+        "referenceTailFinishTime": 105.68567303709824,
+        "tailImprovement": 0.056443894474654144,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.056443894474654144,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0.7569444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0.7569444444444444
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202711",
+          "index": 1,
+          "x": 1571.4362146168626,
+          "frameStartX": 1571.3218955994087,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.54,
+          "duration": 1.98
+        },
+        "usefulSeconds": 1.9799999999999798
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201341",
+      "name": "決意の直滑降",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "supported",
+      "gain": 0.5051096096551267,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.49938297703297,
+        "tailFinishTime": 105.67457488040276,
+        "referenceTailFinishTime": 105.68567303709824,
+        "tailImprovement": 0.011098156695481975,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.011098156695481975,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201341": 0.9513888888888888
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201341": 0.4375
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "201341",
+          "index": 1,
+          "x": 1594.4482726397898,
+          "frameStartX": 1594.3313278868397,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 81.48,
+          "duration": 6.6
+        },
+        "usefulSeconds": 2.1099999999999772
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0.8837895381845999,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.46194131248997,
+        "tailFinishTime": 105.64553037879278,
+        "referenceTailFinishTime": 105.68567303709824,
+        "tailImprovement": 0.040142658305455825,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.040142658305455825,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1578.204391178439,
+          "frameStartX": 1578.0892936765918,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.755,
+          "duration": 3.96
+        },
+        "usefulSeconds": 2.2799999999999736
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8123522797501068,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.56490297614813,
+        "tailFinishTime": 105.7282995534649,
+        "referenceTailFinishTime": 105.78209203679086,
+        "tailImprovement": 0.05379248332596376,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.05379248332596376,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0.7569444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0.7569444444444444
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202711",
+          "index": 1,
+          "x": 1571.5266187202003,
+          "frameStartX": 1571.2979549228257,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.55,
+          "duration": 1.98
+        },
+        "usefulSeconds": 1.9800000000000015
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201341",
+      "name": "決意の直滑降",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0.4550144577037359,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.60053078813168,
+        "tailFinishTime": 105.77203647712298,
+        "referenceTailFinishTime": 105.78209203679086,
+        "tailImprovement": 0.010055559667875968,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.010055559667875968,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201341": 0.9513888888888888
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201341": 0.4375
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "201341",
+          "index": 1,
+          "x": 1594.6595304024797,
+          "frameStartX": 1594.4255887448116,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 81.49,
+          "duration": 6.6
+        },
+        "usefulSeconds": 2.099999999999999
+      }
+    },
+    {
+      "courseId": "10906",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.7776086562641201,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 105.56835829662248,
+        "tailFinishTime": 105.74374931914548,
+        "referenceTailFinishTime": 105.78209203679086,
+        "tailImprovement": 0.03834271764537789,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.03834271764537789,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5625
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5625
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1578.1808275363378,
+          "frameStartX": 1577.9506331594782,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 80.76,
+          "duration": 3.96
+        },
+        "usefulSeconds": 2.2699999999999956
+      }
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202481",
+      "name": "怪物",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 1.9209796003696538,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.08912051086378,
+        "tailFinishTime": 121.25829051217804,
+        "referenceTailFinishTime": 121.4336360354136,
+        "tailImprovement": 0.1753455232355634,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.1753455232355634,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202481": 0.5277777777777778
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202481": 0.5277777777777778
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202481",
+          "index": 1,
+          "x": 1667.047459344993,
+          "frameStartX": 1666.8541753878756,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 87.29,
+          "duration": 3
+        },
+        "usefulSeconds": 2.99999999999998
+      }
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.27887175908397,
+        "tailFinishTime": 121.4336360354136,
+        "referenceTailFinishTime": 121.4336360354136,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.27887175908397,
+        "tailFinishTime": 121.4336360354136,
+        "referenceTailFinishTime": 121.4336360354136,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202481",
+      "name": "怪物",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 1.895678557454087,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.09221019659779,
+        "tailFinishTime": 121.2654640930022,
+        "referenceTailFinishTime": 121.43393207451724,
+        "tailImprovement": 0.16846798151505027,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.16846798151505027,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202481": 0.5208333333333334
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202481": 0.5208333333333334
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202481",
+          "index": 1,
+          "x": 1667.047459344993,
+          "frameStartX": 1666.8541753878756,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 87.27,
+          "duration": 3
+        },
+        "usefulSeconds": 2.99999999999998
+      }
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.2794622923844,
+        "tailFinishTime": 121.43393207451724,
+        "referenceTailFinishTime": 121.43393207451724,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.2794622923844,
+        "tailFinishTime": 121.43393207451724,
+        "referenceTailFinishTime": 121.43393207451724,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202481",
+      "name": "怪物",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 1.9228872585933523,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.08410862977433,
+        "tailFinishTime": 121.25425065472928,
+        "referenceTailFinishTime": 121.42860952212277,
+        "tailImprovement": 0.1743588673934937,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.1743588673934937,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202481": 0.5277777777777778
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202481": 0.5277777777777778
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202481",
+          "index": 1,
+          "x": 1666.7842345334536,
+          "frameStartX": 1666.6876022941742,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 87.27,
+          "duration": 3
+        },
+        "usefulSeconds": 2.9999999999999583
+      }
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.27404797532806,
+        "tailFinishTime": 121.42860952212277,
+        "referenceTailFinishTime": 121.42860952212277,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.27404797532806,
+        "tailFinishTime": 121.42860952212277,
+        "referenceTailFinishTime": 121.42860952212277,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202481",
+      "name": "怪物",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 1.8094451382307208,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.21038404245967,
+        "tailFinishTime": 121.36988315396972,
+        "referenceTailFinishTime": 121.54573973055011,
+        "tailImprovement": 0.17585657658038656,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.17585657658038656,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202481": 0.5277777777777778
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202481": 0.5277777777777778
+      },
+      "firstActivation": {
+        "sample": 1,
+        "event": {
+          "id": "202481",
+          "index": 1,
+          "x": 1667.047459344993,
+          "frameStartX": 1666.8541753878756,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 87.29,
+          "duration": 3
+        },
+        "usefulSeconds": 2.99999999999998
+      }
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.39063429913355,
+        "tailFinishTime": 121.54573973055011,
+        "referenceTailFinishTime": 121.54573973055011,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "10506",
+      "style": 2,
+      "id": "202671",
+      "name": "ハイボルテージ",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "inactive",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 121.39063429913355,
+        "tailFinishTime": 121.54573973055011,
+        "referenceTailFinishTime": 121.54573973055011,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202671": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202671": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "202871",
+      "name": "君臨",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.2361772775673892,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.11830994853496,
+        "tailFinishTime": 95.24784427593288,
+        "referenceTailFinishTime": 95.25990437552124,
+        "tailImprovement": 0.012060099588367734,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.012060099588367734,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202871": 0.8472222222222222
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202871": 0.7430555555555556
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "202871",
+          "index": 1,
+          "x": 1510.061464485795,
+          "frameStartX": 1509.815102756647,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 76.2,
+          "duration": 1.8
+        },
+        "usefulSeconds": 1.2000000000000008
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "200641",
+      "name": "迫る影",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.14101538508028,
+        "tailFinishTime": 95.25990437552124,
+        "referenceTailFinishTime": 95.25990437552124,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200641": 0.9444444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200641": 0
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "200641",
+          "index": 1,
+          "x": 1720.1389980407546,
+          "frameStartX": 1719.8809029940292,
+          "activationPhase": 3,
+          "physicsPhase": 3,
+          "t": 84.4,
+          "duration": 1.8
+        },
+        "usefulSeconds": 0
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "202871",
+      "name": "君臨",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.23617727756738927,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.11893494853494,
+        "tailFinishTime": 95.24931185140612,
+        "referenceTailFinishTime": 95.26018215329904,
+        "tailImprovement": 0.01087030189292193,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.01087030189292193,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202871": 0.8541666666666666
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202871": 0.7430555555555556
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "202871",
+          "index": 1,
+          "x": 1510.061464485795,
+          "frameStartX": 1509.815102756647,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 76.22,
+          "duration": 1.8
+        },
+        "usefulSeconds": 1.2000000000000008
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "200641",
+      "name": "迫る影",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.14164038508028,
+        "tailFinishTime": 95.26018215329904,
+        "referenceTailFinishTime": 95.26018215329904,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200641": 0.9444444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200641": 0
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "200641",
+          "index": 1,
+          "x": 1720.1389980407546,
+          "frameStartX": 1719.8809029940292,
+          "activationPhase": 3,
+          "physicsPhase": 3,
+          "t": 84.42,
+          "duration": 1.8
+        },
+        "usefulSeconds": 0
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "202871",
+      "name": "君臨",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0.23629145351701483,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.11469499817429,
+        "tailFinishTime": 95.24413407702158,
+        "referenceTailFinishTime": 95.25645213421672,
+        "tailImprovement": 0.012318057195130905,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.012318057195130905,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202871": 0.8472222222222222
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202871": 0.7430555555555556
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "202871",
+          "index": 1,
+          "x": 1510.1002383876585,
+          "frameStartX": 1509.9770443613713,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 76.2,
+          "duration": 1.8
+        },
+        "usefulSeconds": 1.1999999999999964
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "200641",
+      "name": "迫る影",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "supported",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.1374116956108,
+        "tailFinishTime": 95.25645213421672,
+        "referenceTailFinishTime": 95.25645213421672,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200641": 0.9444444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200641": 0
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "200641",
+          "index": 1,
+          "x": 1720.0520048632893,
+          "frameStartX": 1719.92295718633,
+          "activationPhase": 3,
+          "physicsPhase": 3,
+          "t": 84.395,
+          "duration": 1.8
+        },
+        "usefulSeconds": 0
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "202871",
+      "name": "君臨",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.17665974749196553,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.19156265610712,
+        "tailFinishTime": 95.31889473722507,
+        "referenceTailFinishTime": 95.32781069671479,
+        "tailImprovement": 0.008915959489726788,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.008915959489726788,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202871": 0.8472222222222222
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202871": 0.7430555555555556
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "202871",
+          "index": 1,
+          "x": 1510.061464485795,
+          "frameStartX": 1509.815102756647,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 76.2,
+          "duration": 1.8
+        },
+        "usefulSeconds": 1.2000000000000008
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 4,
+      "id": "200641",
+      "name": "迫る影",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "supported",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.20868375076675,
+        "tailFinishTime": 95.32781069671479,
+        "referenceTailFinishTime": 95.32781069671479,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "200641": 0.9444444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "200641": 0
+      },
+      "firstActivation": {
+        "sample": 0,
+        "event": {
+          "id": "200641",
+          "index": 1,
+          "x": 1720.171469424659,
+          "frameStartX": 1719.9141171713798,
+          "activationPhase": 3,
+          "physicsPhase": 3,
+          "t": 84.41,
+          "duration": 1.8
+        },
+        "usefulSeconds": 0
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.20665560429352,
+        "tailFinishTime": 95.32939599944326,
+        "referenceTailFinishTime": 95.32939599944326,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "base",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.9676406883473481,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.11152630105074,
+        "tailFinishTime": 95.28656493460048,
+        "referenceTailFinishTime": 95.32939599944326,
+        "tailImprovement": 0.04283106484278676,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.04283106484278676,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1434.6873303832995,
+          "frameStartX": 1434.45849646838,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 72.71000000000001,
+          "duration": 3.6
+        },
+        "usefulSeconds": 2.5499999999999896
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.20728060429352,
+        "tailFinishTime": 95.32967377722102,
+        "referenceTailFinishTime": 95.32967377722102,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "seed",
+      "seed": 20261123,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.9085452626739483,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.11796115163942,
+        "tailFinishTime": 95.28752463749571,
+        "referenceTailFinishTime": 95.32967377722102,
+        "tailImprovement": 0.04214913972531065,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.04214913972531065,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5416666666666666
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5416666666666666
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1367.37833059545,
+          "frameStartX": 1367.167520389405,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 69.69,
+          "duration": 3.6
+        },
+        "usefulSeconds": 3.5999999999999672
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.20217487143675,
+        "tailFinishTime": 95.32581552119647,
+        "referenceTailFinishTime": 95.32581552119647,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "fine",
+      "seed": 0,
+      "dt": 0.005,
+      "status": "assumed",
+      "gain": 0.9674869381214116,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.10706111444475,
+        "tailFinishTime": 95.28254845115865,
+        "referenceTailFinishTime": 95.32581552119647,
+        "tailImprovement": 0.04326707003782815,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.04326707003782815,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1434.7243568528984,
+          "frameStartX": 1434.6099270322343,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 72.705,
+          "duration": 3.6
+        },
+        "usefulSeconds": 2.549999999999968
+      }
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "202711",
+      "name": "王手",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.28520474511625,
+        "tailFinishTime": 95.40823309428922,
+        "referenceTailFinishTime": 95.40823309428922,
+        "tailImprovement": 0,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": 0,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "202711": 0
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "202711": 0
+      },
+      "firstActivation": null
+    },
+    {
+      "courseId": "11709",
+      "style": 2,
+      "id": "201901",
+      "name": "鍔迫り合い",
+      "variant": "no-extra-spurt",
+      "seed": 0,
+      "dt": 0.01,
+      "status": "assumed",
+      "gain": 0.8541668547901817,
+      "feasible": true,
+      "hpSuccessRate": 1,
+      "hpShortfall": 0,
+      "performance": {
+        "meanFinishTime": 95.20050034009017,
+        "tailFinishTime": 95.36745058356291,
+        "referenceTailFinishTime": 95.40823309428922,
+        "tailImprovement": 0.040782510726302235,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.040782510726302235,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201901": 0.5694444444444444
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201901": 0.5694444444444444
+      },
+      "firstActivation": {
+        "sample": 3,
+        "event": {
+          "id": "201901",
+          "index": 1,
+          "x": 1434.6873303832995,
+          "frameStartX": 1434.45849646838,
+          "activationPhase": 2,
+          "physicsPhase": 2,
+          "t": 72.71000000000001,
+          "duration": 3.6
+        },
+        "usefulSeconds": 2.5499999999999896
+      }
+    }
+  ]
+}

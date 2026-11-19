@@ -1,6 +1,6 @@
 // Equations and explicit approximations: pinned umasim SkillData/SkillChecker,
 // documented in CM_SELF_EFFECTS_QA.md. Raw source records are never rewritten.
-const neutral=new Set(['vision','lane_change_speed','lane_position','ignore_popularity','invoke_group']);
+const neutral=new Set(['vision','lane_change_speed','lane_position','invoke_group']);
 export const supportedScale=code=>[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,19,20,22,23,24,25,26,27,28,30,31,32,34,35,36,37,40,41,42].includes(code);
 export const supportedDuration=code=>[0,1,2,3,4,5,7,8].includes(code);
 export function selfEffectSkill(skill){

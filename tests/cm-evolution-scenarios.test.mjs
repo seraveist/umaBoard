@@ -112,7 +112,7 @@ test('actual stat thresholds change the ramen evolution effect without becoming 
  for(let sample=0;sample<24;sample++)for(const [stats,index]of [[{speed:999,stamina:1500,power:1500,guts:1500,wisdom:1500},2],[{speed:1000,stamina:1000,power:1000,guts:1000,wisdom:1000},1]]){
   const setup={...base,stats},compiled=compileChartSkill(skill,setup);
   const result=simulateSolo(setup,[compiled],.5,{dt:.05,keepTrace:false,branchSampler:branchSampler(setup,[],sample)});
-  assert.deepEqual(result.events.filter(e=>e.id===skill.id).map(e=>e.index),[index],`sample ${sample}: one eligible effect, with source priority`);
+  assert.deepEqual(result.events.filter(e=>e.id===skill.id).map(e=>e.index),result.activation.eligibleIds.includes(skill.id)?[index]:[],`sample ${sample}: source priority when active; wisdom misses remain absent`);
  }
 });
 

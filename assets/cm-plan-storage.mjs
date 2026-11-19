@@ -1,7 +1,8 @@
 // Recalculate the chart after reviewed route changes; retain recorded inputs
 // only for data versions that the publisher proved have the same mechanics.
 export function checklistPlanKey(input,dataVersion){
- return JSON.stringify({...input,supportIds:input.supportIds.slice().sort(),dataVersion});
+ const {raceContext,samplingSeed,...scope}=input;
+ return JSON.stringify({...scope,supportIds:input.supportIds.slice().sort(),dataVersion});
 }
 export function restoreChecklistPlan(plans,input,manifest){
  const key=checklistPlanKey(input,manifest.checklist_data_sha256||manifest.active_version);

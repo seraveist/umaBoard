@@ -17,7 +17,7 @@ test('secured targets cost actual SP, remain optional and gain is still relative
  const missing=await recommendFinalPlan(data,chart,{},input,quick);assert.deepEqual(missing.unavailableTargetIds,['other']);assert.ok(!missing.activeIds.includes('other'));
 });
 function skill(id,value,rarity='white',kind='target_speed'){
- return {id,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
+ return {id,activation_raw:0,name_jp:id,rarity,inherited:false,parent_ids:[],categories:[kind==='heal'?'heal':'speed'],invocations:[{index:1,condition:[[{field:'remain_distance',operator:'<=',value:400}]],precondition:[],duration_raw:30000,duration_unit:'umatools_base_time',cooldown_raw:null,effects:[{kind,value_raw:value,unit:'umatools_raw',source_type:kind==='heal'?9:27,extras_raw:{}}]}]};
 }
 function fixture(){
  const list=[skill('native',1000,'unique'),skill('white',2000),skill('gold',4500,'gold'),skill('a',5500,'evolution'),skill('b',6500,'evolution'),skill('other',3000),skill('unavailable',20000),skill('unknown',20000)];
@@ -160,8 +160,20 @@ test('current JP rare prices use entered hints instead of the old automatic whit
 test('a bounded search starts with complete affordable packs even when singletons consume its evaluation allowance',async()=>{
  const {data,chart}=fixture(),states={};
  for(let i=0;i<16;i++){const id='pack'+i;data.skills[id]=skill(id,400);data.purchase_stages[id]={status:'verified',base_cost:10};chart.rows.push({...data.skills[id],name:id});states[id]='0';}
- const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1});
+ const result=await recommendFinalPlan(data,chart,states,{...input,spBudget:160},{...quick,evaluationLimit:1,gainTolerance:0});
  assert.equal(result.purchases.length,16);assert.equal(result.budget.used,160);assert.equal(result.search.method,'bounded');
+});
+
+test('compression retains the combined benefit of many edits individually smaller than the gain tolerance',async()=>{
+ const {data,chart}=fixture(),states={};
+ for(let i=0;i<16;i++){const id='micro'+i;data.skills[id]=skill(id,200);data.purchase_stages[id]={status:'verified',base_cost:10};chart.rows.push({...data.skills[id],name:id});states[id]='0';}
+ const actual={...input,spBudget:160},exact=await recommendFinalPlan(data,chart,states,actual,{...quick,evaluationLimit:1,gainTolerance:0,diagnostics:false});
+ const single=await recommendFinalPlan(data,chart,{micro0:'0'},{...input,spBudget:10},{...quick,gainTolerance:0,diagnostics:false});
+ assert.ok(single.gain>0&&single.gain<.1,`single gain=${single.gain}`);
+ const compressed=await recommendFinalPlan(data,chart,states,actual,{...quick,evaluationLimit:1,diagnostics:false});
+ assert.ok(exact.gain>.1);assert.ok(compressed.purchases.length>0);
+ assert.ok(exact.gain-compressed.gain<=.1+1e-10);assert.ok(compressed.budget.used<=160);
+ assert.equal(compressed.search.precisionSeedCandidates,16);assert.equal(compressed.search.precisionSeedCount,2);
 });
 
 test('Fast Learner adds ten percentage points to every recorded hint discount before one integer floor',()=>{
@@ -229,8 +241,9 @@ test('actual CM recommendation enforces event routes including owned records',as
  const {data,chart}=fixture();chart.nativeIds=[];chart.rows=['x','y'].map(id=>{data.skills[id]=skill(id,3000,'gold');data.purchase_stages[id]={status:'verified',base_cost:50};return {...data.skills[id],name:id};});
  chart.setup.supportIds=['card'];data.acquisition_routes=['x','y'].map(id=>({skill_id:id,owner_type:'support',owner_id:'card',kind:'support_event'}));
  data.support_events={card:{events:[{id:'choice',choices:['x','y'].map(id=>({id,rewards:[{skill_id:id}]}))}]}};
- const plan=await recommendFinalPlan(data,chart,{x:'0',y:'0'},input,quick);assert.equal(plan.purchases.length,1);
- await assert.rejects(()=>recommendFinalPlan(data,chart,{x:'owned',y:'owned'},input,quick),/이벤트 선택지/);
+ const plan=await recommendFinalPlan(data,chart,{x:'0',y:'unavailable'},input,quick);assert.equal(plan.purchases.length,1);
+ await assert.rejects(()=>recommendFinalPlan(data,chart,{x:'0',y:'0'},input,quick),{code:'ACQUISITION_CONFLICT'});
+ await assert.rejects(()=>recommendFinalPlan(data,chart,{x:'owned',y:'owned'},input,quick),{code:'ACQUISITION_CONFLICT'});
 });
 
 test('redundant saturated accelerations do not consume extra SP',async()=>{
@@ -241,4 +254,15 @@ test('redundant saturated accelerations do not consume extra SP',async()=>{
  }
  const plan=await recommendFinalPlan(data,chart,{cheap:'0',expensive:'0'},{...input,spBudget:200},quick);
  assert.deepEqual(plan.activeIds,['cheap']);assert.equal(plan.budget.used,50);
+});
+
+test('an earlier plan is rescored with current hints, ownership and budget; stale plans never unlock a purchase',async()=>{
+ const {data,chart}=fixture(),previousPlanIds=['native','other'];
+ const check=(states,budget,prior=previousPlanIds)=>recommendFinalPlan(data,chart,states,{...input,spBudget:budget,previousPlanIds:prior},quick);
+ const valid=await check({other:'5'},60);
+ assert.equal(valid.search.previousPlanCompared,true);assert.equal(valid.budget.used,60);
+ const paid=await check({other:'owned'},0);assert.equal(paid.search.previousPlanCompared,true);assert.equal(paid.budget.used,0);
+ for(const [states,budget,ids] of [[{},200,previousPlanIds],[{other:'0'},60,previousPlanIds],[{other:'5'},100,['removed-skill']]]){
+  const plan=await check(states,budget,ids);assert.equal(plan.search.previousPlanCompared,false);assert.ok(plan.budget.used<=budget);
+ }
 });

@@ -1,0 +1,517 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "auditedHead": "5cce5384f9ff403f9dae9a7199e8354582fc85c9",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "name": "최적화 알고리즘 v1",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "scope": "Completed branch v1 only; no main merge, external calibration or production changes",
+  "status": "completed",
+  "input": {
+    "outfitId": "102201",
+    "scenarioId": "15",
+    "style": 2,
+    "courseId": "10903",
+    "supportIds": [
+      "30153",
+      "30093"
+    ],
+    "going": 1,
+    "weather": 1,
+    "season": 4,
+    "time": 2
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1700,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "spBudget": 700,
+    "discountTrait": "studious"
+  },
+  "states": {
+    "200362": "2",
+    "201031": "1",
+    "201032": "3",
+    "201041": "0",
+    "201042": "owned",
+    "201341": "2",
+    "201342": "3",
+    "201901": "0",
+    "201902": "4",
+    "202671": "1",
+    "202672": "5"
+  },
+  "ownedId": "201042",
+  "candidateIds": [
+    "202671",
+    "202672",
+    "201901",
+    "201902",
+    "201341",
+    "201342",
+    "201031",
+    "201032",
+    "201041",
+    "201042",
+    "200362"
+  ],
+  "enumeratedMasks": 1024,
+  "uniqueAffordablePlans": 270,
+  "totalWallMs": 52218.3681,
+  "records": [
+    {
+      "budget": 470,
+      "affordableDistinctPlans": 139,
+      "current": {
+        "ids": [
+          "100221",
+          "201032",
+          "201042",
+          "201341",
+          "201902",
+          "202672"
+        ],
+        "cost": 434,
+        "gain": 2.0185627111072755,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 74.86272300369973,
+          "tailFinishTime": 75.03812523585705,
+          "referenceTailFinishTime": 75.15620291221454,
+          "tailImprovement": 0.1180776763574869,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.1180776763574869,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "201032": 0.9444444444444444,
+          "201042": 0.9444444444444444,
+          "201341": 0.9513888888888888,
+          "201902": 0.5555555555555556,
+          "202672": 0.5416666666666666
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "201032": 0,
+          "201042": 0,
+          "201341": 0.7222222222222222,
+          "201902": 0.5486111111111112,
+          "202672": 0.5277777777777778
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 138,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 8,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 44,
+          "precisionScreenedFinalists": 44,
+          "precisionCandidates": 45,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 7,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "profile": {
+        "name": "mile-owned-fallback-470",
+        "mode": "observe",
+        "evaluateCalls": 138,
+        "uniqueEvaluationKeys": 138,
+        "strictDuplicateCalls": 0,
+        "fullScoreRepeatCalls": 0,
+        "completeResultMismatches": 0,
+        "simulationCalls": 13932,
+        "referenceSimulationCalls": 288,
+        "runCacheHits": 13644,
+        "wallMs": 6602.099900000001,
+        "duplicateEvaluationMs": 0,
+        "memoHits": 0,
+        "byStage": {
+          "initial": {
+            "calls": 1,
+            "duplicateCalls": 0
+          },
+          "candidates": {
+            "calls": 13,
+            "duplicateCalls": 0
+          },
+          "search": {
+            "calls": 31,
+            "duplicateCalls": 0
+          },
+          "screening": {
+            "calls": 53,
+            "duplicateCalls": 0
+          },
+          "stabilization": {
+            "calls": 10,
+            "duplicateCalls": 0
+          },
+          "final": {
+            "calls": 28,
+            "duplicateCalls": 0
+          },
+          "closure": {
+            "calls": 2,
+            "duplicateCalls": 0
+          }
+        },
+        "totalWallMs": 6798.768300000003
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "201032",
+          "201042",
+          "201341",
+          "202671"
+        ],
+        "cost": 462,
+        "gain": 2.0517737776000944,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 74.85950685818752,
+          "tailFinishTime": 75.05053547642258,
+          "referenceTailFinishTime": 75.15620291221454,
+          "tailImprovement": 0.10566743579195759,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.10566743579195759,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": false,
+      "gainGap": 0.03321106649281891
+    },
+    {
+      "budget": 700,
+      "affordableDistinctPlans": 270,
+      "current": {
+        "ids": [
+          "100221",
+          "201031",
+          "201042",
+          "201341",
+          "201901",
+          "202672"
+        ],
+        "cost": 700,
+        "gain": 2.495682136746246,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 74.81657218085839,
+          "tailFinishTime": 75.01554054493744,
+          "referenceTailFinishTime": 75.15620291221454,
+          "tailImprovement": 0.1406623672771019,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.1406623672771019,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "201031": 0.9444444444444444,
+          "201042": 0.9444444444444444,
+          "201341": 0.9513888888888888,
+          "201901": 0.5694444444444444,
+          "202672": 0.5416666666666666
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "201031": 0,
+          "201042": 0,
+          "201341": 0.6805555555555556,
+          "201901": 0.5625,
+          "202672": 0.5208333333333334
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 158,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 6,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 49,
+          "precisionScreenedFinalists": 49,
+          "precisionCandidates": 50,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 6,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "profile": {
+        "name": "mile-owned-fallback-700",
+        "mode": "observe",
+        "evaluateCalls": 158,
+        "uniqueEvaluationKeys": 158,
+        "strictDuplicateCalls": 0,
+        "fullScoreRepeatCalls": 0,
+        "completeResultMismatches": 0,
+        "simulationCalls": 16002,
+        "referenceSimulationCalls": 288,
+        "runCacheHits": 15714,
+        "wallMs": 7861.13239999998,
+        "duplicateEvaluationMs": 0,
+        "memoHits": 0,
+        "byStage": {
+          "initial": {
+            "calls": 1,
+            "duplicateCalls": 0
+          },
+          "candidates": {
+            "calls": 21,
+            "duplicateCalls": 0
+          },
+          "search": {
+            "calls": 29,
+            "duplicateCalls": 0
+          },
+          "screening": {
+            "calls": 60,
+            "duplicateCalls": 0
+          },
+          "stabilization": {
+            "calls": 12,
+            "duplicateCalls": 0
+          },
+          "final": {
+            "calls": 33,
+            "duplicateCalls": 0
+          },
+          "closure": {
+            "calls": 2,
+            "duplicateCalls": 0
+          }
+        },
+        "totalWallMs": 8054.365400000002
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "200362",
+          "201032",
+          "201042",
+          "201341",
+          "201902",
+          "202671"
+        ],
+        "cost": 700,
+        "gain": 2.5675236215132298,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 74.80961416574507,
+          "tailFinishTime": 75.01300028766916,
+          "referenceTailFinishTime": 75.15620291221454,
+          "tailImprovement": 0.14320262454538124,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14320262454538124,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": false,
+      "gainGap": 0.07184148476698393
+    }
+  ],
+  "budgetMonotonicWithinProbe": true,
+  "reversedRows": {
+    "result": {
+      "ids": [
+        "100221",
+        "201032",
+        "201042",
+        "201341",
+        "201902",
+        "202672"
+      ],
+      "cost": 434,
+      "gain": 2.0185627111072755,
+      "hpSuccessRate": 1,
+      "feasible": true,
+      "performance": {
+        "meanFinishTime": 74.86272300369973,
+        "tailFinishTime": 75.03812523585705,
+        "referenceTailFinishTime": 75.15620291221454,
+        "tailImprovement": 0.1180776763574869,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.1180776763574869,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201032": 0.9444444444444444,
+        "201042": 0.9444444444444444,
+        "201341": 0.9513888888888888,
+        "201902": 0.5555555555555556,
+        "202672": 0.5416666666666666
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201032": 0,
+        "201042": 0,
+        "201341": 0.7222222222222222,
+        "201902": 0.5486111111111112,
+        "202672": 0.5277777777777778
+      },
+      "search": {
+        "method": "bounded",
+        "evaluations": 138,
+        "hpPrunedPlans": 0,
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 8,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 44,
+        "precisionScreenedFinalists": 44,
+        "precisionCandidates": 45,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 1,
+        "stabilizationChecks": 7,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    "profile": {
+      "name": "mile-owned-fallback-470-reverse",
+      "mode": "observe",
+      "evaluateCalls": 138,
+      "uniqueEvaluationKeys": 138,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 0,
+      "completeResultMismatches": 0,
+      "simulationCalls": 13932,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 13644,
+      "wallMs": 6467.928400000026,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 0,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 13,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 31,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 53,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 10,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 28,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 2,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 6649.669900000001
+    },
+    "sameSelection": true,
+    "gainDifference": 0
+  }
+}

@@ -1,0 +1,468 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "29de686",
+  "modelVersion": "cm-post-training-v12",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "baseline": false,
+  "modulesSha256": "76f5213d9d244c6ac4b4ee736dca99643b222a093d6b4c61786d4a5f39936c2c",
+  "input": {
+    "outfitId": "102201",
+    "scenarioId": "15",
+    "style": 2,
+    "courseId": "10906",
+    "supportIds": [
+      "30161",
+      "30093"
+    ],
+    "going": 2,
+    "weather": 1,
+    "season": 2,
+    "time": 2
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1800,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "spBudget": 700,
+    "discountTrait": "studious"
+  },
+  "states": {
+    "200362": "2",
+    "201101": "1",
+    "201102": "owned",
+    "201111": "0",
+    "201112": "4",
+    "201341": "2",
+    "201342": "3",
+    "201901": "0",
+    "201902": "4",
+    "202711": "1",
+    "202712": "5"
+  },
+  "records": [
+    {
+      "budget": 470,
+      "previous": {
+        "ids": [
+          "100221",
+          "201102",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 454,
+        "gain": 1.9730738622217925,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.36891535500449,
+          "tailFinishTime": 105.55716640974765,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.14012389110025936,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14012389110025936,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "201102": 0.9513888888888888,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201902": 0.5486111111111112,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "201102": 0,
+          "201111": 0,
+          "201342": 0.5208333333333334,
+          "201902": 0.5208333333333334,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 130,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 7,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 40,
+          "precisionScreenedFinalists": 40,
+          "precisionCandidates": 42,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 8,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "current": {
+        "ids": [
+          "100221",
+          "201102",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 454,
+        "gain": 1.9730738622217925,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.36891535500449,
+          "tailFinishTime": 105.55716640974765,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.14012389110025936,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14012389110025936,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "search": {
+          "method": "exhaustive",
+          "evaluations": 137,
+          "hpPrunedPlans": 0,
+          "coarseEvaluations": 1,
+          "precisionEvaluations": 136,
+          "precisionBeforeRefinement": 136,
+          "refinementEvaluations": 0,
+          "refinementEvaluationLimit": 0,
+          "coarseEvaluationLimit": 1401,
+          "initialCoarseEvaluations": 1,
+          "initialCoarseEvaluationLimit": 1400,
+          "coarseLimitReached": false,
+          "exchangeEvaluationLimit": 1400,
+          "exchangeEvaluations": 0,
+          "exchangeProposalChecks": 0,
+          "exchangePrecisionChecks": 0,
+          "exchangeScreeningComplete": true,
+          "exactEnumeration": {
+            "complete": true,
+            "reason": null,
+            "nodes": 487,
+            "groups": 6,
+            "affordablePlans": 136,
+            "planLimit": 512
+          },
+          "shortlisted": 0,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+          "closureTermination": "stable",
+          "initialDirectSweeps": 0,
+          "initialDirectEvaluations": 0,
+          "closureChecks": 0,
+          "closurePasses": 0,
+          "batchChecks": 0,
+          "screenedFinalists": 0,
+          "precisionScreenedFinalists": 0,
+          "precisionCandidates": 136,
+          "precisionSeedCandidates": 0,
+          "precisionSeedCount": 0,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 0,
+          "stabilizationChecks": 0,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": true,
+          "optimalityScope": "affordable-recorded-candidates-at-declared-sampling-resolution",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "201102",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 454,
+        "gain": 1.9730738622217925,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.36891535500449,
+          "tailFinishTime": 105.55716640974765,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.14012389110025936,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14012389110025936,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": true,
+      "gainGap": 0,
+      "profile": {
+        "evaluations": 137,
+        "simulations": 19593,
+        "referenceSimulations": 153,
+        "cacheHits": 19440,
+        "byResolution": {
+          "9|0.05": 1,
+          "144|0.01": 136
+        },
+        "wallMs": 30445.3235
+      }
+    },
+    {
+      "budget": 700,
+      "previous": {
+        "ids": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 677,
+        "gain": 2.642768529417118,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.30298473029599,
+          "tailFinishTime": 105.49431372423932,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.20297657660859159,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.20297657660859159,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201902": 0.5486111111111112,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0,
+          "201342": 0.5416666666666666,
+          "201902": 0.5208333333333334,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 199,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 8,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 52,
+          "precisionScreenedFinalists": 52,
+          "precisionCandidates": 53,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 8,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "current": {
+        "ids": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 677,
+        "gain": 2.642768529417118,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.30298473029599,
+          "tailFinishTime": 105.49431372423932,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.20297657660859159,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.20297657660859159,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "search": {
+          "method": "exhaustive",
+          "evaluations": 262,
+          "hpPrunedPlans": 0,
+          "coarseEvaluations": 1,
+          "precisionEvaluations": 261,
+          "precisionBeforeRefinement": 261,
+          "refinementEvaluations": 0,
+          "refinementEvaluationLimit": 0,
+          "coarseEvaluationLimit": 1401,
+          "initialCoarseEvaluations": 1,
+          "initialCoarseEvaluationLimit": 1400,
+          "coarseLimitReached": false,
+          "exchangeEvaluationLimit": 1400,
+          "exchangeEvaluations": 0,
+          "exchangeProposalChecks": 0,
+          "exchangePrecisionChecks": 0,
+          "exchangeScreeningComplete": true,
+          "exactEnumeration": {
+            "complete": true,
+            "reason": null,
+            "nodes": 487,
+            "groups": 6,
+            "affordablePlans": 261,
+            "planLimit": 512
+          },
+          "shortlisted": 0,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureScope": "initial-exact-neighborhood-then-screened-refinement",
+          "closureTermination": "stable",
+          "initialDirectSweeps": 0,
+          "initialDirectEvaluations": 0,
+          "closureChecks": 0,
+          "closurePasses": 0,
+          "batchChecks": 0,
+          "screenedFinalists": 0,
+          "precisionScreenedFinalists": 0,
+          "precisionCandidates": 261,
+          "precisionSeedCandidates": 0,
+          "precisionSeedCount": 0,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 0,
+          "stabilizationChecks": 0,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": true,
+          "optimalityScope": "affordable-recorded-candidates-at-declared-sampling-resolution",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 677,
+        "gain": 2.642768529417118,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.30298473029599,
+          "tailFinishTime": 105.49431372423932,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.20297657660859159,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.20297657660859159,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": true,
+      "gainGap": 0,
+      "profile": {
+        "evaluations": 262,
+        "simulations": 37593,
+        "referenceSimulations": 153,
+        "cacheHits": 37440,
+        "byResolution": {
+          "9|0.05": 1,
+          "144|0.01": 261
+        },
+        "wallMs": 57935.656
+      }
+    }
+  ],
+  "rowOrderInvariant": true,
+  "budgetMonotonic": true
+}

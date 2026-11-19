@@ -1,0 +1,234 @@
+{
+  "auditDate": "2026-11-18 Asia/Seoul",
+  "engineCommit": "af941ca14f0ddce37e0dec870a375c2b1b79a51a",
+  "method": "Read full original pages; paraphrased claims only; no copied full articles. Guide consistency is not empirical probability calibration.",
+  "sourceCount": 14,
+  "sources": [
+    {
+      "id": "official-october",
+      "url": "https://umamusume.jp/steam-news/detail?id=3496",
+      "title": "News｜ウマ娘 プリティーダービー 公式ポータルサイト｜Cygames",
+      "type": "official-event",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-10-20",
+      "modified": null,
+      "claims": [
+        "Kyoto turf2200, right outer, autumn, cloudy, good, day; nine runners; 2026-10-20 through 2026-10-26."
+      ],
+      "limits": [
+        "Event conditions only; no per-skill measured probability."
+      ]
+    },
+    {
+      "id": "official-longchamp",
+      "url": "https://umamusume.jp/news/detail?id=3444",
+      "title": "レースイベント「チャンピオンズミーティング CLASSIC」特別開催決定！",
+      "type": "official-event",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-09-09 17:00 Asia/Tokyo",
+      "modified": "2026-09-11 18:06 Asia/Tokyo",
+      "claims": [
+        "2026-09-29 special CLASSIC: Longchamp turf2400 medium, right, autumn, sunny, softest/heavy going (going4), day.",
+        "No-debuff special rule."
+      ],
+      "limits": [
+        "Event conditions only; no per-skill measured probability."
+      ]
+    },
+    {
+      "id": "kyoto-kamigame",
+      "url": "https://kamigame.jp/umamusume/page/435477327611173204.html",
+      "title": "【ウマ娘】2026年10月チャンミ中距離のコース解説と有効加速｜おすすめキャラ - 神ゲー攻略",
+      "type": "published-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-10-27T11:28:42+09:00",
+      "claims": [
+        "Downhill acceleration is a priority.",
+        "Final-corner acceleration including King/Gun is about 83m late, useful but low cost efficiency.",
+        "Late-straight and uphill acceleration are ineffective for this late-entry geometry."
+      ],
+      "limits": [
+        "The article distinguishes useful-but-weak from hard nonactivation; do not turn its terminology into an ID blacklist."
+      ]
+    },
+    {
+      "id": "kyoto-gamewith",
+      "url": "https://gamewith.jp/uma-musume/article/show/572401",
+      "title": "【ウマ娘】チャンミ中距離のおすすめキャラと育成｜2026年10月 - ゲームウィズ",
+      "type": "published-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-11-16T04:55:15+09:00",
+      "claims": [
+        "Advanced stats 2100/1600/1600/1200/1700; scenario14.",
+        "Leader/chaser example decks supply King/Gun.",
+        "Gun is marked poor for this course."
+      ],
+      "limits": [
+        "Updated after the October event; examples are target builds, not a full obtained-hint replay."
+      ]
+    },
+    {
+      "id": "kyoto-merci",
+      "url": "https://merci-splatoon.com/2610cla-1/",
+      "title": "26’10月チャンミ「CLASSIC」基礎攻略＆チーム編成考察会 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "type": "player-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-08-27T19:27:20+09:00",
+      "modified": "2026-10-10T09:22:33+09:00",
+      "claims": [
+        "Prefer white downhill and strong inherited acceleration.",
+        "Avoid weak final-corner King/Gun.",
+        "Almond acceleration core explicitly lists native evolution, downhill, Epiph inherited evolution, Uma avoidance, early white acceleration."
+      ],
+      "limits": [
+        "Recommendations are qualitative; no controlled per-skill activation dataset."
+      ]
+    },
+    {
+      "id": "kyoto-yaroshi",
+      "url": "https://note.com/yaroshi_1025/n/ncfaa16aefb1f",
+      "title": "【ウマ娘】2026年10月京都2200先行脚質考察(チャンピオンズミーティング)｜やろし",
+      "type": "player-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-10-05",
+      "modified": null,
+      "claims": [
+        "Exact target stats 2150/1600/1700/1200/1600.",
+        "Prioritize listed speed whites and downhill."
+      ],
+      "limits": [
+        "2026-10-05 pre-event analysis; images/skillset are not a complete priced obtained-hint record."
+      ]
+    },
+    {
+      "id": "kyoto-umalabo",
+      "url": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "title": "【ウマ娘】10月チャンミCLASSIC・コースの必須知識とおすすめウマ娘まとめ（京都芝2200m）│ウマ娘ラボ",
+      "type": "published-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-09-26",
+      "modified": null,
+      "claims": [
+        "Strong inherited accelerations, downhill whites and early acceleration are recommended.",
+        "Lists duration and effect values for inherited evolutions and white downhill."
+      ],
+      "limits": [
+        "Omission of King/Gun alone is not proof of a negative claim; public data may share the engine's sources."
+      ]
+    },
+    {
+      "id": "longchamp-merci",
+      "url": "https://merci-splatoon.com/2609cla-1/",
+      "title": "【特別開催】26’9月チャンミ「CLASSIC」チーム編成考察会 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "type": "player-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-09-10T16:35:32+09:00",
+      "modified": "2026-09-11T16:52:34+09:00",
+      "claims": [
+        "Late final-corner and late-straight acceleration are effective.",
+        "King/Gun are valid; downhill has low usefulness and is discouraged.",
+        "Reduce added acceleration when native acceleration is strong."
+      ],
+      "limits": [
+        "2026-09 special CLASSIC, not MILE or a twelve-runner LoH."
+      ]
+    },
+    {
+      "id": "longchamp-omi",
+      "url": "https://note.com/aomi_star/n/n16f092066e2b",
+      "title": "【ウマ娘】ロンシャン芝2400（中距離）-環境全体レビュー【9月後半チャンミ】｜oMi",
+      "type": "player-theoretical-review",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-09-10",
+      "modified": null,
+      "claims": [
+        "Almond can have excess acceleration; speed may be preferable.",
+        "Native acceleration changes optimal added acceleration."
+      ],
+      "limits": [
+        "Author explicitly says no practice observation yet and emphasizes an ace-plus-helpers competitive format; do not count this as measured CM evidence."
+      ]
+    },
+    {
+      "id": "tokyo1800-merci",
+      "url": "https://merci-splatoon.com/2609mile-1/",
+      "title": "26’9月チャンミ「MILE」チーム編成考察会 | Merci.のスプラ3＆ウマ娘攻略ブログ",
+      "type": "player-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-07-25T15:37:06+09:00",
+      "modified": "2026-07-25T15:37:06+09:00",
+      "claims": [
+        "Distinguish final-corner, late-corner and random final-corner acceleration.",
+        "Late-straight acceleration starts about75m late and is secondary."
+      ],
+      "limits": [
+        "Pre-event 2026-07-25 guide, not race telemetry."
+      ]
+    },
+    {
+      "id": "nakayama2500-umalabo",
+      "url": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "title": "【ウマ娘】12月チャンミLONG・コースの必須知識とおすすめウマ娘まとめ（中山芝2500m）│ウマ娘ラボ",
+      "type": "prospective-guide",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-11-14",
+      "modified": null,
+      "claims": [
+        "Early/straight long-distance accelerations and strong inherited accelerations are recommended."
+      ],
+      "limits": [
+        "December2026 event is still future at audit time. No retrospective CM result claim and no negative claim inferred from omission."
+      ]
+    },
+    {
+      "id": "cb-card",
+      "url": "https://gamewith.jp/uma-musume/article/show/573289",
+      "title": "【ウマ娘】ミスターシービー(SSRスピード)の評価とイベント - ゲームウィズ",
+      "type": "card-event-table",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-11-17T03:15:20+09:00",
+      "claims": [
+        "SSR30312 choices pair StrongAttack with either TokiRitsudan, Gun, or IchimoDajin."
+      ],
+      "limits": [
+        "Those three branches are not simultaneously available from this one event."
+      ]
+    },
+    {
+      "id": "efforia-card",
+      "url": "https://gamewith.jp/uma-musume/article/show/573288",
+      "title": "【ウマ娘】エフフォーリア(SSRサポート)の評価とイベント - ゲームウィズ",
+      "type": "card-event-table",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": null,
+      "modified": "2026-11-17T07:37:15+09:00",
+      "claims": [
+        "SSR30311 choices grant common talent gold plus exactly one of SeireiKoga, JunshinMuku, Showdown."
+      ],
+      "limits": [
+        "SeireiKoga and JunshinMuku cannot both come from this final event in one training run."
+      ]
+    },
+    {
+      "id": "tokyo1800-mammoth",
+      "url": "https://note.com/200000is/n/nd8d3ee5e7c36",
+      "title": "マイルチャンミ(2026年9月)メモ｜20マンモス",
+      "type": "player-pre-event-analysis",
+      "retrievedDate": "2026-11-18 Asia/Seoul",
+      "published": "2026-07-18 22:50 Asia/Tokyo",
+      "modified": null,
+      "claims": [
+        "Tokyo1800, left, autumn, sunny, good.",
+        "VictoryShot and late-corner acceleration valid; late-straight starts75m after phase2."
+      ],
+      "limits": [
+        "Author warns this is a rough memo and may be revised.",
+        "Do not adopt all unrelated scenario/evolution statements; a reader challenges its scenario evolution claim in comments.",
+        "Pre-event analysis, no controlled activation telemetry."
+      ]
+    }
+  ]
+}

@@ -168,7 +168,8 @@ def publish(root,data,validation,sources,input_hashes,fingerprint):
         def record_identity(dataset):
             return {'skills':{sid:{key:row.get(key) for key in ('rarity','inherited','parent_ids')}
                               for sid,row in dataset['skills'].items()},
-                    **{key:dataset.get(key) for key in ('outfits','supports','courses','relations','evolution_rules')}}
+                    'outfits':{sid:{k:v for k,v in row.items() if k!='origin'} for sid,row in dataset['outfits'].items()},
+                    **{key:dataset.get(key) for key in ('supports','courses','relations','evolution_rules')}}
         # Corrected effect mathematics and newly proven prices do not undo real
         # purchases. Reuse only the records/inputs; the chart and result are fresh.
         def extends_records(previous, current):

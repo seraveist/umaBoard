@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "status": "passed",
+  "base": "http://127.0.0.1:8177/",
+  "checks": [
+    {
+      "name": "initial release label, legacy setup, empty and locked post-training",
+      "status": "passed"
+    },
+    {
+      "name": "chart cancel and setup edits reject obsolete requests",
+      "status": "passed"
+    },
+    {
+      "name": "chart download preserves real worker scores, states, HP and probability metadata",
+      "status": "passed"
+    },
+    {
+      "name": "restored actual stats, hints and accessible validation",
+      "status": "passed"
+    },
+    {
+      "name": "recommendation cancellation keeps records and rejects late completion",
+      "status": "passed"
+    },
+    {
+      "name": "unchanged archived recommendation, complete export and no duplicate submit",
+      "status": "passed"
+    },
+    {
+      "name": "mobile panels, keyboard navigation and one shared checklist",
+      "status": "passed"
+    },
+    {
+      "name": "search, view changes and popup dismissal do not recalculate or lose hints",
+      "status": "passed"
+    },
+    {
+      "name": "actual input edits invalidate export and never trigger automatic recommendation",
+      "status": "passed"
+    },
+    {
+      "name": "reload and explicit regeneration restore inputs and acquisition without restoring old recommendations",
+      "status": "passed"
+    },
+    {
+      "name": "changed race setup blocks first-chart download and post-training",
+      "status": "passed"
+    },
+    {
+      "name": "data loading failure keeps calculations unavailable and explains recovery",
+      "status": "passed"
+    },
+    {
+      "name": "storage failure is visible and preserves ability to calculate",
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "scope": "Production Pages modules, real chart/final workers at 144 samples and 0.01s; isolated legacy draft; read-only worker-message observation, no mocked calculation or changed search options",
+  "browser": "157.0.8103.80",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c"
+  },
+  "chart": {
+    "model": "cm-first-chart-v11",
+    "rows": 190,
+    "exportedRows": 456,
+    "recordedStatSkill": "204142",
+    "chartState": "inactive"
+  },
+  "recommendation": {
+    "gain": 0.1481436749595168,
+    "budget": {
+      "total": 200,
+      "used": 144,
+      "remaining": 56
+    },
+    "selectedIds": [
+      "100221",
+      "204142"
+    ],
+    "hpSuccessRate": 1,
+    "activationRates": {
+      "100221": 0.5555555555555556,
+      "204142": 1
+    },
+    "usefulAccelerationRates": {
+      "100221": 0,
+      "204142": 0
+    },
+    "exactArchivedGain": true,
+    "workerExportEqual": true
+  }
+}

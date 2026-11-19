@@ -20,8 +20,12 @@ test('acquisition labels distinguish already purchased, available without discou
 test('bulk Lv5 preserves paid history while an explicit whole reset clears records and excludes stale IDs',()=>{
  const {rows,hierarchy}=fixture(),old={white:'owned',rare:'owned',evoA:'owned',other:'4',stale:'owned'};
  const cleared=bulkAcquisition(rows,old,'unavailable');assert.ok(Object.values(cleared).every(value=>value==='unavailable'));assert.ok(!('stale' in cleared));assert.equal(old.evoA,'owned');
- const hinted=bulkAcquisition(rows,old,'5');assert.equal(hinted.white,'owned');assert.equal(hinted.rare,'owned');assert.equal(hinted.evoA,'owned');assert.equal(hinted.other,'5');assert.ok(!('stale' in hinted));
- const restored=checklistSnapshot(rows,hinted,hierarchy);assert.equal(restored.evoA,'owned');assert.equal(restored.evoB,'unavailable');assert.equal(restored.white,'owned');
+ const visible=rows.filter(row=>!row.id.startsWith('evo')),hidden=rows.filter(row=>row.id.startsWith('evo'));
+ const recorded=updateAcquisition(rows,old,'evoA','owned',hierarchy);
+ const hinted=bulkAcquisition(visible,recorded,'5',hidden);
+ for(const id of ['white','circle','rare','evoA'])assert.equal(hinted[id],'owned');
+ assert.equal(hinted.other,'5');assert.ok(!('stale' in hinted));assert.ok(!('evoB' in hinted));
+ assert.equal(bulkAcquisition(visible,hinted,'unavailable',hidden).evoA,'unavailable');
  assert.throws(()=>bulkAcquisition(rows,old,'owned'));
 });
 
@@ -107,4 +111,13 @@ test('a saved original inheritance hint migrates only when the current row has n
  assert.equal(checklistSnapshot(rows,{'901411':'5'})['91101411'],'5');
  assert.equal(checklistSnapshot(rows,{'901411':'owned'})['91101411'],'owned');
  assert.equal(checklistSnapshot(rows,{'901411':'owned','91101411':'unavailable'})['91101411'],'unavailable');
+});
+
+
+test('paid forms share an inheritance slot and retain priority over earlier hints',()=>{
+ const rows=Array.from({length:7},(_,i)=>({id:String(i),inherited:true}));
+ rows.push({id:'strong',inheritanceOriginId:'6',inherited:true});
+ const states=Object.fromEntries(rows.map(row=>[row.id,'2']));states.strong='owned';
+ const hinted=bulkAcquisition(rows,states,'5');assert.equal(hinted.strong,'owned');assert.equal(hinted['6'],'unavailable');assert.equal(inheritedCount(rows,hinted),6);
+ states['6']='owned';const bought=bulkAcquisition(rows,states,'5');assert.equal(bought['6'],'owned');assert.equal(bought.strong,'owned');assert.equal(inheritedCount(rows,bought),6);
 });

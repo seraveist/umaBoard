@@ -1,5 +1,6 @@
 name: CI
 on:
+  workflow_dispatch:
   push:
   pull_request:
 permissions:
@@ -10,7 +11,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -24,13 +25,52 @@ jobs:
       - name: Test source normalization and atomic activation
         run: python -m unittest discover -s tests -v
       - name: Test real JP candidates and solo comparison engine
-        run: node --test tests/*.test.mjs
+        run: |
+          cp data/manifest.json "$RUNNER_TEMP/live-manifest.json"
+          trap 'cp "$RUNNER_TEMP/live-manifest.json" data/manifest.json' EXIT
+          cp docs/validation/cm-launch-manifest-20261119.json data/manifest.json
+          node --test tests/*.test.mjs
       - name: Validate active dataset
-        run: python scripts/validate_data.py
+        run: |
+          python scripts/validate_data.py
+          node --test --test-name-pattern="latest Daring Tact" tests/cm-joint-evolution.test.mjs
+      - name: Verify optimization algorithm v1 calculation contract
+        run: node scripts/check_cm_algorithm_v1.mjs
       - name: Check GitHub Pages artifact
-        run: python scripts/build_pages.py
+        run: |
+          python scripts/build_pages.py
+          node scripts/check_cm_algorithm_v1.mjs --build
       - name: Check browser scripts
         run: |
           for script in assets/*.mjs; do node --check "$script"; done
           node --check prototype/model.js
           node --check prototype/app.js
+
+  browser:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - name: Render the staged mobile app and exercise both production workers
+        run: |
+          python3 scripts/build_pages.py
+          npm install --prefix "$RUNNER_TEMP/browser" --ignore-scripts --no-audit --no-fund playwright-core@1.56.1
+          python3 -m http.server 8177 --bind 127.0.0.1 --directory .cache/pages > "$RUNNER_TEMP/cm-http.log" 2>&1 &
+          trap 'kill "$!" || true' EXIT
+          if git diff --quiet HEAD^1 HEAD -- assets scripts/check_cm_browser.cjs index.html; then export CM_SMALL_BROWSER_CHECK=1; fi
+          NODE_PATH="$RUNNER_TEMP/browser/node_modules" node scripts/check_cm_browser.cjs
+      - name: Save browser measurements and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cm-mobile-release-check
+          path: .cache/cm-browser/
+          include-hidden-files: true
+          if-no-files-found: warn

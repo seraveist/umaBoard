@@ -1,0 +1,890 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baselineCommit": "5699d480ec7fb4db09a3c739b5c1212a46314838",
+  "baselineAssetsSha256": "779d0b8477d178c8bded03db8a497462134647002554b3d6cda3d5bab39d8833",
+  "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+  "worktreeBaseCommit": "d05f1344707216f5541ae47ee8a1ee09d6a32494",
+  "modelVersion": "cm-first-chart-v11",
+  "finalModelVersion": "cm-post-training-v11",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "interpretation": "same-input regression under unchanged assumed encounter population and objective; not empirical race probabilities",
+  "scope": "one real stat-gated white across ten profiles and three courses; original audit purchase inputs without manual row restoration",
+  "matrix": [
+    {
+      "scenarioId": "6",
+      "courseId": "10604",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "6",
+      "courseId": "10810",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "6",
+      "courseId": "10704",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "7",
+      "courseId": "10604",
+      "baseStamina": 1500,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "7",
+      "courseId": "10810",
+      "baseStamina": 1500,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "7",
+      "courseId": "10704",
+      "baseStamina": 1500,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "8",
+      "courseId": "10604",
+      "baseStamina": 1000,
+      "previous": {
+        "inChecklist": false,
+        "hint": null
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "inactive",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "8",
+      "courseId": "10810",
+      "baseStamina": 1000,
+      "previous": {
+        "inChecklist": false,
+        "hint": null
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "inactive",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "8",
+      "courseId": "10704",
+      "baseStamina": 1000,
+      "previous": {
+        "inChecklist": false,
+        "hint": null
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "inactive",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "9",
+      "courseId": "10604",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "9",
+      "courseId": "10810",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "9",
+      "courseId": "10704",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "10",
+      "courseId": "10604",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "10",
+      "courseId": "10810",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "10",
+      "courseId": "10704",
+      "baseStamina": 1600,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "11",
+      "courseId": "10604",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "11",
+      "courseId": "10810",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "11",
+      "courseId": "10704",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "12",
+      "courseId": "10604",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "12",
+      "courseId": "10810",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "12",
+      "courseId": "10704",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "13",
+      "courseId": "10604",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "13",
+      "courseId": "10810",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "13",
+      "courseId": "10704",
+      "baseStamina": 1700,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "14",
+      "courseId": "10604",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "14",
+      "courseId": "10810",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "14",
+      "courseId": "10704",
+      "baseStamina": 1800,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "15",
+      "courseId": "10604",
+      "baseStamina": 1850,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "15",
+      "courseId": "10810",
+      "baseStamina": 1850,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    },
+    {
+      "scenarioId": "15",
+      "courseId": "10704",
+      "baseStamina": 1850,
+      "previous": {
+        "inChecklist": true,
+        "hint": "2"
+      },
+      "current": {
+        "inChecklist": true,
+        "state": "supported",
+        "hint": "2"
+      }
+    }
+  ],
+  "plans": [
+    {
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "8",
+        "style": 2,
+        "supportIds": [],
+        "courseId": "10810",
+        "going": 1,
+        "weather": 1,
+        "season": 3,
+        "time": 2
+      },
+      "id": "204142",
+      "actual": {
+        "stats": {
+          "speed": 1750,
+          "stamina": 1199,
+          "power": 1700,
+          "guts": 1700,
+          "wisdom": 1350
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 200
+      },
+      "previous": {
+        "selectedIds": [
+          "100221"
+        ],
+        "acquisition": null,
+        "budget": {
+          "total": 200,
+          "used": 0,
+          "remaining": 200
+        },
+        "gain": 0,
+        "hpSuccessRate": 0,
+        "performance": {
+          "meanFinishTime": 150.63246299179065,
+          "tailFinishTime": 150.77493622259018,
+          "referenceTailFinishTime": 150.77493622259018,
+          "tailImprovement": 0,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": 0,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0
+        }
+      },
+      "current": {
+        "selectedIds": [
+          "100221"
+        ],
+        "acquisition": "2",
+        "budget": {
+          "total": 200,
+          "used": 0,
+          "remaining": 200
+        },
+        "gain": 0,
+        "hpSuccessRate": 0,
+        "performance": {
+          "meanFinishTime": 150.63246299179065,
+          "tailFinishTime": 150.77493622259018,
+          "referenceTailFinishTime": 150.77493622259018,
+          "tailImprovement": 0,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": 0,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0
+        }
+      }
+    },
+    {
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "8",
+        "style": 2,
+        "supportIds": [],
+        "courseId": "10810",
+        "going": 1,
+        "weather": 1,
+        "season": 3,
+        "time": 2
+      },
+      "id": "204142",
+      "actual": {
+        "stats": {
+          "speed": 1750,
+          "stamina": 1200,
+          "power": 1700,
+          "guts": 1700,
+          "wisdom": 1350
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 200
+      },
+      "previous": {
+        "selectedIds": [
+          "100221"
+        ],
+        "acquisition": null,
+        "budget": {
+          "total": 200,
+          "used": 0,
+          "remaining": 200
+        },
+        "gain": 0,
+        "hpSuccessRate": 0,
+        "performance": {
+          "meanFinishTime": 150.57107170821195,
+          "tailFinishTime": 150.76579109268636,
+          "referenceTailFinishTime": 150.76579109268636,
+          "tailImprovement": 0,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": 0,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0
+        }
+      },
+      "current": {
+        "selectedIds": [
+          "100221",
+          "204142"
+        ],
+        "acquisition": "2",
+        "budget": {
+          "total": 200,
+          "used": 144,
+          "remaining": 56
+        },
+        "gain": 2.359053395704662,
+        "hpSuccessRate": 0,
+        "performance": {
+          "meanFinishTime": 150.31550154520443,
+          "tailFinishTime": 150.40852716271573,
+          "referenceTailFinishTime": 150.76579109268636,
+          "tailImprovement": 0.35726392997062817,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.35726392997062817,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "204142": 1
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "204142": 0
+        }
+      }
+    },
+    {
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "8",
+        "style": 2,
+        "supportIds": [],
+        "courseId": "10810",
+        "going": 1,
+        "weather": 1,
+        "season": 3,
+        "time": 2
+      },
+      "id": "204142",
+      "actual": {
+        "stats": {
+          "speed": 1750,
+          "stamina": 1800,
+          "power": 1700,
+          "guts": 1700,
+          "wisdom": 1350
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 200
+      },
+      "previous": {
+        "selectedIds": [
+          "100221"
+        ],
+        "acquisition": null,
+        "budget": {
+          "total": 200,
+          "used": 0,
+          "remaining": 200
+        },
+        "gain": 0,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 149.86315439145417,
+          "tailFinishTime": 150.02901446872497,
+          "referenceTailFinishTime": 150.02901446872497,
+          "tailImprovement": 0,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": 0,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0
+        }
+      },
+      "current": {
+        "selectedIds": [
+          "100221",
+          "204142"
+        ],
+        "acquisition": "2",
+        "budget": {
+          "total": 200,
+          "used": 144,
+          "remaining": 56
+        },
+        "gain": 0.1481436749595168,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 149.84791741316292,
+          "tailFinishTime": 150.01374782087953,
+          "referenceTailFinishTime": 150.02901446872497,
+          "tailImprovement": 0.01526664784543641,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.01526664784543641,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "204142": 1
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "204142": 0
+        }
+      }
+    },
+    {
+      "input": {
+        "outfitId": "102201",
+        "scenarioId": "8",
+        "style": 2,
+        "supportIds": [],
+        "courseId": "10810",
+        "going": 1,
+        "weather": 1,
+        "season": 3,
+        "time": 2
+      },
+      "id": "204142",
+      "actual": {
+        "stats": {
+          "speed": 1750,
+          "stamina": 2400,
+          "power": 1700,
+          "guts": 1700,
+          "wisdom": 1350
+        },
+        "aptitudes": {
+          "distance": "A",
+          "surface": "A",
+          "style": "A"
+        },
+        "spBudget": 200
+      },
+      "previous": {
+        "selectedIds": [
+          "100221"
+        ],
+        "acquisition": null,
+        "budget": {
+          "total": 200,
+          "used": 0,
+          "remaining": 200
+        },
+        "gain": 0,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 149.67266272514803,
+          "tailFinishTime": 149.838197647327,
+          "referenceTailFinishTime": 149.838197647327,
+          "tailImprovement": 0,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": 0,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556
+        },
+        "usefulAccelerationRates": {
+          "100221": 0
+        }
+      },
+      "current": {
+        "selectedIds": [
+          "100221",
+          "204142"
+        ],
+        "acquisition": "2",
+        "budget": {
+          "total": 200,
+          "used": 144,
+          "remaining": 56
+        },
+        "gain": 0.10396335620632222,
+        "hpSuccessRate": 1,
+        "performance": {
+          "meanFinishTime": 149.66203775430654,
+          "tailFinishTime": 149.82755751476242,
+          "referenceTailFinishTime": 149.838197647327,
+          "tailImprovement": 0.010640132564589067,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.010640132564589067,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "204142": 1
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "204142": 0
+        }
+      }
+    }
+  ],
+  "inactiveOwned": {
+    "id": "204142",
+    "actual": {
+      "stats": {
+        "speed": 1750,
+        "stamina": 1199,
+        "power": 1700,
+        "guts": 1700,
+        "wisdom": 1350
+      },
+      "spBudget": 0
+    },
+    "selectedIds": [
+      "100221",
+      "204142"
+    ],
+    "acquisition": "owned",
+    "budget": {
+      "total": 0,
+      "used": 0,
+      "remaining": 0
+    },
+    "gain": 0,
+    "hpSuccessRate": 0,
+    "performance": {
+      "meanFinishTime": 150.63246299179065,
+      "tailFinishTime": 150.77493622259018,
+      "referenceTailFinishTime": 150.77493622259018,
+      "tailImprovement": 0,
+      "risk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": 0,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      }
+    },
+    "activationRates": {
+      "100221": 0.5555555555555556,
+      "204142": 0
+    },
+    "usefulAccelerationRates": {
+      "100221": 0,
+      "204142": 0
+    }
+  }
+}

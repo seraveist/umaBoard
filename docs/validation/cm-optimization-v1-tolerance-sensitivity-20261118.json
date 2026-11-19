@@ -1,0 +1,731 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "dbbe246",
+  "modelVersion": "cm-post-training-v13",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "baseline": false,
+  "modulesSha256": "b00adbd3dd3f964aaaf55bdecc6bd9758a35d6e02cd67928999e4315ada987ee",
+  "scope": "Fixed old and new recommendations only; no reoptimization at alternative settings; scenario sample comparisons, not real-race probabilities",
+  "records": [
+    {
+      "key": "mile",
+      "budget": 470,
+      "variant": {
+        "name": "default",
+        "samples": 144,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.1859623528659897,
+      "currentGain": 2.1772361120446284,
+      "gainDifference": -0.008726240821361309,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.11701995697566758,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14896060712774783,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 700,
+      "variant": {
+        "name": "default",
+        "samples": 144,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.6932047198951476,
+      "currentGain": 2.6932047198951476,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15455514572909124,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15455514572909124,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 470,
+      "variant": {
+        "name": "half-step",
+        "samples": 144,
+        "dt": 0.005,
+        "seed": 0
+      },
+      "previousGain": 2.183130058131942,
+      "currentGain": 2.1731871155568236,
+      "gainDifference": -0.009942942575118519,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.1164617473432088,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14854496859224753,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 700,
+      "variant": {
+        "name": "half-step",
+        "samples": 144,
+        "dt": 0.005,
+        "seed": 0
+      },
+      "previousGain": 2.690333417775428,
+      "currentGain": 2.690333417775428,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15390066955484372,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15390066955484372,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 470,
+      "variant": {
+        "name": "alternate-seed",
+        "samples": 288,
+        "dt": 0.01,
+        "seed": 1
+      },
+      "previousGain": 2.1535952890530057,
+      "currentGain": 2.1019489922202874,
+      "gainDifference": -0.051646296832718264,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.11219325072015351,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14828808916547587,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 700,
+      "variant": {
+        "name": "alternate-seed",
+        "samples": 288,
+        "dt": 0.01,
+        "seed": 1
+      },
+      "previousGain": 2.621396744304037,
+      "currentGain": 2.621396744304037,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.1504211378517084,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.1504211378517084,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 470,
+      "variant": {
+        "name": "larger-sample",
+        "samples": 576,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.2120522682867154,
+      "currentGain": 2.1443798846828024,
+      "gainDifference": -0.06767238360391303,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.11529000502223141,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15754857945943002,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile",
+      "budget": 700,
+      "variant": {
+        "name": "larger-sample",
+        "samples": 576,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.678466774612541,
+      "currentGain": 2.678466774612541,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15414555873267943,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.15414555873267943,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 470,
+      "variant": {
+        "name": "default",
+        "samples": 144,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.0517737776000944,
+      "currentGain": 2.0517737776000944,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10566743579195759,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10566743579195759,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 700,
+      "variant": {
+        "name": "default",
+        "samples": 144,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.5675236215132298,
+      "currentGain": 2.5675236215132298,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14320262454538124,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14320262454538124,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 470,
+      "variant": {
+        "name": "half-step",
+        "samples": 144,
+        "dt": 0.005,
+        "seed": 0
+      },
+      "previousGain": 2.0540207036090106,
+      "currentGain": 2.0540207036090106,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10568809817107194,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10568809817107194,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 700,
+      "variant": {
+        "name": "half-step",
+        "samples": 144,
+        "dt": 0.005,
+        "seed": 0
+      },
+      "previousGain": 2.5709466216763905,
+      "currentGain": 2.5709466216763905,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14312702038270686,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14312702038270686,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 470,
+      "variant": {
+        "name": "alternate-seed",
+        "samples": 288,
+        "dt": 0.01,
+        "seed": 1
+      },
+      "previousGain": 1.9928925407658937,
+      "currentGain": 1.9928925407658937,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10366145661977555,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.10366145661977555,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 700,
+      "variant": {
+        "name": "alternate-seed",
+        "samples": 288,
+        "dt": 0.01,
+        "seed": 1
+      },
+      "previousGain": 2.511994582727583,
+      "currentGain": 2.511994582727583,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14188934375133044,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14188934375133044,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 470,
+      "variant": {
+        "name": "larger-sample",
+        "samples": 576,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.0271992330685302,
+      "currentGain": 2.0271992330685302,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.1030397361823816,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.1030397361823816,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "mile-owned-fallback",
+      "budget": 700,
+      "variant": {
+        "name": "larger-sample",
+        "samples": 576,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 2.5609801814790716,
+      "currentGain": 2.5609801814790716,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14189528989282962,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -0.14189528989282962,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "large",
+      "budget": 7000,
+      "variant": {
+        "name": "default",
+        "samples": 144,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 36.50123091043926,
+      "currentGain": 36.50123091043926,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.410513273724149,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.410513273724149,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "large",
+      "budget": 7000,
+      "variant": {
+        "name": "half-step",
+        "samples": 144,
+        "dt": 0.005,
+        "seed": 0
+      },
+      "previousGain": 36.49625277750615,
+      "currentGain": 36.49625277750615,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4105290703883213,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4105290703883213,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "large",
+      "budget": 7000,
+      "variant": {
+        "name": "alternate-seed",
+        "samples": 288,
+        "dt": 0.01,
+        "seed": 1
+      },
+      "previousGain": 36.677512666403146,
+      "currentGain": 36.677512666403146,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4206608056621945,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4206608056621945,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    },
+    {
+      "key": "large",
+      "budget": 7000,
+      "variant": {
+        "name": "larger-sample",
+        "samples": 576,
+        "dt": 0.01,
+        "seed": 0
+      },
+      "previousGain": 36.56551169855655,
+      "currentGain": 36.56551169855655,
+      "gainDifference": 0,
+      "currentHp": 1,
+      "previousHp": 1,
+      "currentRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4125654162659345,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "previousRisk": {
+        "policy": "mean-gain-baseline-tail-guard-v1",
+        "tailMass": 0.25,
+        "maxTailDelay": 0,
+        "tailDelay": -3.4125654162659345,
+        "withinLimit": true,
+        "units": "seconds",
+        "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+        "interpretation": "scenario-risk-preference-not-empirical-confidence"
+      },
+      "improves": false
+    }
+  ]
+}

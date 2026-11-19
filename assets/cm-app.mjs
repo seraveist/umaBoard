@@ -1,8 +1,10 @@
 import {createAccelerationPanel} from './cm-acceleration-ui.mjs';
-import {createChartSetup,CM_MODEL_VERSION} from './cm-chart.mjs';
+import {createChartSetup,sortChartRows,CM_MODEL_VERSION} from './cm-chart.mjs';
+import {selectableCourse} from './reviewed-course-geometry.mjs';
 import {ACQUISITION_OPTIONS,acquisitionValue,acquisitionId,checklistCounts,checklistSnapshot,inheritedCount,canRecordAcquisition,buildAcquisitionHierarchy,relatedAcquisitionIds,updateAcquisition,bulkAcquisition} from './cm-state.mjs';
 import {createSkillDetails} from './cm-skill-details.mjs';
-import {INHERITED_LIMIT} from './cm-recommendation.mjs';
+import {INHERITED_LIMIT,inheritedOrigin} from './cm-recommendation.mjs';
+import {calculationSummary,contributionTitle} from './cm-model-presentation.mjs';
 import {SKILL_CATEGORIES,categoryRows} from './cm-categories.mjs';
 import {courseSvg} from './cm-course.mjs';
 import {umaName,cardName,cardTypeBadge,cardTypes,selectableSupports} from './display.mjs';
@@ -15,10 +17,12 @@ import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.m
 import {createWorkflow} from './cm-workflow.mjs';
 import {restoreChecklistPlan,trimChecklistPlans} from './cm-plan-storage.mjs';
 import {finalAcquisitionSnapshot} from './cm-evolution.mjs';
+import {CM_ALGORITHM} from './cm-algorithm-version.mjs';
 
 const $=selector=>document.querySelector(selector);
+$('#algorithm-version').textContent=CM_ALGORITHM.name;
 const STORAGE='umaboard-cm-workspace-v1';
-const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹'};
+const trackLabels={'10001':'삿포로','10002':'하코다테','10003':'니가타','10004':'후쿠시마','10005':'나카야마','10006':'도쿄','10007':'주쿄','10008':'교토','10009':'한신','10010':'코쿠라','10101':'오이','10102':'카와사키','10103':'후나바시','10104':'모리오카','10105':'우라와','10201':'롱샹','10202':'산타아니타','10203':'델마'};
 const statLabels={speed:'스피드',stamina:'스태미나',power:'파워',guts:'근성',wisdom:'지능'};
 let data,profiles,display,portraits,manifest,worker,hierarchy,finalPlanner,accelerationPanel,skillSources,ready=false,busy=false,requestId=0,currentPlan='',rows=[],result=null,total=0;
 let draft={setup:null,roster:{},plans:{}},outfitId='101301',deck=['30275','30311','30300','30322','30289','30323'];
@@ -41,8 +45,8 @@ function ownedProfile(id=outfitId){
  if(entry&&Number.isInteger(entry.bloom)&&entry.bloom>=data.outfits[id].base_stars&&entry.bloom<=5&&Number.isInteger(entry.uniqueLevel)&&entry.uniqueLevel>=1&&entry.uniqueLevel<=6)return entry;
  return {bloom:5,uniqueLevel:6};
 }
-function setupInput(){return {outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
-function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();accelerationPanel?.stale();workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
+function setupInput(){return {raceContext:{postNumber:$('#race-post').value?Number($('#race-post').value):null,popularity:$('#race-popularity').value?Number($('#race-popularity').value):null},outfitId,...ownedProfile(),style:Number($('input[name="style"]:checked').value),courseId:$('#course').value,going:Number($('#going').value),weather:Number($('#weather').value),season:Number($('#season').value),time:Number($('#race-time').value),scenarioId:$('#scenario').value,supportIds:deck.filter(Boolean)};}
+function persistSetup(){if(!ready)return;draft.setup=setupInput();saveDraft();finalPlanner?.invalidate();accelerationPanel?.stale();$('#export-checklist').disabled=true;workflow.setChartState(result?'stale':'empty');if(result||rows.length)notice('설정 변경 · 마신표를 다시 생성하세요.');}
 function stopCalculation(announce=true){
  if(!busy)return;worker.postMessage({type:'cancel'});requestId++;busy=false;
  $('#generate').disabled=false;$('#generate span').textContent='1차 마신표 만들기';$('#cancel-calculation').hidden=true;
@@ -70,7 +74,7 @@ function renderDeck(){
  $('#deck-count').textContent=`${deck.filter(Boolean).length} / 6`;
 }
 function option(value,label){const o=el('option','',label);o.value=String(value);return o;}
-function selectableCourses(){return Object.values(data.courses).filter(c=>c.selectable&&!c.run_up_m&&Number(c.track_id)<10202);}
+function selectableCourses(){return Object.values(data.courses).filter(selectableCourse);}
 function populateCourses(preferred){
  const list=selectableCourses().filter(c=>c.track_id===$('#track').value).sort((a,b)=>a.surface-b.surface||a.distance-b.distance||a.id.localeCompare(b.id));
  $('#course').replaceChildren(...list.map(c=>option(c.id,`${c.surface===1?'잔디':'더트'} ${c.distance.toLocaleString('ko-KR')}m${c.course_variant===3?' · 외':c.course_variant===2?' · 내':''}`)));
@@ -123,6 +127,7 @@ function renderPicker(){
  $('#picker-empty').hidden=list.length!==0;$('#picker-count').textContent=`${list.length.toLocaleString('ko-KR')}개`;
 }
 
+function allChecklistRows(){return [...new Map([...rows,...(result?.inheritanceOptions||[])].map(row=>[row.id,row])).values()];}
 function newRow(row){
  const tr=el('tr',row.rarity==='evolution'?'evolution-row':'');tr.dataset.skill=row.id;
  const nameCell=el('td'),identity=el('div','skill-identity'),icon=display.icons?.[row.iconId];
@@ -130,16 +135,17 @@ function newRow(row){
  const iconButton=el('button',`skill-detail-trigger rarity-${row.rarity==='gold'?'rare':row.rarity==='evolution'?'evolution':'normal'}`);iconButton.type='button';
  if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
  else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}
- skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)});identity.append(iconButton);
+ skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)},true);identity.append(iconButton);
  const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)+(row.targetInheritance?' · 목표 가속 계승':row.recordedInheritance?' · 확보한 계승 기록':'')+(row.strategicGoals?.includes('pdm-release')?' · PDM 해제 확보 목표':'')));
  identity.append(copy);nameCell.append(identity);const gain=el('td','gain-cell');gain.dataset.gain='';
  const state=el('td','state-cell'),select=el('select','hint-select');select.dataset.skillId=acquisitionId(row);select.setAttribute('aria-label',`${row.name} 획득 상태 및 할인 레벨`);
  select.append(...ACQUISITION_OPTIONS.map(item=>option(item.value,item.label)));state.append(select);tr.append(nameCell,gain,state);return tr;
 }
 function renderRows(){
- const query=searchKey($('#skill-search').value),visible=categoryRows(rows,category).filter(row=>searchKey(row.name).includes(query)),body=$('#skill-table-body');
+ const pool=allChecklistRows().filter(row=>!row.inherited||$('#show-all-inherited').checked||rows.some(main=>main.id===row.id)||states[row.id]&&states[row.id]!=='unavailable');
+ const query=searchKey($('#skill-search').value),ordered=pool.length?sortChartRows(pool,data,display):[],visible=categoryRows(ordered,category).filter(row=>searchKey(row.name).includes(query)),body=$('#skill-table-body');
  for(const item of SKILL_CATEGORIES){
-  const tab=$(`#category-${item.id}`),count=categoryRows(rows,item.id).length;
+  const tab=$(`#category-${item.id}`),count=categoryRows(pool,item.id).length;
   tab.setAttribute('aria-selected',String(category===item.id));tab.tabIndex=category===item.id?0:-1;tab.querySelector('.category-count').textContent=String(count);
  }
  $('#skill-categories').hidden=rows.length===0;$('#inheritance-note').hidden=rows.length===0;
@@ -149,7 +155,8 @@ function renderRows(){
  visible.forEach((row,index)=>{
   let node=tableNodes.get(row.id);if(!node){node=newRow(row);tableNodes.set(row.id,node);}
   const gain=node.querySelector('[data-gain]'),value=Number.isFinite(row.gain)&&Math.abs(row.gain)<.005?0:row.gain;
-  gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):'미지원';gain.classList.toggle('is-zero',value===0);
+  gain.textContent=Number.isFinite(value)?(value>0?'+':'')+value.toFixed(2):row.calculationState==='incompatible-reference'?'비교 불가':'미지원';gain.classList.toggle('is-zero',value===0);
+  gain.title=contributionTitle(row);
   const select=node.querySelector('select'),state=acquisitionValue(states[acquisitionId(row)]);if(select.value!==state)select.value=state;
   node.classList.toggle('is-recorded',state!=='unavailable');select.classList.toggle('is-recorded',state!=='unavailable');
   node.classList.toggle('is-owned',state==='owned');select.classList.toggle('is-owned',state==='owned');
@@ -157,21 +164,22 @@ function renderRows(){
  });
  skillDetails.dismissDetached();
  $('#empty-state').hidden=rows.length>0||busy;$('#skill-table-wrap').hidden=visible.length===0;$('#no-results').hidden=!(rows.length>0&&visible.length===0);
- const count=checklistCounts(rows,states);$('#checklist-count').replaceChildren();
- $('#inherited-count').textContent=`계승 ${inheritedCount(rows,states)} / ${INHERITED_LIMIT}`;
- if(rows.length){if(workflow.stage==='prepare')$('#checklist-count').textContent=`${total||rows.length}개 스킬`;else $('#checklist-count').append(document.createTextNode(`전체 ${total||rows.length} · `),el('strong','',`확보 ${count.available}`));}
+ const count=checklistCounts(allChecklistRows(),states);$('#checklist-count').replaceChildren();
+ $('#inherited-count').textContent=`계승 ${inheritedCount(allChecklistRows(),states)} / ${INHERITED_LIMIT}`;
+ if(rows.length){if(workflow.stage==='prepare')$('#checklist-count').textContent=`${pool.length}개 스킬`;else $('#checklist-count').append(document.createTextNode(`전체 ${pool.length} · `),el('strong','',`확보 ${count.available}`));}
  else $('#checklist-count').textContent=busy?'계산 준비 중':'목록을 생성해 주세요';
  $('#clear-skill-search').hidden=!$('#skill-search').value;
  for(const id of ['bulk-unavailable','bulk-level5'])$('#'+id).disabled=busy||!result;
  accelerationPanel?.updateAcquisition(rows,states);
 }
 function recordState(id,value){
- if(!canRecordAcquisition(rows,states,id,value)){renderRows();$('#draft-status').textContent='계승은 최대 6개입니다.';return;}
- const next=updateAcquisition(rows,states,id,value,hierarchy);
+ if(!canRecordAcquisition(allChecklistRows(),states,id,value)){renderRows();$('#draft-status').textContent='계승은 최대 6개입니다.';return;}
+ const next=updateAcquisition(allChecklistRows(),states,id,value,hierarchy);
  saveAcquisitionStates(next);
 }
 function saveAcquisitionStates(next,warning=''){
  states=next;
+ for(const node of tableNodes.values()){const select=node.querySelector('select');select.removeAttribute('aria-invalid');select.removeAttribute('aria-describedby');}
  if(!draft.plans[currentPlan])draft.plans[currentPlan]={states:{}};
  draft.plans[currentPlan].states=states;draft.plans[currentPlan].savedAt=new Date().toISOString();
  draft.plans=trimChecklistPlans(draft.plans);
@@ -180,8 +188,7 @@ function saveAcquisitionStates(next,warning=''){
 }
 function recordAll(value){
  if(busy||!result)return;
- const history=(result.evolutionOptions||[]).filter(row=>states[row.id]==='owned'&&!rows.some(r=>r.id===row.id));
- const next=bulkAcquisition([...rows,...history],states,value),skipped=value==='5'?rows.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
+ const pool=allChecklistRows(),next=bulkAcquisition(pool,states,value,result.evolutionOptions),skipped=value==='5'?pool.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
  saveAcquisitionStates(next,skipped?'계승은 6개만 적용했습니다.':'');
 }
 function beginCalculation(event){
@@ -200,9 +207,9 @@ function beginCalculation(event){
  notice();renderRows();worker.postMessage({type:'generate',requestId:++requestId,payload:{...input,acquisition:states}});
 }
 function exportChecklist(){
- if(!result)return;
- const payload={schemaVersion:1,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
-  accelerationPlan:result.accelerationPlan,rankComparison:result.rankComparison,strategyGoals:result.strategyGoals,acquisition:finalAcquisitionSnapshot(data,result,states),evolutionOptions:result.evolutionOptions,skills:result.rows.map(row=>({id:row.id,name:row.name,gain:row.gain,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,recommendation:row.recommendation,strategicGoals:row.strategicGoals,recordedInheritance:row.recordedInheritance,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
+ if(!result||busy||$('#export-checklist').disabled)return;
+ const payload={schemaVersion:1,algorithm:CM_ALGORITHM,modelVersion:CM_MODEL_VERSION,createdAt:new Date().toISOString(),dataVersion:manifest.active_version,setup:result.setup,
+  accelerationPlan:result.accelerationPlan,strategyGoals:result.strategyGoals,acquisition:finalAcquisitionSnapshot(data,result,states),comparisonBasis:result.comparisonBasis,objectivePolicy:result.objectivePolicy,evolutionOptions:result.evolutionOptions,samplingPolicy:result.samplingPolicy,inheritanceOptions:result.inheritanceOptions,skills:allChecklistRows().map(row=>({id:row.id,name:row.name,gain:row.gain,robustGain:row.robustGain,scenarioSensitivity:row.scenarioSensitivity,popularityResults:row.popularityResults,calculationState:row.calculationState,hpSuccessRate:row.hpSuccessRate,hpShortfall:row.hpShortfall,performance:row.performance,comparisonBasis:row.comparisonBasis,scenarios:row.scenarios,scenarioCoverage:row.scenarioCoverage,usefulAccelerationRate:row.usefulAccelerationRate,timeGain:row.timeGain,hpGain:row.hpGain,rarity:row.rarity,inherited:row.inherited,strategicGoals:row.strategicGoals,targetInheritance:row.targetInheritance,recommendation:row.recommendation,evolutionBaseId:row.evolutionBaseId,prerequisiteIds:relatedAcquisitionIds(hierarchy,row.id),calculationNotes:row.calculationNotes,assumptions:row.assumptions,activationRate:row.activationRate,sampling:row.sampling})),effectPolicy:'self-performance-only',inheritedTopIds:result.inheritedTopIds,sampling:{count:result.samples,dt:result.dt},fullSpurtPolicy:result.fullSpurtPolicy};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=`umaBoard-CM-${result.setup.course.distance}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function setupWorker(){
@@ -213,9 +220,9 @@ function setupWorker(){
   if(message.type==='progress'){
    rows=message.progress.rows;states={...states,...checklistSnapshot(rows,states,hierarchy)};total=rows.length;$('#progress-label').textContent=({inheritance:'계승 Top 10 후보 비교 중',acceleration:'목표 가속 조합 비교 중',rewards:'서포트 레어 세트 비교 중'})[message.progress.stage]||'확정된 체크리스트 계산 중';$('#progress-bar').max=message.progress.total;$('#progress-bar').value=message.progress.completed;$('#progress-count').textContent=`${message.progress.completed} / ${message.progress.total}`;$('#skill-search').disabled=false;renderRows();
   }else if(message.type==='result'){
-   result=message.result;rows=result.rows;total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
+   result=message.result;rows=result.rows;$('#chart-calculation-details').hidden=false;$('#chart-calculation-note').textContent=calculationSummary(result);total=rows.length;states=finalAcquisitionSnapshot(data,result,states);busy=false;$('#generate').disabled=false;$('#generate span').textContent='1차 마신표 다시 만들기';$('#cancel-calculation').hidden=true;$('#export-checklist').disabled=false;$('#skill-search').disabled=false;$('#calculation-progress').hidden=true;
    notice();renderRows();
-   let retained=0,trimmed=false;for(const row of rows)if(row.inherited&&states[row.id]!=='unavailable'&&++retained>INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}
+   const retained=new Set();let trimmed=false;for(const row of allChecklistRows())if(row.inherited&&states[row.id]!=='unavailable'){const origin=row.inheritanceOriginId??inheritedOrigin(row.id);if(!retained.has(origin)&&retained.size>=INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}else retained.add(origin);}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
    renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
    accelerationPanel?.render(result.accelerationPlan);accelerationPanel?.updateAcquisition(rows,states);finalPlanner?.setChart(result,states,currentPlan);
@@ -235,14 +242,18 @@ async function start(){
  try{
   [manifest,profiles,display,portraits]=await Promise.all(['data/manifest.json','data/cm-scenario-profiles.json','data/cm-skill-display.json','data/portraits.json'].map(loadJson));
   data=await loadJson(manifest.dataset_path);hierarchy=buildAcquisitionHierarchy(data);accelerationPanel=createAccelerationPanel({data,display,portraits,skillDetails});
-  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
+  finalPlanner=createFinalPlanner({data,display,manifest,skillDetails,onResult:()=>workflow.showPostView('result'),onRecordError:(ids,message)=>{
+   if(workflow.stage!=='finish')return;workflow.showPostView('record');$('#draft-status').textContent=message;let first=null;
+   for(const id of ids){const select=tableNodes.get(id)?.querySelector('select');if(select){select.setAttribute('aria-invalid','true');select.setAttribute('aria-describedby','draft-status');if(select.isConnected)first??=select;}}
+   (first||$('#skill-search')).focus();
+  },read:key=>draft.plans[key]?.postTraining,write:(key,value)=>{draft.plans[key]??={states:{}};draft.plans[key].postTraining=value;draft.plans[key].savedAt=new Date().toISOString();draft.plans=trimChecklistPlans(draft.plans);return saveDraft();}});
   const saved=draft.setup;
   if(saved&&data.outfits[saved.outfitId])outfitId=saved.outfitId;
   if(saved&&Array.isArray(saved.supportIds))deck=saved.supportIds.slice(0,6);
   const course=selectableCourses().find(c=>c.id===(saved?.courseId||'10808'))||selectableCourses()[0];
   const trackIds=[...new Set(selectableCourses().map(c=>c.track_id))].sort();$('#track').replaceChildren(...trackIds.map(id=>option(id,trackLabels[id]||id)));$('#track').value=course.track_id;populateCourses(course.id);
   $('#scenario').replaceChildren(...Object.values(profiles.profiles).sort((a,b)=>Number(b.id)-Number(a.id)).map(p=>option(p.id,p.name_ko)));$('#scenario').value=profiles.profiles[saved?.scenarioId]?saved.scenarioId:profiles.default_scenario_id;
-  if(saved){for(const [id,key]of [['going','going'],['weather','weather'],['season','season'],['race-time','time']])if(saved[key])$('#'+id).value=String(saved[key]);const radio=$(`input[name="style"][value="${Number(saved.style)}"]`);if(radio)radio.checked=true;}
+  if(saved){for(const [id,key]of [['race-post','postNumber'],['race-popularity','popularity']])$('#'+id).value=saved.raceContext?.[key]??'';for(const [id,key]of [['going','going'],['weather','weather'],['season','season'],['race-time','time']])if(saved[key])$('#'+id).value=String(saved[key]);const radio=$(`input[name="style"][value="${Number(saved.style)}"]`);if(radio)radio.checked=true;}
   renderOutfit();renderDeck();renderCaps();renderRace();for(const id of ['track','course','scenario','outfit-picker'])$('#'+id).disabled=false;
   setupWorker();
  }catch{notice('데이터를 불러오지 못했습니다. 네트워크를 확인하고 페이지를 새로고침해 주세요.',true);$('#outfit-name').textContent='데이터를 불러오지 못했습니다';$('#outfit-subtitle').textContent='페이지를 새로고침해 주세요.';}
@@ -279,3 +290,6 @@ $('#skill-categories').addEventListener('keydown',event=>{
  if(next===null)return;event.preventDefault();tabs[next].focus();tabs[next].click();
 });
 start();
+
+$('#show-all-inherited').addEventListener('change',renderRows);
+for(const id of ['race-post','race-popularity'])$('#'+id).addEventListener('change',()=>{stopCalculation(false);persistSetup();});

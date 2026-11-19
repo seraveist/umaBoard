@@ -1,0 +1,2172 @@
+{
+  "validatedAt": "2026-11-17 Asia/Seoul",
+  "engineCommit": "a81b894373f987cb7d3ac367982f86e959639c4c",
+  "modelVersion": "cm-first-chart-v6",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "stats": {
+    "speed": 2100,
+    "stamina": 1600,
+    "power": 1600,
+    "guts": 1200,
+    "wisdom": 1700
+  },
+  "aptitudes": {
+    "distance": "A",
+    "surface": "A",
+    "style": "A"
+  },
+  "mood": "best",
+  "nativeBaseline": "none-isolate-skill-effect",
+  "samples": 256,
+  "dt": 0.01,
+  "events": {
+    "kyoto": {
+      "courseId": "10808",
+      "distance": 2200,
+      "track": "10008",
+      "season": 3,
+      "weather": 2,
+      "going": 1,
+      "time": 2,
+      "event": "2026-10 CLASSIC",
+      "status": "completed-exact-official-settings",
+      "source": "https://umamusume.jp/steam-news/detail?id=3496"
+    },
+    "tokyo": {
+      "courseId": "10603",
+      "distance": 1800,
+      "track": "10006",
+      "season": 3,
+      "weather": 1,
+      "going": 1,
+      "time": 2,
+      "event": "2026-09 MILE",
+      "status": "completed-course-only-weather-standardized",
+      "source": "https://merci-splatoon.com/2609mile-1/"
+    },
+    "longchamp": {
+      "courseId": "11203",
+      "distance": 2400,
+      "track": "10201",
+      "season": 3,
+      "weather": 1,
+      "going": 1,
+      "time": 2,
+      "event": "2026-09 CLASSIC",
+      "status": "completed-course-only-weather-standardized",
+      "source": "https://merci-splatoon.com/2610cla-2/"
+    },
+    "nakayama": {
+      "courseId": "10506",
+      "distance": 2500,
+      "track": "10005",
+      "season": 4,
+      "weather": 1,
+      "going": 1,
+      "time": 2,
+      "event": "2026-12 LONG",
+      "status": "announced-prospective-not-real-outcome",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612"
+    }
+  },
+  "sources": {
+    "kyotoOfficial": "https://umamusume.jp/steam-news/detail?id=3496",
+    "kyotoLabo": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+    "kyotoMerci": "https://merci-splatoon.com/2610cla-2/",
+    "kyotoBasics": "https://merci-splatoon.com/2610cla-1/",
+    "kyotoGamewith": "https://gamewith.jp/uma-musume/article/show/572401",
+    "tokyoMerci": "https://merci-splatoon.com/2609mile-1/",
+    "nakayamaLabo": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612"
+  },
+  "cases": [
+    {
+      "event": "kyoto",
+      "id": "201342",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "直滑降",
+      "gain": 2.089158691537967,
+      "activationRate": 0.953125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.8188706881579493,
+        "standardDeviation": 0.6308426110478035,
+        "halfDifference": 0.0027848154704721573,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "201342",
+          "index": 1,
+          "x": 1517.9193713885377,
+          "t": 78.17,
+          "duration": 6.6
+        }
+      ],
+      "firstAcceleration": 1517.9193713885377,
+      "lateStart": 1466.6666666666667,
+      "offset": 51.25270472187094,
+      "gain128": 2.090551099273203,
+      "delta128vs256": 0.0013924077352358566,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "203322",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "駆け降り",
+      "gain": 2.26273628620573,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 3.0662714881666036,
+        "standardDeviation": 0.7088878434870682,
+        "halfDifference": 0.009746017650044347,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203322",
+          "index": 1,
+          "x": 1398.1277563092867,
+          "t": 72.54,
+          "duration": 6.6
+        }
+      ],
+      "firstAcceleration": 1398.1277563092867,
+      "lateStart": 1466.6666666666667,
+      "offset": -68.53891035738002,
+      "gain128": 2.2676092950307507,
+      "delta128vs256": 0.004873008825020619,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "203902",
+      "style": 4,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "急降下",
+      "gain": 2.3400212449551,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 3.1753384394214663,
+        "standardDeviation": 0.7261825557894135,
+        "halfDifference": 0.053825995038173424,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203902",
+          "index": 1,
+          "x": 1443.6956890164506,
+          "t": 74.89,
+          "duration": 6.6
+        }
+      ],
+      "firstAcceleration": 1443.6956890164506,
+      "lateStart": 1466.6666666666667,
+      "offset": -22.970977650216128,
+      "gain128": 2.366934242474188,
+      "delta128vs256": 0.026912997519088044,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "91101411",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "光れ！弾けろ！超新星爆発！",
+      "gain": 2.1955875931520623,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.313047011715753,
+        "standardDeviation": 0.5088258886962018,
+        "halfDifference": 0.01807067977902932,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "91101411",
+          "index": 1,
+          "x": 1100.0995272467217,
+          "t": 56.870000000000005,
+          "duration": 7.92
+        },
+        {
+          "id": "91101411",
+          "index": 2,
+          "x": 1466.8455911079766,
+          "t": 75.62,
+          "duration": 2.64
+        }
+      ],
+      "firstAcceleration": 1466.8455911079766,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.17892444130984586,
+      "gain128": 2.204622933041577,
+      "delta128vs256": 0.00903533988951466,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "91101351",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "黄金を訪ねて",
+      "gain": 2.28713501678449,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.419448612796805,
+        "standardDeviation": 0.5511858126284476,
+        "halfDifference": 0.03780388457495043,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "91101351",
+          "index": 1,
+          "x": 1100.0959741339968,
+          "t": 57.34,
+          "duration": 7.92
+        },
+        {
+          "id": "91101351",
+          "index": 2,
+          "x": 1466.6908155117428,
+          "t": 75.95,
+          "duration": 2.64
+        }
+      ],
+      "firstAcceleration": 1466.6908155117428,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.024148845076069847,
+      "gain128": 2.306036959071954,
+      "delta128vs256": 0.018901942287464113,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "900201",
+      "style": 1,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "アングリング×スキーミング",
+      "gain": 2.402839048822651,
+      "activationRate": 0.94140625,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.5523933464672153,
+        "standardDeviation": 0.6006364468014476,
+        "halfDifference": 0.01994057301927521,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900201",
+          "index": 1,
+          "x": 1466.7794991246922,
+          "t": 75.98,
+          "duration": 5.28
+        }
+      ],
+      "firstAcceleration": 1466.7794991246922,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.11283245802542297,
+      "gain128": 2.39286876231302,
+      "delta128vs256": -0.009970286509631165,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "900271",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "燃えろ筋肉！",
+      "gain": 2.6983942217017587,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.842752760311305,
+        "standardDeviation": 0.625350973102804,
+        "halfDifference": 0.022209005939932247,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900271",
+          "index": 1,
+          "x": 1466.6963443092714,
+          "t": 76.01,
+          "duration": 5.28
+        }
+      ],
+      "firstAcceleration": 1466.6963443092714,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.02967764260461081,
+      "gain128": 2.6872897187317832,
+      "delta128vs256": -0.01110450296997545,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "900591",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "彼方、その先へ…",
+      "gain": 2.6983942217017587,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.842752760311305,
+        "standardDeviation": 0.625350973102804,
+        "halfDifference": 0.022209005939932247,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate",
+        "temptation_count"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900591",
+          "index": 1,
+          "x": 1466.6963443092714,
+          "t": 76.01,
+          "duration": 5.28
+        }
+      ],
+      "firstAcceleration": 1466.6963443092714,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.02967764260461081,
+      "gain128": 2.6872897187317832,
+      "delta128vs256": -0.01110450296997545,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "910681",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "あっぱれ大盤振る舞い！",
+      "gain": 1.2314868778929764,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.2973688919366395,
+        "standardDeviation": 0.2853962224126163,
+        "halfDifference": 0.010135694468254908,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "910681",
+          "index": 1,
+          "x": 1466.8441775320462,
+          "t": 75.68,
+          "duration": 5.28
+        }
+      ],
+      "firstAcceleration": 1466.8441775320462,
+      "lateStart": 1466.6666666666667,
+      "offset": 0.17751086537941774,
+      "gain128": 1.236554725127109,
+      "delta128vs256": 0.005067847234132561,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "203441",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "夢の舞台へ",
+      "gain": 2.1566167715790505,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 3.199311199182193,
+        "standardDeviation": 0.7178248886981352,
+        "halfDifference": 0.013059081477950762,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203441",
+          "index": 1,
+          "x": 1552.4150760328569,
+          "t": 79.75,
+          "duration": 2.64
+        }
+      ],
+      "firstAcceleration": 1552.4150760328569,
+      "lateStart": 1466.6666666666667,
+      "offset": 85.74840936619012,
+      "gain128": 2.150087230840075,
+      "delta128vs256": -0.006529540738975381,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "203831",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/kyoto2200chanmi-202610",
+      "expectedOffset": null,
+      "name": "天賦の才",
+      "gain": 2.3416569653659205,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 3.387181375732689,
+        "standardDeviation": 0.7494747215630257,
+        "halfDifference": 0.002656790791240926,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203831",
+          "index": 1,
+          "x": 1522.8589365986031,
+          "t": 78.72,
+          "duration": 2.64
+        }
+      ],
+      "firstAcceleration": 1522.8589365986031,
+      "lateStart": 1466.6666666666667,
+      "offset": 56.19226993193638,
+      "gain128": 2.3403285699702994,
+      "delta128vs256": -0.0013283953956211292,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "202711",
+      "style": 2,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2610cla-1/",
+      "expectedOffset": null,
+      "name": "王手",
+      "gain": 1.2552325896671248,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.3278493510528278,
+        "standardDeviation": 0.30250352073490294,
+        "halfDifference": 0.020747646110200524,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 1,
+      "firstEvents": [
+        {
+          "id": "202711",
+          "index": 1,
+          "x": 1550.1939444502605,
+          "t": 79.71000000000001,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1550.1939444502605,
+      "lateStart": 1466.6666666666667,
+      "offset": 83.52727778359372,
+      "gain128": 1.2656064127222293,
+      "delta128vs256": 0.01037382305510448,
+      "contributionPass": false,
+      "spatialPass": null,
+      "pass": false
+    },
+    {
+      "event": "kyoto",
+      "id": "202871",
+      "style": 4,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2610cla-1/",
+      "expectedOffset": null,
+      "name": "君臨",
+      "gain": 1.4737186256384087,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.5525595397672078,
+        "standardDeviation": 0.3415332604890856,
+        "halfDifference": 0.012129371404431266,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "202871",
+          "index": 1,
+          "x": 1550.1892204126311,
+          "t": 80,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1550.1892204126311,
+      "lateStart": 1466.6666666666667,
+      "offset": 83.52255374596439,
+      "gain128": 1.4676539399361854,
+      "delta128vs256": -0.006064685702223294,
+      "contributionPass": false,
+      "spatialPass": null,
+      "pass": false
+    },
+    {
+      "event": "kyoto",
+      "id": "203381",
+      "style": 3,
+      "expect": "guide-avoid",
+      "source": "https://gamewith.jp/uma-musume/article/show/572401",
+      "expectedOffset": null,
+      "name": "勝負はここから！",
+      "gain": 0,
+      "activationRate": 0,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0,
+        "standardDeviation": 0,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "inactive",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [],
+      "firstAcceleration": null,
+      "lateStart": 1466.6666666666667,
+      "offset": null,
+      "gain128": 0,
+      "delta128vs256": 0,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "202712",
+      "style": 2,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "会心の一歩",
+      "gain": 0.6847264720602554,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.7243387473034091,
+        "standardDeviation": 0.1650149703279646,
+        "halfDifference": 0.011317792926615722,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "202712",
+          "index": 1,
+          "x": 1550.1939444502605,
+          "t": 79.65,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1550.1939444502605,
+      "lateStart": 1466.6666666666667,
+      "offset": 83.52727778359372,
+      "gain128": 0.6790675755969445,
+      "delta128vs256": -0.0056588964633108585,
+      "contributionPass": false,
+      "spatialPass": null,
+      "pass": false
+    },
+    {
+      "event": "kyoto",
+      "id": "203712",
+      "style": 2,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "勇気の一歩",
+      "gain": 0,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0,
+        "standardDeviation": 0,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203712",
+          "index": 1,
+          "x": 1797.0222994831738,
+          "t": 89.83,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1797.0222994831738,
+      "lateStart": 1466.6666666666667,
+      "offset": 330.35563281650707,
+      "gain128": 0,
+      "delta128vs256": 0,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "204432",
+      "style": 3,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "影より速く",
+      "gain": 0,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0,
+        "standardDeviation": 0,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "204432",
+          "index": 1,
+          "x": 1797.120366326816,
+          "t": 90.05,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1797.120366326816,
+      "lateStart": 1466.6666666666667,
+      "offset": 330.45369966014937,
+      "gain128": 0,
+      "delta128vs256": 0,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "kyoto",
+      "id": "200642",
+      "style": 4,
+      "expect": "guide-avoid",
+      "source": "https://gamewith.jp/uma-musume/article/show/572401",
+      "expectedOffset": null,
+      "name": "直線一気",
+      "gain": 0,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0,
+        "standardDeviation": 0,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "200642",
+          "index": 1,
+          "x": 1797.2465113747019,
+          "t": 90.07000000000001,
+          "duration": 1.98
+        }
+      ],
+      "firstAcceleration": 1797.2465113747019,
+      "lateStart": 1466.6666666666667,
+      "offset": 330.5798447080351,
+      "gain128": 0,
+      "delta128vs256": 0,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "tokyo",
+      "id": "900201",
+      "style": 1,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2609mile-1/",
+      "expectedOffset": 0,
+      "name": "アングリング×スキーミング",
+      "gain": 1.977966080117455,
+      "activationRate": 0.94140625,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.101523053659821,
+        "standardDeviation": 0.49443193636447025,
+        "halfDifference": 0.016348006003885862,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900201",
+          "index": 1,
+          "x": 1200.0937416710703,
+          "t": 61,
+          "duration": 4.32
+        }
+      ],
+      "firstAcceleration": 1200.0937416710703,
+      "lateStart": 1200,
+      "offset": 0.09374167107034737,
+      "gain128": 1.9697920771155124,
+      "delta128vs256": -0.008174003001942598,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "tokyo",
+      "id": "900511",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2609mile-1/",
+      "expectedOffset": 0,
+      "name": "つぼみ、ほころぶ時",
+      "gain": 2.1798245892561234,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.296440719545535,
+        "standardDeviation": 0.5051728235709961,
+        "halfDifference": 0.01794094312144967,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order",
+        "order_rate",
+        "blocked_side_continuetime"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900511",
+          "index": 1,
+          "x": 1200.1147666064583,
+          "t": 60.74,
+          "duration": 4.32
+        }
+      ],
+      "firstAcceleration": 1200.1147666064583,
+      "lateStart": 1200,
+      "offset": 0.11476660645826087,
+      "gain128": 2.1887950608168367,
+      "delta128vs256": 0.008970471560713289,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "tokyo",
+      "id": "900271",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2609mile-1/",
+      "expectedOffset": 0,
+      "name": "燃えろ筋肉！",
+      "gain": 2.4782677621393083,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.6111466095856484,
+        "standardDeviation": 0.5743371326936996,
+        "halfDifference": 0.02047303297738301,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900271",
+          "index": 1,
+          "x": 1200.0174356923762,
+          "t": 60.99,
+          "duration": 4.32
+        }
+      ],
+      "firstAcceleration": 1200.0174356923762,
+      "lateStart": 1200,
+      "offset": 0.017435692376238876,
+      "gain128": 2.468031245650625,
+      "delta128vs256": -0.01023651648868329,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "tokyo",
+      "id": "202712",
+      "style": 2,
+      "expect": "guide-avoid",
+      "source": "https://merci-splatoon.com/2609mile-1/",
+      "expectedOffset": null,
+      "name": "会心の一歩",
+      "gain": 0,
+      "activationRate": 0,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0,
+        "standardDeviation": 0,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "inactive",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [],
+      "firstAcceleration": null,
+      "lateStart": 1200,
+      "offset": null,
+      "gain128": 0,
+      "delta128vs256": 0,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "tokyo",
+      "id": "200642",
+      "style": 4,
+      "expect": "delayed",
+      "source": "https://merci-splatoon.com/2609mile-1/",
+      "expectedOffset": 75,
+      "name": "直線一気",
+      "gain": 0.7812710468831868,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.8266669964494213,
+        "standardDeviation": 0.1882818544438786,
+        "halfDifference": 0.000015007855832749328,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "200642",
+          "index": 1,
+          "x": 1275.2029458098548,
+          "t": 64.54,
+          "duration": 1.62
+        }
+      ],
+      "firstAcceleration": 1275.2029458098548,
+      "lateStart": 1200,
+      "offset": 75.20294580985478,
+      "gain128": 0.7812785508110989,
+      "delta128vs256": 0.000007503927912044794,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "203712",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "勇気の一歩",
+      "gain": 1.488140659446492,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.5745335901847284,
+        "standardDeviation": 0.3586331363658449,
+        "halfDifference": 0.000028279705446720982,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203712",
+          "index": 1,
+          "x": 1666.8449643374606,
+          "t": 87.25,
+          "duration": 2.25
+        }
+      ],
+      "firstAcceleration": 1666.8449643374606,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.17829767079388148,
+      "gain128": 1.4881547992992137,
+      "delta128vs256": 0.000014139852721584134,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "204432",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "影より速く",
+      "gain": 1.5447115097566093,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.6343076841181756,
+        "standardDeviation": 0.37226637274005053,
+        "halfDifference": 0.00002513975844053995,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "204432",
+          "index": 1,
+          "x": 1666.8119883525246,
+          "t": 87.65,
+          "duration": 2.25
+        }
+      ],
+      "firstAcceleration": 1666.8119883525246,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.14532168585787986,
+      "gain128": 1.5446989398773854,
+      "delta128vs256": -0.000012569879223933711,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "200642",
+      "style": 4,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "直線一気",
+      "gain": 1.5942168476188776,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.686719541369348,
+        "standardDeviation": 0.3841968450496061,
+        "halfDifference": 0.000022627724507673364,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "200642",
+          "index": 1,
+          "x": 1666.8573037602343,
+          "t": 87.7,
+          "duration": 2.25
+        }
+      ],
+      "firstAcceleration": 1666.8573037602343,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.19063709356760228,
+      "gain128": 1.594205533756618,
+      "delta128vs256": -0.00001131386225949882,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "203711",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "ショーダウン",
+      "gain": 2.839287857351114,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.9914784553100615,
+        "standardDeviation": 0.6580030185262851,
+        "halfDifference": 0.02336701518525386,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203711",
+          "index": 1,
+          "x": 1666.8449643374606,
+          "t": 87.25,
+          "duration": 2.25
+        }
+      ],
+      "firstAcceleration": 1666.8449643374606,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.17829767079388148,
+      "gain128": 2.827604349758498,
+      "delta128vs256": -0.01168350759261605,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "204431",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "絶塵",
+      "gain": 2.9427575490575304,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 3.1134516854943284,
+        "standardDeviation": 0.7091872578671087,
+        "halfDifference": 0.04869794698423968,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "204431",
+          "index": 1,
+          "x": 1666.8119883525246,
+          "t": 87.65,
+          "duration": 2.25
+        }
+      ],
+      "firstAcceleration": 1666.8119883525246,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.14532168585787986,
+      "gain128": 2.918408575565421,
+      "delta128vs256": -0.024348973492109405,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "91101411",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "光れ！弾けろ！超新星爆発！",
+      "gain": 2.5349127641178315,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.677632940535477,
+        "standardDeviation": 0.5874860085249063,
+        "halfDifference": 0.021165142108376944,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "91101411",
+          "index": 1,
+          "x": 1250.015499337604,
+          "t": 65.68,
+          "duration": 9
+        },
+        {
+          "id": "91101411",
+          "index": 2,
+          "x": 1666.8343386186168,
+          "t": 87.18,
+          "duration": 3
+        }
+      ],
+      "firstAcceleration": 1666.8343386186168,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.16767195195006934,
+      "gain128": 2.5454953351720273,
+      "delta128vs256": 0.0105825710541958,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "91101351",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": null,
+      "name": "黄金を訪ねて",
+      "gain": 2.608981272097333,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.7656004134243632,
+        "standardDeviation": 0.6287776677012229,
+        "halfDifference": 0.042716785910895005,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "91101351",
+          "index": 1,
+          "x": 1250.1519783525,
+          "t": 66.24,
+          "duration": 9
+        },
+        {
+          "id": "91101351",
+          "index": 2,
+          "x": 1666.7918076336757,
+          "t": 87.58,
+          "duration": 3
+        }
+      ],
+      "firstAcceleration": 1666.7918076336757,
+      "lateStart": 1666.6666666666667,
+      "offset": 0.12514096700897426,
+      "gain128": 2.630339665052778,
+      "delta128vs256": 0.021358392955444838,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "900201",
+      "style": 1,
+      "expect": "delayed",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": 33.333333333333336,
+      "name": "アングリング×スキーミング",
+      "gain": 1.904093623873248,
+      "activationRate": 0.94140625,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.022636849106857,
+        "standardDeviation": 0.47596530925305836,
+        "halfDifference": 0.015803806874063575,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900201",
+          "index": 1,
+          "x": 1700.0905177721322,
+          "t": 89.27,
+          "duration": 6
+        }
+      ],
+      "firstAcceleration": 1700.0905177721322,
+      "lateStart": 1666.6666666666667,
+      "offset": 33.423851105465474,
+      "gain128": 1.8961917204362235,
+      "delta128vs256": -0.00790190343702446,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "900591",
+      "style": 3,
+      "expect": "delayed",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": 33.333333333333336,
+      "name": "彼方、その先へ…",
+      "gain": 2.1911340381292317,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 2.3083962355640324,
+        "standardDeviation": 0.5077937810618854,
+        "halfDifference": 0.018031659307752967,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate",
+        "temptation_count"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "900591",
+          "index": 1,
+          "x": 1700.1367825749082,
+          "t": 89.31,
+          "duration": 6
+        }
+      ],
+      "firstAcceleration": 1700.1367825749082,
+      "lateStart": 1666.6666666666667,
+      "offset": 33.470115908241496,
+      "gain128": 2.1821182084753543,
+      "delta128vs256": -0.009015829653877372,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "nakayama",
+      "id": "910681",
+      "style": 2,
+      "expect": "delayed",
+      "source": "https://umamusumelabo.com/event/champions-meeting/chanmilong-202612",
+      "expectedOffset": 33.333333333333336,
+      "name": "あっぱれ大盤振る舞い！",
+      "gain": 1.0587112026557008,
+      "activationRate": 0.94921875,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.1156539557610814,
+        "standardDeviation": 0.2453558284448602,
+        "halfDifference": 0.008727358320143042,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "910681",
+          "index": 1,
+          "x": 1700.1140802659247,
+          "t": 88.92,
+          "duration": 6
+        }
+      ],
+      "firstAcceleration": 1700.1140802659247,
+      "lateStart": 1666.6666666666667,
+      "offset": 33.44741359925797,
+      "gain128": 1.0630748818157734,
+      "delta128vs256": 0.00436367916007252,
+      "contributionPass": true,
+      "spatialPass": true,
+      "pass": true
+    },
+    {
+      "event": "longchamp",
+      "id": "202712",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "会心の一歩",
+      "gain": 1.3990766246736424,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.4800149418035289,
+        "standardDeviation": 0.3371690698804423,
+        "halfDifference": 0.023125233465679962,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "assumed",
+      "assumptions": [
+        "order_rate"
+      ],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "202712",
+          "index": 1,
+          "x": 1600.063193805398,
+          "t": 83.61,
+          "duration": 2.16
+        }
+      ],
+      "firstAcceleration": 1600.063193805398,
+      "lateStart": 1600,
+      "offset": 0.06319380539798658,
+      "gain128": 1.3875140079408068,
+      "delta128vs256": -0.01156261673283554,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "longchamp",
+      "id": "203712",
+      "style": 2,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "勇気の一歩",
+      "gain": 1.2586399888128086,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.3314538724631348,
+        "standardDeviation": 0.3033246834792435,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "203712",
+          "index": 1,
+          "x": 1617.031941670539,
+          "t": 84.47,
+          "duration": 2.16
+        }
+      ],
+      "firstAcceleration": 1617.031941670539,
+      "lateStart": 1600,
+      "offset": 17.031941670539027,
+      "gain128": 1.2586399888128044,
+      "delta128vs256": -4.218847493575595e-15,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    },
+    {
+      "event": "longchamp",
+      "id": "204432",
+      "style": 3,
+      "expect": "useful",
+      "source": "https://merci-splatoon.com/2610cla-2/",
+      "expectedOffset": null,
+      "name": "影より速く",
+      "gain": 1.3362043564771138,
+      "activationRate": 0.9453125,
+      "hpSuccessRate": 1,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.4135054349510028,
+        "standardDeviation": 0.32201723057782755,
+        "halfDifference": 0,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "status": "supported",
+      "assumptions": [],
+      "timingSample": 0,
+      "firstEvents": [
+        {
+          "id": "204432",
+          "index": 1,
+          "x": 1617.1024802741088,
+          "t": 84.84,
+          "duration": 2.16
+        }
+      ],
+      "firstAcceleration": 1617.1024802741088,
+      "lateStart": 1600,
+      "offset": 17.102480274108757,
+      "gain128": 1.3362043564771184,
+      "delta128vs256": 4.6629367034256575e-15,
+      "contributionPass": true,
+      "spatialPass": null,
+      "pass": true
+    }
+  ],
+  "seedSensitivity": [
+    {
+      "event": "kyoto",
+      "id": "201342",
+      "name": "直滑降",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        2.090551099273203,
+        2.05055128301917,
+        2.0941542692154704,
+        2.0635674254835306,
+        2.072603417672353,
+        2.090498374045566,
+        2.037030575532092,
+        2.0757429795359177
+      ],
+      "min": 2.037030575532092,
+      "max": 2.0941542692154704,
+      "spread": 0.05712369368337855
+    },
+    {
+      "event": "kyoto",
+      "id": "203441",
+      "name": "夢の舞台へ",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        2.150087230840075,
+        2.1467241789373555,
+        2.1296121787462092,
+        2.1550328956296245,
+        2.1478122252633645,
+        2.1368328495654567,
+        2.125620149911755,
+        2.139539005680278
+      ],
+      "min": 2.125620149911755,
+      "max": 2.1550328956296245,
+      "spread": 0.02941274571786945
+    },
+    {
+      "event": "kyoto",
+      "id": "900271",
+      "name": "燃えろ筋肉！",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        2.6872897187317832,
+        2.6872897187317832,
+        2.6872897187317832,
+        2.7094987246717155,
+        2.665080712791851,
+        2.6872897187317832,
+        2.665080712791851,
+        2.7094987246717155
+      ],
+      "min": 2.665080712791851,
+      "max": 2.7094987246717155,
+      "spread": 0.044418011879864494
+    },
+    {
+      "event": "kyoto",
+      "id": "91101411",
+      "name": "光れ！弾けろ！超新星爆発！",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        2.204622933041577,
+        2.204622933041577,
+        2.1684815734835183,
+        2.1865522532625477,
+        2.204622933041577,
+        2.1684815734835183,
+        2.204622933041577,
+        2.204622933041577
+      ],
+      "min": 2.1684815734835183,
+      "max": 2.204622933041577,
+      "spread": 0.03614135955805864
+    },
+    {
+      "event": "tokyo",
+      "id": "900511",
+      "name": "つぼみ、ほころぶ時",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        2.1887950608168367,
+        2.1887950608168367,
+        2.170854117695387,
+        2.170854117695387,
+        2.170854117695387,
+        2.1887950608168367,
+        2.170854117695387,
+        2.170854117695387
+      ],
+      "min": 2.170854117695387,
+      "max": 2.1887950608168367,
+      "spread": 0.01794094312144967
+    },
+    {
+      "event": "nakayama",
+      "id": "200642",
+      "name": "直線一気",
+      "samples": 128,
+      "seeds": 8,
+      "values": [
+        1.594205533756618,
+        1.6073717163113126,
+        1.5942055337566183,
+        1.5942111906877452,
+        1.5942168476188718,
+        1.5941829060321109,
+        1.6073773732424395,
+        1.5942055337566183
+      ],
+      "min": 1.5941829060321109,
+      "max": 1.6073773732424395,
+      "spread": 0.013194467210328575
+    }
+  ],
+  "rankSensitivity": [
+    {
+      "id": "900201",
+      "name": "アングリング×スキーミング",
+      "values": [
+        {
+          "rank": 1,
+          "gain": 2.39286876231302,
+          "activationRate": 0.9375
+        },
+        {
+          "rank": 2,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 3,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 4,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 5,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 6,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 7,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 8,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 9,
+          "gain": 0,
+          "activationRate": 0
+        }
+      ]
+    },
+    {
+      "id": "900271",
+      "name": "燃えろ筋肉！",
+      "values": [
+        {
+          "rank": 1,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 2,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 3,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 4,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 5,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 6,
+          "gain": 2.6872897187317832,
+          "activationRate": 0.9453125
+        },
+        {
+          "rank": 7,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 8,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 9,
+          "gain": 0,
+          "activationRate": 0
+        }
+      ]
+    },
+    {
+      "id": "900591",
+      "name": "彼方、その先へ…",
+      "values": [
+        {
+          "rank": 1,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 2,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 3,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 4,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 5,
+          "gain": 2.6872897187317832,
+          "activationRate": 0.9453125
+        },
+        {
+          "rank": 6,
+          "gain": 2.6872897187317832,
+          "activationRate": 0.9453125
+        },
+        {
+          "rank": 7,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 8,
+          "gain": 0,
+          "activationRate": 0
+        },
+        {
+          "rank": 9,
+          "gain": 0,
+          "activationRate": 0
+        }
+      ]
+    },
+    {
+      "id": "91101411",
+      "name": "光れ！弾けろ！超新星爆発！",
+      "values": [
+        {
+          "rank": 1,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 2,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 3,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 4,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 5,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 6,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 7,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 8,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        },
+        {
+          "rank": 9,
+          "gain": 2.204622933041577,
+          "activationRate": 0.953125
+        }
+      ]
+    }
+  ],
+  "combinationMarginals": [
+    {
+      "event": "kyoto",
+      "style": 2,
+      "ids": [
+        "201342",
+        "203441",
+        "91101411"
+      ],
+      "joint": 5.086063600697259,
+      "singles": [
+        {
+          "id": "201342",
+          "gain": 2.089158691537967
+        },
+        {
+          "id": "203441",
+          "gain": 2.1566167715790505
+        },
+        {
+          "id": "91101411",
+          "gain": 2.1955875931520623
+        }
+      ],
+      "ablated": [
+        {
+          "id": "201342",
+          "marginal": 1.1148210768554474
+        },
+        {
+          "id": "203441",
+          "marginal": 1.155191834802118
+        },
+        {
+          "id": "91101411",
+          "marginal": 1.518962610496812
+        }
+      ],
+      "sumSingles": 6.44136305626908
+    },
+    {
+      "event": "nakayama",
+      "style": 4,
+      "ids": [
+        "200642",
+        "91101351"
+      ],
+      "joint": 4.082691217349081,
+      "singles": [
+        {
+          "id": "200642",
+          "gain": 1.5942168476188776
+        },
+        {
+          "id": "91101351",
+          "gain": 2.6748073925917444
+        }
+      ],
+      "ablated": [
+        {
+          "id": "200642",
+          "marginal": 1.4078838247573362
+        },
+        {
+          "id": "91101351",
+          "marginal": 2.488474369730203
+        }
+      ],
+      "sumSingles": 4.269024240210622
+    }
+  ],
+  "recommendationStability": [
+    {
+      "seed": 0,
+      "activeIds": [
+        "201341",
+        "202712",
+        "203441"
+      ],
+      "gain": 4.179356928300166,
+      "budget": {
+        "total": 500,
+        "used": 456,
+        "remaining": 44
+      },
+      "hpSuccessRate": 1,
+      "search": {
+        "method": "exhaustive",
+        "evaluations": 60,
+        "shortlisted": 7,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 5,
+        "globalOptimal": false,
+        "searchSamples": 8,
+        "searchDt": 0.05,
+        "samples": 128,
+        "dt": 0.01
+      },
+      "excluded": [
+        {
+          "id": "91101411",
+          "reason": "구매 비용 확인 필요"
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "activeIds": [
+        "201341",
+        "202712",
+        "203441"
+      ],
+      "gain": 4.166852491904534,
+      "budget": {
+        "total": 500,
+        "used": 456,
+        "remaining": 44
+      },
+      "hpSuccessRate": 1,
+      "search": {
+        "method": "exhaustive",
+        "evaluations": 59,
+        "shortlisted": 7,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 4,
+        "globalOptimal": false,
+        "searchSamples": 8,
+        "searchDt": 0.05,
+        "samples": 128,
+        "dt": 0.01
+      },
+      "excluded": [
+        {
+          "id": "91101411",
+          "reason": "구매 비용 확인 필요"
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "activeIds": [
+        "201341",
+        "202712",
+        "203441"
+      ],
+      "gain": 4.168896839531177,
+      "budget": {
+        "total": 500,
+        "used": 456,
+        "remaining": 44
+      },
+      "hpSuccessRate": 1,
+      "search": {
+        "method": "exhaustive",
+        "evaluations": 60,
+        "shortlisted": 7,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 5,
+        "globalOptimal": false,
+        "searchSamples": 8,
+        "searchDt": 0.05,
+        "samples": 128,
+        "dt": 0.01
+      },
+      "excluded": [
+        {
+          "id": "91101411",
+          "reason": "구매 비용 확인 필요"
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "activeIds": [
+        "201341",
+        "202712",
+        "203441"
+      ],
+      "gain": 4.174803917272844,
+      "budget": {
+        "total": 500,
+        "used": 456,
+        "remaining": 44
+      },
+      "hpSuccessRate": 1,
+      "search": {
+        "method": "exhaustive",
+        "evaluations": 60,
+        "shortlisted": 7,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 5,
+        "globalOptimal": false,
+        "searchSamples": 8,
+        "searchDt": 0.05,
+        "samples": 128,
+        "dt": 0.01
+      },
+      "excluded": [
+        {
+          "id": "91101411",
+          "reason": "구매 비용 확인 필요"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "cases": 36,
+    "passed": 33,
+    "failed": [
+      {
+        "event": "kyoto",
+        "id": "202711",
+        "expect": "guide-avoid",
+        "gain": 1.2552325896671248,
+        "offset": 83.52727778359372
+      },
+      {
+        "event": "kyoto",
+        "id": "202871",
+        "expect": "guide-avoid",
+        "gain": 1.4737186256384087,
+        "offset": 83.52255374596439
+      },
+      {
+        "event": "kyoto",
+        "id": "202712",
+        "expect": "guide-avoid",
+        "gain": 0.6847264720602554,
+        "offset": 83.52727778359372
+      }
+    ],
+    "max128vs256": 0.026912997519088044
+  }
+}

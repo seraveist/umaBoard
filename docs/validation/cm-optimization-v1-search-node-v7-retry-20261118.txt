@@ -1,0 +1,23 @@
+✔ both strengthened inherited effects share their verified paid stage at all hints and discounts (7.837ms)
+✔ generic inherited transforms work with arbitrary IDs and preserve prerequisite ownership without double effects (28.1302ms)
+✔ normal/strengthened acquisition uses one inheritance origin and paid history can be cleared coherently (1.3185ms)
+✔ actual strengthened inheritance is purchasable at Lv5 and upgrades an already paid original for zero SP (236.16ms)
+✔ all skills in a sample share one rank and contradictory instantaneous rank gates cannot both fire (44.6606ms)
+✔ context scheduling retains the original random draw and excludes impossible constant/rank windows (60.2897ms)
+✔ explicit weighted contexts aggregate scenario means and override default coverage (41.9416ms)
+✔ shared threshold cases evaluate unseen numeric gates consistently rather than satisfying both opposites (2.1734ms)
+✔ continuous rank gates accumulate elapsed time, reset after leaving the rank band and respect recorded opponent events (0.2269ms)
+✔ full-spurt acceleration contributes only after the enabled extra-spurt state starts (29.179ms)
+✔ usefulness spans the whole duration: prelaid acceleration helps after the boundary, expired and late acceleration do not (33.2364ms)
+✔ backup acceleration value and usefulness naturally fall when the primary acceleration succeeds (176.5939ms)
+✔ optimizer ranks model mean with whole-run tail protection and reports actual ablation gains (70.7176ms)
+✔ HP-first pruning rejects only a proven infeasible challenger and preserves complete feasible scores (39.8736ms)
+✔ large-pool staged search uses final samples and matches an affordable-subset oracle (209.3508ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1111.6513

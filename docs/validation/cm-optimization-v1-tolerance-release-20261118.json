@@ -1,0 +1,165 @@
+{
+  "id": "umaboard-optimization-v1",
+  "version": "v1",
+  "revision": 3,
+  "name": "최적화 알고리즘 v1",
+  "date": "2026-11-18 Asia/Seoul",
+  "baseCommit": "dbbe246",
+  "models": {
+    "chart": "cm-first-chart-v11",
+    "final": "cm-post-training-v13",
+    "solo": "solo-comparison-v5"
+  },
+  "entrypoints": [
+    "assets/cm-chart.mjs",
+    "assets/cm-final-plan.mjs"
+  ],
+  "parentRelease": {
+    "path": "docs/validation/cm-optimization-v1-search-release-20261118.json",
+    "textSha256": "731447001c23f2b09e7a58f7d4ef51ade905b842347bd2472128821825175c92"
+  },
+  "parentBaseline": {
+    "path": "docs/validation/cm-algorithm-v1-baseline-20261118.json",
+    "textSha256": "80010914a59c4b662b69c117fb34e549a7e3947ab64e6de5d8713f0b0a6b9a4f"
+  },
+  "priorAudit": {
+    "path": "docs/validation/cm-optimization-v1-search-summary-20261118.json",
+    "textSha256": "ee0fde335e674c1d562e303205c153d49e67cd65f5be7427faef2c19c84a9dd8"
+  },
+  "authorizedChanges": [
+    "assets/cm-final-plan.mjs",
+    "assets/cm-plan-compression.mjs"
+  ],
+  "modules": [
+    {
+      "path": "assets/acquisition-constraints.mjs",
+      "textSha256": "538c827afc9fd955eb2a0dab798623bb1cdc85f7a2dee5a2181c596961481abd"
+    },
+    {
+      "path": "assets/acquisition-rules.mjs",
+      "textSha256": "12b942ec6bcb7782739e132e3b3a00b7bf12ac500cd858422f101582cb5ca281"
+    },
+    {
+      "path": "assets/activation.mjs",
+      "textSha256": "2a30b3a689516d18a6d920f14278e6ccbd74bc78e94866b386ca24d68314505a"
+    },
+    {
+      "path": "assets/candidates.mjs",
+      "textSha256": "dd430b393a8d713f98f9600047ff17631dec0189dc4fb96ee7e02ba34a862da4"
+    },
+    {
+      "path": "assets/cm-chart.mjs",
+      "textSha256": "56f44437a435cf890fb3d8e3e7315dc5c07079b32de6d0320e98477c7810b6a5"
+    },
+    {
+      "path": "assets/cm-course-metadata.mjs",
+      "textSha256": "b542490433b4415d2d7ccf8940b1a4d5f5bbe8afc5093a1d5f25efc478125e72"
+    },
+    {
+      "path": "assets/cm-discounts.mjs",
+      "textSha256": "67e6360f5f90c21df23f28918b82c548ccd46e8dfff8462aab3edddb4ec61f69"
+    },
+    {
+      "path": "assets/cm-effect-policy.mjs",
+      "textSha256": "ecae9c5065722642d95248923c085c09367ba9fe6aa42fa03e988b7008ae1210"
+    },
+    {
+      "path": "assets/cm-evolution.mjs",
+      "textSha256": "06d0bb584841aa60421456c732f04f1ff642274c77e36e3c87c9658960a43e50"
+    },
+    {
+      "path": "assets/cm-final-plan.mjs",
+      "textSha256": "5db9151847cb73e3e8bbff5f7015899b99ffdb0afaea656ab567189f05b3cdfc"
+    },
+    {
+      "path": "assets/cm-icons.mjs",
+      "textSha256": "bdcefba95047523d080dc063a22587fa1974b72dbd95c3a37d691991319299f5"
+    },
+    {
+      "path": "assets/cm-plan-compression.mjs",
+      "textSha256": "357b9cd332d9bec6b3c0727d4bbfc1d1010211e0b4d6d26a2dcd51767d6f5537"
+    },
+    {
+      "path": "assets/cm-ranks.mjs",
+      "textSha256": "aa48af5b79c75bdfc6f670f3b3ad28d13209afdaac453c0c86d7d5709c1feef6"
+    },
+    {
+      "path": "assets/cm-recommendation.mjs",
+      "textSha256": "650f15081d68b8af8e2c079b65cd8b052ab301bc63f0f165d28ffc45469ccbad"
+    },
+    {
+      "path": "assets/cm-search.mjs",
+      "textSha256": "316dc9d40fefdf11766a65db039b14a1a92049b1f6923cd2f17d6541d6d39537"
+    },
+    {
+      "path": "assets/cm-state.mjs",
+      "textSha256": "8ea266505c475186a6f84a6cc7326f8b5a887b89ce454ee82e88c1e40f42aca9"
+    },
+    {
+      "path": "assets/condition-windows.mjs",
+      "textSha256": "8f40f511f308f88a5927bfed7105f0a4a527c71e77d2344a7eff41e17e6b2ee1"
+    },
+    {
+      "path": "assets/physics.mjs",
+      "textSha256": "33540668e3d51c179f6f39e60e6a154af7ac387468b2e5767b909b495ca2b81c"
+    },
+    {
+      "path": "assets/purchases.mjs",
+      "textSha256": "802b8bcb17bf6688f65bb6ca1b628fd2d08bc42d5e0246e2b23004a581538d1f"
+    },
+    {
+      "path": "assets/race-evaluation.mjs",
+      "textSha256": "b11d5fb7de686848efa52ac478ed72389871bb210b00050fdda1fb77c134bd15"
+    },
+    {
+      "path": "assets/race-frame.mjs",
+      "textSha256": "bfe4fb7d1b05a79d3cff6f916b31fae2b1941ca09c565459fd383b2f2fd07430"
+    },
+    {
+      "path": "assets/race-objective.mjs",
+      "textSha256": "c4e5fc4ae68eef8a5296240c8a1172facbc4e50cc4266b3c44f36017a19c7a3b"
+    },
+    {
+      "path": "assets/race-sampling.mjs",
+      "textSha256": "93c41582ef801115b88f83ef4447b8192b7f861a1bf1a2be2cfcc0ba9d518535"
+    },
+    {
+      "path": "assets/race-scenarios.mjs",
+      "textSha256": "4bf9e3f10bd8c709f048c64815aa649262cb59da964f85e6f69f3e07b4dd8244"
+    },
+    {
+      "path": "assets/result-policy.mjs",
+      "textSha256": "adb6969d36e59edcaee1f1321e61ebbb1cb43ae2bf15d3c6d52fc61ead327df1"
+    },
+    {
+      "path": "assets/reviewed-course-geometry.mjs",
+      "textSha256": "42d7a39e43d55791b95732d80f7bec36931c94b90de0d1856e5c72ca08f44ed6"
+    },
+    {
+      "path": "assets/selection.mjs",
+      "textSha256": "0f806b51a94bbe50f7b145347088a78460f14724ee4eb99ee57b43463018d3f2"
+    },
+    {
+      "path": "assets/skill-context.mjs",
+      "textSha256": "0279135d82bcd5cde56834cef098f17919a664b1dbd051df5bbd7d75d11ba2b1"
+    },
+    {
+      "path": "assets/skill-dependencies.mjs",
+      "textSha256": "b3092595782f6a00a6793b3b3eb76499c5c197fc698f86b31b1af3245fabc0d5"
+    },
+    {
+      "path": "assets/skill-transforms.mjs",
+      "textSha256": "a9b530e644b3b5b60d8edefa1e5ce46dcba840a9711bc48acc293aa896bb73fc"
+    },
+    {
+      "path": "assets/solo.mjs",
+      "textSha256": "a4a07689bb976ac55de67f500e8ab0dfa2eeb42c40371967b37a6762e42db667"
+    },
+    {
+      "path": "assets/spurt-planning.mjs",
+      "textSha256": "b9e8d7619ac6e9e2e57b6bed39f6df441b7954684d29e4cb0a676fc3b8369e4d"
+    }
+  ],
+  "coreSha256": "b00adbd3dd3f964aaaf55bdecc6bd9758a35d6e02cd67928999e4315ada987ee",
+  "scope": "User-authorized 0.01-length near-best selection and progressive whole-plan compression; original race physics, data, prices and historical evidence preserved."
+}

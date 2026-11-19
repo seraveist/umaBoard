@@ -47,6 +47,11 @@ Runtime ownership is model B: `assets/cm.css :root` owns the tokens above and
 this document mirrors them. Controls/table/dialog consume the same variables.
 `tests/cm-ui.test.mjs` verifies the token and state contract.
 
+The public calculation release is `최적화 알고리즘 v1`, shown once beneath the
+page title through the existing `section-meta` type treatment. The shared
+`cm-algorithm-version.mjs` owns this name and export metadata. Internal v11 model
+IDs, numerical behavior, draft keys and existing visual tokens remain unchanged.
+
 ## Colors
 
 White work surfaces on cool pale gray; deep racing green marks the primary
@@ -176,6 +181,12 @@ sampling, not a claim of complete accessibility certification.
 
 ## Do's and Don'ts
 
+Optional gate/popularity controls reuse native selects inside existing details.
+The full-inheritance view uses one compact native checkbox beside the shared
+six-slot count. Model qualifications stay in collapsed `발동 조건과 표본` details;
+sample HP count/total remains ordinary numeric result text. These additions use
+the existing spacing, focus, border and muted-text tokens.
+
 - Do keep the acquisition checklist in source order while users work.
 - Do preserve inputs, scroll and focus during asynchronous progress.
 - Do use actual portraits/icons and actual course coordinates.
@@ -185,3 +196,10 @@ sampling, not a claim of complete accessibility certification.
 - Do draw relative elevation, phase bands and numbered segments from course geometry.
 - Don't turn this tool into a landing page or rankings dashboard. SP recommendation belongs only in the separate post-training stage; the initial chart remains SP-free.
 - Don't claim exact game simulation or exact sorting before verification.
+- Keep v7 context coverage/physics sensitivity in the existing calculation
+  disclosure; show package contribution as muted detail under applied skills.
+  Preserve the table and stage layout. Comparison percentages are not empirical rates.
+- Keep v8 tail-time risk details collapsed. Event-reward conflicts use the same
+  concise draft status, native select focus and danger border; return mobile
+  users to skill records without changing their choices. Narrow gain headings
+  may wrap inside their fixed column instead of colliding with acquisition controls.

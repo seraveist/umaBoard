@@ -1,0 +1,173 @@
+{
+  "frozenCommit": "a21a0cc52624de95682b2f7be3755104949366ad",
+  "results": [
+    {
+      "race": "niigata1200",
+      "syntheticRank": 3,
+      "contestSeconds": 2,
+      "defaultActiveIds": [
+        "100221",
+        "200652",
+        "200962",
+        "200972",
+        "201392"
+      ],
+      "defaultGain": 1.506964725938124,
+      "activeIds": [
+        "100221",
+        "200652",
+        "201392",
+        "900511"
+      ],
+      "gain": 2.5063244767201582,
+      "budget": {
+        "total": 300,
+        "used": 294,
+        "remaining": 6
+      },
+      "performance": {
+        "meanFinishTime": 55.595643299398404,
+        "tailFinishTime": 55.687487579342914,
+        "referenceTailFinishTime": 55.87365307947505,
+        "tailImprovement": 0.18616550013213384,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.18616550013213384,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "interpretation": "context dependence, not an estimate of the frequency of either world"
+    },
+    {
+      "race": "niigata1200",
+      "syntheticRank": 6,
+      "contestSeconds": 2,
+      "defaultActiveIds": [
+        "100221",
+        "200652",
+        "200962",
+        "200972",
+        "201392"
+      ],
+      "defaultGain": 1.506964725938124,
+      "activeIds": [
+        "100221",
+        "200652",
+        "201392",
+        "900271"
+      ],
+      "gain": 2.503436746057572,
+      "budget": {
+        "total": 300,
+        "used": 294,
+        "remaining": 6
+      },
+      "performance": {
+        "meanFinishTime": 55.70810348603687,
+        "tailFinishTime": 55.79914114790842,
+        "referenceTailFinishTime": 55.985962931518834,
+        "tailImprovement": 0.18682178361041224,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.18682178361041224,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "interpretation": "context dependence, not an estimate of the frequency of either world"
+    },
+    {
+      "race": "hanshin1600",
+      "syntheticRank": 3,
+      "contestSeconds": 2,
+      "defaultActiveIds": [
+        "100221",
+        "201032",
+        "201042",
+        "201382",
+        "201392"
+      ],
+      "defaultGain": 1.2091159587073885,
+      "activeIds": [
+        "100221",
+        "201042",
+        "201392",
+        "900511"
+      ],
+      "gain": 2.97602849849152,
+      "budget": {
+        "total": 300,
+        "used": 258,
+        "remaining": 42
+      },
+      "performance": {
+        "meanFinishTime": 74.71143793283144,
+        "tailFinishTime": 74.78255929664692,
+        "referenceTailFinishTime": 75.0315465194472,
+        "tailImprovement": 0.24898722280028096,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.24898722280028096,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "interpretation": "context dependence, not an estimate of the frequency of either world"
+    },
+    {
+      "race": "hanshin1600",
+      "syntheticRank": 6,
+      "contestSeconds": 2,
+      "defaultActiveIds": [
+        "100221",
+        "201032",
+        "201042",
+        "201382",
+        "201392"
+      ],
+      "defaultGain": 1.2091159587073885,
+      "activeIds": [
+        "100221",
+        "201042",
+        "201392",
+        "900271"
+      ],
+      "gain": 2.9720957002549984,
+      "budget": {
+        "total": 300,
+        "used": 258,
+        "remaining": 42
+      },
+      "performance": {
+        "meanFinishTime": 74.88148258972521,
+        "tailFinishTime": 74.95232461229628,
+        "referenceTailFinishTime": 75.20121774453244,
+        "tailImprovement": 0.24889313223616227,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.24889313223616227,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "interpretation": "context dependence, not an estimate of the frequency of either world"
+    }
+  ]
+}

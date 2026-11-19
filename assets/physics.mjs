@@ -1,5 +1,6 @@
 // Independently implemented equations. Reference versions and omissions: docs/ENGINE_VALIDATION.md.
-export const MODEL_VERSION='solo-comparison-v2';
+import {supportsCourseCoordinates} from './reviewed-course-geometry.mjs';
+export const MODEL_VERSION='solo-comparison-v8';
 export const STAT_KEYS=['speed','stamina','power','guts','wisdom'];
 const SPEED=[[1,.98,.962],[.978,.991,.975],[.938,.998,.994],[.931,1,1]];
 const ACCEL=[[1,1,.996],[.985,1,.996],[.975,1,1],[.945,1,.997]];
@@ -31,7 +32,7 @@ export function uniqueMultiplier(kind,level){
 }
 export function validateSetup(setup){
  if(!setup.course?.selectable)throw new Error('선택할 수 없는 코스입니다.');
- if(setup.course.run_up_m||Number(setup.course.track_id)>=10202)throw new Error('미국 코스의 출발 좌표 보정은 검증 중입니다.');
+ if(!supportsCourseCoordinates(setup.course))throw new Error('이 코스의 출발 좌표·보정은 검증 중입니다.');
  if(![1,2,3,4].includes(setup.style))throw new Error('각질을 확인하세요.');
  if(![1,2,3,4].includes(setup.going))throw new Error('마장 상태를 확인하세요.');
  if(![-2,-1,0,1,2].includes(setup.mood))throw new Error('의욕을 확인하세요.');
@@ -50,13 +51,14 @@ export function buildPhysics(setup,passive={}){
  const rawPower=stats.power+(passive.power||0),rawStamina=stats.stamina+(passive.stamina||0);
  const legAccel=rawPower>1200?Math.sqrt((rawPower-1200)*130)*.001*LEG_STYLE[course.distance_type-1][style-1]:0;
  const staminaDistance=course.distance<=2100?0:course.distance<=2200?.5:course.distance<=2400?1:course.distance<=2600?1.5:1.8;
- return {modified,bs,spurt,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
+ const fullSpurtEligible=stats.speed>2000&&stats.speed*coeff+(passive.speed||0)>2000;
+ return {modified,bs,spurt,lateCruise:bs*speedCoefficients[2]+lateAdd,minSpeed:.85*bs+Math.sqrt(200*modified.guts)*.001,
   hpMax:course.distance+.8*modified.stamina*(oonige?.86:HP_STYLE[style-1]),
   legAccel,legDuration:3*LEG_TIME[course.distance_type-1],
   staminaSpeed:rawStamina>1200?Math.sqrt(rawStamina-1200)*.0085*staminaDistance:0,
   // Keep the entered speed in the ordinary equations; never clamp it to 2000.
   // Full-spurt's additional speed ceiling is still unverified and is excluded explicitly.
-  fullSpurtExcluded:stats.speed>2000||stats.speed*coeff+(passive.speed||0)>2000,
+  fullSpurtEligible,fullSpurtExcluded:fullSpurtEligible,
   wisdomSpeedMultiplier(phase){return 1+wisdomSkillBase(stats.wisdom*coeff+(passive.wisdom||0))*WISDOM_SKILL[style-1][phase];},
   target(phase){return phase>=2?spurt:bs*speedCoefficients[phase];},
   acceleration(phase,uphill){return (uphill?.0004:.0006)*Math.sqrt(500*modified.power)*accelCoefficients[Math.min(phase,2)]*SURFACE_ACCEL[aptitudes.surface]*DISTANCE_ACCEL[aptitudes.distance];},

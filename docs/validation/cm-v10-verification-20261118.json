@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "engineCommit": "dc41b7c0714725a7e8277ffbd6f0309257f65e08",
+  "assetsSha256": "779d0b8477d178c8bded03db8a497462134647002554b3d6cda3d5bab39d8833",
+  "modelVersion": "cm-first-chart-v10",
+  "finalModelVersion": "cm-post-training-v10",
+  "tests": {
+    "node": {
+      "total": 289,
+      "passed": 289,
+      "failed": 0
+    },
+    "python": {
+      "total": 51,
+      "passed": 51,
+      "failed": 0
+    }
+  },
+  "dataValidation": "passed with 5 pre-existing warnings",
+  "pageBuild": "passed; 209 files",
+  "moduleAndPrototypeSyntax": "passed",
+  "protectedFilesUnchangedFromV9": [
+    "data",
+    "assets/race-scenarios.mjs",
+    "assets/race-objective.mjs",
+    "assets/cm-effect-policy.mjs",
+    "assets/cm-recommendation.mjs",
+    "assets/reviewed-course-geometry.mjs"
+  ],
+  "checks": {
+    "unchangedBaselineTrajectories": 528,
+    "cmComparisons": 192,
+    "additionalCourseComparisons": 60,
+    "independentFinitePoolMatches": 74,
+    "independentFinitePoolCases": 74,
+    "alternativeSamplingRows": 40,
+    "physicsConvergenceRows": 32,
+    "upgradeProbes": 21,
+    "heldoutAndFinerIntegrationBothPass": true
+  },
+  "limitations": [
+    "not empirical activation or win-rate calibration",
+    "public full-spurt and external effect approximations unchanged",
+    "source-disagreement sampling policies remain separate",
+    "bounded large-pool search is not globally proven optimal; cross-physics witness remains about 0.01093 lengths better in the Kyoto gold-wide case"
+  ]
+}

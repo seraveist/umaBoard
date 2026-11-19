@@ -1,0 +1,825 @@
+{
+  "engineCommit": "a81b894373f987cb7d3ac367982f86e959639c4c",
+  "stats": {
+    "speed": 2100,
+    "stamina": 1600,
+    "power": 1600,
+    "guts": 1200,
+    "wisdom": 1700
+  },
+  "samples": 256,
+  "dt": 0.01,
+  "contextCases": [
+    {
+      "name": "isolated",
+      "style": 2,
+      "baseline": [],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 1.2552325896671248,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.3278493510528278,
+        "standardDeviation": 0.30250352073490294,
+        "halfDifference": 0.020747646110200524,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "isolated",
+      "style": 2,
+      "baseline": [],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.6847264720602554,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.7243387473034091,
+        "standardDeviation": 0.1650149703279646,
+        "halfDifference": 0.011317792926615722,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "inherited-only",
+      "style": 2,
+      "baseline": [
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 0.9834215986390884,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.3278493510528278,
+        "standardDeviation": 0.2447542905723269,
+        "halfDifference": 0.013687620369212783,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "inherited-only",
+      "style": 2,
+      "baseline": [
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.5505474894299184,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.7243387473034091,
+        "standardDeviation": 0.13670790131346833,
+        "halfDifference": 0.010145924082682667,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "downhill-and-inherited",
+      "style": 2,
+      "baseline": [
+        "201342",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 0.497707438173285,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.0466495018503337,
+        "standardDeviation": 0.21253253756952725,
+        "halfDifference": 0.007748136077748435,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "downhill-and-inherited",
+      "style": 2,
+      "baseline": [
+        "201342",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.3000864409708292,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.5830631066190108,
+        "standardDeviation": 0.11882042179689785,
+        "halfDifference": 0.011425837621483748,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "gold-downhill-and-inherited",
+      "style": 2,
+      "baseline": [
+        "201342",
+        "203441",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 0.15924085094225043,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.0266215861040109,
+        "standardDeviation": 0.11677355207253848,
+        "halfDifference": 0.009726296170093462,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "gold-downhill-and-inherited",
+      "style": 2,
+      "baseline": [
+        "201342",
+        "203441",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.09686198260321599,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.574339535279978,
+        "standardDeviation": 0.07271496379251191,
+        "halfDifference": 0.001427669170287485,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "Fine-native-and-evolved-main",
+      "style": 2,
+      "baseline": [
+        "100221",
+        "102201211",
+        "91101411",
+        "910681",
+        "203442"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 0.0829655422664161,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.7294513950262627,
+        "standardDeviation": 0.11241912211470384,
+        "halfDifference": 0.003871075015189296,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "Fine-native-and-evolved-main",
+      "style": 2,
+      "baseline": [
+        "100221",
+        "102201211",
+        "91101411",
+        "910681",
+        "203442"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.04783268732859937,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.4413021569207558,
+        "standardDeviation": 0.0679145952651147,
+        "halfDifference": 0.002300287307582506,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "Almond-native-and-evolved-main",
+      "style": 2,
+      "baseline": [
+        "101291",
+        "112901211",
+        "112901111",
+        "201342",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202711",
+      "nameJp": "王手",
+      "gain": 0.3136528925699686,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.0420079214945872,
+        "standardDeviation": 0.17610862777120795,
+        "halfDifference": 0.009378366745998734,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "Almond-native-and-evolved-main",
+      "style": 2,
+      "baseline": [
+        "101291",
+        "112901211",
+        "112901111",
+        "201342",
+        "91101411"
+      ],
+      "ids": [
+        "202711",
+        "202712"
+      ],
+      "candidate": "202712",
+      "nameJp": "会心の一歩",
+      "gain": 0.18989680572815282,
+      "hpSuccessRate": 1,
+      "activationRate": 0.9453125,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 0.5819367569896713,
+        "standardDeviation": 0.10444044073984175,
+        "halfDifference": 0.004155818503939229,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "chaser-isolated",
+      "style": 4,
+      "baseline": [],
+      "ids": [
+        "202871"
+      ],
+      "candidate": "202871",
+      "nameJp": "君臨",
+      "gain": 1.4737186256384087,
+      "hpSuccessRate": 1,
+      "activationRate": 0.94921875,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.5525595397672078,
+        "standardDeviation": 0.3415332604890856,
+        "halfDifference": 0.012129371404431266,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    },
+    {
+      "name": "chaser-downhill-and-inherited",
+      "style": 4,
+      "baseline": [
+        "203902",
+        "91101351"
+      ],
+      "ids": [
+        "202871"
+      ],
+      "candidate": "202871",
+      "nameJp": "君臨",
+      "gain": 0.6982303401648695,
+      "hpSuccessRate": 1,
+      "activationRate": 0.94921875,
+      "sampling": {
+        "count": 256,
+        "dt": 0.01,
+        "min": 0,
+        "max": 1.2496488008251618,
+        "standardDeviation": 0.25092708348685133,
+        "halfDifference": 0.02391413991855984,
+        "interpretation": "sample-spread-not-a-confidence-bound"
+      },
+      "assumptions": [
+        "order_rate"
+      ]
+    }
+  ],
+  "fullSpurtSensitivity": [
+    {
+      "speed": 1999,
+      "on": 1.0910625686410842,
+      "off": 1.0910625686410842
+    },
+    {
+      "speed": 2000,
+      "on": 1.091346218976889,
+      "off": 1.091346218976889
+    },
+    {
+      "speed": 2001,
+      "on": 1.2275653554141002,
+      "off": 1.091346218976889
+    },
+    {
+      "speed": 2100,
+      "on": 1.2656064127222293,
+      "off": 1.1296487571892666
+    }
+  ],
+  "trace": [
+    {
+      "baseline": [],
+      "sample": 1,
+      "event": {
+        "id": "202711",
+        "index": 1,
+        "x": 1550.1939444502605,
+        "t": 79.71000000000001,
+        "duration": 1.98
+      },
+      "baselineAtTrigger": {
+        "t": 79.7,
+        "x": 1549.972111731361,
+        "v": 22.18072244119419,
+        "target": 24.908835423393686
+      },
+      "targetGap": 2.7281129821994945,
+      "baselineReach": {
+        "x": 1680.4272388237262,
+        "t": 85.23
+      },
+      "baselineEntry": {
+        "x": 1466.8441775320462,
+        "t": 75.74,
+        "speed": 19.6218,
+        "target": 24.908835423393686,
+        "targetGap": 5.287035423393686
+      }
+    },
+    {
+      "baseline": [
+        "201342",
+        "91101411"
+      ],
+      "sample": 1,
+      "event": {
+        "id": "202711",
+        "index": 1,
+        "x": 1550.1206298205218,
+        "t": 79.52,
+        "duration": 1.98
+      },
+      "baselineAtTrigger": {
+        "t": 79.52,
+        "x": 1550.1206298205218,
+        "v": 23.415535671650385,
+        "target": 24.908835423393686
+      },
+      "targetGap": 1.4932997517433009,
+      "baselineReach": {
+        "x": 1622.810830385948,
+        "t": 82.52
+      },
+      "baselineEntry": {
+        "x": 1466.8455911079766,
+        "t": 75.68,
+        "speed": 19.6218,
+        "target": 24.908835423393686,
+        "targetGap": 5.287035423393686
+      }
+    }
+  ],
+  "interpretation": "controlled-in-model-marginals-not-replays-of-public-accounts",
+  "inheritedPriceCoverage": [
+    {
+      "base": "901411",
+      "strong": "91101411",
+      "baseStage": {
+        "base_cost": 200,
+        "evidence": "umatools_single_stage",
+        "prerequisite_id": null,
+        "status": "verified"
+      },
+      "strongStage": null,
+      "states": [
+        {
+          "state": "0",
+          "base": {
+            "complete": true,
+            "used": 200,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 0,
+                "extraDiscount": 0,
+                "cost": 200
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "1",
+          "base": {
+            "complete": true,
+            "used": 180,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 1,
+                "extraDiscount": 0,
+                "cost": 180
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "2",
+          "base": {
+            "complete": true,
+            "used": 160,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 2,
+                "extraDiscount": 0,
+                "cost": 160
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "3",
+          "base": {
+            "complete": true,
+            "used": 140,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 3,
+                "extraDiscount": 0,
+                "cost": 140
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "4",
+          "base": {
+            "complete": true,
+            "used": 130,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 4,
+                "extraDiscount": 0,
+                "cost": 130
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "5",
+          "base": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "901411",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101411"
+          }
+        },
+        {
+          "state": "owned",
+          "base": {
+            "complete": true,
+            "used": 0,
+            "stages": []
+          },
+          "strong": {
+            "complete": true,
+            "used": 0,
+            "stages": []
+          }
+        }
+      ]
+    },
+    {
+      "base": "901351",
+      "strong": "91101351",
+      "baseStage": {
+        "base_cost": 200,
+        "evidence": "umatools_single_stage",
+        "prerequisite_id": null,
+        "status": "verified"
+      },
+      "strongStage": null,
+      "states": [
+        {
+          "state": "0",
+          "base": {
+            "complete": true,
+            "used": 200,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 0,
+                "extraDiscount": 0,
+                "cost": 200
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "1",
+          "base": {
+            "complete": true,
+            "used": 180,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 1,
+                "extraDiscount": 0,
+                "cost": 180
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "2",
+          "base": {
+            "complete": true,
+            "used": 160,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 2,
+                "extraDiscount": 0,
+                "cost": 160
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "3",
+          "base": {
+            "complete": true,
+            "used": 140,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 3,
+                "extraDiscount": 0,
+                "cost": 140
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "4",
+          "base": {
+            "complete": true,
+            "used": 130,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 4,
+                "extraDiscount": 0,
+                "cost": 130
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "5",
+          "base": {
+            "complete": true,
+            "used": 120,
+            "stages": [
+              {
+                "id": "901351",
+                "base": 200,
+                "hint": 5,
+                "extraDiscount": 0,
+                "cost": 120
+              }
+            ]
+          },
+          "strong": {
+            "complete": false,
+            "used": null,
+            "stages": [],
+            "unknown": "91101351"
+          }
+        },
+        {
+          "state": "owned",
+          "base": {
+            "complete": true,
+            "used": 0,
+            "stages": []
+          },
+          "strong": {
+            "complete": true,
+            "used": 0,
+            "stages": []
+          }
+        }
+      ]
+    }
+  ]
+}

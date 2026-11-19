@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {recommendTargetAcceleration} from '../assets/cm-acceleration-plan.mjs';
 import {compileChartSkill} from '../assets/cm-chart.mjs';
-import {createPositionComparison} from '../assets/cm-position-comparison.mjs';
+import {RaceEvaluator} from '../assets/race-evaluation.mjs';
+import {branchSampler} from '../assets/cm-chart.mjs';
 
 const atom=(field,operator,value)=>({field,operator,value});
 function skill(id,value=4000,{kind='acceleration',rarity='white',condition=[[atom('phase','>=',2)]],inherited=false}={}){
@@ -81,9 +82,9 @@ test('target rows are sorted by paired marginal gain rather than ID or standalon
  const {data,chart}=fixture([skill('a-small',1000),skill('z-large',3000)],{'a-small':10,'z-large':10});
  const result=await recommendTargetAcceleration(data,chart,quick);
  assert.equal(result.skills.length,2);assert.equal(result.skills[0].id,'z-large');
- const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=createPositionComparison(chart.setup,compiled,chart.nativeIds);
+ const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=new RaceEvaluator(chart.setup,compiled,chart.nativeIds,chart.nativeIds,branchSampler);
  for(const row of result.skills){
-  const without=comparison.compare(result.ids.filter(id=>id!==row.id),quick.samples,quick.dt);
+  const without=comparison.evaluate([...chart.nativeIds,...result.ids.filter(id=>id!==row.id)],result.samples,quick.dt);
   assert.ok(Math.abs(row.marginalGain-(result.gain-without.gain))<1e-9);
  }
  assert.ok(result.skills[0].marginalGain>=result.skills[1].marginalGain);
@@ -91,9 +92,9 @@ test('target rows are sorted by paired marginal gain rather than ID or standalon
 
 test('positive but inefficient insurance is left out according to its additional SP instead of absolute maximum gain',async()=>{
  const {data,chart}=fixture([skill('core',4000),skill('insurance',500)],{core:100,insurance:1500}),result=await recommendTargetAcceleration(data,chart,quick);
- const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=createPositionComparison(chart.setup,compiled,chart.nativeIds),a=comparison.compare(['core'],quick.samples,quick.dt),b=comparison.compare(['core','insurance'],quick.samples,quick.dt);
+ const compiled=new Map(Object.values(data.skills).map(s=>[s.id,compileChartSkill(s,chart.setup)])),comparison=new RaceEvaluator(chart.setup,compiled,chart.nativeIds,chart.nativeIds,branchSampler),a=comparison.evaluate([...chart.nativeIds,'core'],result.samples,quick.dt),b=comparison.evaluate([...chart.nativeIds,'core','insurance'],result.samples,quick.dt);
  assert.ok(b.gain>a.gain+.005);assert.deepEqual(result.ids,['core']);assert.ok(result.maximumGain>result.gain);
- assert.equal(result.efficiencyPolicy.minGainPer100Sp,.15);assert.equal(result.rankComparison.probabilities,false);
+ assert.equal(result.efficiencyPolicy.minGainPer100Sp,.15);assert.equal(result.scenarioCoverage.complete,true);
 });
 
 test('unverified acceleration prices are disclosed without entering a target as a free skill',async()=>{

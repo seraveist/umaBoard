@@ -1,5 +1,6 @@
 import {activeAcquisitionRoute} from './acquisition-rules.mjs';
 import {el} from './cm-dom.mjs';
+import {skillTransforms} from './skill-transforms.mjs';
 
 export const rarityBadge=row=>row.inherited?null:row.rarity==='gold'?{label:'레어',kind:'rare'}:row.rarity==='evolution'?{label:'진화',kind:'evolution'}:null;
 export function skillNameLine(row){
@@ -11,6 +12,7 @@ export function skillNameLine(row){
 // player actually saw. Missing direct evidence is visibly marked as inferred.
 export function createSkillSourceResolver(data,setup){
  const direct=new Map(),upper=new Map(),memo=new Map();
+ const strengthened=new Set(skillTransforms(data).filter(r=>data.skills[r.evolved_id]?.inherited).map(r=>r.evolved_id));
  const add=(id,route)=>{if(!direct.has(id))direct.set(id,[]);direct.get(id).push(route);};
  for(const route of data.acquisition_routes||[])if(activeAcquisitionRoute(data,setup,route))add(route.skill_id,route);
  for(const rule of data.evolution_rules||[])if(direct.has(rule.base_id)&&((rule.owner_type==='outfit'&&rule.owner_id===setup.outfitId)||(rule.owner_type==='scenario'&&rule.owner_id===setup.scenarioId)))add(rule.evolved_id,{...rule,kind:'evolution'});
@@ -19,7 +21,7 @@ export function createSkillSourceResolver(data,setup){
  const resolve=(id,seen=new Set())=>{
   if(memo.has(id))return memo.get(id);if(seen.has(id))return null;
   const skill=data.skills[id];if(!skill)return null;
-  if(skill.inherited)return {labels:['계승 스킬'],inferred:false};
+  if(skill.inherited)return {labels:[strengthened.has(id)?'강화 계승 · 강화 조건 충족 시':'계승 스킬'],inferred:false};
   const labels=[...new Set((direct.get(id)||[]).map(route=>label(route,skill)).filter(Boolean))];
   if(labels.length){const result={labels,inferred:false};memo.set(id,result);return result;}
   seen=new Set([...seen,id]);

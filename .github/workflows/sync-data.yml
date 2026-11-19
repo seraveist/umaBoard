@@ -14,11 +14,14 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/sync-data.yml'
-      - 'scripts/**'
+      - 'scripts/umaboard/**'
+      - 'scripts/sync_data.py'
+      - 'scripts/sync_portraits.py'
       - 'curated/**'
       - 'sync-config.json'
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: uma-data-sync
   cancel-in-progress: false
@@ -61,11 +64,20 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/sync_portraits.py
       - name: Check candidate and engine compatibility with new data
-        run: node --test tests/*.test.mjs
+        run: |
+          node scripts/check_cm_algorithm_v1.mjs
+          node --test --test-name-pattern="latest Daring Tact" tests/cm-joint-evolution.test.mjs
       - name: Commit changed data
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git add data/manifest.json data/bundles data/portraits.json
           if git diff --cached --quiet; then
+            # Retry an interrupted post-push dispatch on a later sync.
+            if [[ "$(git log -1 --format=%s)" == 'chore(data): sync JP source data' ]]; then
+              runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$(git rev-parse HEAD)&per_page=1" --jq .total_count)
+              if [[ "$runs" == 0 ]]; then gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref main; fi
+            fi
             echo 'No data changes to commit.'
             exit 0
           fi
@@ -73,6 +85,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'chore(data): sync JP source data'
           git push origin HEAD:main
+          gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref main
       - name: Save synchronization status
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

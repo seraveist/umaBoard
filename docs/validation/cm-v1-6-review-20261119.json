@@ -1,0 +1,684 @@
+{
+  "revision": "1.6.1",
+  "dataVersion": "e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66",
+  "samples": 144,
+  "dt": 0.01,
+  "external": {
+    "repository": "alpha123/uma-skill-tools",
+    "commit": "8b3f5e27e939e77431679876403d3fb2f0709e2a",
+    "horse": {
+      "speed": 2200,
+      "stamina": 1850,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800,
+      "strategy": "Senkou",
+      "distanceAptitude": "A",
+      "surfaceAptitude": "A",
+      "strategyAptitude": "A",
+      "skills": [
+        100221
+      ]
+    },
+    "args": "-N 144 --seed 1911 --no-position-keep --enable-wisdom-checks --timestep 0.01",
+    "hpPolicy": "NoopHpPolicy",
+    "results": [
+      {
+        "course": "10808",
+        "skill": "201342",
+        "min": 1.3,
+        "max": 3.13,
+        "mean": 2.21,
+        "median": 2.28
+      },
+      {
+        "course": "10606",
+        "skill": "202711",
+        "min": 1.97,
+        "max": 2.43,
+        "mean": 2.12,
+        "median": 2.18
+      },
+      {
+        "course": "11703",
+        "skill": "202711",
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0
+      }
+    ]
+  },
+  "chartAndRace": {
+    "results": [
+      {
+        "courseId": "10808",
+        "id": "201342",
+        "rank": null,
+        "gain": 1.981378,
+        "activation": 0.958333,
+        "usefulAcceleration": 0.958333
+      },
+      {
+        "courseId": "10808",
+        "id": "201342",
+        "rank": 3,
+        "gain": 1.981363,
+        "activation": 0.958333,
+        "usefulAcceleration": 0.958333
+      },
+      {
+        "courseId": "10606",
+        "id": "202711",
+        "rank": null,
+        "gain": 1.320526,
+        "activation": 0.722222,
+        "usefulAcceleration": 0.722222
+      },
+      {
+        "courseId": "10606",
+        "id": "202711",
+        "rank": 3,
+        "gain": 1.941751,
+        "activation": 0.944444,
+        "usefulAcceleration": 0.944444
+      },
+      {
+        "courseId": "11703",
+        "id": "202711",
+        "rank": null,
+        "gain": 0,
+        "activation": 0,
+        "usefulAcceleration": 0
+      },
+      {
+        "courseId": "11703",
+        "id": "202711",
+        "rank": 3,
+        "gain": 0,
+        "activation": 0,
+        "usefulAcceleration": 0
+      }
+    ],
+    "hp": [
+      {
+        "stamina": 400,
+        "entryDeficit": 336.616544,
+        "peakDebt": 67.023958,
+        "finishHp": -67.023958,
+        "feasible": false
+      },
+      {
+        "stamina": 600,
+        "entryDeficit": 180.549814,
+        "peakDebt": 68.48349,
+        "finishHp": -68.48349,
+        "feasible": false
+      },
+      {
+        "stamina": 1000,
+        "entryDeficit": 0,
+        "peakDebt": 0,
+        "finishHp": 90.454468,
+        "feasible": true
+      }
+    ]
+  },
+  "plans": {
+    "niigata": {
+      "input": {
+        "style": 3,
+        "going": 3,
+        "weather": 3,
+        "season": 4,
+        "time": 2,
+        "samplingSeed": 47,
+        "courseId": "10306"
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1760,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "5",
+        "200512": "1",
+        "201381": "3",
+        "201382": "owned",
+        "201392": "2",
+        "201571": "3"
+      },
+      "stageCosts": {
+        "200352": 95,
+        "200512": 146,
+        "201381": 92,
+        "201392": 98,
+        "201571": 105
+      },
+      "results": [
+        {
+          "spBudget": 220,
+          "mode": "strict",
+          "affordable": 12,
+          "measured": 12,
+          "ids": [
+            "100221",
+            "201381",
+            "201392"
+          ],
+          "cost": 190,
+          "gain": 0.64676,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 220,
+          "mode": "default",
+          "affordable": 12,
+          "measured": 12,
+          "ids": [
+            "100221",
+            "201381",
+            "201392"
+          ],
+          "cost": 190,
+          "gain": 0.64676,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 220,
+          "mode": "bounded",
+          "affordable": 12,
+          "measured": 11,
+          "ids": [
+            "100221",
+            "201381",
+            "201392"
+          ],
+          "cost": 190,
+          "gain": 0.64676,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 370,
+          "mode": "strict",
+          "affordable": 26,
+          "measured": 26,
+          "ids": [
+            "100221",
+            "200512",
+            "201381",
+            "201392"
+          ],
+          "cost": 336,
+          "gain": 0.916609,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 370,
+          "mode": "default",
+          "affordable": 26,
+          "measured": 14,
+          "ids": [
+            "100221",
+            "200512",
+            "201381",
+            "201392"
+          ],
+          "cost": 336,
+          "gain": 0.916609,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 370,
+          "mode": "bounded",
+          "affordable": 26,
+          "measured": 13,
+          "ids": [
+            "100221",
+            "200512",
+            "201381",
+            "201392"
+          ],
+          "cost": 336,
+          "gain": 0.916609,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    },
+    "nakayama": {
+      "input": {
+        "style": 3,
+        "going": 3,
+        "weather": 3,
+        "season": 4,
+        "time": 2,
+        "samplingSeed": 47,
+        "courseId": "10510"
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 475,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "5",
+        "200512": "1",
+        "201381": "3",
+        "201382": "owned",
+        "201392": "2",
+        "201571": "3"
+      },
+      "stageCosts": {
+        "200352": 95,
+        "200512": 146,
+        "201381": 92,
+        "201392": 98,
+        "201571": 105
+      },
+      "results": [
+        {
+          "spBudget": 220,
+          "mode": "strict",
+          "affordable": 12,
+          "measured": 12,
+          "ids": [
+            "100221",
+            "200352",
+            "201382",
+            "201571"
+          ],
+          "cost": 200,
+          "gain": 9.64566,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 220,
+          "mode": "default",
+          "affordable": 12,
+          "measured": 12,
+          "ids": [
+            "100221",
+            "200352",
+            "201382",
+            "201571"
+          ],
+          "cost": 200,
+          "gain": 9.64566,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 220,
+          "mode": "bounded",
+          "affordable": 12,
+          "measured": 11,
+          "ids": [
+            "100221",
+            "200352",
+            "201382",
+            "201571"
+          ],
+          "cost": 200,
+          "gain": 9.64566,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 370,
+          "mode": "strict",
+          "affordable": 26,
+          "measured": 26,
+          "ids": [
+            "100221",
+            "200352",
+            "200512",
+            "201382",
+            "201571"
+          ],
+          "cost": 346,
+          "gain": 9.689031,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 370,
+          "mode": "default",
+          "affordable": 26,
+          "measured": 19,
+          "ids": [
+            "100221",
+            "200352",
+            "201382",
+            "201571"
+          ],
+          "cost": 200,
+          "gain": 9.64566,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0.043371,
+          "savedSp": 146
+        },
+        {
+          "spBudget": 370,
+          "mode": "bounded",
+          "affordable": 26,
+          "measured": 18,
+          "ids": [
+            "100221",
+            "200352",
+            "201382",
+            "201571"
+          ],
+          "cost": 200,
+          "gain": 9.64566,
+          "hpSuccess": 0,
+          "shortfall": 312.447623,
+          "tailGuard": true,
+          "loss": 0.043371,
+          "savedSp": 146
+        }
+      ],
+      "seedChecks": [
+        {
+          "spBudget": 370,
+          "seed": 193,
+          "signedLoss": 0.051071,
+          "anchorHp": 0,
+          "cheaperHp": 0,
+          "anchorShortfall": 312.456762,
+          "cheaperShortfall": 312.456762,
+          "anchorTailGuard": true,
+          "cheaperTailGuard": true
+        }
+      ]
+    },
+    "kyoto": {
+      "input": {
+        "scenarioId": "12",
+        "courseId": "10807",
+        "supportIds": [
+          "30161"
+        ],
+        "going": 1,
+        "weather": 1,
+        "season": 3,
+        "time": 2
+      },
+      "stats": {
+        "speed": 2100,
+        "stamina": 2000,
+        "power": 1700,
+        "guts": 1400,
+        "wisdom": 1500
+      },
+      "states": {
+        "200362": "2",
+        "201102": "2",
+        "201112": "2",
+        "202711": "2",
+        "202712": "2"
+      },
+      "stageCosts": {
+        "200362": 136,
+        "201102": 80,
+        "201112": 80,
+        "202711": 288,
+        "202712": 144
+      },
+      "results": [
+        {
+          "spBudget": 500,
+          "mode": "strict",
+          "affordable": 21,
+          "measured": 21,
+          "ids": [
+            "100221",
+            "201102",
+            "201112",
+            "202711"
+          ],
+          "cost": 448,
+          "gain": 1.64777,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        },
+        {
+          "spBudget": 500,
+          "mode": "default",
+          "affordable": 21,
+          "measured": 13,
+          "ids": [
+            "100221",
+            "200362",
+            "201102",
+            "201112",
+            "202712"
+          ],
+          "cost": 440,
+          "gain": 1.614358,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0.033412,
+          "savedSp": 8
+        },
+        {
+          "spBudget": 500,
+          "mode": "bounded",
+          "affordable": 21,
+          "measured": 13,
+          "ids": [
+            "100221",
+            "200362",
+            "201102",
+            "201112",
+            "202712"
+          ],
+          "cost": 440,
+          "gain": 1.614358,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0.033412,
+          "savedSp": 8
+        }
+      ],
+      "seedChecks": [
+        {
+          "spBudget": 500,
+          "seed": 193,
+          "signedLoss": 0.0488,
+          "anchorHp": 1,
+          "cheaperHp": 1,
+          "anchorShortfall": 0,
+          "cheaperShortfall": 0,
+          "anchorTailGuard": true,
+          "cheaperTailGuard": true
+        }
+      ]
+    }
+  },
+  "historical7000FixedSets": [
+    {
+      "gain": 34.15891784569843,
+      "hp": 1,
+      "safe": true
+    },
+    {
+      "gain": 35.57883626099098,
+      "hp": 1,
+      "safe": true
+    }
+  ],
+  "distanceControls": [
+    {
+      "input": {
+        "courseId": "10501",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1100,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "201312"
+          ],
+          "cost": 104,
+          "gain": 0.108978,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    },
+    {
+      "input": {
+        "courseId": "10602",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1100,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "201312"
+          ],
+          "cost": 104,
+          "gain": 0.217958,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    },
+    {
+      "input": {
+        "courseId": "10811",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1050,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "200352"
+          ],
+          "cost": 136,
+          "gain": 4.657777,
+          "hpSuccess": 0,
+          "shortfall": 241.441261,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    }
+  ]
+}

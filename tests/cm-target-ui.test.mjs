@@ -75,7 +75,7 @@ test('inherited target rows show their exact provider outfit portrait and Korean
   panel.render({skills:[{id:'inherit',inherited:true,rarity:'inherited',routes:[],providers:['114101']}],gain:2,cost:120,scenarioEvolutionCount:0,sacrificedGain:0,search:{method:'bounded'},rankComparison:{},rewards:[]});
   const row=ids.get('#target-skill-list').children[0],copy=row.children[1],badge=copy.children.find(n=>n.className==='target-providers').children[0];
   assert.match(badge.title,/에피파네이아.*Fate/);assert.equal(badge.children[0].children[0].src,path);
-  assert.match(badge.children[1].textContent,/에피파네이아/);assert.match(ids.get('#target-policy').textContent,/순위 조건별/);
+  assert.match(badge.children[1].textContent,/에피파네이아/);assert.match(ids.get('#target-policy').textContent,/공통 레이스 전개별 평균/);
   assert.equal(ids.get('#target-inherited-count').textContent,'1 / 6');
   const speedRows=Array.from({length:6},(_,i)=>({id:'speed'+i,inherited:true}));
   panel.updateAcquisition(speedRows,Object.fromEntries(speedRows.map(r=>[r.id,'owned'])));

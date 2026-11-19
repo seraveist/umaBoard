@@ -1,5 +1,7 @@
-import {buildChartCandidates,compileChartSkill,CM_SAMPLES,CM_DT} from './cm-chart.mjs';
-import {createPositionComparison} from './cm-position-comparison.mjs';
+import {buildChartCandidates,compileChartSkill,branchSampler,CM_SAMPLES,CM_DT} from './cm-chart.mjs';
+import {RaceEvaluator} from './race-evaluation.mjs';
+import {scenarioCount} from './race-scenarios.mjs';
+import {positionAt} from './physics.mjs';
 import {selectionRules} from './selection.mjs';
 import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {styleRecommendation} from './cm-recommendation.mjs';
@@ -7,7 +9,7 @@ import {RecordedPurchaseModel} from './cm-final-plan.mjs';
 import {EventConstraints} from './cm-event-constraints.mjs';
 import {strategyGoals,strategySkillIds} from './cm-strategy.mjs';
 
-export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v4';
+export const TARGET_ACCELERATION_VERSION='cm-target-acceleration-v5';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const native=s=>['unique','unique_low_star','unique_upgraded'].includes(s.rarity);
 const key=ids=>[...new Set(ids)].sort().join(',');
@@ -16,12 +18,16 @@ const pause=()=>new Promise(resolve=>setTimeout(resolve,0));
 // A target is a preparation plan, independent of the actual hint/owned records.
 export async function recommendTargetAcceleration(data,chart,{cancelled=()=>false,onProgress=()=>{},samples=CM_SAMPLES,dt=CM_DT,searchSamples=3,searchDt=.05,evaluationLimit=360,maxCandidates=24,width=4,refinementLimit=96,minGainPer100Sp=.15}={}){
  if(!Number.isFinite(minGainPer100Sp)||minGainPer100Sp<0)throw new Error('가속 SP 효율 기준을 확인하세요.');
- const setup=chart.setup,records=buildChartCandidates(data,setup),rules=selectionRules(data,records),events=new EventConstraints(data,setup);
+ const setup={...chart.setup,ownedSkillIds:[]},contexts=scenarioCount(setup);
+ samples=Math.max(samples,contexts);searchSamples=Math.max(searchSamples,contexts);
+ const records=buildChartCandidates(data,setup),rules=selectionRules(data,records),events=new EventConstraints(data,setup);
  const compiled=new Map([...records].map(([id,s])=>[id,compileChartSkill(s,setup)]));
  const strategicGoals=strategyGoals(data,setup).map(goal=>({...goal,skillIds:strategySkillIds(goal,compiled,setup),scenarioFallbacks:events.groups.filter(g=>g.scenario_id).flatMap(g=>g.choices.flatMap(c=>c.rewards.filter(r=>goal.skillIds.includes(r.skill_id)).map(r=>({eventName:g.name_jp,label:c.label,skillId:r.skill_id}))))}));
- const nativeIds=chart.nativeIds,states=Object.fromEntries([...records.keys()].map(id=>[id,'5']));
+ const nativeIds=chart.nativeIds;
+ for(const id of nativeIds)if(!compiled.has(id)&&data.skills[id])compiled.set(id,compileChartSkill(data.skills[id],setup));
+ const states=Object.fromEntries([...records.keys()].map(id=>[id,'5']));
  const planningRows=[...records.values()].map(s=>({...s,evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&(r.owner_id===setup.outfitId||r.owner_id===setup.scenarioId))?.base_id}));
- const prices=new RecordedPurchaseModel(data,planningRows,states),evaluated=new Map(),comparison=createPositionComparison(setup,compiled,nativeIds),excludedCandidates=[];
+ const prices=new RecordedPurchaseModel(data,planningRows,states),evaluated=new Map(),comparison=new RaceEvaluator(setup,compiled,nativeIds,nativeIds,branchSampler),excludedCandidates=[];
  let checks=0;
  const legal=(ids,pins=null)=>ids.every((id,i)=>ids.slice(0,i).every(other=>rules.compatible(id,other)))&&scenarioSelectionAllowed(data,ids,setup.scenarioId)&&ids.filter(id=>records.get(id)?.inherited).length<=6&&(pins?new EventConstraints(data,{...setup,eventChoices:pins}):events).selection(ids)!==null;
  const evaluate=(ids,count=searchSamples,step=searchDt)=>{
@@ -29,14 +35,15 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   if(evaluated.has(k))return evaluated.get(k);
   if(!legal(ids)||ids.some(id=>compiled.get(id)?.status==='unsupported'||!nativeIds.includes(id)&&!supported(compiled.get(id))))return null;
   const price=prices.selection(ids);if(!price.complete)return null;
-  const result={ids:ids.filter(id=>!nativeIds.includes(id)),...comparison.compare(ids,count,step),cost:price.used};
+  const score=comparison.evaluate(ids,count,step);
+  const result={ids:ids.filter(id=>!nativeIds.includes(id)),gain:score.gain,min:score.sampling.min,max:score.sampling.max,step,scenarios:score.scenarios,scenarioCoverage:score.scenarioCoverage,cost:price.used};
   result.score=result.gain-result.cost*minGainPer100Sp/100;
   evaluated.set(k,result);checks++;return result;
  };
  const lateContribution=id=>{
   const c=compiled.get(id),acceleration=i=>i.effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)&&e.value>0),indices=new Set(c.invocations.filter(acceleration).map(i=>i.index)),connectors=new Set(c.invocations.filter(i=>acceleration(i)&&i.effects.some(e=>['target_speed','current_speed','speed_with_decel'].includes(e.kind)&&e.value>0)).map(i=>i.index));
-  for(const rank of comparison.ranks)for(let sample=0;sample<searchSamples;sample++){
-   const before=comparison.run([],sample,searchDt,rank),after=comparison.run([id],sample,searchDt,rank);
+  for(let sample=0;sample<searchSamples;sample++){
+   const before=comparison.run(nativeIds,sample,searchDt,true),after=comparison.run([...nativeIds,id],sample,searchDt);
    if(after.events.some(e=>e.id===id&&indices.has(e.index)&&(e.x>=2*setup.course.distance/3||e.t+(e.duration||0)>=after.entry.t)))return true;
    // Early acceleration can perturb a later native trigger by a frame. That
    // indirect change is not a late accelerator. Only a late-half hybrid's
@@ -180,7 +187,19 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   return evaluate(ids);
  };
  const bundleOrder=(a,b)=>b.score.gain-a.score.gain||a.score.cost-b.score.cost||JSON.stringify(a.pins).localeCompare(JSON.stringify(b.pins));
- const tieOrder=(a,b)=>positionSensitive&&Math.abs(a.score.entryGain-b.score.entryGain)>.005?b.score.entryGain-a.score.entryGain:a.score.cost-b.score.cost||bundleOrder(a,b);
+ // Mid-race position only resolves reward ties. Preserve the same paired draws and scenario weights.
+ const entryGain=(score,count,step)=>{
+  const groups=new Map();
+  for(let i=0;i<count;i++){
+   const before=comparison.run(nativeIds,i,step,true),after=comparison.run([...nativeIds,...score.ids],i,step);
+   const group=groups.get(after.scenario.id)||{sum:0,count:0,weight:after.scenario.weight};
+   group.sum+=(positionAt(after,before.entry.t)-positionAt(before,before.entry.t))/2.5;group.count++;groups.set(after.scenario.id,group);
+  }
+  const values=[...groups.values()],scale=Math.max(...values.map(g=>g.weight));
+  return values.reduce((n,g)=>n+g.weight/scale*g.sum/g.count,0)/values.reduce((n,g)=>n+g.weight/scale,0);
+ };
+ const entry=(score)=>score.entryGain??=(positionSensitive?entryGain(score,score.scenarios.reduce((n,s)=>n+s.count,0),score.step):0);
+ const tieOrder=(a,b)=>positionSensitive&&Math.abs(entry(a.score)-entry(b.score))>.005?entry(b.score)-entry(a.score):a.score.cost-b.score.cost||bundleOrder(a,b);
  let assignments=[{pins:{},available:[],score:evaluate(required)}];
  for(const group of goldGroups){
   const next=[];
@@ -205,9 +224,9 @@ export async function recommendTargetAcceleration(data,chart,{cancelled=()=>fals
   // Only call a set required if every feasible alternative loses the target.
   const forced=needed.length>0&&group.choices.filter(c=>legal([...nativeIds,...required],{...assignment.pins,[group.id]:c.id})).length===1;
   const near=assignments.filter(a=>a!==assignment&&a.pins[group.id]!==selected.id&&Math.abs(a.score.gain-assignment.score.gain)<=.01);
-  const positionPreferred=positionSensitive&&near.length&&assignment.score.entryGain>Math.max(...near.map(a=>a.score.entryGain))+.005;
+  const positionPreferred=positionSensitive&&near.length&&entry(assignment.score)>Math.max(...near.map(a=>entry(a.score)))+.005;
   return {cardId:group.card_id,scenarioId:group.scenario_id,eventName:group.name_jp,selectionLabel:selected.label,groupId:group.id,setId:selected.id,ids:rareIds,targetIds:needed,alternatives,reason:forced?'target':group.choices.length===1?'fixed':near.length?positionPreferred?'position':'cost':'gain',verified:group.choices.length===1||!events.unverified.includes(group.card_id)};
  }).filter(Boolean);
  return {modelVersion:TARGET_ACCELERATION_VERSION,ids:required,skills,skillGainPolicy:'remove-one-from-target',gain:chosen.gain,min:chosen.min,max:chosen.max,cost:chosen.cost,maximumGain:fineMaximum.gain,sacrificedGain:Math.max(0,fineMaximum.gain-chosen.gain),allowedLoss:null,score:chosen.score,efficiencyPolicy:{minGainPer100Sp,scoreTolerance,source:'preparation-policy-not-measured'},scenarioEvolutionCount:required.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length,
-  eventChoices:assignment.pins,rewards:rewards.filter(r=>r.cardId),scenarioRewards:rewards.filter(r=>r.scenarioId),strategyGoals:strategicGoals,samples,dt,rankComparison:comparison.policy,gainByRank:chosen.byRank,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,contributionEvaluations,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
+  eventChoices:assignment.pins,rewards:rewards.filter(r=>r.cardId),scenarioRewards:rewards.filter(r=>r.scenarioId),strategyGoals:strategicGoals,samples,dt,scenarioCoverage:chosen.scenarioCoverage,scenarios:chosen.scenarios,excludedCandidates,search:{method:search,rewardMethod:'beam-4',candidateCount:singles.length,shortlisted:pool.length,evaluations:checks,contributionEvaluations,refinementEvaluations,refinementLimit,refinementLimited,closureComplete,exchangeMethod:'coarse-screened-12-in-6-out-8-score-8-cost',globalOptimal:false},pricePolicy:'all-hints-lv5-no-trait',positionPolicy:positionSensitive?'prefer-mid-position-on-tie':'cost-on-tie',baseline:'native-unique-only'};
 }

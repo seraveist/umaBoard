@@ -1,5 +1,6 @@
 // Acquisition is deliberately independent from the simulation's selected skills.
-import {INHERITED_LIMIT,inheritedOrigin} from './cm-recommendation.mjs';
+import {INHERITED_LIMIT} from './cm-recommendation.mjs';
+import {skillTransforms,inheritedBase} from './skill-transforms.mjs';
 export const ACQUISITION_OPTIONS=Object.freeze([
  {value:'owned',label:'습득'}, {value:'unavailable',label:'미획득'},
  {value:'0',label:'획득'},...Array.from({length:5},(_,index)=>({value:String(index+1),label:`할인 Lv${index+1}`}))
@@ -11,24 +12,24 @@ export const acquisitionValue=value=>validAcquisition(value)?String(value):'unav
 export const acquisitionId=row=>row.id;
 export function buildAcquisitionHierarchy(data){
  const lower=new Map(),upper=new Map(),evolutionBase=new Map(),alternatives=new Map();
- const link=(high,low)=>{
-  if(!high||!low||high===low||!data.skills?.[high]||!data.skills?.[low]||data.skills[high].inherited||data.skills[low].inherited)return;
+ const link=(high,low,inheritance=false)=>{
+  if(!high||!low||high===low||!data.skills?.[high]||!data.skills?.[low]||!inheritance&&(data.skills[high].inherited||data.skills[low].inherited))return;
   if(!lower.has(high))lower.set(high,new Set());lower.get(high).add(low);
   if(!upper.has(low))upper.set(low,new Set());upper.get(low).add(high);
  };
  for(const [id,stage]of Object.entries(data.purchase_stages||{}))if(stage.status==='verified')link(id,stage.prerequisite_id);
- for(const rule of data.evolution_rules||[]){
-  if(data.skills?.[rule.evolved_id]?.rarity!=='evolution')continue;
-  link(rule.evolved_id,rule.base_id);evolutionBase.set(rule.evolved_id,rule.base_id);
+ for(const rule of skillTransforms(data)){
+  if(data.skills?.[rule.evolved_id]?.rarity!=='evolution'&&rule.kind!=='inherited_evolution')continue;
+  link(rule.evolved_id,rule.base_id,rule.kind==='inherited_evolution');evolutionBase.set(rule.evolved_id,rule.base_id);
   if(!alternatives.has(rule.base_id))alternatives.set(rule.base_id,new Set());alternatives.get(rule.base_id).add(rule.evolved_id);
  }
  return {lower,upper,evolutionBase,alternatives};
 }
 export function relatedAcquisitionIds(hierarchy,id,direction='lower'){
  const seen=new Set([id]),result=[],pending=[id],edges=hierarchy?.[direction];
- while(pending.length)for(const next of edges?.get(pending.pop())||[]){
+ while(pending.length){const current=pending.pop();for(const next of edges?.get(current)||[]){
   if(seen.has(next))continue;seen.add(next);result.push(next);pending.push(next);
- }
+ }}
  return result;
 }
 export function updateAcquisition(rows,states,id,value,hierarchy){
@@ -53,7 +54,8 @@ export function updateAcquisition(rows,states,id,value,hierarchy){
  return next;
 }
 export function checklistSnapshot(rows,states={},hierarchy){
- let result=Object.fromEntries(rows.map(row=>[row.id,acquisitionValue(states[acquisitionId(row)]??(row.inherited?states[inheritedOrigin(row.id)]:undefined))]));
+ const rowIds=new Set(rows.map(row=>row.id));
+ let result=Object.fromEntries(rows.map(row=>[row.id,acquisitionValue(states[acquisitionId(row)]??(row.inherited&&!rowIds.has(origin(row))?states[origin(row)]:undefined))]));
  if(hierarchy){
   // Migrate old independent drafts deterministically. The first acquired
   // alternative in table order wins; no hidden/stale ID enters the snapshot.
@@ -65,27 +67,36 @@ export function checklistCounts(rows,states={}){
  const values=rows.map(row=>acquisitionValue(states[acquisitionId(row)]));
  return {total:rows.length,available:values.filter(v=>v!=='unavailable').length,owned:values.filter(v=>v==='owned').length};
 }
-export const inheritedCount=(rows,states={})=>rows.filter(row=>row.inherited&&acquisitionValue(states[row.id])!=='unavailable').length;
+const origin=row=>row.inheritanceOriginId??inheritedBase(row.id);
+export const inheritedCount=(rows,states={})=>new Set(rows.filter(row=>row.inherited&&acquisitionValue(states[row.id])!=='unavailable').map(origin)).size;
 // A changed ranking must not erase actual purchases or recorded hints merely
 // because an inherited skill falls outside the new display Top10.
 export function retainedInheritanceCandidates(candidates,shown,states={}){
  const visible=new Set(shown.map(row=>row.id));
- return candidates.filter(row=>row.inherited&&!visible.has(row.id)&&acquisitionValue(states[row.id]??states[inheritedOrigin(row.id)])!=='unavailable');
+ return candidates.filter(row=>row.inherited&&!visible.has(row.id)&&acquisitionValue(states[row.id]??states[origin(row)])!=='unavailable');
 }
 export function canRecordAcquisition(rows,states,id,value){
  const row=rows.find(row=>row.id===id);
  if(!row)return false;
- return !row.inherited||acquisitionValue(value)==='unavailable'||acquisitionValue(states[id])!=='unavailable'||inheritedCount(rows,states)<INHERITED_LIMIT;
+ return !row.inherited||acquisitionValue(value)==='unavailable'||rows.some(other=>other.inherited&&origin(other)===origin(row)&&acquisitionValue(states[other.id])!=='unavailable')||inheritedCount(rows,states)<INHERITED_LIMIT;
 }
 
 // One atomic whole-checklist change, independent of the current search/tab.
 // Keep previously secured inherited choices first, then fill unused slots in
 // chart order. Hints do not buy either side of an evolution branch.
-export function bulkAcquisition(rows,states,value){
+export function bulkAcquisition(rows,states,value,evolutionOptions=[]){
  if(!['unavailable','5'].includes(value))throw new Error('지원하지 않는 일괄 설정입니다.');
- const inherits=rows.filter(row=>row.inherited),selected=new Set([
-  ...inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable'),
-  ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable').sort((a,b)=>Number(!!b.targetInheritance)-Number(!!a.targetInheritance))
- ].slice(0,INHERITED_LIMIT).map(row=>row.id));
- return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&states[row.id]==='owned'?'owned':value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
+ const visible=new Set(rows.map(row=>row.id));
+ const history=evolutionOptions.filter(row=>states[row.id]==='owned'&&!visible.has(row.id));
+ rows=[...rows,...history];
+ if(value==='unavailable')return Object.fromEntries(rows.map(row=>[row.id,value]));
+ const inherits=rows.filter(row=>row.inherited);
+ const origins=new Set(inherits.filter(row=>states[row.id]==='owned').map(origin)),selected=new Set();
+ const available=inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable');
+ for(const row of [...available,...inherits.slice().sort((a,b)=>Number(!!b.targetInheritance)-Number(!!a.targetInheritance))]){
+  const base=origin(row);
+  if(origins.size>=INHERITED_LIMIT)break;
+  if(!origins.has(base)){origins.add(base);selected.add(row.id);}
+ }
+ return Object.fromEntries(rows.map(row=>[row.id,states[row.id]==='owned'?'owned':!row.inherited||selected.has(row.id)?'5':'unavailable']));
 }

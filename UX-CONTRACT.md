@@ -13,6 +13,13 @@ Business authority: `PRODUCT.md`, `docs/CM_FIRST_CHART.md`, and the user's
 | Toast | stable inline cm-notice live region | DESIGN | status / error | browser |
 | Skill details | cm-skill-details.mjs | DESIGN | hover / focus / tap | browser |
 
+Public release identity comes from `cm-algorithm-version.mjs`: optimization v1
+uses unchanged v11 chart/final model IDs and existing draft/cache schemas.
+Both JSON downloads add the same `algorithm` identity. The chart download also
+retains each row's calculation state and sampled HP outcome. Setup edits disable
+the previous chart download until a complete replacement is available. These UI
+and export rules do not alter candidate admission, sampling, pricing or search.
+
 Under the user's quiet-copy update, omit general instructions, policy prose,
 list-footer repetition and routine save/restore/export/completion success copy.
 Keep semantic labels, source routes, actual numbers and necessary error,
@@ -60,6 +67,10 @@ storage is disclosed and does not prevent calculation. Export is a user-triggere
 JSON download. No external writes/messaging or irreversible mutations.
 
 The dropdown records acquisition without altering the simulated mean gain.
+Course selection uses the same reviewed-coordinate support gate as calculation.
+Reviewed zero-runup US courses use Korean track labels; missing/conflicting or
+positive-runup geometry remains unavailable. This does not change selection,
+keyboard, invalidation or stage-transition behavior. See `docs/CM_ALGORITHMS_V9_QA.md`.
 Under the user's 2026-11-16 update, acquired upper skills also mark every verified
 lower purchase/evolution stage acquired. An unavailable lower stage clears every
 linked upper. Returning a purchased lower stage to a hint clears acquired uppers.
@@ -79,7 +90,10 @@ reruns calculations, changes source order or discards acquisition states. Tabs
 have arrow/Home/End keyboard navigation and counts; tab/search changes retain all
 matching rows without a display batch. Source icons determine mixed-effect categories.
 Inheritance Top10 is frozen before rows appear; the shared six-slot limit counts
-purchased and Lv0–5 states across every view. A seventh attempt restores the
+purchased and Lv0–5 states across every view and full inheritance options. The
+native `전체 계승 후보 보기` checkbox exposes all inherited rows; recorded outside
+Top10 rows remain visible after it closes. It does not rerun or discard records.
+A seventh attempt restores the
 previous select value and reports the six-slot limit in the live draft status.
 
 Post-training inputs remain hidden and disabled until a complete first chart exists. The
@@ -96,6 +110,14 @@ precedence. The legacy boolean remains derived for compatibility in saved inputs
 and exports, so it never stacks with Studious. Selection persists per plan and
 cancels stale work on change. UI restoration tolerates malformed legacy drafts;
 calculation input rejects unknown choices.
+
+Native optional gate/popularity selects appear in collapsed race-context details
+in both stages. Missing values visibly say uniform assumption. Changed values
+invalidate the corresponding calculation; they do not create a new acquisition
+history scope. Stage2 restores its own values, falling back to the chart context.
+Collapsed `발동 조건과 표본` details disclose self/probability sampling, opponent
+assumptions and full-spurt approximation. Result HP text gives sampled success
+count/total. No per-row warning badges or expanded policy prose are added.
 
 `cm-final-plan.mjs` owns stage pricing and combination recommendation; the shared
 discount function remains in `purchases.mjs`. `cm-final-ui.mjs` owns the second
@@ -123,3 +145,20 @@ badges are omitted. Source evidence filters by selected owners and reviewed
 requirements; verified prerequisite-derived paths and factor candidates are
 marked inferred, and other missing paths are unknown. Display sources never
 become acquisition edges or pricing rules.
+
+The chart label is 단독 평균 마신; calculation details qualify9 shared comparison
+contexts/144 samples as coverage, not measured probabilities. Final applied
+skills expose their whole-effect ablation contribution in the current package.
+Activation sample rate and useful-acceleration sample rate are separate. Normal
+and strengthened inheritance share one origin/slot and the original paid stage;
+recording a strengthened effect asserts that its actual requirements are met.
+
+The v8 objective and risk preference stay in the existing calculation disclosure
+and export. Comparison-sample percentages remain distinct from measured rates.
+Reviewed mutually exclusive gold event rewards invalidate the entire recorded
+availability before simulation. Structured errors preserve all records, search,
+filters and actual inputs, select the mobile skill-record view, mark the minimal
+conflicting selects with `aria-invalid`, describe them through `draft-status`,
+and focus the first visible conflict (or search when filtered out). The shared
+draft footer shows the concise correction message. A record edit clears these
+markers and stale recommendations; the app never chooses an event on the user's behalf.

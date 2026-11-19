@@ -57,7 +57,9 @@ test('current speed with natural deceleration can connect and reduce the late en
 test('changing a late target-speed skill raises the required speed, independently of course windows',()=>{
  const speed=skill('speed','target_speed',3500);
  const a=run([speed]),b=run([]);
- assert.ok(a.entry.targetGap>b.entry.targetGap+.3);
+ const firstAfter=a.trace.find(p=>p.x>a.events[0].x);
+ assert.ok(firstAfter&&firstAfter.target>b.entry.target+.3);
+ assert.ok(a.events[0].x>=1600&&a.events[0].frameStartX>=1600);
  assert.deepEqual(compileSkill(speed,setup).invocations[0].condition[0].windows,[[1600,2400]]);
 });
 test('unknown effect, scale and repeated activation are unsupported, never zero benefit',()=>{
@@ -314,13 +316,13 @@ test('automatically chosen hybrids never become the next automatic speed baselin
  e.toggle(hybrid.id,false,'speed');assert.ok(!e.analyze().selected.includes(hybrid.id));
  e.toggle(hybrid.id,true,'speed');assert.ok(e.baselineSelection().includes(hybrid.id));assert.ok(!e.analyze().automaticIds.includes(hybrid.id));
 });
-test('safe insurance with zero central gain survives pruning by worst-sample contribution',()=>{
+test('safe insurance survives pruning by worst-sample contribution with unconditioned random draws',()=>{
  const early=skill('early','acceleration',4000,[[atom('phase_random','==',1),atom('remain_distance','<=',920)]]);
  const cover=skill('cover','acceleration',2000,[[atom('remain_distance','<=',670)]]);
  const e=new PreparationEngine(fixture([early,cover],{early:100,cover:100}),setup);e.objective='safe';
  const expected=e.recommendation().gain.min,result=e.analyze(),entry=result.skills.find(s=>s.id===cover.id);
  assert.ok(result.selected.includes(cover.id));assert.ok(result.tables.acceleration.ordinary.includes(cover.id));
- assert.equal(entry.gain.median,0);assert.ok(entry.safetyGain>.14);assert.ok(Math.abs(result.recommendation.gain.min-expected)<1e-8);
+ assert.ok(entry.gain.median>=0);assert.ok(entry.safetyGain>.14);assert.ok(Math.abs(result.recommendation.gain.min-expected)<1e-8);
 });
 test('bulk speed selection explicitly pins an already automatically selected hybrid',()=>{
  const hybrid=skill('hybrid','target_speed',3500);hybrid.categories.push('acceleration');

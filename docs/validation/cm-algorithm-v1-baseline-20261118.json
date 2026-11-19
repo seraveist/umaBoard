@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "id": "cm-algorithm-first-completion-v1",
+  "status": "complete-with-documented-limitations",
+  "date": "2026-11-18 Asia/Seoul",
+  "decision": "Keep v11 as the first completed algorithm baseline; additional tuning of the known small search gap is deferred.",
+  "runtime": {
+    "commit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+    "auditCommit": "0098f02f354f624fc5cd44ab96a4e047a47fea59",
+    "assetsSha256": "cc4c5e607abfac201a87705a3b99c7d461218166a721f0c6788086459df4b46b",
+    "assetsHashRule": "sorted assets/*.mjs and *.css; filename+LF+LF-normalized text+LF",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "data": {
+    "activeVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+    "counts": {
+      "courses": 138,
+      "outfits": 274,
+      "skills": 2236,
+      "supports": 568
+    },
+    "supportedCourses": 132,
+    "scenarioProfiles": 10,
+    "calculationStatus": "unvalidated",
+    "curationStatus": "partial"
+  },
+  "textHashRule": "SHA256 of UTF-8 text with CRLF normalized to LF",
+  "inputs": [
+    {
+      "path": "data/manifest.json",
+      "textSha256": "e165c9c053d5c6370044acd321ebad43152bfacf29626c325164871aef716562"
+    },
+    {
+      "path": "data/bundles/0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26/dataset.json",
+      "textSha256": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26"
+    },
+    {
+      "path": "curated/cm-scenario-profiles.json",
+      "textSha256": "e5ffc245eb24f2148c22be5dc3c091b6345782b3f76ca290c325cce3eea63b6d"
+    },
+    {
+      "path": "curated/cm-skill-display.json",
+      "textSha256": "ee6af0c3970a8f2f34dc59a5b68f93672141a9936028948074dc6a760e17aa1b"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/validation/cm-v11-checks-20261118.json",
+      "textSha256": "5f904b3c48a8a5cefa5bace090d1723b9def24f26d82884b45a7029dc19ce6ee"
+    },
+    {
+      "path": "docs/validation/cm-v11-candidates-20261118.json",
+      "textSha256": "0d32887dfca130bbf05b4dc31ff1afa43fd823b1c369cf1f5b6abd26313b8912"
+    },
+    {
+      "path": "docs/validation/cm-v11-clock-20261118.json",
+      "textSha256": "196ccfd74513562b6073f71432aa4c2a4276bf7a8453a30dd3b861260b6692ec"
+    },
+    {
+      "path": "docs/validation/cm-v11-bounded-20261118.json",
+      "textSha256": "ad341ee5ec4c00a805986414592fb28df86b1d6792ec3d4cdb452962061e5b2e"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-stats-20261118.json",
+      "textSha256": "df8be1c76d873326adca70fc4814efc3d708f6b3a54b3a44df6ce1ad95796e4a"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-plans-20261118.json",
+      "textSha256": "7774b50e1dc28e697a38ce5cfa7fcd1b494cc7d695d24f0b7256859ffdda6c2d"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-witness-20261118.json",
+      "textSha256": "dc717527df6d07c045be039df2688a613578d96aabbe87d468b98888c6200db6"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-guides-20261118.json",
+      "textSha256": "51ff1415eaaef92760fb431e8411d0cc0506bddebb633e366a31b860e3f42107"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-late-plan-20261118.json",
+      "textSha256": "99a49b12ecf8365ebe1544b9d63298b2b43e4c2e822171e00ef3fa8b5319033e"
+    },
+    {
+      "path": "docs/validation/cm-v11-reaudit-evidence-20261118.json",
+      "textSha256": "d105a4bb114b2984be683a02ea2287cac87fb76e0f0cff92fd3bd7b21be83cb5"
+    }
+  ],
+  "checks": {
+    "runtimeCi": {
+      "commit": "d3b40fddf28fb6eb28b045afd65583b0ae3b11f6",
+      "url": "https://github.com/seraveist/umaBoard/actions/runs/44262723887",
+      "conclusion": "success",
+      "nodeTests": 295,
+      "pythonTests": 51
+    },
+    "latestAuditFocused": {
+      "tests": 54,
+      "pass": 54,
+      "fail": 0
+    },
+    "finalizationFocused": {
+      "tests": 49,
+      "pass": 49,
+      "fail": 0,
+      "command": "node --test tests/cm-candidate-retention.test.mjs tests/cm-final-plan.test.mjs tests/cm-state.test.mjs tests/cm-plan-storage.test.mjs tests/cm-ui.test.mjs"
+    },
+    "statGatedSkills": 54,
+    "statProjectionChecks": 2268,
+    "recordedHintAndOwnedCases": 19,
+    "finalizationDataValidation": {
+      "status": "passed",
+      "counts": {
+        "skills": 2236,
+        "outfits": 274,
+        "supports": 568,
+        "courses": 138
+      },
+      "warnings": 5
+    },
+    "finalizationPagesBuild": {
+      "output": ".cache\\pages",
+      "data_version": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+      "assets_version": "ed21f3994c5a27a0",
+      "portraits": {
+        "available": {
+          "outfits": 0,
+          "supports": 0
+        },
+        "source_missing": {
+          "outfits": 0,
+          "supports": 0
+        },
+        "unavailable_downloads": 592
+      },
+      "files": 209
+    },
+    "baselineIdentity": {
+      "status": "passed",
+      "lockedInputs": 4,
+      "verifiedEvidence": 10,
+      "scope": "identity/integrity; does not rerun gameplay evaluations"
+    }
+  },
+  "acceptedLimits": [
+    {
+      "id": "bounded-search",
+      "evidence": "docs/validation/cm-v11-reaudit-witness-20261118.json",
+      "knownGapAtDeclaredInput": 0.006220234851014972,
+      "meaning": "known counterexample retained; not a global error bound or an operational cutoff"
+    },
+    {
+      "id": "sampling-and-physical-approximation",
+      "meaning": "near ties and late conditional acceleration may vary with keyed draws and public physics assumptions"
+    },
+    {
+      "id": "unmeasured-encounters",
+      "meaning": "assumed encounter frequencies are not empirical activation or win probabilities; no recalibration in this baseline"
+    },
+    {
+      "id": "partial-data-coverage",
+      "meaning": "unvalidated/partial upstream-data flags remain intact; completion is the application algorithm scope, not full game certification"
+    }
+  ],
+  "outputReview": {
+    "empiricalProbabilityDisclaimerPresent": true,
+    "boundedSearchLabelPresent": true,
+    "hpSampleFailureVisible": true,
+    "comments": "Read existing presentation and result code; no UI changes in finalization."
+  },
+  "reopenFor": [
+    "reproducible missing legal candidate or lost acquisition record",
+    "wrong verified price or duplicate/sunk-cost charge",
+    "impossible activation or acquisition accepted",
+    "material recommendation regression under the same inputs and stability checks",
+    "new game/source evidence contradicting current conditions/effects/prices/course data"
+  ]
+}

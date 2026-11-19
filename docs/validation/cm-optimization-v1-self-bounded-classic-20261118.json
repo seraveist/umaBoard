@@ -1,0 +1,521 @@
+{
+  "date": "2026-11-18 Asia/Seoul",
+  "auditedHead": "5cce5384f9ff403f9dae9a7199e8354582fc85c9",
+  "algorithm": {
+    "id": "umaboard-optimization-v1",
+    "version": "v1",
+    "name": "최적화 알고리즘 v1",
+    "models": {
+      "chart": "cm-first-chart-v11",
+      "final": "cm-post-training-v11",
+      "solo": "solo-comparison-v5"
+    }
+  },
+  "coreSha256": "b850f80fb6bbada03f3d03eb64af1baad91a465b2e5fb937a123cb93f465811c",
+  "dataVersion": "0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26",
+  "scope": "Completed branch v1 only; no main merge, external calibration or production changes",
+  "status": "completed",
+  "input": {
+    "outfitId": "102201",
+    "scenarioId": "15",
+    "style": 2,
+    "courseId": "10906",
+    "supportIds": [
+      "30161",
+      "30093"
+    ],
+    "going": 2,
+    "weather": 1,
+    "season": 2,
+    "time": 2
+  },
+  "actual": {
+    "stats": {
+      "speed": 2200,
+      "stamina": 1800,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "aptitudes": {
+      "distance": "A",
+      "surface": "A",
+      "style": "A"
+    },
+    "spBudget": 700,
+    "discountTrait": "studious"
+  },
+  "states": {
+    "200362": "2",
+    "201101": "1",
+    "201102": "owned",
+    "201111": "0",
+    "201112": "4",
+    "201341": "2",
+    "201342": "3",
+    "201901": "0",
+    "201902": "4",
+    "202711": "1",
+    "202712": "5"
+  },
+  "ownedId": "201102",
+  "candidateIds": [
+    "202711",
+    "202712",
+    "201901",
+    "201902",
+    "201341",
+    "201342",
+    "201101",
+    "201102",
+    "201111",
+    "201112",
+    "200362"
+  ],
+  "enumeratedMasks": 1024,
+  "uniqueAffordablePlans": 261,
+  "totalWallMs": 105192.17490000001,
+  "records": [
+    {
+      "budget": 470,
+      "affordableDistinctPlans": 136,
+      "current": {
+        "ids": [
+          "100221",
+          "201102",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 454,
+        "gain": 1.9730738622217925,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.36891535500449,
+          "tailFinishTime": 105.55716640974765,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.14012389110025936,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14012389110025936,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "201102": 0.9513888888888888,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201902": 0.5486111111111112,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "201102": 0,
+          "201111": 0,
+          "201342": 0.5208333333333334,
+          "201902": 0.5208333333333334,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 130,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 7,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 40,
+          "precisionScreenedFinalists": 40,
+          "precisionCandidates": 42,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 8,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "profile": {
+        "name": "classic-470",
+        "mode": "observe",
+        "evaluateCalls": 130,
+        "uniqueEvaluationKeys": 130,
+        "strictDuplicateCalls": 0,
+        "fullScoreRepeatCalls": 0,
+        "completeResultMismatches": 0,
+        "simulationCalls": 13311,
+        "referenceSimulationCalls": 288,
+        "runCacheHits": 13041,
+        "wallMs": 12911.201499999974,
+        "duplicateEvaluationMs": 0,
+        "memoHits": 0,
+        "byStage": {
+          "initial": {
+            "calls": 1,
+            "duplicateCalls": 0
+          },
+          "candidates": {
+            "calls": 18,
+            "duplicateCalls": 0
+          },
+          "search": {
+            "calls": 22,
+            "duplicateCalls": 0
+          },
+          "screening": {
+            "calls": 51,
+            "duplicateCalls": 0
+          },
+          "stabilization": {
+            "calls": 8,
+            "duplicateCalls": 0
+          },
+          "final": {
+            "calls": 29,
+            "duplicateCalls": 0
+          },
+          "closure": {
+            "calls": 1,
+            "duplicateCalls": 0
+          }
+        },
+        "totalWallMs": 13085.7661
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "201102",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 454,
+        "gain": 1.9730738622217925,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.36891535500449,
+          "tailFinishTime": 105.55716640974765,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.14012389110025936,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.14012389110025936,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": true,
+      "gainGap": 0
+    },
+    {
+      "budget": 700,
+      "affordableDistinctPlans": 261,
+      "current": {
+        "ids": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 677,
+        "gain": 2.642768529417118,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.30298473029599,
+          "tailFinishTime": 105.49431372423932,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.20297657660859159,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.20297657660859159,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        },
+        "activationRates": {
+          "100221": 0.5555555555555556,
+          "200362": 0.9513888888888888,
+          "201101": 0.9236111111111112,
+          "201111": 0.9444444444444444,
+          "201342": 0.9583333333333334,
+          "201902": 0.5486111111111112,
+          "202712": 0.7361111111111112
+        },
+        "usefulAccelerationRates": {
+          "100221": 0,
+          "200362": 0,
+          "201101": 0,
+          "201111": 0,
+          "201342": 0.5416666666666666,
+          "201902": 0.5208333333333334,
+          "202712": 0.7361111111111112
+        },
+        "search": {
+          "method": "bounded",
+          "evaluations": 199,
+          "hpPrunedPlans": 0,
+          "shortlisted": 10,
+          "scenarioPacks": 1,
+          "closureComplete": true,
+          "closureChecks": 8,
+          "closurePasses": 1,
+          "batchChecks": 0,
+          "screenedFinalists": 52,
+          "precisionScreenedFinalists": 52,
+          "precisionCandidates": 53,
+          "precisionSeedCandidates": 10,
+          "precisionSeedCount": 2,
+          "precisionScreeningComplete": true,
+          "screeningSamples": 144,
+          "stabilizationPasses": 1,
+          "stabilizationChecks": 8,
+          "stabilizationBatchChecks": 0,
+          "stabilizationComplete": true,
+          "globalOptimal": false,
+          "optimalityScope": "bounded-search",
+          "searchSamples": 9,
+          "searchDt": 0.05,
+          "samples": 144,
+          "dt": 0.01
+        }
+      },
+      "profile": {
+        "name": "classic-700",
+        "mode": "observe",
+        "evaluateCalls": 199,
+        "uniqueEvaluationKeys": 199,
+        "strictDuplicateCalls": 0,
+        "fullScoreRepeatCalls": 0,
+        "completeResultMismatches": 0,
+        "simulationCalls": 19206,
+        "referenceSimulationCalls": 288,
+        "runCacheHits": 18918,
+        "wallMs": 19240.002199999828,
+        "duplicateEvaluationMs": 0,
+        "memoHits": 0,
+        "byStage": {
+          "initial": {
+            "calls": 1,
+            "duplicateCalls": 0
+          },
+          "candidates": {
+            "calls": 22,
+            "duplicateCalls": 0
+          },
+          "search": {
+            "calls": 48,
+            "duplicateCalls": 0
+          },
+          "screening": {
+            "calls": 62,
+            "duplicateCalls": 0
+          },
+          "stabilization": {
+            "calls": 16,
+            "duplicateCalls": 0
+          },
+          "final": {
+            "calls": 46,
+            "duplicateCalls": 0
+          },
+          "closure": {
+            "calls": 4,
+            "duplicateCalls": 0
+          }
+        },
+        "totalWallMs": 19494.218999999997
+      },
+      "oracle": {
+        "ids": [
+          "100221",
+          "200362",
+          "201101",
+          "201111",
+          "201342",
+          "201902",
+          "202712"
+        ],
+        "cost": 677,
+        "gain": 2.642768529417118,
+        "hpSuccessRate": 1,
+        "feasible": true,
+        "performance": {
+          "meanFinishTime": 105.30298473029599,
+          "tailFinishTime": 105.49431372423932,
+          "referenceTailFinishTime": 105.69729030084791,
+          "tailImprovement": 0.20297657660859159,
+          "risk": {
+            "policy": "mean-gain-baseline-tail-guard-v1",
+            "tailMass": 0.25,
+            "maxTailDelay": 0,
+            "tailDelay": -0.20297657660859159,
+            "withinLimit": true,
+            "units": "seconds",
+            "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+            "interpretation": "scenario-risk-preference-not-empirical-confidence"
+          }
+        }
+      },
+      "matchesOracle": true,
+      "gainGap": 0
+    }
+  ],
+  "budgetMonotonicWithinProbe": true,
+  "reversedRows": {
+    "result": {
+      "ids": [
+        "100221",
+        "201102",
+        "201111",
+        "201342",
+        "201902",
+        "202712"
+      ],
+      "cost": 454,
+      "gain": 1.9730738622217925,
+      "hpSuccessRate": 1,
+      "feasible": true,
+      "performance": {
+        "meanFinishTime": 105.36891535500449,
+        "tailFinishTime": 105.55716640974765,
+        "referenceTailFinishTime": 105.69729030084791,
+        "tailImprovement": 0.14012389110025936,
+        "risk": {
+          "policy": "mean-gain-baseline-tail-guard-v1",
+          "tailMass": 0.25,
+          "maxTailDelay": 0,
+          "tailDelay": -0.14012389110025936,
+          "withinLimit": true,
+          "units": "seconds",
+          "basis": "whole-run-finish-times-not-minimum-incremental-gain",
+          "interpretation": "scenario-risk-preference-not-empirical-confidence"
+        }
+      },
+      "activationRates": {
+        "100221": 0.5555555555555556,
+        "201102": 0.9513888888888888,
+        "201111": 0.9444444444444444,
+        "201342": 0.9583333333333334,
+        "201902": 0.5486111111111112,
+        "202712": 0.7361111111111112
+      },
+      "usefulAccelerationRates": {
+        "100221": 0,
+        "201102": 0,
+        "201111": 0,
+        "201342": 0.5208333333333334,
+        "201902": 0.5208333333333334,
+        "202712": 0.7361111111111112
+      },
+      "search": {
+        "method": "bounded",
+        "evaluations": 130,
+        "hpPrunedPlans": 0,
+        "shortlisted": 10,
+        "scenarioPacks": 1,
+        "closureComplete": true,
+        "closureChecks": 7,
+        "closurePasses": 1,
+        "batchChecks": 0,
+        "screenedFinalists": 40,
+        "precisionScreenedFinalists": 40,
+        "precisionCandidates": 42,
+        "precisionSeedCandidates": 10,
+        "precisionSeedCount": 2,
+        "precisionScreeningComplete": true,
+        "screeningSamples": 144,
+        "stabilizationPasses": 1,
+        "stabilizationChecks": 8,
+        "stabilizationBatchChecks": 0,
+        "stabilizationComplete": true,
+        "globalOptimal": false,
+        "optimalityScope": "bounded-search",
+        "searchSamples": 9,
+        "searchDt": 0.05,
+        "samples": 144,
+        "dt": 0.01
+      }
+    },
+    "profile": {
+      "name": "classic-470-reverse",
+      "mode": "observe",
+      "evaluateCalls": 130,
+      "uniqueEvaluationKeys": 130,
+      "strictDuplicateCalls": 0,
+      "fullScoreRepeatCalls": 0,
+      "completeResultMismatches": 0,
+      "simulationCalls": 13311,
+      "referenceSimulationCalls": 288,
+      "runCacheHits": 13041,
+      "wallMs": 11648.21940000006,
+      "duplicateEvaluationMs": 0,
+      "memoHits": 0,
+      "byStage": {
+        "initial": {
+          "calls": 1,
+          "duplicateCalls": 0
+        },
+        "candidates": {
+          "calls": 18,
+          "duplicateCalls": 0
+        },
+        "search": {
+          "calls": 22,
+          "duplicateCalls": 0
+        },
+        "screening": {
+          "calls": 51,
+          "duplicateCalls": 0
+        },
+        "stabilization": {
+          "calls": 8,
+          "duplicateCalls": 0
+        },
+        "final": {
+          "calls": 29,
+          "duplicateCalls": 0
+        },
+        "closure": {
+          "calls": 1,
+          "duplicateCalls": 0
+        }
+      },
+      "totalWallMs": 11824.117299999998
+    },
+    "sameSelection": true,
+    "gainDifference": 0
+  }
+}
