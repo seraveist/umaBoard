@@ -187,7 +187,30 @@ export function branchSampler(setup,nativeIds,sample){
 // One factory belongs to one final-plan evaluator. Each sample has a fixed race
 // context and seed. Possession and live race state are tested later by branchReady.
 export function createFinalBranchSampler(){
- const samples=new Map();
+ const samples=new Map(),dependencies=new WeakMap(),possessions=new WeakMap();
+ function selectionReads(skill){
+  if(!dependencies.has(skill)){
+   const has=new Set();let size=false,inherited=false,forced=false;
+   for(const inv of skill.invocations){
+    for(const e of inv.effects){size||=e.scale===2;forced||=e.kind==='invoke_rare'||e.kind==='invoke_unique';}
+    for(const b of [...inv.condition,...inv.precondition])for(const a of b.dynamic){
+     if(a.field==='is_exist_skill_id')has.add(String(a.value));
+     if(a.field==='succession_skill_count')inherited=true;
+    }
+   }
+   dependencies.set(skill,{has:[...has],size,inherited,forced});
+  }
+  return dependencies.get(skill);
+ }
+ function possession(plan,setup){
+  if(!possessions.has(plan)){
+   const ids=new Set(plan.possessionIds),inherited=setup.inheritanceOrigins?
+    new Set([...ids].filter(id=>Object.hasOwn(setup.inheritanceOrigins,id)).map(id=>setup.inheritanceOrigins[id])).size:
+    plan.skills.filter(s=>s.skill?.inherited).length;
+   possessions.set(plan,{ids,inherited});
+  }
+  return possessions.get(plan);
+ }
  return (setup,nativeIds,sample)=>{
   if(samples.has(sample))return samples.get(sample);
   const draw=branchSampler(setup,nativeIds,sample),conditions=new WeakMap(),preconditions=new WeakMap(),units=new Map();
@@ -200,6 +223,37 @@ export function createFinalBranchSampler(){
    let draws=units.get(id);if(!draws){draws=new Map();units.set(id,draws);}
    if(!draws.has(channel))draws.set(channel,draw.unit(id,channel));
    return draws.get(channel);
+  };
+  const opportunities=new WeakMap();
+  const possible=branch=>branch.at!==Infinity&&branch.windows.length&&branch.dynamic.every(atom=>{
+   if(atom.field==='random_lot'||atom.field==='random_lot_shared'){
+    const q=atom.field==='random_lot_shared'?branch.sharedLotQ:branch.lotQ;
+    return atom.operator==='=='&&q<atom.value/100;
+   }
+   return true;
+  });
+  function mayActivate(skill){
+   if(!opportunities.has(skill)){
+    const eligible=!skill.probabilistic||sampler.unit(skill.id,'activation')<(skill.activationProbability??1);
+    opportunities.set(skill,eligible&&skill.invocations.some(inv=>
+     sampler(inv.condition,skill.id,inv,false).some(possible)&&sampler(inv.precondition,skill.id,inv,true).some(possible)));
+   }
+   return opportunities.get(skill);
+  }
+  sampler.observationKey=plan=>{
+   const active=[];
+   for(const skill of plan.skills){
+    if(!mayActivate(skill))continue;
+    const reads=selectionReads(skill);
+    // A forced invocation can target a skill that missed its own activation roll.
+    if(reads.forced)return null;
+    active.push(skill.id);
+    if(reads.size||reads.inherited||reads.has.length){
+     const held=possession(plan,setup);
+     active.push([reads.size?held.ids.size:null,reads.inherited?held.inherited:null,...reads.has.map(id=>held.ids.has(id))]);
+    }
+   }
+   return JSON.stringify(active);
   };
   sampler.policy=draw.policy;
   if(samples.size>=256)samples.delete(samples.keys().next().value);

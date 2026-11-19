@@ -113,12 +113,14 @@ async function main() {
     metrics.recommendSeconds=(Date.now()-start)/1000;
     metrics.phaseMilliseconds=await page.evaluate(()=>window.cmSearchTimings);
     assert.ok(metrics.phaseMilliseconds?.diagnostics>=0);
+    metrics.firstCache=await page.evaluate(()=>window.cmCompleted.cache);
     const download=page.waitForEvent('download');
     await page.locator('#final-export').click();
     const file=await (await download).path(),plan=read(file);
     assert.equal(plan.dataVersion,manifest.active_version);
     assert.ok(plan.acquisitionValidation.feasible && plan.scenarioCoverage.complete);
     if (!small && manifest.active_version===launch.active_version) {
+      assert.ok(metrics.firstCache.seedDrawHits>0);
       assert.equal(plan.budget.used,6984);assert.equal(plan.hpSuccesses,144);
       assert.ok(Math.abs(plan.gain-34.8926350616523)<1e-9);
     }

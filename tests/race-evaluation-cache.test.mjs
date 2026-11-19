@@ -51,3 +51,32 @@ test('shared activation draws and finish-line probes reproduce full trajectories
  assert.deepEqual(compact.marginal(['speed','heal'],'speed',12,.02),full.marginal(['speed','heal'],'speed',12,.02));
  assert.equal(compact.runs.size,0);
 });
+
+test('seed draws agree with independent runs for missed rolls, possession gates, count scaling and forced targets',()=>{
+ const local={...setup,inheritanceOrigins:{'999':'unique'},possessionGraph:{'999':['100']}},skills=compiled(local);
+ const gate=id=>({field:'is_exist_skill_id',operator:'==',value:Number(id)});
+ function add(id,{active=true,condition,effects}={}){
+  const skill=compileChartSkill(raw(id,'target_speed',2000),local),inv=skill.invocations[0];
+  skill.probabilistic=!active;skill.activationProbability=active?1:0;
+  if(id==='999')skill.skill={...skill.skill,rarity:'gold'};
+  if(condition)inv.condition=[{...inv.condition[0],dynamic:[condition]}];
+  if(effects)inv.effects=effects(inv.effects);
+  skills.set(id,skill);
+ }
+ add('999',{active:false});add('100',{active:false});add('base');
+ add('gate',{condition:gate('100')});
+ add('inherit',{condition:{field:'succession_skill_count',operator:'>=',value:1}});
+ add('scale',{effects:effects=>effects.map(e=>({...e,scale:2}))});
+ add('force',{effects:effects=>effects.map(e=>({...e,kind:'invoke_rare',value:1}))});
+ const cached=new RaceEvaluator(local,skills,[],[],createFinalBranchSampler(),{compactComparisons:true});
+ const oracle=new RaceEvaluator(local,skills,[],[],branchSampler);
+ cached.beginSeedComparisons();
+ for(const id of ['base','gate','inherit','scale','force']){
+  for(const ids of [[id],[id,'100'],[id,'999']]){
+   const expected=oracle.evaluate(ids,4,.05,{scenarioPriorities:true});
+   assert.deepEqual(cached.evaluate(ids,4,.05,{scenarioPriorities:true}),expected);
+   if(id==='force'&&ids.includes('999'))assert.ok(expected.activationRates['999']>0);
+  }
+ }
+ assert.ok(cached.endSeedComparisons()>=8);assert.equal(cached.seedDraws,null);
+});

@@ -440,6 +440,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   return value;
  };
  onPhase('precisionSeeds');
+ if(method!=='exhaustive')evaluator.beginSeedComparisons();
  const seedResolutions={};
  const seedScore=ids=>{
   let value=gainTolerance?pilotScore(ids):finalScore(ids);
@@ -468,6 +469,8 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   protectedFinalIds=constructive.map(row=>row.ids);
   finalists=[...new Map([...finalists,...constructive].map(row=>[idKey(row.ids),row])).values()];
  }
+ const seedDrawHits=evaluator.endSeedComparisons();
+ if(session)session.metrics.seedDrawHits=seedDrawHits;
  // Compound proposals share a separate coarse-work allowance across ALL
  // closure passes; full-sample whole-plan scoring is only used for finalists.
  const initialCoarseEvaluations=coarseEvaluations,exchangeWorkLimit=gainTolerance?Math.min(evaluationLimit,512):evaluationLimit;quickLimit=initialCoarseEvaluations+exchangeWorkLimit;

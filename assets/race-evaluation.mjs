@@ -51,12 +51,15 @@ export class RaceEvaluator{
   while(pending.length){const id=pending.pop();for(const low of this.setup.possessionGraph?.[id]||[])if(!possession.has(low)){possession.add(low);pending.push(low);}}
   return {key:active.join(','),skills,possessionIds:[...possession]};
  }
+ scenario(sample){
+  const index=sample%this.scenarioCount;
+  if(!this.scenarios.has(index))this.scenarios.set(index,raceScenario(this.setup,sample));
+  return this.scenarios.get(index);
+ }
  run(ids,sample,dt,reference=false,plan=this.prepare(ids),comparisonTime=null){
   const cache=reference?this.references:this.runs,k=`${plan.key}|${sample}|${dt}`;
   if(!cache.has(k)){
-   const index=sample%this.scenarioCount;
-   if(!this.scenarios.has(index))this.scenarios.set(index,raceScenario(this.setup,sample));
-   const scenario=this.scenarios.get(index),setup={...this.setup,raceContext:scenario.context,possessionIds:plan.possessionIds};
+   const scenario=this.scenario(sample),setup={...this.setup,raceContext:scenario.context,possessionIds:plan.possessionIds};
    const run=simulateSolo(setup,plan.skills,.5,{dt,keepTrace:false,comparisonTime:this.compactComparisons?comparisonTime:null,fullSpurt:setup.fullSpurtMode!=='off',branchSampler:this.samplerFactory(setup,this.nativeIds,sample)});
    const measured={...run,scenario:{id:scenario.id,label:scenario.label,weight:scenario.weight,basis:scenario.basis}};
    if(this.compactComparisons&&comparisonTime!==null)return measured;
@@ -64,6 +67,30 @@ export class RaceEvaluator{
    while(cache.size>(reference?1536:192))cache.delete(cache.keys().next().value);
   }
   return cache.get(k);
+ }
+ beginSeedComparisons(){
+  this.seedDraws=new Map();this.seedDrawHits=0;
+ }
+ endSeedComparisons(){
+  this.seedDraws=null;return this.seedDrawHits??0;
+ }
+ observe(ids,plan,reference,sample,dt){
+  let key=null;
+  if(this.seedDraws){
+   const setup={...this.setup,raceContext:this.scenario(sample).context,possessionIds:plan.possessionIds};
+   const sampler=this.samplerFactory(setup,this.nativeIds,sample),active=sampler.observationKey?.(plan)??null;
+   if(active!==null){
+    key=sample+'|'+dt+'|'+active;
+    if(this.seedDraws.has(key)){this.seedDrawHits++;return this.seedDraws.get(key);}
+   }
+  }
+  const before=this.run(this.referenceIds,sample,dt,true,reference),after=this.run(ids,sample,dt,false,plan,before.finishTime);
+  const observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpShortfall:after.hpShortfall,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
+  if(key!==null){
+   if(this.seedDraws.size>=8192)this.seedDraws.delete(this.seedDraws.keys().next().value);
+   this.seedDraws.set(key,observation);
+  }
+  return observation;
  }
  evaluate(ids,count,dt,{stopOnHpFailure=false,chartSkillId,scenarioPriorities=false}={}){
   if(!Number.isInteger(count)||count<1||count>2048||!Number.isFinite(dt)||dt<=0||dt>.1)throw new Error('계산 표본 설정을 확인하세요.');
@@ -76,8 +103,7 @@ export class RaceEvaluator{
    let observation=records[sample];
    if(observation)this.sampleCacheHits++;
    else{
-    const before=this.run(this.referenceIds,sample,dt,true,reference),after=this.run(ids,sample,dt,false,plan,before.finishTime);
-    observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpShortfall:after.hpShortfall,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
+    observation=this.observe(ids,plan,reference,sample,dt);
     if(this.sampleCacheLimit){records.push(observation);this.cachedSamples++;
      while(this.cachedSamples>this.sampleCacheLimit&&this.sampleCache.size>1){const oldest=this.sampleCache.keys().next().value;this.cachedSamples-=this.sampleCache.get(oldest).length;this.sampleCache.delete(oldest);}
     }
