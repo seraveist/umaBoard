@@ -40,7 +40,7 @@ test('post-training owns a separate validated form, scoped draft, cancellable wo
 test('compact inputs expose the discount trait, collapsed aptitude settings, whole-list actions and shared name badges',()=>{
  assert.match(html,/<select id="discount-trait">/);assert.match(html,/<option value="none">없음<\/option><option value="studious">공부가<\/option><option value="fast-learner">수완가<\/option>/);assert.match(html,/<details class="aptitude-options">/);
  for(const id of ['bulk-unavailable','bulk-level5'])assert.ok(html.includes(`id="${id}"`));
- assert.match(app,/bulkAcquisition\(allChecklistRows\(\),states,value\)/);assert.match(app,/skillNameLine\(row\)/);assert.match(app,/skillSources\(row\)/);
+ assert.match(html,/id=\"bulk-level5\"[^>]*>미습득 전체 Lv5</);assert.match(app,/bulkAcquisition\(pool,states,value,result\.evolutionOptions\)/);assert.match(app,/skillNameLine\(row\)/);assert.match(app,/skillSources\(row\)/);
  assert.ok(!app.includes("'skill-kind'"));assert.match(css,/\.skill-badge/);assert.match(css,/repeat\(3,minmax\(0,1fr\)\)/);
 });
 

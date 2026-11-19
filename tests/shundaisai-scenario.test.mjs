@@ -73,7 +73,9 @@ test('six link choices are exclusive, but an independent support event can provi
 
 test('an independent gold source cannot borrow an inactive link hint discount',()=>{
  const {m}=build({supportIds:['30283'],eventChoices:{'15-link-skill':'2'}}),p=m.selection(['204071']);
- assert.equal(p.complete,true);assert.equal(p.state.hints['204071']??0,0);assert.equal(p.used,288);
+ // Fine Motion's newly reviewed support set supplies Lv1 itself. The inactive
+ // scenario link must not upgrade it to the link's Lv2.
+ assert.equal(p.complete,true);assert.equal(p.state.hints['204071'],1);assert.equal(p.used,270);
  assert.ok(m.routeRows(['204071'],p).rows[0].routes.every(r=>r.owner_type==='support'));
 });
 

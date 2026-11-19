@@ -20,15 +20,20 @@ test('acquisition labels distinguish already purchased, available without discou
 test('whole-checklist bulk changes clear purchased branches atomically and exclude hidden stale IDs',()=>{
  const {rows,hierarchy}=fixture(),old={white:'owned',rare:'owned',evoA:'owned',other:'4',stale:'owned'};
  const cleared=bulkAcquisition(rows,old,'unavailable');assert.ok(Object.values(cleared).every(value=>value==='unavailable'));assert.ok(!('stale' in cleared));assert.equal(old.evoA,'owned');
- const hinted=bulkAcquisition(rows,old,'5');assert.ok(Object.values(hinted).every(value=>value==='5'));assert.deepEqual(checklistSnapshot(rows,hinted,hierarchy),hinted);
+ const visible=rows.filter(row=>!row.id.startsWith('evo')),hidden=rows.filter(row=>row.id.startsWith('evo'));
+ const recorded=updateAcquisition(rows,old,'evoA','owned',hierarchy);
+ const hinted=bulkAcquisition(visible,recorded,'5',hidden);
+ for(const id of ['white','circle','rare','evoA'])assert.equal(hinted[id],'owned');
+ assert.equal(hinted.other,'5');assert.ok(!('stale' in hinted));assert.ok(!('evoB' in hinted));
+ assert.equal(bulkAcquisition(visible,hinted,'unavailable',hidden).evoA,'unavailable');
  assert.throws(()=>bulkAcquisition(rows,old,'owned'));
 });
 
 test('bulk discount Lv5 retains secured inherits first and fills only the shared six slots',()=>{
  const rows=Array.from({length:10},(_,i)=>({id:String(i),inherited:true}));rows.unshift({id:'ordinary'});
  const states={'8':'owned','9':'0'},next=bulkAcquisition(rows,states,'5');
- assert.equal(next.ordinary,'5');assert.equal(next['8'],'5');assert.equal(next['9'],'5');assert.equal(inheritedCount(rows,next),6);
- assert.deepEqual(rows.filter(row=>row.inherited&&next[row.id]==='5').map(row=>row.id),['0','1','2','3','8','9']);
+ assert.equal(next.ordinary,'5');assert.equal(next['8'],'owned');assert.equal(next['9'],'5');assert.equal(inheritedCount(rows,next),6);
+ assert.deepEqual(rows.filter(row=>row.inherited&&next[row.id]==='5').map(row=>row.id),['0','1','2','3','9']);
  assert.equal(inheritedCount(rows,bulkAcquisition(rows,states,'unavailable')),0);
 });
 
@@ -100,4 +105,12 @@ test('real JP purchase and evolution edges support the same transitive interacti
 test('player-facing rarity labels use standard terms',()=>{
  assert.deepEqual(['white','gold','evolution'].map(rarity=>skillRarityLabel({rarity})),['일반','레어','진화']);
  assert.equal(skillRarityLabel({rarity:'gold',inherited:true}),'계승');
+});
+
+test('paid forms share an inheritance slot and retain priority over earlier hints',()=>{
+ const rows=Array.from({length:7},(_,i)=>({id:String(i),inherited:true}));
+ rows.push({id:'strong',inheritanceOriginId:'6',inherited:true});
+ const states=Object.fromEntries(rows.map(row=>[row.id,'2']));states.strong='owned';
+ const hinted=bulkAcquisition(rows,states,'5');assert.equal(hinted.strong,'owned');assert.equal(hinted['6'],'unavailable');assert.equal(inheritedCount(rows,hinted),6);
+ states['6']='owned';const bought=bulkAcquisition(rows,states,'5');assert.equal(bought['6'],'owned');assert.equal(bought.strong,'owned');assert.equal(inheritedCount(rows,bought),6);
 });

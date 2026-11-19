@@ -77,12 +77,19 @@ export function canRecordAcquisition(rows,states,id,value){
 // One atomic whole-checklist change, independent of the current search/tab.
 // Keep previously secured inherited choices first, then fill unused slots in
 // chart order. Hints do not buy either side of an evolution branch.
-export function bulkAcquisition(rows,states,value){
+export function bulkAcquisition(rows,states,value,evolutionOptions=[]){
  if(!['unavailable','5'].includes(value))throw new Error('지원하지 않는 일괄 설정입니다.');
- const inherits=rows.filter(row=>row.inherited),selected=new Set(),origins=new Set();
- for(const row of [
-  ...inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable'),
-  ...inherits.filter(row=>acquisitionValue(states[row.id])==='unavailable')
- ]){const base=origin(row);if(!origins.has(base)&&origins.size<INHERITED_LIMIT){origins.add(base);selected.add(row.id);}}
- return Object.fromEntries(rows.map(row=>[row.id,value==='5'&&row.inherited&&!selected.has(row.id)?'unavailable':value]));
+ const visible=new Set(rows.map(row=>row.id));
+ const history=evolutionOptions.filter(row=>states[row.id]==='owned'&&!visible.has(row.id));
+ rows=[...rows,...history];
+ if(value==='unavailable')return Object.fromEntries(rows.map(row=>[row.id,value]));
+ const inherits=rows.filter(row=>row.inherited);
+ const origins=new Set(inherits.filter(row=>states[row.id]==='owned').map(origin)),selected=new Set();
+ const available=inherits.filter(row=>acquisitionValue(states[row.id])!=='unavailable');
+ for(const row of [...available,...inherits]){
+  const base=origin(row);
+  if(origins.size>=INHERITED_LIMIT)break;
+  if(!origins.has(base)){origins.add(base);selected.add(row.id);}
+ }
+ return Object.fromEntries(rows.map(row=>[row.id,states[row.id]==='owned'?'owned':!row.inherited||selected.has(row.id)?'5':'unavailable']));
 }

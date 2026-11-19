@@ -88,10 +88,11 @@ gold ID remains pricing metadata; later optimization still resolves shared costs
 
 Visible dropdown names are 습득 / 미획득 / 획득 / 할인 Lv1–5, while stored
 owned/unavailable/0–5 values remain unchanged. Whole-list unavailable and Lv5
-actions ignore the current search/tab, replace all row states atomically and
-invalidate final recommendations. Lv5 hints do not purchase competing branches.
-Inherited bulk selection prioritizes already secured choices and then chart
-order, retaining at most six; remaining inherited rows stay unavailable.
+actions apply across filters and invalidate the previous recommendation. The
+Lv5 action preserves all purchased stages, including hidden evolution records.
+It reserves purchased inheritance origins first, then recorded hints, then
+unrecorded origins in chart order, up to six distinct origins. Whole-list
+unavailable explicitly clears purchased stages and hints.
 
 ## Numerical/model policy
 
@@ -99,7 +100,7 @@ The [first completed algorithm baseline](CM_ALGORITHM_V1_COMPLETION.md) freezes
 v11 with its documented approximations and bounded-search limitations. Completion
 does not mean empirical activation or win-rate calibration.
 
-Current model `cm-first-chart-v11` supports the reviewed self-performance effects,
+Current model `cm-first-chart-v12` supports the reviewed self-performance effects,
 including full-spurt acceleration, variable magnitudes/durations and repeats.
 Opponent debuffs are excluded per user scope; neutral vision/lane components
 retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
@@ -129,6 +130,9 @@ retain zero direct solo margin. See [effect/price audit](CM_SELF_EFFECTS_QA.md).
   random-condition key share the sample. A stronger stat-dependent form and its
   fallback cannot independently race to activate. Explicitly linked effects
   retain their own conditions and follow-up timing.
+- `is_activate_any_skill` requires an actual trigger in the previous simulation frame.
+  `is_activate_heal_skill` requires a positive recovery in that frame. Both use
+  the selected runner’s events in the same trajectory.
 - Own activation/heal/passive/phase counters, HP, possession, inheritance count
   and start predicates are evaluated against live state. `activation_raw=0`
   exempts wisdom checks; otherwise activation uses max(.2,1−90/rawWisdom).

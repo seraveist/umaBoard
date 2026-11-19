@@ -13,12 +13,12 @@
 | 저장소 | [seraveist/umaBoard](https://github.com/seraveist/umaBoard) |
 | 원격 주소 | `https://github.com/seraveist/umaBoard.git` |
 | 기준 브랜치 | `feat/cm-first-chart` |
-| 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
+| 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/feat/cm-first-chart` 최신 커밋 |
-| 현재 모델 | 공개v1·개정4, 마신표v11·최종 추천v14·단독 비교v5 |
-| 계산32모듈 SHA256 | `4e9e1cbd3c0effe7503b1738835e67ab6ace0ed84ed4cb05e1118d03e1bb86db` |
-| 활성 데이터 | `0b105741168200654ef4ef6523e1cb0bc0b7d9852107f3d478ea0fdcd6b7ad26` |
+| 현재 모델 | 공개v1·개정5, 마신표v12·최종 추천v15·단독 비교v6 |
+| 계산32모듈 SHA256 | `d0afa3aaafed05f841a8fd2207554c2e9e801da259de3164eb67a7863f15b6a2` |
+| 활성 데이터 | `e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
 이는 출처 확인용이며 새 작업이 이 절대 경로에 의존하면 안 된다. 아래 명령은 선택한 저장소의 루트에서 실행한다.
@@ -83,8 +83,8 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 1. [현재 상태와 보완 방향](CM_V1_STATUS_AND_ROADMAP.md): 현재 수치·해석 범위·우선순위.
 2. [개정4 QA](CM_OPTIMIZATION_V1_FAST_QA.md): 실제 변경, 채택하지 않은 시험, 입력과 검증 근거.
 3. [마신표 계약](CM_FIRST_CHART.md), [최종 추천 계약](CM_POST_TRAINING.md): 구현이 지켜야 할 동작.
-4. [현재 고정 기준](validation/cm-optimization-v1-fast-release-20261118.json),
-   [집계·증거 해시](validation/cm-optimization-v1-fast-summary-20261118.json).
+4. [현재 고정 기준](validation/cm-optimization-v1-trigger-release-20261119.json),
+   [개정4 집계·증거 해시](validation/cm-optimization-v1-fast-summary-20261118.json).
 5. [누적 개발 현황](CM_PROGRESS_AND_NEXT_STEPS.md): UI·데이터·과거 검증의 날짜별 맥락.
 
 | 코드 | 역할 |
@@ -105,7 +105,7 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 node scripts/check_cm_algorithm_v1.mjs
 ```
 
-변경 전 기준에서 `status:passed`, 공개v1·개정4, 계산32모듈과 위 계산 해시를 확인한다.
+변경 전 기준에서 `status:passed`, 공개v1·개정5, 계산32모듈과 위 계산 해시를 확인한다.
 변경 전부터 실패하면 브랜치·데이터·파일 상태를 먼저 조사한다.
 정당한 코드 수정 뒤에는 고정 검사 실패가 예상될 수 있다. 이 경우 기존 릴리스 파일의 해시만 덮어써 통과시키지 않고,
 새 개정·모델·고정 파일을 만들며 현재 기준을 이전 증거로 연결한다.
@@ -114,7 +114,7 @@ node scripts/check_cm_algorithm_v1.mjs
 
 - 기본 허용 범위는0.1마신이며 HP·가격·획득·위험 제약에는 적용하지 않는다.
   최종 기본 평가는144표본·0.01초이고 개별 작은 기여를 버리거나 더해서 최종 점수를 만들지 않는다.
-- 7000SP·220후보는36.928414마신·6972SP·표본HP 충족률1이다.
+- 개정4 기록에서 7000SP·220후보는36.928414마신·6972SP·표본HP 충족률1이다.
   직전 대비 정밀367→104회, 관찰282→214초이며 더 넓은 시험의 최선과도0.027001 차이다.
 - 기존10추천·강제 제한4추천의 전수 기준 차이는0.1 이내다.
   다른 표본20대조 중4건은 약0.117~0.125 차이였으므로 모든 추첨의0.1 상한은 아니다.
@@ -206,12 +206,12 @@ seraveist/umaBoard의 origin/feat/cm-first-chart 최신 상태에서 이어서 �
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 34d0579, 공개v1 개정4, 마신표v11·최종 추천v14다.
+현재 계산 기준은 공개v1 개정5, 마신표v12·최종 추천v15다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
-과거 v11 테스트베드 전체가 v14에서 재검증된 상태도 아니다.
+과거 v11 테스트베드 전체가 v15에서 재검증된 상태도 아니다.
 
 기존 증거를 보존하고 새 출력 경로부터 준비한 뒤,
-기존 넓은 테스트베드의 v14 재실행과 미사용 조건의 독립 소규모 전수 대조부터 진행해줘.
+기존 넓은 테스트베드의 v15 재실행과 미사용 조건의 독립 소규모 전수 대조부터 진행해줘.
 실패가 나오면 제약 위반·탐색 누락·표본 차이를 구분하고 필요한 공통 로직을 보완해줘.
 
 HP·획득·가격·발동 조건·복합 연계와 잔여SP 재검토를 유지하고,

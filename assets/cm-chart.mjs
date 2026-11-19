@@ -19,11 +19,11 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v11';
+export const CM_MODEL_VERSION='cm-first-chart-v12';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
-const ASSUME=new Set(['temptation_count','is_temptation','running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','is_activate_any_skill','is_activate_heal_skill','temptation_opponent_count_behind','visiblehorse']);
+const ASSUME=new Set(['temptation_count','is_temptation','running_style_count_same','running_style_count_same_rate','running_style_equal_popularity_one','same_skill_horse_count','behind_near_lane_time_set1','change_order_up_end_after','change_order_up_middle','change_order_up_finalcorner_after','is_other_character_activate_advantage_skill','is_popularity_top_character_activate_advantage_skill','temptation_opponent_count_behind','visiblehorse']);
 export function radicalInverse(n,base){let x=0,f=1/base;for(;n>0;n=Math.floor(n/base),f/=base)x+=n%base*f;return x;}
 
 export function createChartSetup(data,catalog,input){

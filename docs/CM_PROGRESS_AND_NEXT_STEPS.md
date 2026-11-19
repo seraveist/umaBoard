@@ -5,17 +5,17 @@
 | 항목 | 기준 |
 | --- | --- |
 | 작업 브랜치 | `feat/cm-first-chart` |
-| 공개 알고리즘 명칭 | 최적화 알고리즘 v1(개정4) — 마신표v11·최종 추천v14 |
-| 완료 상태 | [원래1차 완성본](CM_ALGORITHM_V1_COMPLETION.md) 보존, 후속 요청에 따른 [0.1마신 압축 개정4](CM_OPTIMIZATION_V1_FAST_QA.md) 적용 |
+| 공개 알고리즘 명칭 | 최적화 알고리즘 v1(개정5) · 마신표v12·최종 추천v15 |
+| 완료 상태 | [원래1차 완성본](CM_ALGORITHM_V1_COMPLETION.md) 보존, 후속 요청에 따른 [0.1마신 압축 개정4](CM_OPTIMIZATION_V1_FAST_QA.md)와 [발동·획득·기구매 보정](CM_V1_STATUS_AND_ROADMAP.md) 적용 |
 | v6 보완 전 기준 커밋 | [`3cc94e1`](https://github.com/seraveist/umaBoard/commit/3cc94e1ff6b4527ae55cb0cb099d3aea07f02848) |
 | 검토 PR | [#3](https://github.com/seraveist/umaBoard/pull/3) |
-| 1차 마신표 모델 | `cm-first-chart-v11` |
-| 육성 후 추천 모델 | `cm-post-training-v14` |
-| 활성 데이터 | `0b1057411682…` — 정확한 버전·원본 커밋은 [manifest](../data/manifest.json) 참조 |
-| 현재 검증 범위 | [개정4·동일 조건 재검증](CM_OPTIMIZATION_V1_FAST_QA.md) |
+| 1차 마신표 모델 | `cm-first-chart-v12` |
+| 육성 후 추천 모델 | `cm-post-training-v15` |
+| 활성 데이터 | `e8fe44237bf2…` — 정확한 버전·원본 커밋은 [manifest](../data/manifest.json) 참조 |
+| 현재 검증 범위 | [개정5 재현 사례](CM_V1_STATUS_AND_ROADMAP.md) |
 | 과거 v11 검증 범위 | [v11 재검증](CM_ALGORITHMS_V11_QA.md): Node295·Python51 통과, 후보30행·시점33개·추천6개 열거·왕수/군림24개·7000SP 회귀 통과 |
 
-개정4까지의 통합 요약과 앞으로의 알고리즘 보완 순서는 [v1 현재 상태와 보완 방향](CM_V1_STATUS_AND_ROADMAP.md)을 따른다.
+개정5까지의 통합 요약과 앞으로의 알고리즘 보완 순서는 [v1 현재 상태와 보완 방향](CM_V1_STATUS_AND_ROADMAP.md)을 따른다.
 아래의 긴 이력·누적 과제 표는 각 시점의 범위를 구분해 읽는다. 다른 work에서 재개하는 절차와 복사용 요청문은 [인계서](CM_V1_HANDOFF.md)에 있다.
 
 이 문서는 현재까지의 기능과 사용자 결정을 후속 작업에 전달하기 위한 기준 문서다.

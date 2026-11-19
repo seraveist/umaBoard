@@ -18,7 +18,7 @@ import {ENCOUNTER_POLICY,contextDomains,scenarioCount} from './race-scenarios.mj
 import {normalizeRiskPolicy,compareRacePlans,RACE_OBJECTIVE} from './race-objective.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 
-export const FINAL_MODEL_VERSION='cm-post-training-v14';
+export const FINAL_MODEL_VERSION='cm-post-training-v15';
 const supported=s=>s&&['supported','assumed'].includes(s.status);
 const hint=value=>/^[0-5]$/.test(String(value))?Number(value):null;
 const idKey=ids=>[...new Set(ids)].sort().join(',');

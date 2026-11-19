@@ -98,9 +98,14 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   sleepers.splice(lo,0,{inv,x});
  };
  pending.forEach((inv,index)=>{inv.order=index;if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv.preMet?inv.condition:inv.precondition));else awake.push(inv);}});
+ // Snapshot once per frame so skill ID order cannot satisfy a trigger in the same tick.
+ let previousEvents=0,previousHeals=0;
  for(let frame=0;state.x<d&&frame<100000;frame++){
   const t=frame*dt;state.t=t;state.phase=phaseAt(state.x,d);
   const eventStart=events.length;
+  state.previousFrameActivated=eventStart>previousEvents;
+  state.previousFrameHealed=state.healCount>previousHeals;
+  previousEvents=eventStart;previousHeals=state.healCount;
   advanceRankDurations(state);
   if(adaptive&&state.phase>=2){if(!spurtPlan)updateSpurt();state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;}
   for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);

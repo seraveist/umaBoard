@@ -42,13 +42,17 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  }
  // An independently found legal plan exposed a coarse-search miss. Recompute
  // its result with the current engine, rather than fitting a gain constant.
- const witness=read('docs/validation/cm-v10-search-witness-20261118.json');assert.equal(witness.dataVersion,manifest.active_version);assert.deepEqual(witness.input,input);assert.deepEqual(witness.actual,actual);
+ const witness=read('docs/validation/cm-v10-search-witness-20261118.json');assert.deepEqual(witness.input,input);
+ assert.equal(witness.dataVersion,read('docs/validation/cm-algorithm-v1-baseline-20261118.json').data.activeVersion);
+ const {acquisitionChoices:oldChoices,...oldActual}=witness.actual;
+ assert.deepEqual({...oldActual,acquisitionChoices},actual);
+ for(const [event,choice]of Object.entries(oldChoices))assert.equal(acquisitionChoices[event],choice);
  const witnessPrice=new RecordedPurchaseModel(data,[...chart.rows,...chart.evolutionOptions,...chart.inheritanceOptions],states,actual).selection(witness.activeIds);
  assert.ok(witnessPrice.complete&&witnessPrice.used<=actual.spBudget);assert.ok(constraints.allowed(witness.activeIds));
  const previous=read('docs/validation/cm-optimization-v1-tolerance-large-20261118.json').current;
  const required=[...plan.nativeIds,...plan.ownedIds],compiled=new Map([...new Set([...required,...witness.activeIds,...previous.ids])].map(id=>[id,compileChartSkill(data.skills[id],plan.setup)]));
  const evaluator=new RaceEvaluator(plan.setup,compiled,required,plan.nativeIds,branchSampler),alternative=evaluator.evaluate(witness.activeIds,144,.01),reference=evaluator.evaluate(previous.ids,144,.01);
- assert.equal(reference.gain,previous.gain);assert.ok(comparePlanPriorities(plan,reference)<=0);
+ assert.ok(constraints.allowed(previous.ids));assert.equal(reference.gain,previous.gain);assert.ok(comparePlanPriorities(plan,reference)<=0);
  assert.ok(comparePlanPriorities(plan,reference)<0||reference.gain-plan.gain<=.1+1e-10);
  assert.ok(compareRacePlans({ids:plan.activeIds,cost:plan.budget.used,...plan},{ids:witness.activeIds,cost:witnessPrice.used,...alternative})<=0);
  assert.equal(plan.search.finalValidationComplete,true);assert.equal(plan.search.precisionSeedCandidates,plan.candidateCount);assert.equal(plan.search.precisionSeedCount,2);assert.ok(plan.search.seedEvaluationSamples<=plan.sampling.count);assert.ok(plan.search.constructiveEvaluationSamples<plan.sampling.count);

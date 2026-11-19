@@ -186,7 +186,7 @@ function saveAcquisitionStates(next,warning=''){
 }
 function recordAll(value){
  if(busy||!result)return;
- const next=bulkAcquisition(allChecklistRows(),states,value),skipped=value==='5'?allChecklistRows().filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
+ const pool=allChecklistRows(),next=bulkAcquisition(pool,states,value,result.evolutionOptions),skipped=value==='5'?pool.filter(row=>row.inherited&&next[row.id]==='unavailable').length:0;
  saveAcquisitionStates(next,skipped?'계승은 6개만 적용했습니다.':'');
 }
 function beginCalculation(event){
