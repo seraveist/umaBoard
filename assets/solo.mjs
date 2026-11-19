@@ -51,11 +51,11 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  physics=buildPhysics(setup,passive);
  state.hp=state.hpMax=physics.hpMax;
  let velocity=3,currentOffset=0,entry=null,reach=null,legStart=null,staminaFight=false,depletion=null,fullSpurtStarted=false,fullSpurtSpeed=0;
- const adaptive=setup.spurtPolicy===SPURT_POLICY;let spurtPlan=null,maxSpurtAtEntry=null;
+ const adaptive=setup.spurtPolicy===SPURT_POLICY;let spurtPlan=null,maxSpurtAtEntry=null,entryHpShortfall=0,peakHpDebt=0;
  const updateSpurt=()=>{
   if(!adaptive||state.phase<2)return;
   spurtPlan=planSpurt(d,state.x,state.hp,physics,draw('race',`spurt-choice:${state.healCount}`));
-  if(maxSpurtAtEntry===null)maxSpurtAtEntry=spurtPlan.maximum;
+  if(maxSpurtAtEntry===null){maxSpurtAtEntry=spurtPlan.maximum;entryHpShortfall=spurtPlan.hpShortfall;}
   state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;
  };
  if(adaptive){state.lastSpurtActive=false;state.maximumSpurt=false;}
@@ -169,7 +169,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
    const byId=new Map();for(const effect of active)if(effect.kind==='acceleration'&&effect.value>0)byId.set(effect.id,(byId.get(effect.id)||0)+effect.value);
    for(const [id,value]of byId){let without=Math.min(target,velocity+Math.max(0,acceleration-value)*dt);if(!startDash)without=Math.max(physics.minSpeed,without);without=Math.min(30,without);if(next>without+1e-9)accelerationUseSeconds[id]=(accelerationUseSeconds[id]||0)+dt;}
   }
-  if(fullSpurt&&setup.stats.speed>2000&&state.phase>=2&&(!adaptive||state.maximumSpurt)&&velocity>=physics.spurt-1e-6){fullSpurtStarted=true;if(state.fullSpurtStart===null)state.fullSpurtStart=state.x;}
+  if(fullSpurt&&physics.fullSpurtEligible&&state.phase>=2&&(!adaptive||state.maximumSpurt)&&velocity>=physics.spurt-1e-6){fullSpurtStarted=true;if(state.fullSpurtStart===null)state.fullSpurtStart=state.x;}
   // Public umasim approximation: independent extra acceleration; its ceiling is
   // unknown in the source. This mode is explicit and versioned by the CM chart.
   const fullAcceleration=.068*physics.acceleration(state.phase,uphill)/Math.pow(d/1000,1.5)+fullSpurtBonus;
@@ -186,11 +186,14 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   const speed=t<delay?0:Math.max(0,(velocity+next)/2+currentOffset+(fullSpurtSpeed+nextFull)/2),step=speed*dt;
   const fraction=step>0?Math.min(1,(d-state.x)/step):1;
   state.hp-=physics.consumption(speed,state.phase)*dt*fraction;
-  if(depletion===null&&state.hp<0)depletion=state.x+step*fraction;
+  if(state.hp<0){
+   peakHpDebt=Math.max(peakHpDebt,-state.hp);
+   if(depletion===null)depletion=state.x+step*fraction;
+  }
   state.prevX=state.x;state.x=Math.min(d,state.x+step);positions.push(state.x);velocity=next;fullSpurtSpeed=nextFull;
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,finishTime:t+dt*fraction,entry,reach,
-    hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,fullSpeedFeasible:depletion===null&&(!adaptive||maxSpurtAtEntry===true),spurtPlan,maxSpurtAtEntry,spurtPolicy:adaptive?SPURT_POLICY:'forced-projection',
+    hpMax:state.hpMax,hpRemaining:state.hp,minHpDepletion:depletion,entryHpShortfall,peakHpDebt,hpShortfall:Math.max(entryHpShortfall,peakHpDebt),fullSpeedFeasible:depletion===null&&(!adaptive||maxSpurtAtEntry===true),spurtPlan,maxSpurtAtEntry,spurtPolicy:adaptive?SPURT_POLICY:'forced-projection',
     events,passive,trace,accelerationUseSeconds,activation:{eligibleIds:eligible.map(s=>s.id),startDelay,postNumber:state.postNumber,popularity:state.popularity},triggerCounts:{inPhase:[...counts],laterHalf:state.laterCount},
     ...(diagnostics?{diagnostics:{frames:diagnosticFrames,interpretation:'observed-computation-state-not-an-independent-reference'}}:{}),
     fullSpurtExcluded:!fullSpurt&&physics.fullSpurtExcluded,fullSpurtApproximation:fullSpurt&&fullSpurtStarted,physics:{spurt:physics.spurt,staminaSpeed:physics.staminaSpeed,legAccel:physics.legAccel,modified:physics.modified}};

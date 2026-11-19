@@ -79,6 +79,20 @@ export function raceScenario(setup,sample){
  }
  const explicitRank=conditions.order??conditions.order_rate;
  const rankTimeline=context.rankTimeline?.length?context.rankTimeline:Number.isInteger(explicitRank)&&explicitRank>=1&&explicitRank<=9?[{distance:0,rank:explicitRank}]:timeline(setup.course.distance,index);
+ // A front blocker requires a runner ahead. Clip the shared interval once so
+ // the duration resets on taking the lead, including between simulation frames.
+ if(encounterWindows.blocked_front?.length&&rankTimeline.some(point=>point.rank===1)){
+  encounterWindows.blocked_front=encounterWindows.blocked_front.flatMap(window=>{
+   const cuts=[window.start,...new Set(rankTimeline.filter(p=>p.distance>window.start&&p.distance<window.end).map(p=>p.distance)),window.end];
+   const parts=[];
+   for(let i=0;i<cuts.length-1;i++){
+    if(rankAt(rankTimeline,cuts[i])===1)continue;
+    if(parts.at(-1)?.end===cuts[i])parts.at(-1).end=cuts[i+1];
+    else parts.push({...window,start:cuts[i],end:cuts[i+1]});
+   }
+   return parts;
+  });
+ }
  return {id:entry?.id??(base.rankTimeline?.length?'recorded':`coverage-${index+1}`),weight:entry?.weight??1,
   label:entry?.id??(base.rankTimeline?.length?'입력 순위':Number.isInteger(explicitRank)?`입력 ${explicitRank}위`:coverageRanks[index][0]),
   basis:supplied?'provided-weighted-contexts':base.rankTimeline?.length?'recorded-ranks':'coverage-not-observed-frequency',

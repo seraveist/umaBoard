@@ -39,7 +39,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const panel=$('#final-result'),source=createSkillSourceResolver(data,plan.setup);skillDetails.dismiss();$('#final-empty').hidden=true;panel.hidden=false;panel.classList.remove('is-stale');$('#final-result-state').textContent='';
   for(const [id,value]of [['final-used',plan.budget.used],['final-remaining',plan.budget.remaining],['final-budget',plan.budget.total]])$('#'+id).textContent=value.toLocaleString('ko-KR');
   $('#final-gain').textContent=`${plan.gain>0?'+':''}${plan.gain.toFixed(2)}`;
-  $('#final-hp-note').textContent=`비교 표본 스퍼트 HP 충족 ${plan.hpSuccesses} / ${plan.sampling.count}`;
+  $('#final-hp-note').textContent=`비교 표본 스퍼트 HP 충족 ${plan.hpSuccesses} / ${plan.sampling.count}${plan.fullSpeedFeasible?'':' · 표본 평균 부족량 '+plan.hpShortfall.toFixed(1)+' HP'}`;
   $('#final-hp-note').classList.toggle('is-error',!plan.fullSpeedFeasible);
   $('#final-purchase-list').replaceChildren(...plan.purchases.map(row=>{
    const item=el('li','final-purchase');item.dataset.finalSkill=row.id;
@@ -65,7 +65,9 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-scenario-count').textContent=`${plan.scenarioEvolutionCount} / 2`;
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
-  $('#final-search-note').textContent=plan.search.globalOptimal?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
+  $('#final-search-note').textContent=plan.search.allAffordablePlansMeasured?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
+  const compression=plan.search.approximation;
+  if(compression.savedSp>0)$('#final-search-note').textContent+=` 같은 HP·위험 기준에서 최고 평균 대비 ${compression.knownMeanLoss.toFixed(3)}마신 차이로 ${compression.savedSp} SP 절약했습니다.`;
   const alternatives=$('#final-scenario-alternatives'),cases=plan.scenarioAlternatives??[];
   alternatives.hidden=!cases.length;alternatives.open=false;
   const names=ids=>ids.map(id=>data.skills[id]?.name_jp??id).join(' · ');

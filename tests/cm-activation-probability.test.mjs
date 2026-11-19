@@ -178,3 +178,22 @@ test('adaptive HP feeds back into spurt predicates and actual travel time while 
  const recovered={...long,stats:{...long.stats,stamina:3000}},rich=simulate([acceleration],0,recovered);
  assert.equal(rich.maxSpurtAtEntry,true);assert.equal(event(rich,acceleration.id).length,1);
 });
+
+test('late recovery can refill the finish gauge but cannot erase a missed maximum spurt at entry',()=>{
+ const s={...setup,course:{...course,distance:2400,distance_type:3,straights:[{start:0,end:2400}]},stats:{...setup.stats,stamina:450},spurtPolicy:SPURT_POLICY};
+ const heal=skill('late-heal','heal',3500,[[atom('remain_distance',300,'<=')]]);
+ const before=simulate([],0,s),after=simulate([heal],0,s);
+ assert.equal(after.maxSpurtAtEntry,false);assert.equal(after.fullSpeedFeasible,false);
+ assert.ok(after.hpRemaining>0&&after.entryHpShortfall>0);
+ assert.equal(after.entryHpShortfall,before.entryHpShortfall);
+ assert.equal(after.hpShortfall,Math.max(after.entryHpShortfall,after.peakHpDebt));
+});
+
+test('guts affects maximum sprint speed while late cruising is independent; both speed gates apply to extra sprint',()=>{
+ const physics=(speed,mood,guts,passive={})=>buildPhysics({...setup,mood,stats:{...setup.stats,speed,guts}},passive);
+ const low=physics(2100,0,600),high=physics(2100,0,1800);
+ assert.equal(low.lateCruise,high.lateCruise);assert.ok(high.spurt>low.spurt);
+ assert.equal(physics(1990,2,1000,{speed:60}).fullSpurtEligible,false);
+ assert.equal(physics(2010,-2,1000).fullSpurtEligible,false);
+ assert.equal(physics(2010,-2,1000,{speed:100}).fullSpurtEligible,true);
+});

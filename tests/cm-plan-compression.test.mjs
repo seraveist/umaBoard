@@ -76,3 +76,11 @@ test('progressive profile screening retains conditional scenario leaders and an 
  assert.ok(chosen.includes(a));assert.ok(chosen.includes(conditional));assert.ok(chosen.includes(cheap));
  assert.deepEqual(selectProfileLeaders([cheap,conditional,a],1,.1),chosen);
 });
+
+test('0.1 lengths is inclusive at full precision and always measured from the original anchor',()=>{
+ const anchor=row('anchor',2,250),boundary=row('boundary',1.9,60),outside=row('outside',1.899999,1);
+ for(const order of [[outside,boundary,anchor],[anchor,boundary,outside]]){
+  assert.equal(selectNearBest(order,.1).selected,boundary);
+  assert.equal(selectNearBest(order,0).selected,anchor);
+ }
+});

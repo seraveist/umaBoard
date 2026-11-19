@@ -16,8 +16,8 @@
 | 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/feat/cm-first-chart` 최신 커밋 |
-| 현재 모델 | 공개v1·개정6, 마신표v13·최종 추천v16·단독 비교v7 |
-| 계산32모듈 SHA256 | `9a3c800497da8a43abcbc8bbcbe2d7f3dd4abf80e65e8f5aac0af4df8f55eb4a` |
+| 현재 모델 | v1.6.1, 마신표v14·최종 추천v17·단독 비교v8 |
+| 계산32모듈 SHA256 | `ce9263f77da5cfd4d491541db21dc926e9e0ea1d2a69028205e2d92589b6b03d` |
 | 활성 데이터 | `e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
@@ -206,7 +206,7 @@ seraveist/umaBoard의 origin/feat/cm-first-chart 최신 상태에서 이어서 �
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 공개v1 개정6, 마신표v13·최종 추천v16다.
+현재 계산 기준은 v1.6.1, 마신표v14·최종 추천v17이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
 개정6의 순위·경합·인기 판정은 고정 전개의 짝비교로 검증했다.
 

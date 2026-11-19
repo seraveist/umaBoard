@@ -66,7 +66,7 @@ export function scheduleContextBranches(branches,setup){
  const context=setup.raceContext;
  if(!context?.coherentRanks||setup.contextScheduling===false)return branches;
  return branches.flatMap(branch=>{
-  const constant=a=>!['order','order_rate'].includes(a.field)&&!Object.hasOwn(context.encounterWindows||{},encounterField(a.field))&&Object.hasOwn(context.conditions||{},a.field);
+  const constant=a=>!(encounterField(a.field)==='blocked_front'&&context.conditions?.[a.field]>0)&&!['order','order_rate'].includes(a.field)&&!Object.hasOwn(context.encounterWindows||{},encounterField(a.field))&&Object.hasOwn(context.conditions||{},a.field);
   if((branch.external||[]).some(a=>constant(a)&&!compare(context.conditions[a.field],a.operator,a.value)))return [];
   let windows=branch.windows;
   if(branch.ranks?.length<9&&context.rankTimeline?.length){
@@ -91,6 +91,7 @@ export function externalConditionValue(atom,state){
    if(state.externalRank?.x!==state.x)state.externalRank={x:state.x,rank:rankAt(timeline,state.x)};
    return state.externalRank.rank;
   }
+  if(encounterField(atom.field)==='blocked_front'&&rankAt(timeline,state.x)===1)return 0;
   if(Object.hasOwn(context.conditions||{},atom.field))return context.conditions[atom.field];
   if(atom.field==='change_order_onetime'){
    const before=rankAt(timeline,state.prevX??state.x),after=rankAt(timeline,state.x);

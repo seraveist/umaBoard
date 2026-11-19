@@ -36,7 +36,9 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
   inactive unique is valid and contributes zero. Never silently drop an unknown
   native effect while claiming to have applied it.
 
-### Rank, encounters and popularity (revision 6)
+### Rank, encounters and popularity (v1.6.1)
+
+Front-block windows stop while the runner leads. A subsequent loss of the lead starts a fresh interval. Checklist JSON includes the popularity bands and scenario gain range shown for each rated row. [Paired course comparisons](CM_V1_6_FINAL_REVIEW.md)
 
 All compared skills share the same distance-indexed rank trace. A one-time rank change is signed for the current frame. A maintained-rank predicate tracks the best/worst position since the five-second start grace, including an excursion followed by a return before the check. Missing early rank history cannot establish continuous maintenance. [Rank condition reference](https://gametora.com/umamusume/skill-condition-viewer?skill=100211)
 

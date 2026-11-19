@@ -8,7 +8,6 @@ import {simulateSolo} from '../assets/solo.mjs';
 import {possibleInContext} from '../assets/candidates.mjs';
 import {acquisitionEventGroups,createAcquisitionConstraints} from '../assets/acquisition-constraints.mjs';
 import {RaceEvaluator} from '../assets/race-evaluation.mjs';
-import {compareRacePlans} from '../assets/race-objective.mjs';
 import {comparePlanPriorities} from '../assets/cm-plan-compression.mjs';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const manifest=read('data/manifest.json'),data=read(manifest.dataset_path),profiles=read('curated/cm-scenario-profiles.json'),display=read('curated/cm-skill-display.json');
@@ -19,7 +18,13 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  assert.ok(chart.rows.every(row=>row.rarity!=='evolution'));
  assert.ok(chart.evolutionOptions.length>=4);
  for(const option of chart.evolutionOptions)assert.ok(chart.rows.some(row=>row.id===option.evolutionBaseId));
- const states=bulkAcquisition(chart.rows,{},'5'),acquisitionChoices=Object.fromEntries(acquisitionEventGroups(data,chart.setup).map(event=>[event.key,event.choices[0].id]));
+ // Replay the same six inherited hints even when a chart revision changes Top 10.
+ const witness=read('docs/validation/cm-v10-search-witness-20261118.json');
+ const recordedInheritance=witness.activeIds.filter(id=>data.skills[id].inherited).map(id=>{
+  const row=chart.inheritanceOptions.find(row=>row.id===id);assert.ok(row,id);return row;
+ });
+ assert.equal(recordedInheritance.length,6);
+ const states=bulkAcquisition([...chart.rows.filter(row=>!row.inherited),...recordedInheritance],{},'5'),acquisitionChoices=Object.fromEntries(acquisitionEventGroups(data,chart.setup).map(event=>[event.key,event.choices[0].id]));
  const constraints=createAcquisitionConstraints(data,{...chart.setup,acquisitionChoices});
  // A deterministic benchmark assumption, not an actual player's hint dump.
  // Ordinary hints remain hypothetical Lv5; reviewed gold rewards follow the
@@ -42,7 +47,7 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  }
  // An independently found legal plan exposed a coarse-search miss. Recompute
  // its result with the current engine, rather than fitting a gain constant.
- const witness=read('docs/validation/cm-v10-search-witness-20261118.json');assert.deepEqual(witness.input,input);
+ assert.deepEqual(witness.input,input);
  assert.equal(witness.dataVersion,read('docs/validation/cm-algorithm-v1-baseline-20261118.json').data.activeVersion);
  const {acquisitionChoices:oldChoices,...oldActual}=witness.actual;
  assert.deepEqual({...oldActual,acquisitionChoices},actual);
@@ -52,9 +57,16 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  const previous=read('docs/validation/cm-optimization-v1-tolerance-large-20261118.json').current;
  const required=[...plan.nativeIds,...plan.ownedIds],compiled=new Map([...new Set([...required,...witness.activeIds,...previous.ids])].map(id=>[id,compileChartSkill(data.skills[id],plan.setup)]));
  const evaluator=new RaceEvaluator(plan.setup,compiled,required,plan.nativeIds,branchSampler),alternative=evaluator.evaluate(witness.activeIds,144,.01),reference=evaluator.evaluate(previous.ids,144,.01);
- assert.ok(constraints.allowed(previous.ids));assert.ok(Math.abs(reference.gain-35.57883626099098)<1e-9,'revision 6 fixed-plan replay');assert.ok(comparePlanPriorities(plan,reference)<=0);
- assert.ok(comparePlanPriorities(plan,reference)<0||reference.gain-plan.gain<=.1+1e-10);
- assert.ok(compareRacePlans({ids:plan.activeIds,cost:plan.budget.used,...plan},{ids:witness.activeIds,cost:witnessPrice.used,...alternative})<=0);
+ assert.ok(Math.abs(reference.gain-35.57883626099098)<1e-9,'fixed-plan replay on the revision 6 and 6.1 matrix');
+ const previousPrice=new RecordedPurchaseModel(data,[...chart.rows,...chart.evolutionOptions,...chart.inheritanceOptions],states,actual).selection(previous.ids);
+ assert.ok(previousPrice.complete&&previousPrice.used<=actual.spBudget&&constraints.allowed(previous.ids));
+ for(const [score,cost] of [[reference,previousPrice.used],[alternative,witnessPrice.used]]){
+  const priority=comparePlanPriorities(plan,score);assert.ok(priority<=0);
+  if(priority===0){
+   assert.ok(score.gain-plan.gain<=.1+1e-10,`measured witness ${score.gain} vs selected ${plan.gain}`);
+   if(plan.gain<score.gain)assert.ok(plan.budget.used<=cost);
+  }
+ }
  assert.equal(plan.search.finalValidationComplete,true);assert.equal(plan.search.precisionSeedCandidates,plan.candidateCount);assert.equal(plan.search.precisionSeedCount,2);assert.ok(plan.search.seedEvaluationSamples<=plan.sampling.count);assert.ok(plan.search.constructiveEvaluationSamples<plan.sampling.count);
  mkdirSync(new URL('../.cache/',import.meta.url),{recursive:true});
  writeFileSync(new URL('../.cache/cm-current-7000-validation.json',import.meta.url),JSON.stringify({dataVersion:manifest.active_version,input,actual,acquisition:states,acquisitionAssumption:'reviewed-first-event-choices; hypothetical-Lv5; partial-route-coverage-not-a-real-training-replay',chartRows:chart.rows.length,inheritedTopIds:chart.inheritedTopIds,evolutionOptions:chart.evolutionOptions.map(row=>row.id),...plan},null,2));

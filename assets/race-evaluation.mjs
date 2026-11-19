@@ -70,7 +70,7 @@ export class RaceEvaluator{
    if(observation)this.sampleCacheHits++;
    else{
     const before=this.run(this.referenceIds,sample,dt,true),after=this.run(ids,sample,dt);
-    observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
+    observation={gain:lengthsBetween(after,before),popularity:after.activation?.popularity,scenario:after.scenario,finishTime:after.finishTime,referenceFinishTime:before.finishTime,timeGain:before.finishTime-after.finishTime,hpRemaining:after.hpRemaining,hpShortfall:after.hpShortfall,hpGain:after.hpRemaining-before.hpRemaining,fullSpeedFeasible:after.fullSpeedFeasible,activation:[...new Set(after.events.map(e=>e.id))],usefulAcceleration:Object.keys(after.accelerationUseSeconds||{})};
     if(this.sampleCacheLimit){records.push(observation);this.cachedSamples++;
      while(this.cachedSamples>this.sampleCacheLimit&&this.sampleCache.size>1){const oldest=this.sampleCache.keys().next().value;this.cachedSamples-=this.sampleCache.get(oldest).length;this.sampleCache.delete(oldest);}
     }
@@ -85,7 +85,7 @@ export class RaceEvaluator{
    const g=groups.get(after.scenario.id)||{id:after.scenario.id,label:after.scenario.label,weight:after.scenario.weight,gains:[],finishes:[],references:[],time:0,hp:0,hpGain:0,shortfall:0,successes:0,activation:{},usefulAcceleration:{}};
    g.finishes.push(after.finishTime);g.references.push(after.referenceFinishTime);
    if(chartSkillId&&after.activation.includes(chartSkillId))g.activatedGain=(g.activatedGain??0)+gain;
-   g.gains.push(gain);g.time+=after.timeGain;g.hp+=after.hpRemaining;g.hpGain+=after.hpGain;g.shortfall+=Math.max(0,-after.hpRemaining);g.successes+=Number(after.fullSpeedFeasible);
+   g.gains.push(gain);g.time+=after.timeGain;g.hp+=after.hpRemaining;g.hpGain+=after.hpGain;g.shortfall+=after.hpShortfall;g.successes+=Number(after.fullSpeedFeasible);
    for(const id of after.activation)g.activation[id]=(g.activation[id]||0)+1;
    for(const id of after.usefulAcceleration)g.usefulAcceleration[id]=(g.usefulAcceleration[id]||0)+1;
    groups.set(g.id,g);

@@ -167,3 +167,19 @@ test('duel, nearby runners and front-block time use half-open shared windows in 
  assert.ok(event&&event.x>=900&&event.x<1000);
  assert.throws(()=>normalizeRaceContext({encounterWindows:{blocked_front:[{start:7,end:6,value:1}]}}));
 });
+
+test('front blocking stops while leading and restarts after losing the lead',()=>{
+ const blocked=a('blocked_front',1),duration=a('blocked_front_continuetime',1);
+ const timeline=[{distance:0,rank:3},{distance:120,rank:1},{distance:125,rank:2},{distance:130,rank:3}];
+ const context=normalizeRaceContext({rankTimeline:timeline,encounterWindows:{blocked_front:[{start:100,end:150,value:1}]}});
+ const raceContext=raceScenario({...setup,raceContext:context},0).context,windows=raceContext.encounterWindows.blocked_front;
+ assert.deepEqual(windows,[{start:100,end:120,value:1},{start:125,end:150,value:1}]);
+ const state={raceContext,dt:1,x:119,prevX:109,t:12};advanceFrontBlock(state,windows);
+ Object.assign(state,{x:129,prevX:119,t:13});advanceFrontBlock(state,windows);
+ assert.ok(Math.abs(externalConditionValue(duration,state)-.4)<1e-12);
+ state.x=121;assert.equal(externalConditionValue(blocked,state),0);
+ const constant=raceScenario({...setup,raceContext:{rankTimeline:timeline,conditions:{blocked_front:1}}},0).context;
+ assert.equal(externalConditionValue(blocked,{x:121,raceContext:constant}),0);
+ assert.equal(scheduleContextBranches([{windows:[[0,200]],external:[blocked]}],{...setup,raceContext:constant})[0].external.length,1);
+ assert.deepEqual(raceScenario(setup,0).context.encounterWindows.blocked_front,[]);
+});
