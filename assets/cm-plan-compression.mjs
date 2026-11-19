@@ -62,12 +62,15 @@ export function createPlanSignature(compiled,lower,distance,{scope='identity'}={
   if(['is_exist_skill_id','is_used_skill_id','is_used_skill_id_with_detail_one'].includes(atom.field))explicit.add(String(atom.value));
   if(atom.field==='is_activate_any_skill'||atom.field==='is_activate_heal_skill'||atom.field.startsWith('activate_count_')||atom.field==='succession_skill_count')fields.add(atom.field);
  }
+ const hasPopularityOverride=[...compiled.values()].some(skill=>skill.invocations.some(i=>i.effects.some(e=>e.kind==='ignore_popularity')));
  const roles=new Map();
  for(const [id,skill]of compiled){
   const invocations=skill.invocations.filter(inv=>!inv.linked),effects=invocations.flatMap(inv=>inv.effects),dependent=skill.invocations.some(inv=>[...inv.condition,...inv.precondition].some(branch=>branch.dynamic.some(a=>fields.has(a.field))));
   const uses=[...new Set(skill.invocations.flatMap(inv=>[...inv.condition,...inv.precondition].flatMap(branch=>branch.dynamic.filter(a=>fields.has(a.field)).map(a=>a.field))))];
   const referenced=skill.invocations.some(inv=>[...inv.condition,...inv.precondition].some(branch=>branch.dynamic.some(a=>['is_exist_skill_id','is_used_skill_id','is_used_skill_id_with_detail_one','is_activate_other_skill_detail'].includes(a.field))));
-  const critical=dependent||referenced||skill.invocations.flatMap(inv=>inv.effects).some(e=>e.kind==='heal'||e.kind.startsWith('passive_'))||scope==='identity'&&(skill.skill.inherited||skill.skill.rarity==='evolution'||effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)));
+  const popularityLinked=hasPopularityOverride&&skill.invocations.some(i=>i.effects.some(e=>e.kind==='ignore_popularity')||
+   [...i.condition,...i.precondition].some(b=>b.dynamic.some(a=>a.field==='popularity')));
+  const critical=popularityLinked||dependent||referenced||skill.invocations.flatMap(inv=>inv.effects).some(e=>e.kind==='heal'||e.kind.startsWith('passive_'))||scope==='identity'&&(skill.skill.inherited||skill.skill.rarity==='evolution'||effects.some(e=>['acceleration','full_spurt_acceleration'].includes(e.kind)));
   const counts=[...fields].sort().map(field=>{
    // Frame-sensitive helpers with different activation windows are not interchangeable.
    if(field==='is_activate_any_skill')return skill.invocations.length?id:0;

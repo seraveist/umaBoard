@@ -2,7 +2,7 @@ import {planSpurt,SPURT_POLICY} from './spurt-planning.mjs';
 import {buildPhysics,phaseAt} from './physics.mjs';
 import {sampleBranches,branchReady,slopeAt} from './activation.mjs';
 import {effectValue,effectDuration} from './cm-effect-policy.mjs';
-import {advanceRankDurations} from './race-sampling.mjs';
+import {advanceRankHistory,advanceFrontBlock} from './race-sampling.mjs';
 import {activationFrame} from './race-frame.mjs';
 
 // Paired single-runner trajectories. CM uses the explicit HP-adaptive policy;
@@ -19,17 +19,31 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  const context=setup.raceContext||{},startDelay=sampled?.1*draw('race','start-delay'):.1;
  state.startDelay=startDelay;state.raceContext=context;
  state.finalCornerStart=setup.course.corners.at(-1)?.start;
- state.rankDurationRules=[...new Set(pending.flatMap(i=>[...i.condition,...i.precondition].flatMap(b=>(b.external||[]).map(a=>a.field))))].flatMap(field=>{const match=field.match(/^order_rate_(in|out)(\d+)_continue$/);return match?[{field,inside:match[1]==='in',threshold:Math.round(9*Number(match[2])/100)}]:[];});
- state.rankDurations=Object.fromEntries(state.rankDurationRules.map(r=>[r.field,0]));
+ state.dt=dt;
+ const rankBands=new Map();
+ if(context.coherentRanks)for(const invocation of pending){
+  for(const branch of [...invocation.condition,...invocation.precondition])for(const atom of branch.external||[]){
+   const match=/^order_rate_(in|out)(\d+)_continue$/.exec(atom.field);
+   if(match)rankBands.set(atom.field,{inside:match[1]==='in',threshold:Math.round(9*Number(match[2])/100)});
+  }
+ }
+ const blockWindows=context.encounterWindows?.blocked_front;
+ const timeFrontBlock=blockWindows?.length&&pending.some(i=>[...i.condition,...i.precondition].some(b=>b.external?.some(a=>a.field==='blocked_front_continuetime')));
+ state.rankBands=rankBands;
  state.postNumber=context.postNumber??(sampled?1+Math.floor(9*draw('race','post-number')):undefined);
  state.popularity=context.popularity??(sampled?1+Math.floor(9*draw('race','popularity')):undefined);
  state.inheritedCount=setup.inheritanceOrigins?new Set([...selected].filter(id=>Object.hasOwn(setup.inheritanceOrigins,id)).map(id=>setup.inheritanceOrigins[id])).size:compiledSkills.filter(s=>s.skill?.inherited).length;
  let physics=buildPhysics(setup,passive);
  const choice=i=>i.condition[0]?.choiceQ??q;
  // Passives are resolved at the start, including skill-possession predicates.
- for(const i of pending.filter(i=>i.passive)){
+ const passives=pending.filter(i=>i.passive);
+ const readyAtStart=i=>i.precondition.some(b=>branchReady(b,state,i.id))&&i.condition.some(b=>branchReady(b,state,i.id));
+ // The eligible course-specific passive unlocks popularity gates even on
+ // other passives whose skill IDs sort before its own.
+ state.ignorePopularity=passives.some(i=>i.effects.some(e=>e.kind==='ignore_popularity')&&readyAtStart(i));
+ for(const i of passives){
   if(used.has(i.id))continue;
-  if(!i.precondition.some(b=>branchReady(b,state,i.id))||!i.condition.some(b=>branchReady(b,state,i.id)))continue;
+  if(!readyAtStart(i))continue;
   for(const e of i.effects){const value=effectValue(e,{setup,physics,state,q:choice(i)});if(e.kind==='oonige')passive.oonige=true;else if(e.kind==='passive_all')for(const key of ['speed','stamina','power','guts','wisdom'])passive[key]+=value;else if(e.kind.startsWith('passive_'))passive[e.kind.slice(8)]+=value;}
   i.done=!i.effects.some(e=>['start_multiplier','start_offset'].includes(e.kind));i.passiveApplied=true;used.add(i.id);state.usedInvocations.add(`${i.id}:${i.index}`);counts[0]++;if(i.effects.some(e=>e.kind.startsWith('passive_')||e.kind==='temptation_rate'))state.passiveCount++;
   if(i.done)events.push({id:i.id,index:i.index,x:0,t:0,duration:null});
@@ -106,7 +120,8 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   state.previousFrameActivated=eventStart>previousEvents;
   state.previousFrameHealed=state.healCount>previousHeals;
   previousEvents=eventStart;previousHeals=state.healCount;
-  advanceRankDurations(state);
+  if(rankBands.size)advanceRankHistory(state);
+  if(timeFrontBlock)advanceFrontBlock(state,blockWindows);
   if(adaptive&&state.phase>=2){if(!spurtPlan)updateSpurt();state.lastSpurtActive=state.x>=spurtPlan.start&&state.hp>0;state.maximumSpurt=state.lastSpurtActive&&spurtPlan.maximum;}
   for(let k=active.length-1;k>=0;k--)if(t+1e-8>=active[k].end)active.splice(k,1);
   let added=false;

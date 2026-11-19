@@ -14,7 +14,7 @@ const SPATIAL=new Set(['phase','phase_random','phase_firsthalf','phase_firsthalf
 // and the updated position for geometry. Keep their intervals separate.
 const FRAME_START=new Set(['phase','phase_firsthalf','phase_laterhalf','remain_distance','furlong']);
 const SLOPE_RANDOM=new Map([['up_slope_random',1],['down_slope_random',2],['up_slope_random_later_half',1],['down_slope_random_later_half',2]]);
-const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate']);
+const SUPPORTED_EFFECTS=new Set(['target_speed','current_speed','speed_with_decel','acceleration','heal','passive_speed','passive_stamina','passive_power','passive_guts','passive_wisdom','passive_all','start_multiplier','start_offset','full_spurt_acceleration','oonige','evolution_duration','invoke_rare','invoke_unique','model_neutral','temptation_rate','ignore_popularity']);
 const STAT_CONDITIONS=['base_speed','base_stamina','base_power','base_guts','base_wiz'];
 export const hasStatCondition=skill=>skill.invocations.some(inv=>[...(inv.condition||[]),...(inv.precondition||[])].some(group=>group.some(atom=>STAT_CONDITIONS.includes(atom.field))));
 const phaseBounds=(d,p)=>[[0,d/6],[d/6,2*d/3],[2*d/3,5*d/6],[5*d/6,d]][p];
@@ -140,7 +140,7 @@ export function compileSkill(skill,setup){
   if(inv.duration_unit==='umatools_base_time')duration=inv.duration_raw<0?Infinity:inv.duration_raw/10000*setup.course.distance/1000;
   else if(inv.duration_unit==='umasim_seconds_at_base_distance')duration=inv.duration_raw<0?Infinity:inv.duration_raw*setup.course.distance/1000;
   else reasons.push('지속시간 단위');
-  const passive=effects.some(e=>e.kind.startsWith('passive_')||['oonige','temptation_rate'].includes(e.kind))&&effects.every(e=>e.kind.startsWith('passive_')||['oonige','temptation_rate','start_multiplier','start_offset'].includes(e.kind));
+  const passive=effects.some(e=>e.kind.startsWith('passive_')||['oonige','ignore_popularity','temptation_rate'].includes(e.kind))&&effects.every(e=>e.kind.startsWith('passive_')||['oonige','ignore_popularity','temptation_rate','start_multiplier','start_offset'].includes(e.kind));
   if(effects.some(e=>e.kind.startsWith('passive_'))&&(!passive||condition.branches.some(b=>b.dynamic.some(a=>!START_PREDICATES.has(a.field))||b.random||b.windows[0]?.[0]!==0)))reasons.push('주행 중 능력치 변경');
   invocations.push({index:inv.index,condition:condition.branches,precondition:precondition.branches,effects,duration,passive,durationScale:skill.cmSelfEffects?inv.time_scale_raw||0:0,evolution:skill.rarity==='evolution',
    linked:(inv.condition||[]).flat().some(a=>['is_activate_other_skill_detail','is_used_skill_id'].includes(a.field))});
@@ -186,7 +186,7 @@ export function branchReady(branch,state,skillId){
    case 'hp_per':value=Math.floor(100*state.hp/state.hpMax);break;
    case 'succession_skill_count':value=state.inheritedCount??0;break;
    case 'post_number':if(state.postNumber===undefined)return true;value=state.postNumber;break;
-   case 'popularity':if(state.popularity===undefined)return true;value=state.popularity;break;
+   case 'popularity':if(state.ignorePopularity||state.popularity===undefined)return true;value=state.popularity;break;
    case 'random_lot':case 'random_lot_shared':return a.operator==='=='&&(a.field==='random_lot_shared'?(branch.sharedLotQ??.5):(branch.lotQ??.5))<a.value/100;
    case 'is_lastspurt':value=Number(state.lastSpurtActive??state.phase>=2);break;
    case 'lastspurt':value=(state.maximumSpurt??state.phase>=2)?2:3;break;

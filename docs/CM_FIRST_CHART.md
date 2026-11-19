@@ -36,6 +36,16 @@ See [UI verification](CM_UI_REFRESH_QA.md) for the current layout.
   inactive unique is valid and contributes zero. Never silently drop an unknown
   native effect while claiming to have applied it.
 
+### Rank, encounters and popularity (revision 6)
+
+All compared skills share the same distance-indexed rank trace. A one-time rank change is signed for the current frame. A maintained-rank predicate tracks the best/worst position since the five-second start grace, including an excursion followed by a return before the check. Missing early rank history cannot establish continuous maintenance. [Rank condition reference](https://gametora.com/umamusume/skill-condition-viewer?skill=100211)
+
+The nine default cases include steady front/middle/rear positions and changes in both directions. Finish-straight duels, front blocks and nearby runners have illustrative distance intervals. An explicit scenario can set `raceContext.encounterWindows` by field (`compete_fight_count`, `blocked_front`, `near_count`). Each interval supplies `{start,end,value}` in metres, includes its start and excludes its end. An empty list means no such event. Front-block duration uses elapsed race time inside the same window. Other unobserved opponent gates retain the documented scenario assumptions.
+
+Popularity stays fixed within each paired sample. An eligible ignore-popularity passive applies to the runner's other popularity checks, including start passives. [Reference passive handling](https://github.com/mee1080/umasim/blob/e9bb2939ba117ea93e556790c353ed3edec27eab/race/src/commonMain/kotlin/io/github/mee1080/umasim/race/calc2/RaceCalculator.kt#L144-L150)
+
+Skill details show the number of scenarios with an observed activation and paired mean gains in samples with and without activation. Popularity-sensitive skills show observed mean gains in the popularity bands defined by their source predicates when more than one band was sampled. Scenario weights also apply within these summaries. A zero activation count can include a failed wisdom roll. These counts measure the sampled scenarios and rolls, without estimating live CM frequencies.
+
 ## Candidate and acquisition state
 
 Display outfit awakening gold, scenario/deck gold, ordinary purchasable whites/factor candidates and inherited versions. Evolution rows are hidden from the first checklist. Every supported matching evolution remains in `evolutionOptions`, linked to its original rare, for joint post-training optimization. An obtainable original rare remains recordable when only its evolution is useful; unsupported original effects display an explicit unknown score rather than zero. Static impossibility and unsupported calculations otherwise exclude candidates.

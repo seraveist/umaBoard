@@ -19,7 +19,7 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v12';
+export const CM_MODEL_VERSION='cm-first-chart-v13';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -214,8 +214,8 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
    // Even fixed triggers can change the HP-based spurt decision. Use the same
    // race samples for every row instead of presuming a deterministic outcome.
    const count=samples;
-   const stats=evaluator.evaluate(ids,count,dt);
-   return {...row,gain:stats.gain,robustGain:stats.robustGain,feasible:stats.feasible,hpSuccessRate:stats.hpSuccessRate,hpShortfall:stats.hpShortfall,performance:stats.performance,scenarioSensitivity:stats.scenarioSensitivity,objectivePolicy:RACE_OBJECTIVE,comparisonBasis,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
+   const stats=evaluator.evaluate(ids,count,dt,{chartSkillId:row.id});
+   return {...row,gain:stats.gain,robustGain:stats.robustGain,feasible:stats.feasible,hpSuccessRate:stats.hpSuccessRate,hpShortfall:stats.hpShortfall,performance:stats.performance,scenarioSensitivity:stats.scenarioSensitivity,popularityResults:stats.popularityResults,objectivePolicy:RACE_OBJECTIVE,comparisonBasis,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
   }};
 }
 
@@ -225,7 +225,7 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:task.setup,samples:task.samples,dt:task.dt});
  const evaluate=row=>{
   const key=setupKey+'|'+row.id;
-  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,feasible:value.feasible,hpSuccessRate:value.hpSuccessRate,hpShortfall:value.hpShortfall,performance:value.performance,scenarioSensitivity:value.scenarioSensitivity,objectivePolicy:value.objectivePolicy,comparisonBasis:value.comparisonBasis,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate,calculationState:value.calculationState,calculationNotes:value.calculationNotes});}
+  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,feasible:value.feasible,hpSuccessRate:value.hpSuccessRate,hpShortfall:value.hpShortfall,performance:value.performance,scenarioSensitivity:value.scenarioSensitivity,popularityResults:value.popularityResults,objectivePolicy:value.objectivePolicy,comparisonBasis:value.comparisonBasis,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate,calculationState:value.calculationState,calculationNotes:value.calculationNotes});}
   return {...row,...cache.get(key)};
  };
  const inherited=task.rows.filter(row=>row.inherited),scored=[];

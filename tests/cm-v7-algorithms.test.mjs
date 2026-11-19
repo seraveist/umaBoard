@@ -5,7 +5,7 @@ import {compileChartSkill,branchSampler,prepareChart} from '../assets/cm-chart.m
 import {RecordedPurchaseModel,recommendFinalPlan} from '../assets/cm-final-plan.mjs';
 import {RaceEvaluator} from '../assets/race-evaluation.mjs';
 import {ENCOUNTER_POLICY,contextDomains,raceScenario} from '../assets/race-scenarios.mjs';
-import {normalizeRaceContext,advanceRankDurations,externalConditionValue,scheduleContextBranches} from '../assets/race-sampling.mjs';
+import {normalizeRaceContext,advanceRankHistory,advanceFrontBlock,externalConditionValue,scheduleContextBranches} from '../assets/race-sampling.mjs';
 import {buildAcquisitionHierarchy,updateAcquisition,inheritedCount,canRecordAcquisition} from '../assets/cm-state.mjs';
 import {selectionRules} from '../assets/selection.mjs';
 import {selectInheritedTop} from '../assets/cm-recommendation.mjs';
@@ -84,16 +84,26 @@ test('explicit weighted contexts aggregate scenario means and override default c
  assert.throws(()=>normalizeRaceContext({scenarios:[{id:'bad',weight:-1,context:{}}]}));
 });
 test('shared threshold cases evaluate unseen numeric gates consistently rather than satisfying both opposites',()=>{
- const d=smallData([skill('zero','target_speed',1000,[[a('blocked_front',0)]]),skill('one','target_speed',1000,[[a('blocked_front',1)]])]);
+ const d=smallData([skill('zero','target_speed',1000,[[a('is_surrounded',0)]]),skill('one','target_speed',1000,[[a('is_surrounded',1)]])]);
  const s={...setup,externalDomains:contextDomains(d)},evaluator=ev(Object.values(d.skills),s);
  for(let i=0;i<9;i++){const ids=new Set(evaluator.run(['zero','one'],i,.05).events.map(e=>e.id));assert.ok(!(ids.has('zero')&&ids.has('one')));}
- const values=Array.from({length:9},(_,i)=>raceScenario(s,i).context.conditions.blocked_front);assert.ok(values.includes(0)&&values.includes(1));
+ const values=Array.from({length:9},(_,i)=>raceScenario(s,i).context.conditions.is_surrounded);assert.ok(values.includes(0)&&values.includes(1));
 });
-test('continuous rank gates accumulate elapsed time, reset after leaving the rank band and respect recorded opponent events',()=>{
- const field='order_rate_in20_continue',state={x:0,prevX:0,t:0,distance:1200,finalCornerStart:200,raceContext:{coherentRanks:true,rankTimeline:[{distance:0,rank:1},{distance:100,rank:6},{distance:300,rank:5}],conditions:{is_overtake:0}},rankDurationRules:[{field,inside:true,threshold:2}],rankDurations:{[field]:0}};
- advanceRankDurations(state);state.t=3;state.x=50;advanceRankDurations(state);assert.equal(externalConditionValue(a(field,2),state),3);
- state.t=4;state.x=150;advanceRankDurations(state);assert.equal(externalConditionValue(a(field,2),state),0);
- state.prevX=299;state.x=301;assert.equal(externalConditionValue(a('change_order_up_finalcorner_after',1),state),1);assert.equal(externalConditionValue(a('is_overtake',1),state),0);
+test('rank changes last one frame and continuous bands remember departures after the start grace',()=>{
+ const field='order_rate_in20_continue',outside='order_rate_out20_continue';
+ const state={prevX:0,x:20,t:4,dt:1,distance:1200,finalCornerStart:200,
+  rankBands:new Map([[field,{inside:true,threshold:2}],[outside,{inside:false,threshold:2}]]),
+  raceContext:{coherentRanks:true,rankTimeline:[{distance:0,rank:6},{distance:25,rank:2},{distance:100,rank:6},{distance:101,rank:2},{distance:300,rank:1}]}};
+ const at=(x,t)=>{state.prevX=state.x;state.x=x;state.t=t;advanceRankHistory(state);};
+ const value=f=>externalConditionValue(a(f,1),state);
+ at(30,5);assert.equal(value(field),1);assert.equal(value(outside),0);
+ assert.equal(value('change_order_onetime'),-4);
+ at(99,6);assert.equal(value('change_order_onetime'),0);
+ const crossed={...state,rankHistory:{...state.rankHistory},prevX:99,x:102,t:7};
+ advanceRankHistory(crossed);assert.equal(externalConditionValue(a(field,1),crossed),0);
+ at(100,7);assert.equal(value('change_order_onetime'),4);assert.equal(value(field),0);
+ at(101,8);assert.equal(value(field),0);
+ at(301,9);assert.equal(value('change_order_up_finalcorner_after'),1);
 });
 test('full-spurt acceleration contributes only after the enabled extra-spurt state starts',()=>{
  const raw=skill('extra','full_spurt_acceleration',1000,[[a('remain_distance',200,'<=')]]),s={...setup,stats:{...stats,speed:2100}};
@@ -115,7 +125,10 @@ test('backup acceleration value and usefulness naturally fall when the primary a
 });
 test('optimizer ranks model mean with whole-run tail protection and reports actual ablation gains',async()=>{
  const safe=skill('safe','target_speed',1000),fragile=skill('fragile','target_speed',15000,[[a('remain_distance',400,'<='),a('order',1)]]),d=smallData([safe,fragile]);
- const chart={setup:{...setup,scenarioId:'15'},nativeIds:[],rows:[safe,fragile]};
+ // Pin the late lead after the acceleration phase, independently of the default coverage paths.
+ const scenarios=[{id:'late-lead',weight:1,context:{rankTimeline:[{distance:0,rank:6},{distance:course.distance-200,rank:1}]}},
+  {id:'midpack',weight:1,context:{rankTimeline:[{distance:0,rank:6}]}}];
+ const chart={setup:{...setup,scenarioId:'15',raceContext:{scenarios}},nativeIds:[],rows:[safe,fragile]};
  const plan=await recommendFinalPlan(d,chart,{safe:'0',fragile:'0'},{stats,spBudget:100},{gainTolerance:0,searchSamples:9,samples:18,dt:.05});
  assert.deepEqual(plan.activeIds,['fragile']);assert.equal(plan.scenarioCoverage.complete,true);assert.equal(plan.search.globalOptimal,true);
  assert.equal(plan.performance.risk.withinLimit,true);assert.ok(Math.abs(plan.marginalContributions.fragile.gain-plan.gain)<1e-8);assert.ok(plan.physicsSensitivity);
@@ -137,4 +150,20 @@ test('large-pool staged search uses final samples and matches an affordable-subs
  }
  oracle.sort((a,b)=>Number(b.performance.risk.withinLimit)-Number(a.performance.risk.withinLimit)||b.gain-a.gain||a.performance.tailFinishTime-b.performance.tailFinishTime||a.cost-b.cost||a.ids.join(',').localeCompare(b.ids.join(',')));
  assert.equal(plan.search.method,'bounded');assert.deepEqual(plan.activeIds,oracle[0].ids);assert.equal(plan.gain,oracle[0].gain);assert.equal(plan.search.screeningSamples,plan.sampling.count);assert.equal(plan.search.closureComplete,true);
+});
+
+test('duel, nearby runners and front-block time use half-open shared windows in the paired race',()=>{
+ const windows={compete_fight_count:[{start:900,end:1000,value:1}],blocked_front:[{start:100,end:150,value:1}],near_count:[{start:100,end:150,value:3}]};
+ const context=normalizeRaceContext({encounterWindows:windows,rankTimeline:[{distance:0,rank:3}]});
+ const raceContext=raceScenario({...setup,raceContext:context},0).context;
+ const state={x:100,prevX:99,t:10,dt:.1,raceContext};
+ const value=f=>externalConditionValue(a(f,1),state);
+ advanceFrontBlock(state,windows.blocked_front);assert.equal(value('blocked_front_continuetime'),0);assert.equal(value('near_count'),3);
+ state.x=120;state.prevX=119;state.t=12;advanceFrontBlock(state,windows.blocked_front);assert.equal(value('blocked_front_continuetime'),2);
+ state.x=150;advanceFrontBlock(state,windows.blocked_front);assert.equal(value('blocked_front_continuetime'),0);assert.equal(value('near_count'),0);
+ for(const [x,expected] of [[899,0],[900,1],[1000,0]]){state.x=x;assert.equal(value('compete_fight_count'),expected);}
+ const duel=skill('duel','target_speed',1000,[[a('compete_fight_count',0,'>')]]),s={...setup,raceContext:context,externalDomains:contextDomains(smallData([duel]))};
+ const event=ev([duel],s).run(['duel'],0,.05).events.find(e=>e.id==='duel');
+ assert.ok(event&&event.x>=900&&event.x<1000);
+ assert.throws(()=>normalizeRaceContext({encounterWindows:{blocked_front:[{start:7,end:6,value:1}]}}));
 });

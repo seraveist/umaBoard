@@ -1,3 +1,4 @@
+import {chartScenarioSummary} from './cm-model-presentation.mjs';
 export const skillRarityLabel=row=>row.inherited?'계승':row.rarity==='evolution'?'진화':row.rarity==='gold'?'레어':'일반';
 
 // One body-mounted, text-only tooltip avoids table clipping and keeps pointer,
@@ -17,12 +18,14 @@ export function createSkillDetails(){
   const below=rect.bottom+gap,top=below+panel.offsetHeight<=height-12?below:Math.max(12,rect.top-gap-panel.offsetHeight);
   panel.style.left=`${left}px`;panel.style.top=`${top}px`;
  };
- const show=(button,row)=>{
+ const show=(button,row,chart)=>{
   clearTimers();if(active&&active!==button)dismiss();active=button;
   const name=document.createElement('strong');name.className='skill-detail-name';name.lang='ja';name.textContent=row.name;
   const kind=document.createElement('span');kind.className='skill-detail-kind';kind.textContent=skillRarityLabel(row);
   const description=document.createElement('p');description.lang='ja';description.textContent=row.description||'등록된 상세 설명이 없습니다.';
   panel.replaceChildren(name,kind,description);
+  const summary=chart&&chartScenarioSummary(row);
+  if(summary){const line=document.createElement('p');line.textContent=summary;panel.append(line);}
   if(row.prerequisiteNames?.length){const lower=document.createElement('p');lower.className='skill-detail-relations';lower.textContent=`하위 스킬: ${row.prerequisiteNames.join(' · ')}`;panel.append(lower);}
   panel.hidden=false;button.setAttribute('aria-expanded','true');button.setAttribute('aria-describedby',panel.id);position();
  };
@@ -41,12 +44,12 @@ export function createSkillDetails(){
  return {
   dismiss,
   dismissDetached(){if(active&&!active.isConnected)dismiss();},
-  attach(button,row){
+  attach(button,row,chart=false){
    button.setAttribute('aria-label',`${row.name} 상세 설명`);button.setAttribute('aria-controls',panel.id);button.setAttribute('aria-expanded','false');
-   button.addEventListener('pointerenter',event=>{if(event.pointerType==='touch')return;clearTimeout(hideTimer);showTimer=setTimeout(()=>show(button,row),300);});
+   button.addEventListener('pointerenter',event=>{if(event.pointerType==='touch')return;clearTimeout(hideTimer);showTimer=setTimeout(()=>show(button,row,chart),300);});
    button.addEventListener('pointerleave',scheduleHide);
-   button.addEventListener('focus',()=>show(button,row));button.addEventListener('blur',scheduleHide);
-   button.addEventListener('click',()=>{if(active===button&&pinned)dismiss();else{show(button,row);pinned=true;}});
+   button.addEventListener('focus',()=>show(button,row,chart));button.addEventListener('blur',scheduleHide);
+   button.addEventListener('click',()=>{if(active===button&&pinned)dismiss();else{show(button,row,chart);pinned=true;}});
   }
  };
 }

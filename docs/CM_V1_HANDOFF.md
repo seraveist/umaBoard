@@ -16,8 +16,8 @@
 | 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/feat/cm-first-chart` 최신 커밋 |
-| 현재 모델 | 공개v1·개정5, 마신표v12·최종 추천v15·단독 비교v6 |
-| 계산32모듈 SHA256 | `d0afa3aaafed05f841a8fd2207554c2e9e801da259de3164eb67a7863f15b6a2` |
+| 현재 모델 | 공개v1·개정6, 마신표v13·최종 추천v16·단독 비교v7 |
+| 계산32모듈 SHA256 | `9a3c800497da8a43abcbc8bbcbe2d7f3dd4abf80e65e8f5aac0af4df8f55eb4a` |
 | 활성 데이터 | `e8fe44237bf243d2ad4a55415845d3489f78dc04460d9ef303aa325fab34fd66` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
@@ -83,7 +83,7 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 1. [현재 상태와 보완 방향](CM_V1_STATUS_AND_ROADMAP.md): 현재 수치·해석 범위·우선순위.
 2. [개정4 QA](CM_OPTIMIZATION_V1_FAST_QA.md): 실제 변경, 채택하지 않은 시험, 입력과 검증 근거.
 3. [마신표 계약](CM_FIRST_CHART.md), [최종 추천 계약](CM_POST_TRAINING.md): 구현이 지켜야 할 동작.
-4. [현재 고정 기준](validation/cm-optimization-v1-trigger-release-20261119.json),
+4. [현재 고정 기준](validation/cm-optimization-v1-encounter-release-20261119.json),
    [개정4 집계·증거 해시](validation/cm-optimization-v1-fast-summary-20261118.json).
 5. [누적 개발 현황](CM_PROGRESS_AND_NEXT_STEPS.md): UI·데이터·과거 검증의 날짜별 맥락.
 
@@ -105,7 +105,7 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 node scripts/check_cm_algorithm_v1.mjs
 ```
 
-변경 전 기준에서 `status:passed`, 공개v1·개정5, 계산32모듈과 위 계산 해시를 확인한다.
+변경 전 기준에서 `status:passed`, 공개v1·개정6, 계산32모듈과 위 계산 해시를 확인한다.
 변경 전부터 실패하면 브랜치·데이터·파일 상태를 먼저 조사한다.
 정당한 코드 수정 뒤에는 고정 검사 실패가 예상될 수 있다. 이 경우 기존 릴리스 파일의 해시만 덮어써 통과시키지 않고,
 새 개정·모델·고정 파일을 만들며 현재 기준을 이전 증거로 연결한다.
@@ -206,12 +206,12 @@ seraveist/umaBoard의 origin/feat/cm-first-chart 최신 상태에서 이어서 �
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 공개v1 개정5, 마신표v12·최종 추천v15다.
+현재 계산 기준은 공개v1 개정6, 마신표v13·최종 추천v16다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
-과거 v11 테스트베드 전체가 v15에서 재검증된 상태도 아니다.
+개정6의 순위·경합·인기 판정은 고정 전개의 짝비교로 검증했다.
 
 기존 증거를 보존하고 새 출력 경로부터 준비한 뒤,
-기존 넓은 테스트베드의 v15 재실행과 미사용 조건의 독립 소규모 전수 대조부터 진행해줘.
+변경한 조건의 작은 재현 사례와 경계 검사를 먼저 실행해줘.
 실패가 나오면 제약 위반·탐색 누락·표본 차이를 구분하고 필요한 공통 로직을 보완해줘.
 
 HP·획득·가격·발동 조건·복합 연계와 잔여SP 재검토를 유지하고,

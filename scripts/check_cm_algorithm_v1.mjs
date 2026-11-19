@@ -6,16 +6,26 @@ import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {FINAL_MODEL_VERSION} from '../assets/cm-final-plan.mjs';
 import {MODEL_VERSION} from '../assets/physics.mjs';
 const root=new URL('../',import.meta.url),read=p=>fs.readFileSync(new URL(p,root),'utf8').replace(/\r\n/g,'\n'),json=p=>JSON.parse(read(p)),hash=t=>createHash('sha256').update(t).digest('hex');
-const release=json('docs/validation/cm-optimization-v1-trigger-release-20261119.json'),models={chart:CM_MODEL_VERSION,final:FINAL_MODEL_VERSION,solo:MODEL_VERSION};
+const release=json('docs/validation/cm-optimization-v1-encounter-release-20261119.json'),models={chart:CM_MODEL_VERSION,final:FINAL_MODEL_VERSION,solo:MODEL_VERSION};
 assert.deepEqual(CM_ALGORITHM,{id:release.id,version:release.version,revision:release.revision,name:release.name,models:release.models});assert.deepEqual(models,release.models);
 assert.equal(hash(read(release.parentRelease.path)),release.parentRelease.textSha256,'Original release changed.');
 const parent=json(release.parentRelease.path);
 const parentHashes=new Map(parent.modules.map(file=>[file.path,file.textSha256]));
 const changed=release.modules.filter(file=>parentHashes.get(file.path)!==file.textSha256).map(file=>file.path);
 assert.deepEqual(changed,release.authorizedChanges);
-for(const audit of [parent.priorAudit,release.priorAudit]){
- assert.equal(hash(read(audit.path)),audit.textSha256,'Historical audit changed: '+audit.path);
- for(const file of json(audit.path).sourceFiles)assert.equal(hash(read(file.path)),file.textSha256,'Historical audit evidence changed: '+file.path);
+let history=release;
+const verifiedAudits=new Set();
+while(history.priorAudit){
+ const audit=history.priorAudit;
+ if(!verifiedAudits.has(audit.path)){
+  assert.equal(hash(read(audit.path)),audit.textSha256,'Historical audit changed: '+audit.path);
+  for(const file of json(audit.path).sourceFiles)assert.equal(hash(read(file.path)),file.textSha256,'Historical audit evidence changed: '+file.path);
+  verifiedAudits.add(audit.path);
+ }
+ if(!history.parentRelease)break;
+ const previous=history.parentRelease;
+ assert.equal(hash(read(previous.path)),previous.textSha256,'Historical release changed: '+previous.path);
+ history=json(previous.path);
 }
 const seen=new Set();
 function visit(path){if(seen.has(path))return;seen.add(path);for(const m of read(path).matchAll(/(?:from\s*|import\s*)['"]\.\/([^'"]+\.mjs)['"]/g))visit('assets/'+m[1]);}

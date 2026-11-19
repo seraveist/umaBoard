@@ -17,9 +17,11 @@ function contributes(skill,field,distance){
 export function dependencyPacks(compiled,candidates,required,purchase,distance,{limit=160}={}){
  const candidateIds=new Set(candidates.map(row=>row.id)),packs=new Map();
  const add=ids=>{ids=[...new Set(ids)].sort();if(ids.length)packs.set(ids.join(','),ids);};
+ const popularityHelpers=[...candidateIds].filter(id=>compiled.get(id)?.invocations.some(i=>i.effects.some(e=>e.kind==='ignore_popularity')));
  for(const dependent of [...required,...candidateIds]){
   const skill=compiled.get(dependent);if(!skill)continue;
   const atoms=skill.invocations.flatMap(inv=>[...inv.condition,...inv.precondition].flatMap(branch=>branch.dynamic));
+  if(atoms.some(a=>a.field==='popularity'))for(const helper of popularityHelpers)if(helper!==dependent)add([dependent,helper]);
   for(const atom of atoms){
    if(['is_exist_skill_id','is_used_skill_id','is_used_skill_id_with_detail_one'].includes(atom.field)&&atom.operator==='=='){
     const id=String(atom.value);if(candidateIds.has(id))add([dependent,id]);continue;

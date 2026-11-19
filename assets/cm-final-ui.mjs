@@ -5,7 +5,7 @@ import {skillNameLine,createSkillSourceResolver} from './cm-skill-presentation.m
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from './cm-discounts.mjs';
 import {evolutionOptions,evolutionGroups} from './cm-evolution.mjs';
 import {skillIconId} from './cm-icons.mjs';
-import {calculationSummary,marginalSummary} from './cm-model-presentation.mjs';
+import {calculationSummary,marginalSummary,scenarioLabel} from './cm-model-presentation.mjs';
 import {CM_ALGORITHM} from './cm-algorithm-version.mjs';
 
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true,onRecordError=()=>{}}){
@@ -66,6 +66,13 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
   $('#final-search-note').textContent=plan.search.globalOptimal?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
+  const alternatives=$('#final-scenario-alternatives'),cases=plan.scenarioAlternatives??[];
+  alternatives.hidden=!cases.length;alternatives.open=false;
+  const names=ids=>ids.map(id=>data.skills[id]?.name_jp??id).join(' · ');
+  alternatives.querySelector('ul').replaceChildren(...cases.map(item=>{
+   const changes=[item.added.length&&`추가 ${names(item.added)}`,item.removed.length&&`제외 ${names(item.removed)}`].filter(Boolean);
+   return el('li','',`${item.label??scenarioLabel(item.scenario)} · ${item.cost} SP · ${changes.join(' / ')}`);
+  }));
   $('#final-owned-summary').textContent=`습득 스킬 ${plan.ownedIds.length}개`;
   $('#final-owned-list').replaceChildren(...plan.ownedIds.map(id=>{const li=el('li','',data.skills[id].name_jp);li.lang='ja';return li;}));
   $('#final-calculation-note').textContent=`${calculationSummary(plan)} · 전개별 추가 기여 최소 ${plan.robustGain.toFixed(2)}마신${plan.performance?` · 부진 구간 단축 ${plan.performance.tailImprovement.toFixed(3)}초`:''}${plan.physicsSensitivity?` · 전개 스퍼트 근사 사용/제외 차이 ${plan.physicsSensitivity.difference.toFixed(2)}마신`:''}`;
@@ -81,7 +88,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    const node=$('#actual-'+key),value=node.value.trim(),max=key==='sp'?100000:3000,min=key==='sp'?0:1;
    if(!/^\d+$/.test(value)||Number(value)<min||Number(value)>max){error(key==='sp'?'보유 SP를 0~100000 사이의 정수로 입력하세요.':'실제 능력치 5개를 각각 1~3000 사이의 정수로 입력하세요.',node);return;}
   }
-  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,raceContext:raw.raceContext,excludedEvolutionIds:raw.excludedEvolutionIds};
+  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,raceContext:{...chart.setup.raceContext,...raw.raceContext},excludedEvolutionIds:raw.excludedEvolutionIds};
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
   stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message();save();
   const job=requestId;

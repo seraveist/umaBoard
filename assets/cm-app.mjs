@@ -134,7 +134,7 @@ function newRow(row){
  const iconButton=el('button',`skill-detail-trigger rarity-${row.rarity==='gold'?'rare':row.rarity==='evolution'?'evolution':'normal'}`);iconButton.type='button';
  if(icon){const path=icon.path||`assets/skill-icons/utx_ico_skill_${row.iconId}.png`;iconButton.append(image(path,'','skill-icon'));}
  else{const fallback=el('span','skill-icon-fallback');fallback.setAttribute('aria-hidden','true');fallback.innerHTML='<svg viewBox="0 0 20 20"><path d="m5 14 4-9 3 6 3-5M4 16h12"/></svg>';iconButton.append(fallback);}
- skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)});identity.append(iconButton);
+ skillDetails.attach(iconButton,{...row,prerequisiteNames:relatedAcquisitionIds(hierarchy,row.id).map(id=>data.skills[id]?.name_jp).filter(Boolean)},true);identity.append(iconButton);
  const copy=el('div','skill-copy');copy.append(skillNameLine(row),el('span','skill-source',skillSources(row)));
  identity.append(copy);nameCell.append(identity);const gain=el('td','gain-cell');gain.dataset.gain='';
  const state=el('td','state-cell'),select=el('select','hint-select');select.dataset.skillId=acquisitionId(row);select.setAttribute('aria-label',`${row.name} 획득 상태 및 할인 레벨`);
