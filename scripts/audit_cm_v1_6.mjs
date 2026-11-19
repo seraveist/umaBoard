@@ -54,13 +54,15 @@ const priority=(a,b)=>Number(b.feasible)-Number(a.feasible)||(!a.feasible?(b.suc
  Number(b.safe)-Number(a.safe)||(!a.safe?a.delay-b.delay:0);
 const strict=(a,b)=>priority(a,b)||b.gain-a.gain||a.tail-b.tail||a.cost-b.cost||a.ids.join().localeCompare(b.ids.join());
 
-async function planAudit(fixture){
- const {input,states,costs,replacement:[lower,upper],stats,discount,budgets}=fixture;
+const modes=[['strict',{gainTolerance:0}],['default',{}],['bounded',{exactPlanLimit:0}]];
+
+async function planAudit(fixture,checks=modes){
+ const {input,states,costs,replacement:[lower,upper]=[],stats,discount,budgets}=fixture;
  const task=prepare(input),rows=Object.keys(states).map(id=>{const row=task.rows.find(r=>r.id===id);assert.ok(row,id);return row;});
  const chart={setup:{...task.setup,fullSpurtMode:fixture.fullSpurtMode??task.setup.fullSpurtMode},modelVersion:task.modelVersion,nativeIds:task.nativeIds,rows,evolutionOptions:[]};
  const actual={stats,aptitudes:aptitude,discountTrait:discount,spBudget:Math.max(...budgets)};
  const setup=createFinalSetup(chart,actual),owned=Object.keys(states).filter(id=>states[id]==='owned');
- setup.ownedSkillIds=owned;setup.possessionGraph={[upper]:[lower]};
+ setup.ownedSkillIds=owned;setup.possessionGraph=upper?{[upper]:[lower]}:{};
  const base=[...task.nativeIds,...owned],choices=Object.keys(costs);
  const compiled=new Map([...new Set([...base,...choices])].map(id=>[id,compileChartSkill(data.skills[id],setup)]));
  const evaluator=new RaceEvaluator(setup,compiled,base,task.nativeIds,branchSampler);
@@ -84,7 +86,7 @@ async function planAudit(fixture){
    const a=heldOut.evaluate(anchor.ids,144,.01),b=heldOut.evaluate(cheap.ids,144,.01);
    seedChecks.push({spBudget,seed,signedLoss:round(a.gain-b.gain),anchorHp:round(a.hpSuccessRate),cheaperHp:round(b.hpSuccessRate),anchorShortfall:round(a.hpShortfall),cheaperShortfall:round(b.hpShortfall),anchorTailGuard:a.performance.risk.withinLimit,cheaperTailGuard:b.performance.risk.withinLimit});
   }
-  for(const [mode,options] of [['strict',{gainTolerance:0}],['default',{}],['bounded',{exactPlanLimit:0}]]){
+  for(const [mode,options] of checks){
    const plan=await recommendFinalPlan(data,chart,states,{...actual,spBudget},{diagnostics:false,...options});
    const expect=mode==='strict'?anchor:cheap;
    assert.deepEqual([...plan.activeIds].sort(),expect.ids,mode+' '+spBudget);
@@ -97,5 +99,13 @@ async function planAudit(fixture){
  return {input,stats,states,stageCosts:costs,results,seedChecks};
 }
 const name=process.argv[2];
-if(name!=='chart'&&!Object.hasOwn(cases,name))throw new Error('Choose chart, niigata, nakayama or kyoto.');
-console.log(JSON.stringify(name==='chart'?chartAudit():await planAudit(cases[name]),null,2));
+let output;
+if(name==='distance'){
+ output=[];
+ for(const [courseId,stamina] of [['10501',1100],['10602',1100],['10811',1050]]){
+  output.push(await planAudit({input:{courseId,samplingSeed:141},states:{'201312':'2','200352':'2'},costs:{'201312':104,'200352':136},stats:{...mediumStats,stamina},discount:'none',budgets:[140]},[['default',{}]]));
+ }
+}else if(name==='chart')output=chartAudit();
+else if(Object.hasOwn(cases,name))output=await planAudit(cases[name]);
+else throw new Error('Choose chart, niigata, nakayama, kyoto or distance.');
+console.log(JSON.stringify(output,null,2));

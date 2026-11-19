@@ -186,11 +186,11 @@
   "reviewEvidence": [
     {
       "path": "scripts/audit_cm_v1_6.mjs",
-      "textSha256": "8b3fa79488de55e577a52024078963196c0bda3c4fa7168353420fe5e0079236"
+      "textSha256": "804c9f36fce58ef04de86b9802c8b067c6a15d013c56a5a6fe00f4fbc77bfe55"
     },
     {
       "path": "docs/validation/cm-v1-6-review-20261119.json",
-      "textSha256": "2b348ea4b9d62deba3767194184ea0e6359122d710d53efcb4e98668efe550ec"
+      "textSha256": "9a44d37ba9b51e4cfdc8c9aaa15463300a6f6b8e5a3d3829a3304dcb33d963e1"
     }
   ]
 }

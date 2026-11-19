@@ -555,5 +555,130 @@
       "hp": 1,
       "safe": true
     }
+  ],
+  "distanceControls": [
+    {
+      "input": {
+        "courseId": "10501",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1100,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "201312"
+          ],
+          "cost": 104,
+          "gain": 0.108978,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    },
+    {
+      "input": {
+        "courseId": "10602",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1100,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "201312"
+          ],
+          "cost": 104,
+          "gain": 0.217958,
+          "hpSuccess": 1,
+          "shortfall": 0,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    },
+    {
+      "input": {
+        "courseId": "10811",
+        "samplingSeed": 141
+      },
+      "stats": {
+        "speed": 2250,
+        "stamina": 1050,
+        "power": 1680,
+        "guts": 1310,
+        "wisdom": 1550
+      },
+      "states": {
+        "200352": "2",
+        "201312": "2"
+      },
+      "stageCosts": {
+        "200352": 136,
+        "201312": 104
+      },
+      "results": [
+        {
+          "spBudget": 140,
+          "mode": "default",
+          "affordable": 3,
+          "measured": 3,
+          "ids": [
+            "100221",
+            "200352"
+          ],
+          "cost": 136,
+          "gain": 4.657777,
+          "hpSuccess": 0,
+          "shortfall": 241.441261,
+          "tailGuard": true,
+          "loss": 0,
+          "savedSp": 0
+        }
+      ],
+      "seedChecks": []
+    }
   ]
 }
