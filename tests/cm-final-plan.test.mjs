@@ -191,3 +191,14 @@ test('Studious changes affordable combinations and records the selected trait wi
  assert.equal(fast.budget.used,50);assert.equal(study.purchases[0].stages[0].extraDiscount,4);
  assert.equal(chart.setup.discountTrait,undefined);assert.equal(input.discountTrait,undefined);
 });
+
+test('an earlier plan is rescored with current hints, ownership and budget; stale plans never unlock a purchase',async()=>{
+ const {data,chart}=fixture(),previousPlanIds=['native','other'];
+ const check=(states,budget,prior=previousPlanIds)=>recommendFinalPlan(data,chart,states,{...input,spBudget:budget,previousPlanIds:prior},quick);
+ const valid=await check({other:'5'},60);
+ assert.equal(valid.search.previousPlanCompared,true);assert.equal(valid.budget.used,60);
+ const paid=await check({other:'owned'},0);assert.equal(paid.search.previousPlanCompared,true);assert.equal(paid.budget.used,0);
+ for(const [states,budget,ids] of [[{},200,previousPlanIds],[{other:'0'},60,previousPlanIds],[{other:'5'},100,['removed-skill']]]){
+  const plan=await check(states,budget,ids);assert.equal(plan.search.previousPlanCompared,false);assert.ok(plan.budget.used<=budget);
+ }
+});

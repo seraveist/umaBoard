@@ -10,7 +10,7 @@ import {CM_ALGORITHM} from './cm-algorithm-version.mjs';
 
 export function createFinalPlanner({data,display,manifest,skillDetails,read,write,onResult=()=>true,onRecordError=()=>{}}){
  const $=selector=>document.querySelector(selector),form=$('#final-form'),fields=$('#final-fields'),inputs=$('#final-inputs');
- let chart=null,states={},scope='',worker=null,requestId=0,result=null,busy=false;
+ let chart=null,states={},scope='',previousPlanIds=[],worker=null,requestId=0,result=null,busy=false;
  const values=()=>{const discountTrait=$('#discount-trait').value;return {stats:Object.fromEntries(STAT_KEYS.map(key=>[key,$('#actual-'+key).value])),spBudget:$('#actual-sp').value,raceContext:{postNumber:$('#actual-post').value?Number($('#actual-post').value):null,popularity:$('#actual-popularity').value?Number($('#actual-popularity').value):null},discountTrait,fastLearner:discountTrait==='fast-learner',aptitudes:Object.fromEntries(['distance','surface','style'].map(key=>[key,$('#actual-'+key+'-aptitude').value])),excludedEvolutionIds:[...form.querySelectorAll('[data-evolution-option]:not(:checked)')].map(node=>node.value)};};
  const setEvolutionOptions=excluded=>{
   const groups=evolutionGroups(data,chart.setup,evolutionOptions(data,chart));
@@ -34,7 +34,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
  const stale=()=>{stop();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
  const error=(text,input)=>{inputs.open=true;$('#final-error').textContent=text;if(input){input.setAttribute('aria-invalid','true');input.focus();}};
  const clearError=()=>{$('#final-error').textContent='';for(const input of form.querySelectorAll('[aria-invalid]'))input.removeAttribute('aria-invalid');};
- const save=()=>{inputSummary();if(scope&&!write(scope,{values:values()}))message('저장 실패 · 결과를 내려받아 주세요.');};
+ const save=()=>{inputSummary();if(scope&&!write(scope,{values:values(),previousPlanIds}))message('저장 실패 · 결과를 내려받아 주세요.');};
  const render=plan=>{
   const panel=$('#final-result'),source=createSkillSourceResolver(data,plan.setup);skillDetails.dismiss();$('#final-empty').hidden=true;panel.hidden=false;panel.classList.remove('is-stale');$('#final-result-state').textContent='';
   for(const [id,value]of [['final-used',plan.budget.used],['final-remaining',plan.budget.remaining],['final-budget',plan.budget.total]])$('#'+id).textContent=value.toLocaleString('ko-KR');
@@ -90,7 +90,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
    const node=$('#actual-'+key),value=node.value.trim(),max=key==='sp'?100000:3000,min=key==='sp'?0:1;
    if(!/^\d+$/.test(value)||Number(value)<min||Number(value)>max){error(key==='sp'?'보유 SP를 0~100000 사이의 정수로 입력하세요.':'실제 능력치 5개를 각각 1~3000 사이의 정수로 입력하세요.',node);return;}
   }
-  const raw=values(),input={stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,raceContext:{...chart.setup.raceContext,...raw.raceContext},excludedEvolutionIds:raw.excludedEvolutionIds};
+  const raw=values(),input={previousPlanIds,stats:Object.fromEntries(STAT_KEYS.map(key=>[key,Number(raw.stats[key])])),spBudget:Number(raw.spBudget),discountTrait:raw.discountTrait,aptitudes:raw.aptitudes,raceContext:{...chart.setup.raceContext,...raw.raceContext},excludedEvolutionIds:raw.excludedEvolutionIds};
   try{createFinalSetup(chart,input);}catch(cause){error(cause.message);return;}
   stop();busy=true;result=null;$('#final-result').hidden=true;$('#final-empty').hidden=false;$('#final-export').disabled=true;$('#final-submit').disabled=true;$('#final-submit').textContent='조합 추천 중';$('#final-cancel').hidden=false;$('#final-progress').hidden=false;$('#final-progress-bar').value=0;$('#final-progress-bar').max=1;form.setAttribute('aria-busy','true');message();save();
   const job=requestId;
@@ -98,7 +98,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   worker.onmessage=({data:reply})=>{
    if(reply.requestId!==requestId)return;
    if(reply.type==='progress'){$('#final-progress-label').textContent=reply.progress.stage==='candidates'?'실제 스탯으로 후보 비교 중':reply.progress.stage==='search'?'보유 SP에 맞는 조합 탐색 중':'추천 조합 정밀 비교 중';$('#final-progress-bar').max=Math.max(1,reply.progress.total);$('#final-progress-bar').value=reply.progress.completed;}
-   if(reply.type==='result'){result=reply.result;stop();render(result);message();}
+   if(reply.type==='result'){result=reply.result;previousPlanIds=result.activeIds;stop();render(result);message();save();}
    if(reply.type==='error'){stop();error(reply.message);message();if(reply.code==='ACQUISITION_CONFLICT')onRecordError(reply.details?.conflict?.skillIds||[],reply.message);}
   };
   worker.onerror=event=>{event.preventDefault();if(job!==requestId)return;stop();error('추천 계산을 시작하지 못했습니다. 다시 시도해 주세요.');};
@@ -110,7 +110,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   const blob=new Blob([JSON.stringify({schemaVersion:1,dataVersion:manifest.active_version,createdAt:new Date().toISOString(),...result,algorithm:CM_ALGORITHM},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`umaBoard-최종스킬-${result.setup.course.distance}m.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
  return {
-  setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;setValues(read(scope)?.values);$('#final-submit').disabled=false;message();},
+  setChart(value,acquisition,key){stop();clearError();chart=value;states={...acquisition};scope=key;result=null;fields.disabled=false;inputs.open=true;$('#final-result').hidden=true;$('#final-empty').hidden=false;const saved=read(scope);previousPlanIds=Array.isArray(saved?.previousPlanIds)?saved.previousPlanIds:[];setValues(saved?.values);$('#final-submit').disabled=false;message();},
   setStates(value){if(!chart)return;states={...value};clearError();stale();},
   invalidate(){stale();chart=null;fields.disabled=true;$('#final-submit').disabled=true;}
  };

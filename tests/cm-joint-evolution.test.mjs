@@ -31,7 +31,9 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  // declared choices, while unknown routes stay visible as evidence gaps.
  for(const row of chart.rows)if(row.rarity==='gold'&&!constraints.allowed([row.id]))states[row.id]='unavailable';
  const actual={stats:profiles.profiles['15'].stats,spBudget:7000,discountTrait:'none',aptitudes:{distance:'A',surface:'A',style:'S'},acquisitionChoices};
- const plan=await recommendFinalPlan(data,chart,states,actual,{onProgress:p=>{if(p.completed===p.total)console.info(`CM7000 ${p.stage}`);}});
+ const previous=read('docs/validation/cm-optimization-v1-tolerance-large-20261118.json').current;
+ const plan=await recommendFinalPlan(data,chart,states,{...actual,previousPlanIds:previous.ids},{onProgress:p=>{if(p.completed===p.total)console.info(`CM7000 ${p.stage}`);}});
+ console.info('CM7000 result',JSON.stringify({cost:plan.budget.used,gain:plan.gain,hp:plan.hpSuccesses,samples:plan.sampling.count,loss:plan.search.approximation.knownMeanLoss,previousPlanCompared:plan.search.previousPlanCompared}));
  assert.ok(plan.budget.used>0&&plan.budget.used<=7000,JSON.stringify(plan.budget));
  assert.ok(plan.gain>0,`gain=${plan.gain}`);assert.ok(plan.sampling.count>=128);assert.ok(plan.hpSuccessRate>=0&&plan.hpSuccessRate<=1);
  assert.equal(plan.search.closureComplete,false);assert.equal(plan.search.approximation.gainTolerance,.1);assert.ok(plan.search.approximation.knownMeanLoss<=.1+1e-10);
@@ -54,7 +56,7 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
  for(const [event,choice]of Object.entries(oldChoices))assert.equal(acquisitionChoices[event],choice);
  const witnessPrice=new RecordedPurchaseModel(data,[...chart.rows,...chart.evolutionOptions,...chart.inheritanceOptions],states,actual).selection(witness.activeIds);
  assert.ok(witnessPrice.complete&&witnessPrice.used<=actual.spBudget);assert.ok(constraints.allowed(witness.activeIds));
- const previous=read('docs/validation/cm-optimization-v1-tolerance-large-20261118.json').current;
+ assert.ok(plan.search.previousPlanCompared);
  const required=[...plan.nativeIds,...plan.ownedIds],compiled=new Map([...new Set([...required,...witness.activeIds,...previous.ids])].map(id=>[id,compileChartSkill(data.skills[id],plan.setup)]));
  const evaluator=new RaceEvaluator(plan.setup,compiled,required,plan.nativeIds,branchSampler),alternative=evaluator.evaluate(witness.activeIds,144,.01),reference=evaluator.evaluate(previous.ids,144,.01);
  assert.ok(Math.abs(reference.gain-35.57883626099098)<1e-9,'fixed-plan replay on the revision 6 and 6.1 matrix');
@@ -64,7 +66,7 @@ test('rare-only chart jointly spends a 7000-SP budget with consistent reviewed e
   const priority=comparePlanPriorities(plan,score);assert.ok(priority<=0);
   if(priority===0){
    assert.ok(score.gain-plan.gain<=.1+1e-10,`measured witness ${score.gain} vs selected ${plan.gain}`);
-   if(plan.gain<score.gain)assert.ok(plan.budget.used<=cost);
+   if(plan.gain<score.gain)assert.ok(plan.budget.used<=cost,`selected ${plan.budget.used} SP / ${plan.gain}, reference ${cost} SP / ${score.gain}`);
   }
  }
  assert.equal(plan.search.finalValidationComplete,true);assert.equal(plan.search.precisionSeedCandidates,plan.candidateCount);assert.equal(plan.search.precisionSeedCount,2);assert.ok(plan.search.seedEvaluationSamples<=plan.sampling.count);assert.ok(plan.search.constructiveEvaluationSamples<plan.sampling.count);
