@@ -21,7 +21,7 @@ HP·획득·가격·발동 조건과 복합 연계를 유지하면서 완성 조
 | 기본 허용 범위 | 가중 평균 기여0.1마신. 완전 평가한 최선과 같은 HP·위험 우선순위 안에서 적용 |
 | 최종 평가 | 기본144표본·0.01초, 모든 선언 전개 포함 |
 | 출시 기준 데이터 | `59fd2b3c2fd1…`, 정확한 값은 [manifest](../data/manifest.json) 참조 |
-| 계산 소스 고정 | 35모듈, SHA256 `7510628608c80ede227adafd235b2510774d329bae23262b481ae30ab8ead23d` |
+| 계산 소스 고정 | 35모듈, SHA256 `7ffa2b356b161db0b4842aa7b8042ef93ca545d8fc37c4823171508e0e9a9deb` |
 
 고정 기준과 증거 연결은 [v1.6.7 릴리스](validation/cm-optimization-v1-6-7-release-20261123.json),
 현재 계산 계약은 [마신표](CM_FIRST_CHART.md)와 [육성 후 추천](CM_POST_TRAINING.md)을 따른다.

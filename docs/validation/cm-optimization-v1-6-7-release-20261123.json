@@ -78,7 +78,7 @@
     },
     {
       "path": "assets/cm-final-plan.mjs",
-      "textSha256": "25b3174aedca8d75c3850171d208c68a52c0e90dfbca7f8cbd8227d4f90fe933"
+      "textSha256": "e9b4062a581dc30bd7f8219aaca4ce5e00fb1faf6f0ec7facbbe6b887984acfc"
     },
     {
       "path": "assets/cm-icons.mjs",
@@ -173,8 +173,8 @@
       "textSha256": "bd89bf94f0c42275ff537e3e128d8041ad732338623b3542f6227be8cde4197f"
     }
   ],
-  "coreSha256": "7510628608c80ede227adafd235b2510774d329bae23262b481ae30ab8ead23d",
-  "scope": "Exact chart observation reuse and progressive purchase lists. Provisional plans are measured with final resolution and excluded from search decisions. Confirmed purchases precede marginal diagnostics.",
+  "coreSha256": "7ffa2b356b161db0b4842aa7b8042ef93ca545d8fc37c4823171508e0e9a9deb",
+  "scope": "Exact chart observation reuse and progressive purchase lists. The provisional leader is measured once on the final matrix and retained for final comparison regardless of presentation. Confirmed purchases precede marginal diagnostics.",
   "inputs": [
     {
       "path": "docs/validation/cm-launch-manifest-20261119.json",

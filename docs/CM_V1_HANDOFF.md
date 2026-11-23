@@ -19,7 +19,7 @@
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/main` 최신 커밋 |
 | 현재 모델 | v1.6.7, 마신표v15·목표 가속v5·최종 추천v19·단독 비교v8 |
-| 계산35모듈 SHA256 | `7510628608c80ede227adafd235b2510774d329bae23262b481ae30ab8ead23d` |
+| 계산35모듈 SHA256 | `7ffa2b356b161db0b4842aa7b8042ef93ca545d8fc37c4823171508e0e9a9deb` |
 | 출시 기준 데이터 | `59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.

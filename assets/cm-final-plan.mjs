@@ -219,7 +219,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  }
  function summarizePurchases(score,{priced,purchases,groups}){
   return {used:priced.used,budget:setup.spBudget,gain:score.gain,samples:score.sampling.count,
-   hpSuccesses:score.hpSuccesses,purchases:purchases.map(row=>({id:row.id,cost:row.cost})),
+   hpSuccesses:score.hpSuccesses,withinRiskLimit:score.performance.risk.withinLimit,purchases:purchases.map(row=>({id:row.id,cost:row.cost})),
    evolutions:[...groups.outfit,...groups.scenario].map(row=>row.id)};
  }
  const order=compareRacePlans;
@@ -455,13 +455,11 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   const value=evaluate(ids,refillSamples,dt,false,'pilot');refillMemo.set(key,value);if(value)refillEvaluations++;
   return value;
  };
- if(onPurchaseList&&method!=='exhaustive'&&ranked.length){
-  // Measure the provisional winner on the final matrix. Keep this read outside
-  // evaluate() so that emitting an update cannot promote a plan or spend a slot.
-  const leader=ranked[0],measure=()=>evaluator.evaluate(leader.ids,samples,dt,{scenarioPriorities:true});
-  const key=idKey(leader.ids)+'|'+samples+'|'+dt+'|true';
-  const measured=measurements?measurements.score(key,measure):measure();
-  onPurchaseList('preview',summarizePurchases(measured,purchaseList(leader.ids)));
+ // Retain this full-resolution result for both interactive and headless callers.
+ // It joins the final comparison even if a later screening stage drops it.
+ if(method!=='exhaustive'&&ranked.length){
+  const leader=finalScore(ranked[0].ids);
+  if(onPurchaseList)onPurchaseList('preview',summarizePurchases(leader,purchaseList(leader.ids)));
  }
  onPhase('precisionSeeds');
  if(method!=='exhaustive')evaluator.beginSeedComparisons();

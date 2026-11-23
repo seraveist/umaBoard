@@ -42,7 +42,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#purchase-progress-summary').textContent=[
    confirmed?'조합이 확정됐습니다. 스킬별 기여도를 계산하고 있습니다.':'정밀 비교 중입니다. 최종 구매 목록은 달라질 수 있습니다.',
    `${summary.used.toLocaleString('ko-KR')} / ${summary.budget.toLocaleString('ko-KR')} SP`,
-   `평균 ${summary.gain.toFixed(2)}마신 · HP 충족 ${summary.hpSuccesses}/${summary.samples}표본`
+   `평균 ${summary.gain.toFixed(2)}마신 · HP 충족 ${summary.hpSuccesses}/${summary.samples}표본${summary.withinRiskLimit?'':' · 부진 구간 기준 미충족'}`
   ].join(' · ');
   const items=summary.purchases.map(row=>el('li','',`${data.skills[row.id].name_jp} · ${row.cost} SP`));
   for(const id of summary.evolutions)items.push(el('li','',`${data.skills[id].name_jp} · 진화`));

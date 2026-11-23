@@ -282,3 +282,20 @@ test('an edited budget and hint reuse measurements while repricing and searching
   const fresh=await recommendFinalPlan(data,chart,states,settings,quick);assert.deepEqual(run,fresh);
  }
 });
+
+test('publishing the early purchase list leaves headless decisions and search counters identical',async()=>{
+ const {data,chart}=fixture(),states={white:'4',gold:'3',other:'4',unavailable:'1'};
+ const options={...quick,exactPlanLimit:0,evaluationLimit:32},updates=[];
+ const session=new FinalRaceSession();
+ const shown=await recommendFinalPlan(data,chart,states,input,{...options,session,onPurchaseList:(stage,summary)=>updates.push({stage,summary})});
+ const headless=await recommendFinalPlan(data,chart,states,input,options);
+ assert.deepEqual(shown,headless);assert.equal(session.metrics.scoreHits,0);
+ assert.deepEqual(updates.map(x=>x.stage),['preview','confirmed']);
+ for(const {summary} of updates){
+  assert.equal(summary.samples,shown.sampling.count);
+  assert.equal(summary.purchases.reduce((sum,p)=>sum+p.cost,0),summary.used);
+  assert.ok(summary.used<=input.spBudget);
+ }
+ assert.deepEqual(updates[1].summary.purchases,shown.purchases.map(({id,cost})=>({id,cost})));
+ assert.equal(updates[1].summary.gain,shown.gain);
+});
