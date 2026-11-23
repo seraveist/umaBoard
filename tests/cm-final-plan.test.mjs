@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan,FinalRaceSession} from '../assets/cm-final-plan.mjs';
-import {runSeedWorkers} from '../assets/cm-seed-pool.mjs';
+import {createRefinementEvaluator,evaluateRefinements} from '../assets/cm-seed-evaluation.mjs';
+import {createPlanWorkerPool,runSeedWorkers} from '../assets/cm-seed-pool.mjs';
 import {WebModuleWorker} from './helpers/web-module-worker.mjs';
 import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
@@ -405,4 +406,74 @@ test('cancelling during real parallel screening stops the request before purchas
  });
  assert.ok(controller.signal.aborted);
  assert.equal(result,null);assert.deepEqual(stages,['preview']);
+});
+
+
+test('an HP-deficient direct sweep keeps serial priorities, closure order and fallback results',async()=>{
+ const {data,chart}=fixture(),record={};
+ for(let i=0;i<40;i++){
+  const id='heal'+i,row=skill(id,5+i%3,'white','heal');
+  row.invocations[0].condition[0][0].value=1500+i;
+  data.skills[id]=row;chart.rows.push({...row,name:id});
+  data.purchase_stages[id]={status:'verified',base_cost:25};record[id]='0';
+ }
+ const settings={...input,stats:{...input.stats,stamina:40},spBudget:1500};
+ const options={samples:18,dt:.08,searchSamples:9,searchDt:.1,exactPlanLimit:0,evaluationLimit:50,diagnostics:false};
+ const run=extras=>recommendFinalPlan(data,chart,record,settings,{...options,...extras});
+ const serial=await run({}),session=new FinalRaceSession(),signal=new AbortController().signal;
+ const parallel=await run({session,runRefinements:(batch,onProgress)=>{
+  assert.equal(batch.mode,'refinement');assert.equal(batch.sampling.full,18);
+  return runSeedWorkers(batch,{signal,onProgress,createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ }});
+ assert.equal(session.metrics.refinementWorkers.batches,1);assert.ok(session.metrics.refinementWorkers.plans>=32);
+ assert.ok(serial.hpSuccesses<serial.sampling.count);
+ const failed=new FinalRaceSession(),fallback=await run({session:failed,runRefinements:async()=>null});
+ assert.equal(failed.metrics.refinementWorkers.fallbacks,1);
+ for(const plan of [serial,parallel,fallback])delete plan.search.sampleReuse;
+ assert.deepEqual(parallel,serial);assert.deepEqual(fallback,serial);
+ let cancelled=false;
+ assert.equal(await run({cancelled:()=>cancelled,runRefinements:async()=>{cancelled=true;return null;}}),null);
+});
+
+test('refinement workers keep plan prefixes across reordered batches and retry an HP-rejected plan in full',async()=>{
+ const {data,chart}=fixture(),plans=[['native','other'],['native','white']];
+ const settings={mode:'refinement',setup:createFinalSetup(chart,{...input,stats:{...stats,stamina:40}}),
+  records:new Map(Object.entries(data.skills)),baselineIds:chart.nativeIds,nativeIds:chart.nativeIds,sampling:{full:144},dt:.08};
+ const pool=createPlanWorkerPool({signal:new AbortController().signal,
+  createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ const score=(count,ids,stopOnHpFailure=false)=>pool.run({...settings,count,plans:ids,stopOnHpFailure},()=>{});
+ try{
+  assert.equal((await score(9,plans)).prefixHits,0);
+  const middle=await score(36,[...plans].reverse());
+  assert.equal(middle.prefixHits,18);
+  const rejected=await score(144,plans,true);
+  for(const row of rejected.scores.values())assert.equal(row.hpRejected,true);
+  const full=await score(144,[...plans].reverse());
+  assert.equal(full.prefixHits,72);
+  const fresh=evaluateRefinements(createRefinementEvaluator(settings),
+   {...settings,count:144,skills:Object.values(data.skills),plans},()=>{});
+  assert.deepEqual(full.scores,fresh.scores);
+  assert.ok([...full.scores.values()].every(row=>row.sampling.count===144&&row.scenarios.every(s=>'performance' in s)));
+ }finally{pool.close();}
+});
+
+test('a failed later refinement batch discards both lanes without leaking a previous score',async()=>{
+ const lanes=[],batch={mode:'refinement',setup:{},plans:[['a'],['b']],records:new Map([['a',{id:'a'}],['b',{id:'b'}]]),baselineIds:[]};
+ const pool=createPlanWorkerPool({signal:new AbortController().signal,createWorker(){
+  const worker={postMessage(message){this.packet=message;},terminate(){this.terminated=true;}};
+  lanes.push(worker);return worker;
+ }});
+ const send=()=>pool.run(batch,()=>{});
+ const finish=lane=>lane.onmessage({data:{type:'result',scores:new Map([['measured',true]]),drawHits:0}});
+ try{
+  const first=send();
+  for(const lane of lanes){assert.ok(lane.packet.setup);finish(lane);}
+  assert.equal((await first).scores.size,1);
+  const second=send();
+  assert.equal(lanes.length,2);
+  for(const lane of lanes){assert.equal(lane.packet.setup,undefined);assert.deepEqual(lane.packet.skills,[]);}
+  finish(lanes[0]);lanes[1].onmessageerror();
+  assert.equal(await second,null);assert.equal(await send(),null);
+  assert.ok(lanes.every(lane=>lane.terminated));
+ }finally{pool.close();}
 });

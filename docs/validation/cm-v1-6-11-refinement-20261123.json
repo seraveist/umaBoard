@@ -1,0 +1,329 @@
+{
+  "algorithm": "v1.6.11",
+  "baseCommit": "8123dfec8af75b15cdff3dda09fd423a168c98b5",
+  "runtime": "Node.js 24.22.3",
+  "dataVersion": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "input": {
+    "source": "scripts/check_cm_browser.cjs, full launch fixture",
+    "courseId": "10808",
+    "outfitId": "101301",
+    "style": 2,
+    "recorded": 213,
+    "candidates": 210,
+    "budget": 7000,
+    "otherStats": {
+      "speed": 2200,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "sampleCount": 144,
+    "dt": 0.01,
+    "scenarios": 9
+  },
+  "savedInputSha256": "887ebef1695ff9b652262e8a3435052f80029613b459fe6c6b7f6454e11e10bb",
+  "baselineReference": "docs/validation/cm-v1-6-10-parallel-20261123.json",
+  "protocol": "Two cold recommendations per version in total, one per stamina. Replayed the same prepared chart and training record through cm-final-worker and its real nested module workers via Node worker_threads. Full diagnostics enabled. The v1.6.10 control had lightweight timing instrumentation on individual refinements. Some processes ran concurrently. Wall times are illustrative. Chart generation and browser rendering are outside the measurement.",
+  "comparison": "SHA-256 of JSON.stringify(result) after removing only search.sampleReuse (the execution counter of the parent evaluator). Compare both versions with the earlier v1.6.10 release digest. This includes all purchase stages, active IDs, SP, HP, risk, alternative scenarios, search decisions and marginal skill evaluations.",
+  "results": [
+    {
+      "stamina": 1250,
+      "usedSP": 6984,
+      "meanGain": 28.55724129379955,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "activeIds": [
+        "100131",
+        "200011",
+        "200061",
+        "200141",
+        "200151",
+        "200191",
+        "200221",
+        "200252",
+        "200261",
+        "200271",
+        "200281",
+        "200291",
+        "200301",
+        "200361",
+        "200492",
+        "200732",
+        "201101",
+        "201112",
+        "201312",
+        "201321",
+        "201342",
+        "201532",
+        "201591",
+        "201601",
+        "201612",
+        "201631",
+        "201641",
+        "202032",
+        "202092",
+        "202161",
+        "202442",
+        "202602",
+        "202652",
+        "202692",
+        "202702",
+        "202801",
+        "203142",
+        "203172",
+        "203222",
+        "203242",
+        "203512",
+        "203802",
+        "204012",
+        "204142",
+        "204202",
+        "204222",
+        "204262",
+        "204322",
+        "204331",
+        "204362",
+        "204392",
+        "204512",
+        "204531",
+        "204622",
+        "204701",
+        "204792",
+        "210062",
+        "210101",
+        "210131",
+        "210141",
+        "415011",
+        "415021"
+      ],
+      "fullyEvaluatedPlans": 194,
+      "seedResolutions": {
+        "36": 11,
+        "72": 175,
+        "144": 24
+      },
+      "planSha256WithoutSampleCacheCounters": "9f4619243da832ae28de0dd356431479f1bee0411f19bcde94a8a45f4ad913ba",
+      "v1.6.10": {
+        "previewSeconds": 16.905234127,
+        "confirmedSeconds": 220.875193932,
+        "diagnosticsCompleteSeconds": 297.162122691,
+        "phasesMs": {
+          "prepare": 273.251619,
+          "coarseSearch": 16372.122212999999,
+          "precisionSeeds": 48023.590733000005,
+          "finalists": 36562.06088899999,
+          "refinement": 119377.363341,
+          "diagnostics": 76254.26925800001
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      },
+      "v1.6.11": {
+        "previewSeconds": 18.195744967,
+        "confirmedSeconds": 182.83946523499998,
+        "diagnosticsCompleteSeconds": 260.177128943,
+        "phasesMs": {
+          "prepare": 170.42407699999995,
+          "coarseSearch": 17804.657028999998,
+          "precisionSeeds": 56361.986468,
+          "finalists": 40723.942775,
+          "refinement": 67547.137944,
+          "diagnostics": 77297.07068499998
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        },
+        "refinementWorkers": {
+          "batches": 5,
+          "plans": 521,
+          "prefixHits": 3942,
+          "fallbacks": 0
+        }
+      }
+    },
+    {
+      "stamina": 1850,
+      "usedSP": 6984,
+      "meanGain": 34.8926350616523,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "activeIds": [
+        "100131",
+        "101301211",
+        "200011",
+        "200191",
+        "200271",
+        "200332",
+        "200361",
+        "200492",
+        "200511",
+        "200732",
+        "201101",
+        "201111",
+        "201312",
+        "201321",
+        "201342",
+        "201591",
+        "202372",
+        "202522",
+        "202532",
+        "202692",
+        "202801",
+        "203121",
+        "203222",
+        "203421",
+        "203632",
+        "203652",
+        "203852",
+        "203862",
+        "203992",
+        "204001",
+        "204012",
+        "204071",
+        "204082",
+        "204112",
+        "204122",
+        "204222",
+        "204262",
+        "204322",
+        "204331",
+        "204362",
+        "204372",
+        "204531",
+        "204572",
+        "204622",
+        "204701",
+        "204722",
+        "204731",
+        "204812",
+        "210101",
+        "210401",
+        "415011",
+        "415021"
+      ],
+      "fullyEvaluatedPlans": 110,
+      "seedResolutions": {
+        "36": 11,
+        "72": 170,
+        "144": 29
+      },
+      "planSha256WithoutSampleCacheCounters": "c1623f2accc756687ac71176bbe1ebd0a5a6032ad5ef7ed01e6cf78f1ca3aba4",
+      "v1.6.10": {
+        "previewSeconds": 17.447970208999998,
+        "confirmedSeconds": 121.008172651,
+        "diagnosticsCompleteSeconds": 154.97473195799998,
+        "phasesMs": {
+          "prepare": 231.69475599999998,
+          "coarseSearch": 16916.361307,
+          "precisionSeeds": 41627.840106,
+          "finalists": 35893.18961,
+          "refinement": 26036.921988000002,
+          "diagnostics": 33938.97065399999
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      },
+      "v1.6.11": {
+        "previewSeconds": 19.558862397000002,
+        "confirmedSeconds": 121.501188907,
+        "diagnosticsCompleteSeconds": 157.856494909,
+        "phasesMs": {
+          "prepare": 158.55654699999997,
+          "coarseSearch": 19192.615707,
+          "precisionSeeds": 46973.552490999995,
+          "finalists": 39636.624104,
+          "refinement": 15322.754654999997,
+          "diagnostics": 36332.886767
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        },
+        "refinementWorkers": {
+          "batches": 2,
+          "plans": 80,
+          "prefixHits": 612,
+          "fallbacks": 0
+        }
+      }
+    }
+  ],
+  "baselineLowStaminaRefinement": {
+    "firstIncumbentHpFeasible": true,
+    "profile": [
+      {
+        "stage": "preview",
+        "samples": 36,
+        "dt": 0.01,
+        "stopOnHpFailure": false,
+        "calls": 214,
+        "ms": 27869.570085999934
+      },
+      {
+        "stage": "direct",
+        "samples": 144,
+        "dt": 0.01,
+        "stopOnHpFailure": true,
+        "calls": 98,
+        "ms": 46677.56894499998
+      },
+      {
+        "stage": "batch",
+        "samples": 144,
+        "dt": 0.01,
+        "stopOnHpFailure": true,
+        "calls": 4,
+        "ms": 3571.9631189999636
+      },
+      {
+        "stage": "exchangeVariants",
+        "samples": 9,
+        "dt": 0.05,
+        "stopOnHpFailure": false,
+        "calls": 199,
+        "ms": 3275.867948999803
+      },
+      {
+        "stage": "exchangeProposals",
+        "samples": 9,
+        "dt": 0.05,
+        "stopOnHpFailure": false,
+        "calls": 312,
+        "ms": 5269.462969999935
+      },
+      {
+        "stage": "exchangeFinal",
+        "samples": 144,
+        "dt": 0.01,
+        "stopOnHpFailure": true,
+        "calls": 8,
+        "ms": 9773.604476000008
+      },
+      {
+        "stage": "preview",
+        "samples": 9,
+        "dt": 0.01,
+        "stopOnHpFailure": false,
+        "calls": 164,
+        "ms": 11817.856904000073
+      },
+      {
+        "stage": "leaders",
+        "samples": 36,
+        "dt": 0.01,
+        "stopOnHpFailure": false,
+        "calls": 46,
+        "ms": 10370.985043000168
+      }
+    ]
+  }
+}

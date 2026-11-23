@@ -9,7 +9,7 @@ test('public v1 release locks the reviewed spurt and optimization model, scoped 
 });
 
 test('public v1 identity stays immutable while parallel execution keeps chart and final-result model IDs',()=>{
- assert.equal(CM_ALGORITHM.version,'v1');assert.equal(CM_ALGORITHM.revision,6);assert.equal(CM_ALGORITHM.patch,10);assert.equal(CM_ALGORITHM.models.chart,'cm-first-chart-v16');assert.equal(CM_ALGORITHM.models.final,'cm-post-training-v20');
+ assert.equal(CM_ALGORITHM.version,'v1');assert.equal(CM_ALGORITHM.revision,6);assert.equal(CM_ALGORITHM.patch,11);assert.equal(CM_ALGORITHM.models.chart,'cm-first-chart-v16');assert.equal(CM_ALGORITHM.models.final,'cm-post-training-v20');
  assert.throws(()=>{CM_ALGORITHM.version='v2';},TypeError);assert.throws(()=>{CM_ALGORITHM.models.final='cm-post-training-v1';},TypeError);
  assert.deepEqual(JSON.parse(JSON.stringify(CM_ALGORITHM)),CM_ALGORITHM);
 });

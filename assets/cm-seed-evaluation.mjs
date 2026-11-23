@@ -29,3 +29,23 @@ export function evaluateSeedBatch({setup,baselineIds,nativeIds,skills,plans,samp
  }
  return {scores,drawHits:evaluator.endSeedComparisons()};
 }
+
+// Refinement jobs at different resolutions can share only the stable draws of
+// the same plan. Finish each score with the normal race evaluator and HP policy.
+export function createRefinementEvaluator({setup,baselineIds,nativeIds}){
+ return new RaceEvaluator(setup,new Map(),baselineIds,nativeIds,createFinalBranchSampler(),{
+  compactComparisons:true,sampleCacheLimit:16384
+ });
+}
+
+export function evaluateRefinements(evaluator,{skills,plans,sampling,count,dt,stopOnHpFailure},onProgress){
+ const previousHits=evaluator.sampleCacheHits;
+ for(const skill of skills)evaluator.compiled.set(skill.id,compileChartSkill(skill,evaluator.setup));
+ const scores=new Map();
+ for(const [index,ids] of plans.entries()){
+  const value=evaluator.evaluate(ids,count,dt,{stopOnHpFailure,scenarioPriorities:count===sampling.full});
+  scores.set(ids.join(',')+'|'+count+'|'+dt,value);
+  if((index+1)%4===0||index+1===plans.length)onProgress(index+1);
+ }
+ return {scores,drawHits:0,prefixHits:evaluator.sampleCacheHits-previousHits};
+}

@@ -109,7 +109,7 @@ export class FinalRaceSession{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},onPurchaseList=null,session=null,runSeeds=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},onPurchaseList=null,session=null,runSeeds=null,runRefinements=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
  onPhase('prepare');
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  setup.externalDomains=contextDomains(data);
@@ -195,13 +195,13 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const signature=createPlanSignature(compiled,lower,setup.course.distance,{scope:gainTolerance?'complete-plan-profile':'identity'}),fullScores=new Map(),scoreCache=new Map();
  const measurements=session?.begin(data,chart,setup,baselineIds);
  const evaluator=new RaceEvaluator(setup,compiled,baselineIds,chart.nativeIds,createFinalBranchSampler(),{compactComparisons:true});let evaluations=0,hpPrunedPlans=0,coarseEvaluations=0,precisionEvaluations=0,pilotEvaluations=0,middleEvaluations=0;
- let workerSeeds=null;
+ let workerBatch=null,refinementPoolWarm=false;
  const evaluate=(ids,count,step,stopOnHpFailure=false,phase='precision')=>{
   ids=normalize(ids);if(!retained(ids)||!legal(ids))return null;
   const cost=price(ids);if(cost===null||cost>setup.spBudget)return null;
   const cacheKey=`${idKey(ids)}|${count}|${step}`;if(scoreCache.has(cacheKey))return scoreCache.get(cacheKey);
   const scenarioPriorities=count===samples&&step===dt;
-  const calculate=()=>workerSeeds?.scores.get(cacheKey)??evaluator.evaluate(ids,count,step,{stopOnHpFailure,scenarioPriorities});
+  const calculate=()=>workerBatch?.scores.get(cacheKey)??evaluator.evaluate(ids,count,step,{stopOnHpFailure,scenarioPriorities});
   const result=measurements?measurements.score(cacheKey+'|'+scenarioPriorities,calculate):calculate();
   evaluations++;
   if(phase==='coarse')coarseEvaluations++;else if(count===samples&&step===dt)precisionEvaluations++;else if(phase==='pilot')pilotEvaluations++;else middleEvaluations++;
@@ -394,6 +394,39 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   }
   return batch;
  };
+ // Workers only supply scores. The original serial loop admits them in candidate
+ // order, applying its memo, HP policy and evaluation budget as usual.
+ async function prepareWorkerBatch(runBatch,proposals,sampling,stage,{allowance=Infinity,count=sampling.tolerance?sampling.pilot:sampling.full,stopOnHpFailure=false}={}){
+  const refining=stage==='closure';
+  // A warm pool already owns the prefix observations. A full matrix costs
+  // several pilot matrices, so smaller promotion batches justify the handoff.
+  const minimum=refining&&refinementPoolWarm&&count===samples?Math.max(2,Math.ceil(32*pilotSamples/count)):32;
+  if(!runBatch||proposals.length<minimum||allowance<minimum)return null;
+  const uncached=[],seen=new Set();
+  for(const proposal of proposals){
+   const ids=normalize(proposal),key=ids.join(',');
+   if(seen.has(key))continue;
+   seen.add(key);
+   const scoreKey=key+'|'+count+'|'+dt;
+   if(scoreCache.has(scoreKey)||!retained(ids)||!legal(ids))continue;
+   const cost=price(ids);
+   if(cost===null||cost>setup.spBudget)continue;
+   // A session hit still counts as a new logical evaluation in this request.
+   if(!measurements?.hasScore(scoreKey+'|'+(count===samples)))uncached.push(ids);
+   if(--allowance<=0)break;
+  }
+  if(uncached.length<minimum)return null;
+  const result=await runBatch({plans:uncached,records,setup,baselineIds,nativeIds:chart.nativeIds,sampling,dt,
+   ...(refining?{mode:'refinement',count,stopOnHpFailure}:{})},(completed,total)=>onProgress({stage,completed,total}));
+  if(refining)refinementPoolWarm=!!result;
+  if(!cancelled()&&requestMetrics){
+   if(refining){
+    const stats=requestMetrics.refinementWorkers??={batches:0,plans:0,prefixHits:0,fallbacks:0};
+    if(result){stats.batches++;stats.plans+=uncached.length;stats.prefixHits+=result.prefixHits??0;}else stats.fallbacks++;
+   }else requestMetrics.seedWorkers={count:result?2:0,plans:result?uncached.length:0,fallback:!result};
+  }
+  return result;
+ }
  const refinementEvaluationLimit=candidates.length+scenarioPacks.length+12*(width+1);let precisionBudgetReached=false;
  const refineNeighborhood=async(seed,step,seeds,stage,{refillOnly=false}={})=>{
   let best=seed,complete=false,checks=0,passes=0,batchChecks=0,directEvaluations=0,toleranceStopped=false,previewChecks=0,previewRetained=0,previewBatchChecks=0;
@@ -410,6 +443,14 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
    let screenedVariants=[];const previewImprovements=new Map();
    if(gainTolerance&&best.feasible){
     const previewScore=refillOnly?refillScore:pilotScore,incumbent=refillOnly?evaluate(best.ids,refillSamples,dt,false,'pilot'):pilotScore(best.ids),previews=[incumbent];let previewProposals=0;
+    if(runRefinements&&variants.length){
+     const count=refillOnly?refillSamples:pilotSamples;
+     // refillScore counts every successful first visit, even an existing score.
+     // Only prefetch when the entire batch fits its remaining work allowance.
+     if(!refillOnly||variants.length<=refillEvaluationLimit-refillEvaluations)
+      workerBatch=await prepareWorkerBatch(runRefinements,variants,{full:samples},stage,{count});
+     if(cancelled())return null;
+    }
     for(const ids of variants){
      if(cancelled())return null;
      const value=previewScore(ids);
@@ -418,27 +459,39 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
      // A failed stable prefix proves failure at the final matrix. A lower
      // preview mean is only a heuristic screen, never a global error bound.
      if(value?.feasible&&(refillOnly?order(value,incumbent)<0||value.cost<incumbent.cost&&value.gain>=incumbent.gain-gainTolerance:comparePlanPriorities(value,incumbent)!==0||value.gain>=incumbent.gain-gainTolerance||value.sampling.halfDifference>gainTolerance))previews.push(value);
-     if(++previewProposals%8===0){onProgress({stage,completed:previewProposals,total:variants.length});await pause();}
+     if(++previewProposals%8===0){if(!workerBatch)onProgress({stage,completed:previewProposals,total:variants.length});await pause();}
     }
+    workerBatch=null;
     let selected;
     if(refillOnly){
      const leaders=selectProfileLeaders(previews,Math.max(24,width*8),gainTolerance),middle=[],baseline=pilotScore(best.ids);
+     if(runRefinements){
+      workerBatch=await prepareWorkerBatch(runRefinements,leaders.map(row=>row.ids),{full:samples},stage,{count:pilotSamples});
+      if(cancelled())return null;
+     }
      for(let i=0;i<leaders.length;i++){
       if(cancelled())return null;
       const value=pilotScore(leaders[i].ids);if(value)middle.push(value);
-      if(i%4===3){onProgress({stage,completed:i+1,total:leaders.length});await pause();}
+      if(i%4===3){if(!workerBatch)onProgress({stage,completed:i+1,total:leaders.length});await pause();}
      }
+     workerBatch=null;
      for(const value of middle){if(order(value,baseline)<0)previewImprovements.set(idKey(value.ids),value);else previewImprovements.delete(idKey(value.ids));}
      selected=selectProfileLeaders(middle,width*2,gainTolerance);
     }else selected=selectRepresentatives(previews,{tolerance:gainTolerance,signature,limit:width*2,requiredIds:best.ids}).selected;
     screenedVariants=selected.map(row=>row.ids);
     previewRetained+=screenedVariants.length;
-   }else screenedVariants.push(...variants);
+   }else screenedVariants=variants;
+   if(runRefinements&&screenedVariants.length){
+    const allowance=gainTolerance?refinementEvaluationLimit-(precisionEvaluations-precisionBeforeRefinement):Infinity;
+    workerBatch=await prepareWorkerBatch(runRefinements,screenedVariants,{full:samples},stage,{allowance,stopOnHpFailure:best.feasible});
+    if(cancelled())return null;
+   }
    for(let i=0;i<screenedVariants.length;i++){
     if(cancelled())return null;
     const value=precise(screenedVariants[i]);if(value&&order(value,best)<0)improvements.set(idKey(value.ids),value);if(value&&order(value,next)<0)next=value;
-    if(i%2===1||i===screenedVariants.length-1){onProgress({stage,completed:i+1,total:screenedVariants.length});await pause();}
+    if(i%2===1||i===screenedVariants.length-1){if(!workerBatch)onProgress({stage,completed:i+1,total:screenedVariants.length});await pause();}
    }
+   workerBatch=null;
    if(previewImprovements.size>1){
     const batch=composeEdits(best,previewImprovements.values());
     if(idKey(batch)!==idKey(best.ids)){previewBatchChecks++;const value=precise(batch);if(value&&order(value,next)<0)next=value;}
@@ -499,24 +552,9 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   // effects. Rebuild complete proposals from ALL recorded candidates using
   // stable fine-step prefixes, extending unstable rankings before construction.
   // Complete finalists still use the declared full matrix and objective.
-  // Small and warm searches avoid worker startup and data transfer.
-  const minWorkerPlans=32;
-  if(runSeeds&&candidates.length>=minWorkerPlans){
-   const uncached=new Map();
-   for(const row of candidates){
-    const ids=normalize([...required,row.id]),key=ids.join(','),cost=price(ids);
-    const pilotKey=key+'|'+pilotSamples+'|'+dt;
-    if(cost!==null&&cost<=setup.spBudget&&retained(ids)&&legal(ids)&&
-       !scoreCache.has(pilotKey)&&!measurements?.hasScore(pilotKey+'|'+(pilotSamples===samples)))uncached.set(key,ids);
-   }
-   if(uncached.size>=minWorkerPlans){
-    workerSeeds=await runSeeds({plans:[...uncached.values()],records,setup,baselineIds,nativeIds:chart.nativeIds,sampling:seedSampling,dt},
-     (completed,total)=>onProgress({stage:'screening',completed,total}));
-    if(cancelled())return null;
-    workerDrawHits=workerSeeds?.drawHits??0;
-    if(requestMetrics)requestMetrics.seedWorkers={count:workerSeeds?2:0,plans:workerSeeds?uncached.size:0,fallback:!workerSeeds};
-   }
-  }
+  if(runSeeds)workerBatch=await prepareWorkerBatch(runSeeds,candidates.map(row=>[...required,row.id]),seedSampling,'screening');
+  if(cancelled())return null;
+  workerDrawHits=workerBatch?.drawHits??0;
   const preciseSingles=[];
   for(let i=0;i<candidates.length;i++){
    if(cancelled())return null;
@@ -526,9 +564,9 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
     seedResolutions[value.sampling.count]=(seedResolutions[value.sampling.count]||0)+1;
     preciseSingles.push({...value,id:row.id});
    }
-   if(i%5===4||i===candidates.length-1){if(!workerSeeds)onProgress({stage:'screening',completed:i+1,total:candidates.length});await pause();}
+   if(i%5===4||i===candidates.length-1){if(!workerBatch)onProgress({stage:'screening',completed:i+1,total:candidates.length});await pause();}
   }
-  workerSeeds=null;
+  workerBatch=null;
   const gain=[...preciseSingles].sort(gainOrder),efficiency=[...preciseSingles].sort((a,b)=>(b.gain-baseline.gain)/Math.max(1,b.cost-baseline.cost)-(a.gain-baseline.gain)/Math.max(1,a.cost-baseline.cost)||gainOrder(a,b));
   exchangeAdditions=[...new Set([...efficiency,...gain].map(row=>row.id))];
   const constructive=await greedySeeds([efficiency,gain],gainTolerance?pilotScore:finalScore,'stabilization');if(!constructive)return null;
