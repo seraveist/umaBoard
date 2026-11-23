@@ -221,3 +221,42 @@ test('scheduled rank crossings and spurt gates retain exact frames, overrides an
   assert.equal(Number.isFinite(first('full')),fullSpurt);
  }
 });
+
+test('encounter scheduling preserves point crossings, live durations, preconditions and alternative triggers',()=>{
+ const nearby=atom('near_count',3),blocked=atom('blocked_front',1,'==');
+ const skills=[
+  skill('crowded','target_speed',1500,[[nearby,atom('accumulatetime',5)]]),
+  skill('multiple','acceleration',1200,[[nearby,blocked]]),
+  skill('pre','target_speed',900,[[atom('distance_rate',75)]]),
+  skill('either','heal',50,[[nearby],[atom('remain_distance',120,'<=')]]),
+  skill('outside','target_speed',800,[[atom('near_count',0,'==')]]),
+  skill('duel','target_speed',900,[[atom('compete_fight_count',1)]]),
+  skill('duration','target_speed',700,[[atom('blocked_front_continuetime',1)]])
+ ];
+ skills[2].invocations[0].precondition=[[nearby]];
+ const crowd=[{start:120.01,end:120.02,value:3},{start:140,end:160,value:2},{start:240,end:280,value:3}];
+ const front=[{start:235,end:280,value:1}];
+ for(const near_count of [[],crowd,undefined]){
+  const raceContext={coherentRanks:true,rankTimeline:[{distance:0,rank:4}],conditions:{near_count:3},
+   encounterWindows:{blocked_front:front,compete_fight_count:[{start:830,end:860,value:1}],...(near_count?{near_count}:{})}};
+  const input={...setup,raceContext},compiled=skills.map(raw=>compileChartSkill(raw,input));
+  const options={dt:.05,keepTrace:false,branchSampler:branchSampler(input,[],0)};
+  const actual=simulateSolo(input,compiled,.5,options);
+  assert.deepEqual(actual,simulateSolo(input,compiled,.5,{...options,scheduleConditions:false}));
+  const duel=event(actual,'duel')[0];assert.ok(duel.x>=830&&duel.x<860);
+  const simultaneous=event(actual,'multiple')[0];
+  if(near_count===crowd)assert.ok(simultaneous.x>=240&&simultaneous.x<280);
+  if(near_count?.length===0)assert.equal(event(actual,'crowded').length,0);
+ }
+});
+
+test('constant-speed scheduling preserves every position and compact finish probes at slopes and HP boundaries',()=>{
+ const input={...setup,course:{...course,slopes:[{start:190,length:60,slope:12000},{start:690,length:90,slope:-10000}]},
+  spurtPolicy:SPURT_POLICY,stats:{...setup.stats,stamina:20}};
+ const skills=[skill('mid','current_speed',1500,[[atom('distance_rate',45)]]),
+  skill('late','heal',150,[[atom('remain_distance',180,'<=')]])].map(raw=>compileChartSkill(raw,input));
+ for(const dt of [.01,.05])for(const comparisonTime of [null,10,999]){
+  const options={dt,keepTrace:false,fullSpurt:true,comparisonTime,branchSampler:branchSampler(input,[],2)};
+  assert.deepEqual(simulateSolo(input,skills,.5,options),simulateSolo(input,skills,.5,{...options,scheduleConditions:false}));
+ }
+});
