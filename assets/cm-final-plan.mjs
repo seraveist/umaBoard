@@ -106,7 +106,7 @@ export class FinalRaceSession{
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},session=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},onPurchaseList=null,session=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
  onPhase('prepare');
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  setup.externalDomains=contextDomains(data);
@@ -206,6 +206,22 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   if(count===samples&&step===dt)fullScores.set(idKey(ids),score);
   return score;
  };
+ function purchaseList(ids){
+  const priced=purchase.selection(ids),allocated=new Set();
+  const groups=evolutionGroups(data,setup,planningRows.filter(row=>ids.includes(row.id)&&!owned.includes(row.id)&&row.rarity==='evolution'));
+  const purchaseIds=new Set(ids.filter(id=>!chart.nativeIds.includes(id)&&!owned.includes(id)).map(id=>data.skills[id].rarity==='evolution'?(planningRows.find(row=>row.id===id)?.evolutionBaseId||data.evolution_rules.find(r=>r.evolved_id===id)?.base_id):id).filter(id=>!owned.includes(id)));
+  const purchases=planningRows.filter(row=>purchaseIds.has(row.id)&&row.rarity!=='evolution').map(row=>{
+   const stageIds=new Set((purchase.chain(row.id)||[]).map(stage=>stage.id));
+   const stages=priced.stages.filter(stage=>stageIds.has(stage.id)&&!allocated.has(stage.id));stages.forEach(stage=>allocated.add(stage.id));
+   return {...row,transformation:purchase.transforms.get(row.id)||null,cost:stages.reduce((sum,stage)=>sum+stage.cost,0),stages:stages.map(stage=>({...stage,name:data.skills[stage.id].name_jp})),hintLevel:hint(states[row.id])??0};
+  });
+  return {priced,purchases,groups};
+ }
+ function summarizePurchases(score,{priced,purchases,groups}){
+  return {used:priced.used,budget:setup.spBudget,gain:score.gain,samples:score.sampling.count,
+   hpSuccesses:score.hpSuccesses,purchases:purchases.map(row=>({id:row.id,cost:row.cost})),
+   evolutions:[...groups.outfit,...groups.scenario].map(row=>row.id)};
+ }
  const order=compareRacePlans;
  const evaluated=new Map(),coarseLimit=Math.max(evaluationLimit,1+3*candidates.length);let quickLimit=coarseLimit,coarseLimitReached=false;
  const quick=ids=>{const key=idKey(normalize(ids));if(!evaluated.has(key)){
@@ -439,6 +455,14 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   const value=evaluate(ids,refillSamples,dt,false,'pilot');refillMemo.set(key,value);if(value)refillEvaluations++;
   return value;
  };
+ if(onPurchaseList&&method!=='exhaustive'&&ranked.length){
+  // Measure the provisional winner on the final matrix. Keep this read outside
+  // evaluate() so that emitting an update cannot promote a plan or spend a slot.
+  const leader=ranked[0],measure=()=>evaluator.evaluate(leader.ids,samples,dt,{scenarioPriorities:true});
+  const key=idKey(leader.ids)+'|'+samples+'|'+dt+'|true';
+  const measured=measurements?measurements.score(key,measure):measure();
+  onPurchaseList('preview',summarizePurchases(measured,purchaseList(leader.ids)));
+ }
  onPhase('precisionSeeds');
  if(method!=='exhaustive')evaluator.beginSeedComparisons();
  const seedResolutions={};
@@ -534,14 +558,8 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
    if(added.length||removed.length)scenarioAlternatives.push({scenario,label:selected.label,added,removed,cost:selected.cost,gain:selected.gain,hpSuccessRate:selected.hpSuccessRate});
   }
  }
- const priced=purchase.selection(best.ids),allocated=new Set();
- const groups=evolutionGroups(data,setup,planningRows.filter(row=>best.ids.includes(row.id)&&!owned.includes(row.id)&&row.rarity==='evolution'));
- const purchaseIds=new Set(best.ids.filter(id=>!chart.nativeIds.includes(id)&&!owned.includes(id)).map(id=>data.skills[id].rarity==='evolution'?(planningRows.find(row=>row.id===id)?.evolutionBaseId||data.evolution_rules.find(r=>r.evolved_id===id)?.base_id):id).filter(id=>!owned.includes(id)));
- const purchases=planningRows.filter(row=>purchaseIds.has(row.id)&&row.rarity!=='evolution').map(row=>{
-  const stageIds=new Set((purchase.chain(row.id)||[]).map(stage=>stage.id));
-  const stages=priced.stages.filter(stage=>stageIds.has(stage.id)&&!allocated.has(stage.id));stages.forEach(stage=>allocated.add(stage.id));
-  return {...row,transformation:purchase.transforms.get(row.id)||null,cost:stages.reduce((sum,stage)=>sum+stage.cost,0),stages:stages.map(stage=>({...stage,name:data.skills[stage.id].name_jp})),hintLevel:hint(states[row.id])??0};
- });
+ const {priced,purchases,groups}=purchaseList(best.ids);
+ if(onPurchaseList)onPurchaseList('confirmed',summarizePurchases(best,{priced,purchases,groups}));
  const finalSkills=best.ids.map(id=>{const row=planningRows.find(row=>row.id===id)||{...data.skills[id],name:data.skills[id].name_jp,description:data.skills[id].description_jp};return {...row,origin:chart.nativeIds.includes(id)?'native':owned.includes(id)?'owned':data.skills[id].rarity==='evolution'?'evolution':'purchase'};});
  const scenarioEvolutionCount=best.ids.filter(id=>data.evolution_rules.some(r=>r.evolved_id===id&&r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)).length;
  const marginalContributions={},winnerKey=idKey(best.ids)+'|'+samples+'|'+dt;

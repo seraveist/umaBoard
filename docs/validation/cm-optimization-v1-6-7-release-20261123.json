@@ -1,0 +1,203 @@
+{
+  "id": "umaboard-optimization-v1",
+  "version": "v1",
+  "revision": 6,
+  "name": "최적화 알고리즘 v1",
+  "date": "2026-11-23 Asia/Seoul",
+  "baseCommit": "36d90143ef572686c8b6c06245e6d0bcf873ff91",
+  "models": {
+    "chart": "cm-first-chart-v15",
+    "final": "cm-post-training-v19",
+    "solo": "solo-comparison-v8"
+  },
+  "entrypoints": [
+    "assets/cm-chart.mjs",
+    "assets/cm-final-plan.mjs",
+    "assets/cm-acceleration-plan.mjs"
+  ],
+  "parentRelease": {
+    "path": "docs/validation/cm-optimization-v1-6-6-release-20261119.json",
+    "textSha256": "a1330d61e0cada3ffe7ca3d971a9e14f0e3c747534d9eb616fac75a5717920d3"
+  },
+  "parentBaseline": {
+    "path": "docs/validation/cm-algorithm-v1-baseline-20261118.json",
+    "textSha256": "80010914a59c4b662b69c117fb34e549a7e3947ab64e6de5d8713f0b0a6b9a4f"
+  },
+  "priorAudit": {
+    "path": "docs/validation/cm-optimization-v1-fast-summary-20261118.json",
+    "textSha256": "e985b63a88ab9066883d7a64badcbef2a3ff0007aab9955a8dcfffda5e423932"
+  },
+  "authorizedChanges": [
+    "assets/cm-chart.mjs",
+    "assets/cm-final-plan.mjs"
+  ],
+  "modules": [
+    {
+      "path": "assets/acquisition-constraints.mjs",
+      "textSha256": "538c827afc9fd955eb2a0dab798623bb1cdc85f7a2dee5a2181c596961481abd"
+    },
+    {
+      "path": "assets/acquisition-rules.mjs",
+      "textSha256": "12b942ec6bcb7782739e132e3b3a00b7bf12ac500cd858422f101582cb5ca281"
+    },
+    {
+      "path": "assets/activation.mjs",
+      "textSha256": "889475887084c88f27b16da2d039dc7d955e422ab86bd38dfd859df955d84798"
+    },
+    {
+      "path": "assets/candidates.mjs",
+      "textSha256": "dd430b393a8d713f98f9600047ff17631dec0189dc4fb96ee7e02ba34a862da4"
+    },
+    {
+      "path": "assets/cm-acceleration-plan.mjs",
+      "textSha256": "358227a867e2d5347e049259a9230184a27397a1db093fe994e58c0b8706dda2"
+    },
+    {
+      "path": "assets/cm-chart.mjs",
+      "textSha256": "679430beb46cf6c3d85e1ee98cb1165551cce78ca5d29c72bd1856cb5963db89"
+    },
+    {
+      "path": "assets/cm-course-metadata.mjs",
+      "textSha256": "b542490433b4415d2d7ccf8940b1a4d5f5bbe8afc5093a1d5f25efc478125e72"
+    },
+    {
+      "path": "assets/cm-discounts.mjs",
+      "textSha256": "67e6360f5f90c21df23f28918b82c548ccd46e8dfff8462aab3edddb4ec61f69"
+    },
+    {
+      "path": "assets/cm-effect-policy.mjs",
+      "textSha256": "41e8f6ad4ad2f7b47ac6d050ae10c839d2b104d805dde982d00012ca0c5aa415"
+    },
+    {
+      "path": "assets/cm-event-constraints.mjs",
+      "textSha256": "7cb048b0c75442eecaadecadc57842f1882a54f6fd568e144459a47d164aab97"
+    },
+    {
+      "path": "assets/cm-evolution.mjs",
+      "textSha256": "06d0bb584841aa60421456c732f04f1ff642274c77e36e3c87c9658960a43e50"
+    },
+    {
+      "path": "assets/cm-final-plan.mjs",
+      "textSha256": "25b3174aedca8d75c3850171d208c68a52c0e90dfbca7f8cbd8227d4f90fe933"
+    },
+    {
+      "path": "assets/cm-icons.mjs",
+      "textSha256": "bdcefba95047523d080dc063a22587fa1974b72dbd95c3a37d691991319299f5"
+    },
+    {
+      "path": "assets/cm-plan-compression.mjs",
+      "textSha256": "08fdd29d917791c197b39348451400e4a04170910f60140fdb3bd124beb195da"
+    },
+    {
+      "path": "assets/cm-ranks.mjs",
+      "textSha256": "aa48af5b79c75bdfc6f670f3b3ad28d13209afdaac453c0c86d7d5709c1feef6"
+    },
+    {
+      "path": "assets/cm-recommendation.mjs",
+      "textSha256": "650f15081d68b8af8e2c079b65cd8b052ab301bc63f0f165d28ffc45469ccbad"
+    },
+    {
+      "path": "assets/cm-search.mjs",
+      "textSha256": "316dc9d40fefdf11766a65db039b14a1a92049b1f6923cd2f17d6541d6d39537"
+    },
+    {
+      "path": "assets/cm-state.mjs",
+      "textSha256": "6d7612ab9ccf21cc1b07c15237ffbd3173cd29fff9e795bd5370c3387c368ba5"
+    },
+    {
+      "path": "assets/cm-strategy.mjs",
+      "textSha256": "0b0e67a04bd9b5ea90feebc224b7dde0cfd0da3ac136f5f39becb01715734c3a"
+    },
+    {
+      "path": "assets/condition-windows.mjs",
+      "textSha256": "8f40f511f308f88a5927bfed7105f0a4a527c71e77d2344a7eff41e17e6b2ee1"
+    },
+    {
+      "path": "assets/physics.mjs",
+      "textSha256": "2294a90c1dfffd9a49e12d8e272f35a6ca4ea6a2b3b2e6a9398dc68105284d13"
+    },
+    {
+      "path": "assets/purchases.mjs",
+      "textSha256": "802b8bcb17bf6688f65bb6ca1b628fd2d08bc42d5e0246e2b23004a581538d1f"
+    },
+    {
+      "path": "assets/race-evaluation.mjs",
+      "textSha256": "b8e08c0d8cf5ce52cbe4813a1185084ed743c4b3685547812df3ef3413bc12bc"
+    },
+    {
+      "path": "assets/race-frame.mjs",
+      "textSha256": "bfe4fb7d1b05a79d3cff6f916b31fae2b1941ca09c565459fd383b2f2fd07430"
+    },
+    {
+      "path": "assets/race-objective.mjs",
+      "textSha256": "c4e5fc4ae68eef8a5296240c8a1172facbc4e50cc4266b3c44f36017a19c7a3b"
+    },
+    {
+      "path": "assets/race-sampling.mjs",
+      "textSha256": "49f26515366767b5a8244436a46c1b81918b712ea5099f0af015994e7e7d261e"
+    },
+    {
+      "path": "assets/race-scenarios.mjs",
+      "textSha256": "9c2d5324f0955b75f93d75838e372ff281b776a165e4ffc6d73839478c3f9d1c"
+    },
+    {
+      "path": "assets/result-policy.mjs",
+      "textSha256": "adb6969d36e59edcaee1f1321e61ebbb1cb43ae2bf15d3c6d52fc61ead327df1"
+    },
+    {
+      "path": "assets/reviewed-course-geometry.mjs",
+      "textSha256": "42d7a39e43d55791b95732d80f7bec36931c94b90de0d1856e5c72ca08f44ed6"
+    },
+    {
+      "path": "assets/selection.mjs",
+      "textSha256": "0f806b51a94bbe50f7b145347088a78460f14724ee4eb99ee57b43463018d3f2"
+    },
+    {
+      "path": "assets/skill-context.mjs",
+      "textSha256": "0279135d82bcd5cde56834cef098f17919a664b1dbd051df5bbd7d75d11ba2b1"
+    },
+    {
+      "path": "assets/skill-dependencies.mjs",
+      "textSha256": "9f6a106f2abb2170590d2a74bf3493d1a6156ce8f07604944735cc65a2930358"
+    },
+    {
+      "path": "assets/skill-transforms.mjs",
+      "textSha256": "a9b530e644b3b5b60d8edefa1e5ce46dcba840a9711bc48acc293aa896bb73fc"
+    },
+    {
+      "path": "assets/solo.mjs",
+      "textSha256": "2ae8c5c4ed9b4c21b3c8bbd21bd2b6a05f7ddb451dab2ece90970846e677e7b2"
+    },
+    {
+      "path": "assets/spurt-planning.mjs",
+      "textSha256": "bd89bf94f0c42275ff537e3e128d8041ad732338623b3542f6227be8cde4197f"
+    }
+  ],
+  "coreSha256": "7510628608c80ede227adafd235b2510774d329bae23262b481ae30ab8ead23d",
+  "scope": "Exact chart observation reuse and progressive purchase lists. Provisional plans are measured with final resolution and excluded from search decisions. Confirmed purchases precede marginal diagnostics.",
+  "inputs": [
+    {
+      "path": "docs/validation/cm-launch-manifest-20261119.json",
+      "textSha256": "c7324ca202c8631317673ead7e7e6840b92cee5c2095cfaae010611cb18bf01b"
+    },
+    {
+      "path": "data/bundles/59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a/dataset.json",
+      "textSha256": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a"
+    },
+    {
+      "path": "curated/planning.json",
+      "textSha256": "661d715ec11710685d377764aa256187d17376d4371e0d51988da3d968b744b4"
+    }
+  ],
+  "patch": 7,
+  "reviewEvidence": [
+    {
+      "path": "scripts/audit_cm_v1_6.mjs",
+      "textSha256": "804c9f36fce58ef04de86b9802c8b067c6a15d013c56a5a6fe00f4fbc77bfe55"
+    },
+    {
+      "path": "docs/validation/cm-v1-6-review-20261119.json",
+      "textSha256": "9a44d37ba9b51e4cfdc8c9aaa15463300a6f6b8e5a3d3829a3304dcb33d963e1"
+    }
+  ]
+}

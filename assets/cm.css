@@ -219,3 +219,6 @@ dialog{padding:0;border:0;border-radius:var(--radius);background:var(--surface);
 
 .checklist-subtitle{margin:4px 0 0;font-size:11px;color:var(--muted)}
 .inheritance-note label{display:inline-flex;align-items:center;gap:6px;margin-inline-start:16px;cursor:pointer}.inheritance-note input{width:16px;height:16px;min-height:16px;accent-color:var(--primary)}
+
+.purchase-progress-list{padding-inline-start:1.25rem;columns:2 15rem}
+.purchase-progress-list li{break-inside:avoid;margin-block:.25rem}

@@ -224,7 +224,7 @@ function setupWorker(){
    notice();renderRows();
    const retained=new Set();let trimmed=false;for(const row of allChecklistRows())if(row.inherited&&states[row.id]!=='unavailable'){const origin=row.inheritanceOriginId??inheritedOrigin(row.id);if(!retained.has(origin)&&retained.size>=INHERITED_LIMIT){states[row.id]='unavailable';trimmed=true;}else retained.add(origin);}
    if(draft.plans[currentPlan]){draft.plans[currentPlan].states=states;saveDraft();}
-   renderRows();$('#draft-status').textContent=trimmed?'계승은 6개만 복원했습니다.':'';
+   renderRows();$('#draft-status').textContent=[message.restored?'저장된 마신표를 불러왔습니다.':'',trimmed?'계승은 6개만 복원했습니다.':''].filter(Boolean).join(' ');
    accelerationPanel?.render(result.accelerationPlan);accelerationPanel?.updateAcquisition(rows,states);finalPlanner?.setChart(result,states,currentPlan);
    workflow.setContext(umaName(data.outfits[result.setup.outfitId]),`${data.outfits[result.setup.outfitId].outfit_name_jp} · ${['','도주','선행','선입','추입'][result.setup.style]} · ${trackLabels[result.setup.course.track_id]} ${result.setup.course.surface===1?'잔디':'더트'} ${result.setup.course.distance.toLocaleString('ko-KR')}m · SSR ${result.setup.supportIds.length}장`);
    workflow.setChartState('ready');
@@ -234,7 +234,7 @@ function setupWorker(){
   }
  };
  worker.onerror=()=>{stopCalculation(false);notice('계산 작업을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.',true);};
- worker.postMessage({type:'load',requestId:0,payload:{data,profiles,display}});
+ worker.postMessage({type:'load',requestId:0,payload:{data,profiles,display,dataVersion:manifest.active_version}});
 }
 async function loadJson(path){const response=await fetch(path);if(!response.ok)throw new Error(`${path}: ${response.status}`);return response.json();}
 async function start(){

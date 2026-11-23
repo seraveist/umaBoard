@@ -29,10 +29,16 @@ jobs:
           cp data/manifest.json "$RUNNER_TEMP/live-manifest.json"
           trap 'cp "$RUNNER_TEMP/live-manifest.json" data/manifest.json' EXIT
           cp docs/validation/cm-launch-manifest-20261119.json data/manifest.json
-          node --test tests/*.test.mjs
+          # Portrait provenance follows the live manifest and is checked in the next step.
+          engine_tests=()
+          for file in tests/*.test.mjs; do
+            if [[ "$file" != tests/display.test.mjs ]]; then engine_tests+=("$file"); fi
+          done
+          node --test "${engine_tests[@]}"
       - name: Validate active dataset
         run: |
           python scripts/validate_data.py
+          node --test tests/display.test.mjs
           node --test --test-name-pattern="latest Daring Tact" tests/cm-joint-evolution.test.mjs
       - name: Verify optimization algorithm v1 calculation contract
         run: node scripts/check_cm_algorithm_v1.mjs

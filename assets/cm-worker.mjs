@@ -1,26 +1,44 @@
-import {generateChart,prepareChart,sortChartRows} from './cm-chart.mjs';
+import {generateChart,sortChartRows} from './cm-chart.mjs';
 import {recommendTargetAcceleration} from './cm-acceleration-plan.mjs';
 import {retainedInheritanceCandidates} from './cm-state.mjs';
-let data,profiles,display,job=0;
+import {openChartStorage,chartCatalogVersion} from './cm-chart-storage.mjs';
+let data,profiles,display,storage,catalogVersion,lastChart,job=0;
 const cache=new Map();
+
+function withRecordedInheritance(chart,acquisition){
+ const visible=new Set(chart.rows.map(row=>row.id)),targets=new Set(chart.accelerationPlan.ids);
+ const recorded=new Set(retainedInheritanceCandidates(chart.inheritanceOptions,chart.rows,acquisition).map(row=>row.id));
+ const additions=chart.inheritanceOptions.filter(row=>!visible.has(row.id)&&(targets.has(row.id)||recorded.has(row.id)))
+  .map(row=>({...row,recordedInheritance:recorded.has(row.id)}));
+ const rows=additions.length?sortChartRows([...chart.rows,...additions],data,display):chart.rows;
+ return {...chart,rows:rows.map(row=>row.inherited&&targets.has(row.id)?{...row,targetInheritance:true}:row)};
+}
+
 self.onmessage=async({data:message})=>{
  const {type,requestId,payload}=message;
- if(type==='load'){({data,profiles,display}=payload);cache.clear();self.postMessage({type:'loaded',requestId});return;}
+ if(type==='load'){
+  job++;({data,profiles,display}=payload);cache.clear();lastChart=null;
+  catalogVersion=chartCatalogVersion(payload.dataVersion,profiles,display,import.meta.url).catch(()=>null);
+  storage=openChartStorage();self.postMessage({type:'loaded',requestId});return;
+ }
  if(type==='cancel'){job++;return;}
  if(type!=='generate')return;
- const current=++job;
+ const current=++job,cancelled=()=>current!==job;
  try{
-  const result=await generateChart(data,profiles,display,payload,{cache,cancelled:()=>current!==job,
-   onProgress:progress=>{if(current===job)self.postMessage({type:'progress',requestId,progress});}});
-  if(current===job&&result){
-   result.accelerationPlan=await recommendTargetAcceleration(data,result,{cancelled:()=>current!==job,
-    onProgress:progress=>{if(current===job)self.postMessage({type:'progress',requestId,progress:{...progress,rows:result.rows}});}});
-   if(current!==job||!result.accelerationPlan)return;
-   const task=prepareChart(data,profiles,display,payload),extra=result.accelerationPlan.ids.filter(id=>data.skills[id]?.inherited&&!result.rows.some(row=>row.id===id));
-   const recorded=retainedInheritanceCandidates(task.rows,result.rows,payload.acquisition),additions=new Map([...task.rows.filter(row=>extra.includes(row.id)),...recorded].map(row=>[row.id,row]));
-   if(additions.size)result.rows=sortChartRows([...result.rows,...[...additions.values()].map(row=>({...task.evaluate(row),recordedInheritance:recorded.some(r=>r.id===row.id)}))],data,display);
-   result.rows=result.rows.map(row=>row.inherited&&result.accelerationPlan.ids.includes(row.id)?{...row,targetInheritance:true}:row);
+  const {acquisition,...input}=payload,version=await catalogVersion,db=await storage;
+  const key=JSON.stringify([version,input]);
+  let chart=lastChart?.key===key?lastChart.chart:version&&await db?.read(key);
+  const restored=!!chart;
+  if(cancelled())return;
+  if(!chart){
+   const onProgress=progress=>{if(!cancelled())self.postMessage({type:'progress',requestId,progress});};
+   chart=await generateChart(data,profiles,display,input,{cache,cancelled,onProgress});
+   if(cancelled()||!chart)return;
+   chart.accelerationPlan=await recommendTargetAcceleration(data,chart,{cancelled,onProgress:progress=>onProgress({...progress,rows:chart.rows})});
+   if(cancelled()||!chart.accelerationPlan)return;
+   if(version)void db?.write(key,chart);
   }
-  if(current===job&&result)self.postMessage({type:'result',requestId,result});
- }catch(error){if(current===job)self.postMessage({type:'error',requestId,message:error.message});}
+  lastChart={key,chart};
+  self.postMessage({type:'result',requestId,result:withRecordedInheritance(chart,acquisition),restored});
+ }catch(error){if(!cancelled())self.postMessage({type:'error',requestId,message:error.message});}
 };

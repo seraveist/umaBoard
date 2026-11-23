@@ -88,6 +88,10 @@
   <nav id="post-view-tabs" class="post-view-tabs" role="tablist" aria-label="최종 구매 작업 영역" hidden><button id="post-view-record" type="button" role="tab" aria-selected="true" aria-controls="finish-checklist-slot" tabindex="0">스킬 기록</button><button id="post-view-result" type="button" role="tab" aria-selected="false" aria-controls="post-result-panel" tabindex="-1">추천 결과</button></nav>
   <div class="finish-grid"><div id="finish-checklist-slot"></div><section id="post-result-panel" class="final-panel" aria-label="최종 스킬 추천 결과">
         <div id="final-empty" class="final-empty"><h2>추천 구매 목록</h2></div>
+        <section id="purchase-progress" class="final-result" aria-labelledby="purchase-progress-title" hidden>
+          <h3 id="purchase-progress-title" tabindex="-1"></h3><p id="purchase-progress-summary" class="final-help"></p>
+          <ul id="purchase-progress-list" class="purchase-progress-list"></ul>
+        </section>
         <section id="final-result" class="final-result" aria-labelledby="final-result-title" hidden>
           <div class="final-result-heading"><div><h3 id="final-result-title" tabindex="-1">최종 스킬 추천</h3><span id="final-result-state"></span></div><button id="final-export" type="button" class="button subtle" disabled>추천 저장</button></div>
           <dl class="final-totals"><div><dt>추가 구매 SP</dt><dd><span id="final-used">0</span> <small>/ <span id="final-budget">0</span></small></dd></div><div><dt>남는 SP</dt><dd id="final-remaining">0</dd></div><div><dt>현재 습득 대비 평균 마신</dt><dd><span id="final-gain">0.00</span></dd></div></dl>

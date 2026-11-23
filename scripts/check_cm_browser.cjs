@@ -56,9 +56,17 @@ async function main() {
     window.Worker=class extends NativeWorker{
       constructor(...args){
         super(...args);
+        this.chartWorker=String(args[0]).includes('cm-worker.mjs');
         this.finalPlanner=String(args[0]).includes('cm-final-worker.mjs');
         if(this.finalPlanner)finalUrl=args[0];
         this.addEventListener('message',({data})=>{
+          if(this.chartWorker&&data.type==='result'){
+            window.cmChartRestored=data.restored;
+            window.cmChartDigest=crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(data.result))).then(hash=>Array.from(new Uint8Array(hash)));
+          }
+          if(this.finalPlanner&&data.type==='purchases'){
+            window.cmPurchaseStages[data.stage]={ms:performance.now()-this.started,summary:data.summary};
+          }
           if(this.finalPlanner&&data.type==='result'){
             window.cmSearchTimings=data.timings;window.cmCompleted={plan:data.result,cache:data.cache};
           }
@@ -67,7 +75,7 @@ async function main() {
       postMessage(message,...options){
         if(this.finalPlanner){
           if(message.type==='load')loadPacket=message;
-          if(message.type==='recommend')recommendPacket=message;
+          if(message.type==='recommend'){recommendPacket=message;this.started=performance.now();window.cmPurchaseStages={};}
         }
         return super.postMessage(message,...options);
       }
@@ -92,8 +100,17 @@ async function main() {
     await page.locator('#generate').click();
     await waitResult('#stage-finish','#cm-notice',18*60*1000);
     metrics.chartSeconds=(Date.now()-start)/1000;
+    assert.equal(await page.evaluate(()=>window.cmChartRestored),false);
+    const chartDigest=await page.evaluate(()=>window.cmChartDigest);
     assert.equal(await page.locator('#target-acceleration').isVisible(),true);
     await page.screenshot({path:path.join(out,'chart.png')});
+    await page.reload();
+    start=Date.now();
+    await page.locator('#generate').click();
+    await waitResult('#stage-finish','#cm-notice',18*60*1000);
+    metrics.restoredChartSeconds=(Date.now()-start)/1000;
+    assert.equal(await page.evaluate(()=>window.cmChartRestored),true);
+    assert.deepEqual(await page.evaluate(()=>window.cmChartDigest),chartDigest);
     await page.locator('#stage-finish').click();
     assert.equal(await page.locator('#actual-sp').inputValue(),'7000');
     assert.equal(await page.locator('#actual-speed').inputValue(),String(stats.speed));
@@ -105,18 +122,39 @@ async function main() {
     assert.equal(await page.locator('#final-export').isDisabled(),true);
     start=Date.now();
     await page.locator('#final-submit').click();
+    if(!small){
+      for(const heading of ['예비 구매 목록','확정 구매 목록']){
+        await page.waitForFunction(title=>{
+          const error=document.querySelector('#final-error').textContent.trim();if(error)throw Error(error);
+          return document.querySelector('#purchase-progress-title').textContent===title&&document.querySelector('#purchase-progress').getClientRects().length>0;
+        },heading,{timeout:38*60*1000});
+        assert.equal(await page.locator('#final-export').isDisabled(),true);
+      }
+    }
     await page.waitForFunction(()=>{
       const err=document.querySelector('#final-error');
       if (!err.hidden && err.textContent.trim()) throw Error(err.textContent);
       return !document.querySelector('#final-export').disabled;
     },null,{timeout:38*60*1000});
     metrics.recommendSeconds=(Date.now()-start)/1000;
+    const stages=await page.evaluate(()=>window.cmPurchaseStages);
+    if(!small){
+      assert.ok(stages.preview.ms<stages.confirmed.ms);
+      assert.ok(stages.preview.summary.used<=7000);assert.equal(stages.preview.summary.samples,stages.confirmed.summary.samples);
+    }
+    metrics.previewSeconds=stages.preview?.ms/1000||null;
+    metrics.confirmedSeconds=stages.confirmed.ms/1000;
+    if(stages.preview)metrics.preview={used:stages.preview.summary.used,gain:stages.preview.summary.gain,samples:stages.preview.summary.samples};
     metrics.phaseMilliseconds=await page.evaluate(()=>window.cmSearchTimings);
     assert.ok(metrics.phaseMilliseconds?.diagnostics>=0);
     metrics.firstCache=await page.evaluate(()=>window.cmCompleted.cache);
     const download=page.waitForEvent('download');
     await page.locator('#final-export').click();
     const file=await (await download).path(),plan=read(file);
+    assert.equal(stages.confirmed.summary.used,plan.budget.used);
+    assert.equal(stages.confirmed.summary.gain,plan.gain);
+    assert.deepEqual(stages.confirmed.summary.purchases,plan.purchases.map(({id,cost})=>({id,cost})));
+    assert.deepEqual(stages.confirmed.summary.evolutions,[...plan.evolutions.outfit,...plan.evolutions.scenario].map(row=>row.id));
     assert.equal(plan.dataVersion,manifest.active_version);
     assert.ok(plan.acquisitionValidation.feasible && plan.scenarioCoverage.complete);
     if (!small && manifest.active_version===launch.active_version) {

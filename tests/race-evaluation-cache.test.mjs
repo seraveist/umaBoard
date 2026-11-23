@@ -80,3 +80,17 @@ test('seed draws agree with independent runs for missed rolls, possession gates,
  }
  assert.ok(cached.endSeedComparisons()>=8);assert.equal(cached.seedDraws,null);
 });
+
+test('chart draw reuse preserves per-skill activation, popularity bands and all scenario results',()=>{
+ const local={...setup,stats:{...setup.stats,wisdom:900}},skills=compiled(local);
+ const fixed=skills.get('speed').invocations[0];
+ fixed.condition=fixed.condition.map(branch=>({...branch,dynamic:[...branch.dynamic,{field:'popularity',operator:'<=',value:3}]}));
+ const optimized=new RaceEvaluator(local,skills,[],[],createFinalBranchSampler(),{compactComparisons:true,sampleCacheLimit:0});
+ const oracle=new RaceEvaluator(local,skills,[],[],branchSampler);
+ optimized.beginSeedComparisons();
+ for(const id of ['heal','speed']){
+  const options={chartSkillId:id};
+  assert.deepEqual(optimized.evaluate([id],36,.02,options),oracle.evaluate([id],36,.02,options));
+ }
+ assert.ok(optimized.endSeedComparisons()>0);
+});

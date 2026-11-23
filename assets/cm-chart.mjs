@@ -184,7 +184,7 @@ export function branchSampler(setup,nativeIds,sample){
  return sampler;
 }
 
-// One factory belongs to one final-plan evaluator. Each sample has a fixed race
+// One factory belongs to one race evaluator. Each sample has a fixed race
 // context and seed. Possession and live race state are tested later by branchReady.
 export function createFinalBranchSampler(){
  const samples=new Map(),dependencies=new WeakMap(),possessions=new WeakMap();
@@ -283,7 +283,11 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
   rarity:s.rarity,inherited:s.inherited,inheritanceOriginId:setup.inheritanceOrigins[s.id]||null,categories:s.categories,routes:s.routes||[],providers:s.inheritance_outfit_ids||[],calculationNotes:compiled.get(s.id).calculationNotes,recommendation:styleRecommendation(s,compiled.get(s.id),setup),
   strategicGoals:goals.filter(goal=>goal.skillIds.includes(s.id)).map(goal=>goal.id),calculationState:compiled.get(s.id).status,assumptions:compiled.get(s.id).assumed,activationProbability:compiled.get(s.id).activationProbability,
   evolutionBaseId:data.evolution_rules.find(r=>r.evolved_id===s.id&&((r.owner_type==='outfit'&&r.owner_id===setup.outfitId)||(r.owner_type==='scenario'&&r.owner_id===setup.scenarioId)))?.base_id||null})),data,display);
- const evaluator=new RaceEvaluator(setup,compiled,referenceIds,nativeIds,branchSampler);
+ // Chart rows all use the same paired reference and sample matrix. An inactive
+ // candidate can reuse an equivalent draw while its own activation count is
+ // still derived from observed event IDs in evaluate().
+ const evaluator=new RaceEvaluator(setup,compiled,referenceIds,nativeIds,createFinalBranchSampler(),{compactComparisons:true,sampleCacheLimit:0});
+ evaluator.beginSeedComparisons();
  return {setup,rows,strategyGoals:goals,nativeIds,referenceIds,comparisonBasis,modelVersion:CM_MODEL_VERSION,samples,dt,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&s.status==='unsupported').map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
