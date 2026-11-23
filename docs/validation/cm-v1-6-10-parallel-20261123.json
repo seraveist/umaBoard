@@ -1,0 +1,161 @@
+{
+  "algorithm": "v1.6.10",
+  "baseCommit": "fd104cd5dddb9111081945a0d722dc9df5aad18d",
+  "dataVersion": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "runtime": "Node.js 24.22.3",
+  "input": {
+    "source": "scripts/check_cm_browser.cjs, full launch fixture",
+    "courseId": "10808",
+    "outfitId": "101301",
+    "style": 2,
+    "recorded": 213,
+    "candidates": 210,
+    "budget": 7000,
+    "otherStats": {
+      "speed": 2200,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "sampleCount": 144,
+    "dt": 0.01,
+    "scenarios": 9
+  },
+  "protocol": "One timed cold run per row and mode, some processes ran concurrently. The serial control used recommendFinalPlan directly. The parallel run included load, the final worker and its two production module worker entries via worker_threads. Both ran all diagnostics; chart preparation and browser rendering were excluded. Times are illustrative. The complete plan JSON compared byte-for-byte after removing only search.sampleReuse, an execution cache counter. Selected IDs, cost, gain and HP were also checked against the v1.6.9 serial fixture at each stamina.",
+  "results": [
+    {
+      "stamina": 1850,
+      "usedSP": 6984,
+      "meanGain": 34.8926350616523,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "finalSeedResolutions": {
+        "36": 11,
+        "72": 170,
+        "144": 29
+      },
+      "fullyEvaluatedPlans": 110,
+      "planSha256WithoutSampleCacheCounters": "c1623f2accc756687ac71176bbe1ebd0a5a6032ad5ef7ed01e6cf78f1ca3aba4",
+      "runs": [
+        {
+          "mode": "serial",
+          "confirmedSeconds": 157.690836546,
+          "diagnosticsCompleteSeconds": 190.88858791,
+          "phasesMs": {
+            "prepare": 220.72516199999995,
+            "coarseSearch": 17010.057148,
+            "precisionSeeds": 76068.720399,
+            "finalists": 34873.596944000004,
+            "refinement": 29508.82314800001,
+            "diagnostics": 33204.626168999996
+          },
+          "sessionMetrics": {
+            "scoreHits": 0,
+            "diagnosticHits": 0,
+            "seedDrawHits": 3283
+          },
+          "mainEvaluatorSampleReuse": {
+            "hits": 12204,
+            "stored": 53460,
+            "limit": 65536
+          }
+        },
+        {
+          "mode": "parallel",
+          "confirmedSeconds": 126.099692127,
+          "diagnosticsCompleteSeconds": 159.82112302099998,
+          "phasesMs": {
+            "prepare": 382.93617699999993,
+            "coarseSearch": 19214.346957,
+            "precisionSeeds": 43550.60382599999,
+            "finalists": 36411.78570400001,
+            "refinement": 26016.011899999998,
+            "diagnostics": 33696.511887
+          },
+          "sessionMetrics": {
+            "scoreHits": 0,
+            "diagnosticHits": 0,
+            "seedWorkers": {
+              "count": 2,
+              "plans": 210,
+              "fallback": false
+            },
+            "seedDrawHits": 3223
+          },
+          "mainEvaluatorSampleReuse": {
+            "hits": 2880,
+            "stored": 36720,
+            "limit": 65536
+          }
+        }
+      ]
+    },
+    {
+      "stamina": 1250,
+      "usedSP": 6984,
+      "meanGain": 28.55724129379955,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "finalSeedResolutions": {
+        "36": 11,
+        "72": 175,
+        "144": 24
+      },
+      "fullyEvaluatedPlans": 194,
+      "planSha256WithoutSampleCacheCounters": "9f4619243da832ae28de0dd356431479f1bee0411f19bcde94a8a45f4ad913ba",
+      "runs": [
+        {
+          "mode": "serial",
+          "confirmedSeconds": 257.07488901199997,
+          "diagnosticsCompleteSeconds": 332.247985148,
+          "phasesMs": {
+            "prepare": 223.007591,
+            "coarseSearch": 16787.959539,
+            "precisionSeeds": 81109.38792400001,
+            "finalists": 37546.329064000005,
+            "refinement": 121397.95067599998,
+            "diagnostics": 75179.655225
+          },
+          "sessionMetrics": {
+            "scoreHits": 0,
+            "diagnosticHits": 0,
+            "seedDrawHits": 3492
+          },
+          "mainEvaluatorSampleReuse": {
+            "hits": 15192,
+            "stored": 65534,
+            "limit": 65536
+          }
+        },
+        {
+          "mode": "parallel",
+          "confirmedSeconds": 225.375013825,
+          "diagnosticsCompleteSeconds": 298.651541255,
+          "phasesMs": {
+            "prepare": 494.6663859999999,
+            "coarseSearch": 18757.281081,
+            "precisionSeeds": 50383.121501,
+            "finalists": 36962.213814,
+            "refinement": 118264.18897199999,
+            "diagnostics": 73246.76414900002
+          },
+          "sessionMetrics": {
+            "scoreHits": 0,
+            "diagnosticHits": 0,
+            "seedWorkers": {
+              "count": 2,
+              "plans": 210,
+              "fallback": false
+            },
+            "seedDrawHits": 3430
+          },
+          "mainEvaluatorSampleReuse": {
+            "hits": 6228,
+            "stored": 56687,
+            "limit": 65536
+          }
+        }
+      ]
+    }
+  ]
+}

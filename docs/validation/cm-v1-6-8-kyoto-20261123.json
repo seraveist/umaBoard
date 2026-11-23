@@ -1,0 +1,210 @@
+{
+  "baseCommit": "a8aeff3106623765b8364faad65b43108a293d97",
+  "dataset": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "fixture": {
+    "source": "scripts/check_cm_browser.cjs",
+    "course": "10808",
+    "style": 2,
+    "records": 213,
+    "spBudget": 7000,
+    "maintainTargetAcceleration": true,
+    "samples": 144,
+    "dt": 0.01,
+    "earlyCrowdWindow": {
+      "start": 0,
+      "end": 180,
+      "value": 3
+    },
+    "node": "24.22.3",
+    "runsPerTiming": 1
+  },
+  "chartAndAcceleration": {
+    "v167": {
+      "soloRuns": 62578,
+      "throughDecisionSeconds": 184.408,
+      "throughDetailsSeconds": 184.408,
+      "outputSha256": "a787d8f283cc27d491adfeddf5d077fb87a9b59890231151cc13f880bc5c42b4"
+    },
+    "v168": {
+      "soloRuns": 62578,
+      "throughDecisionSeconds": 130.216,
+      "throughDetailsSeconds": 130.216,
+      "outputSha256": "a787d8f283cc27d491adfeddf5d077fb87a9b59890231151cc13f880bc5c42b4"
+    }
+  },
+  "budgetSearch": {
+    "v167": {
+      "soloRuns": 58250,
+      "throughDecisionSeconds": 289.826,
+      "throughDetailsSeconds": 351.664,
+      "outputSha256": "e2ba0f7caff6d8a0dd05144dd7c8244206033e787225c22b8e0bc7374aa12059"
+    },
+    "v168": {
+      "soloRuns": 58250,
+      "throughDecisionSeconds": 159.353,
+      "throughDetailsSeconds": 194.232,
+      "outputSha256": "e2ba0f7caff6d8a0dd05144dd7c8244206033e787225c22b8e0bc7374aa12059"
+    },
+    "extendedDrawReuseExperiment": {
+      "soloRuns": 54743,
+      "throughDecisionSeconds": 155.935,
+      "throughDetailsSeconds": 190.845,
+      "outputSha256": "e2ba0f7caff6d8a0dd05144dd7c8244206033e787225c22b8e0bc7374aa12059"
+    },
+    "v168ProtectionOff": {
+      "soloRuns": 58364,
+      "throughDecisionSeconds": 166.1,
+      "throughDetailsSeconds": 200.676,
+      "outputSha256": "1a4612a2c5930a76f5d2e64fc12f0af928155067b414131b76f02c9a4c3ff66e"
+    }
+  },
+  "protectedPlan": {
+    "pdm": true,
+    "used": 6984,
+    "gain": 34.8926350616523,
+    "hp": 144,
+    "risk": true,
+    "samples": 144,
+    "candidates": 210,
+    "activeIds": [
+      "100131",
+      "101301211",
+      "200011",
+      "200191",
+      "200271",
+      "200332",
+      "200361",
+      "200492",
+      "200511",
+      "200732",
+      "201101",
+      "201111",
+      "201312",
+      "201321",
+      "201342",
+      "201591",
+      "202372",
+      "202522",
+      "202532",
+      "202692",
+      "202801",
+      "203121",
+      "203222",
+      "203421",
+      "203632",
+      "203652",
+      "203852",
+      "203862",
+      "203992",
+      "204001",
+      "204012",
+      "204071",
+      "204082",
+      "204112",
+      "204122",
+      "204222",
+      "204262",
+      "204322",
+      "204331",
+      "204362",
+      "204372",
+      "204531",
+      "204572",
+      "204622",
+      "204701",
+      "204722",
+      "204731",
+      "204812",
+      "210101",
+      "210401",
+      "415011",
+      "415021"
+    ]
+  },
+  "unprotectedPlan": {
+    "pdm": false,
+    "used": 6996,
+    "gain": 35.13324651415284,
+    "hp": 144,
+    "risk": true,
+    "samples": 144,
+    "candidates": 211,
+    "removeFromProtected": [
+      "201591"
+    ],
+    "addToProtected": [
+      "203232"
+    ]
+  },
+  "protectedSkillMarginalGain": 0.15483642059401997,
+  "activationByContext": [
+    {
+      "name": "default",
+      "early": 0,
+      "any": 48,
+      "alternative": 93,
+      "earliest": 770.010594941833,
+      "latest": 1584.2279912159509,
+      "firstSection": 91.66666666666667
+    },
+    {
+      "name": "early",
+      "early": 137,
+      "any": 137,
+      "alternative": 93,
+      "earliest": 85.81244886105239,
+      "latest": 88.81404043632658,
+      "firstSection": 91.66666666666667
+    },
+    {
+      "name": "empty",
+      "early": 0,
+      "any": 0,
+      "alternative": 93,
+      "earliest": null,
+      "latest": 0,
+      "firstSection": 91.66666666666667
+    }
+  ],
+  "fixedPlanComparisons": [
+    {
+      "context": "default",
+      "protected": {
+        "gain": 34.8926350616523,
+        "hp": 144,
+        "risk": true
+      },
+      "unprotected": {
+        "gain": 35.13324651415284,
+        "hp": 144,
+        "risk": true
+      }
+    },
+    {
+      "context": "early",
+      "protected": {
+        "gain": 35.24826612723299,
+        "hp": 144,
+        "risk": true
+      },
+      "unprotected": {
+        "gain": 35.13324651415284,
+        "hp": 144,
+        "risk": true
+      }
+    },
+    {
+      "context": "empty",
+      "protected": {
+        "gain": 34.74237993446113,
+        "hp": 144,
+        "risk": true
+      },
+      "unprotected": {
+        "gain": 35.13324651415284,
+        "hp": 144,
+        "risk": true
+      }
+    }
+  ]
+}

@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan,FinalRaceSession} from '../assets/cm-final-plan.mjs';
+import {createRefinementEvaluator,evaluateRefinements} from '../assets/cm-seed-evaluation.mjs';
+import {createPlanWorkerPool,runSeedWorkers} from '../assets/cm-seed-pool.mjs';
+import {WebModuleWorker} from './helpers/web-module-worker.mjs';
+import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
 
 const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,turn:1,track_id:'10008',course_set_status:[],corners:[],straights:[{start:0,end:2200}],slopes:[]};
@@ -298,4 +302,178 @@ test('publishing the early purchase list leaves headless decisions and search co
  }
  assert.deepEqual(updates[1].summary.purchases,shown.purchases.map(({id,cost})=>({id,cost})));
  assert.equal(updates[1].summary.gain,shown.gain);
+});
+
+test('only an SP-only edit near a safe full-search anchor uses the adjustment path',async()=>{
+ const {data,chart}=fixture(),record={other:'0',white:'0'};
+ chart.modelVersion=CM_MODEL_VERSION;
+ data.purchase_stages.other.base_cost=100;data.purchase_stages.white.base_cost=4;
+ data.skills.other.invocations[0].effects[0].value_raw=7000;
+ for(const r of chart.rows)r.gain=r.id==='other'?2:1;
+ const session=new FinalRaceSession(),options={...quick,exactPlanLimit:0,diagnostics:false,session};
+ const settings={...input,stats:{...input.stats,stamina:3000}};
+ async function run(budget,ids,states=record,changes={}){
+  return recommendFinalPlan(data,chart,states,{...settings,spBudget:budget,previousPlanIds:ids,...changes},options);
+ }
+ let cancelled=false;
+ const stopped=await recommendFinalPlan(data,chart,record,{...settings,spBudget:100},{
+  ...options,diagnostics:true,cancelled:()=>cancelled,onPurchaseList:stage=>{if(stage==='confirmed')cancelled=true;}
+ });
+ assert.equal(stopped,null);
+ assert.equal((await run(104,[])).search.method,'budget-adjustment');
+ const anchor=await run(100,[]);assert.notEqual(anchor.search.method,'budget-adjustment');
+ assert.ok(anchor.activeIds.includes('other'));
+ const up=await run(104,anchor.activeIds);
+ assert.equal(up.search.method,'budget-adjustment');assert.ok(up.activeIds.includes('white'));
+ assert.equal(up.hpSuccesses,up.sampling.count);assert.equal(up.budget.used,104);assert.equal(up.search.globalOptimal,false);
+ const next=await run(106,up.activeIds);assert.notEqual(next.search.method,'budget-adjustment');
+ const edited=await run(107,next.activeIds,{...record,white:'2'});
+ assert.notEqual(edited.search.method,'budget-adjustment');
+ const newStats=await run(108,edited.activeIds,{...record,white:'2'},{stats:{...settings.stats,stamina:100}});
+ assert.notEqual(newStats.search.method,'budget-adjustment');
+});
+
+
+function parallelFixture(){
+ const {data,chart}=fixture(),record={};
+ for(let i=0;i<34;i++){
+  const id='extra'+i,row=skill(id,600+i*60);
+  data.skills[id]=row;chart.rows.push({...row,name:id});
+  data.purchase_stages[id]={status:'verified',base_cost:100};
+  record[id]='0';
+ }
+ return {data,chart,record};
+}
+
+test('parallel seed measurements preserve the complete recommendation and warm searches skip workers',async()=>{
+ const {data,chart,record}=parallelFixture();
+ const options={samples:18,dt:.05,searchSamples:9,searchDt:.1,exactPlanLimit:0,evaluationLimit:50,diagnostics:false};
+ const budget={...input,spBudget:115},session=new FinalRaceSession(),signal=new AbortController().signal;
+ const serial=await recommendFinalPlan(data,chart,record,budget,options);
+ let batches=0;
+ const runSeeds=(batch,onProgress)=>{
+  batches++;
+  return runSeedWorkers(batch,{signal,onProgress,createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ };
+ const parallel=await recommendFinalPlan(data,chart,record,budget,{...options,runSeeds,session});
+ assert.deepEqual(session.metrics.seedWorkers,{count:2,plans:34,fallback:false});
+ const warm=await recommendFinalPlan(data,chart,record,budget,{...options,runSeeds,session});
+ assert.equal(batches,1);
+ const fallbackSession=new FinalRaceSession();
+ const fallback=await recommendFinalPlan(data,chart,record,budget,{...options,session:fallbackSession,runSeeds:(batch,onProgress)=>
+  runSeedWorkers(batch,{onProgress,signal,createWorker(){throw new Error('unavailable');}})});
+ assert.deepEqual(fallbackSession.metrics.seedWorkers,{count:0,plans:0,fallback:true});
+ for(const plan of [serial,parallel,warm,fallback])delete plan.search.sampleReuse;
+ assert.deepEqual(parallel,serial);assert.deepEqual(warm,serial);assert.deepEqual(fallback,serial);
+});
+
+test('aborting a batch or failing to start its second worker disposes all started workers',async()=>{
+ const batch={plans:[['a'],['b']],records:new Map(),baselineIds:[]};
+ for(const abort of [true,false]){
+  const controller=new AbortController();let started=0,terminated=0;
+  const work=runSeedWorkers(batch,{signal:controller.signal,onProgress(){},createWorker(){
+   if(!abort&&started===1)throw new Error('second worker unavailable');
+   started++;
+   return {postMessage(){},terminate(){terminated++;}};
+  }});
+  if(abort)controller.abort();
+  assert.equal(await work,null);assert.equal(started,abort?2:1);assert.equal(terminated,started);
+ }
+});
+
+
+test('a worker message error discards a completed sibling batch and terminates both workers',async()=>{
+ const workers=[];
+ const batch={plans:[['a'],['b']],records:new Map(),baselineIds:[]};
+ const done=runSeedWorkers(batch,{signal:new AbortController().signal,onProgress(){},createWorker(){
+  const worker={postMessage(){},terminate(){this.terminated=true;}};
+  workers.push(worker);return worker;
+ }});
+ workers[0].onmessage({data:{type:'result',scores:new Map(),drawHits:0}});
+ workers[1].onmessageerror();
+ assert.equal(await done,null);
+ assert.ok(workers.every(worker=>worker.terminated&&worker.onmessage===null));
+});
+
+
+test('cancelling during real parallel screening stops the request before purchase confirmation',async()=>{
+ const {data,chart,record}=parallelFixture(),controller=new AbortController(),stages=[];
+ const result=await recommendFinalPlan(data,chart,record,{...input,spBudget:115},{
+  ...quick,exactPlanLimit:0,evaluationLimit:50,diagnostics:false,cancelled:()=>controller.signal.aborted,
+  onPurchaseList:stage=>stages.push(stage),
+  runSeeds:batch=>runSeedWorkers(batch,{signal:controller.signal,onProgress:()=>controller.abort(),
+   createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))})
+ });
+ assert.ok(controller.signal.aborted);
+ assert.equal(result,null);assert.deepEqual(stages,['preview']);
+});
+
+
+test('an HP-deficient direct sweep keeps serial priorities, closure order and fallback results',async()=>{
+ const {data,chart}=fixture(),record={};
+ for(let i=0;i<40;i++){
+  const id='heal'+i,row=skill(id,5+i%3,'white','heal');
+  row.invocations[0].condition[0][0].value=1500+i;
+  data.skills[id]=row;chart.rows.push({...row,name:id});
+  data.purchase_stages[id]={status:'verified',base_cost:25};record[id]='0';
+ }
+ const settings={...input,stats:{...input.stats,stamina:40},spBudget:1500};
+ const options={samples:18,dt:.08,searchSamples:9,searchDt:.1,exactPlanLimit:0,evaluationLimit:50,diagnostics:false};
+ const run=extras=>recommendFinalPlan(data,chart,record,settings,{...options,...extras});
+ const serial=await run({}),session=new FinalRaceSession(),signal=new AbortController().signal;
+ const parallel=await run({session,runRefinements:(batch,onProgress)=>{
+  assert.equal(batch.mode,'refinement');assert.equal(batch.sampling.full,18);
+  return runSeedWorkers(batch,{signal,onProgress,createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ }});
+ assert.equal(session.metrics.refinementWorkers.batches,1);assert.ok(session.metrics.refinementWorkers.plans>=32);
+ assert.ok(serial.hpSuccesses<serial.sampling.count);
+ const failed=new FinalRaceSession(),fallback=await run({session:failed,runRefinements:async()=>null});
+ assert.equal(failed.metrics.refinementWorkers.fallbacks,1);
+ for(const plan of [serial,parallel,fallback])delete plan.search.sampleReuse;
+ assert.deepEqual(parallel,serial);assert.deepEqual(fallback,serial);
+ let cancelled=false;
+ assert.equal(await run({cancelled:()=>cancelled,runRefinements:async()=>{cancelled=true;return null;}}),null);
+});
+
+test('refinement workers keep plan prefixes across reordered batches and retry an HP-rejected plan in full',async()=>{
+ const {data,chart}=fixture(),plans=[['native','other'],['native','white']];
+ const settings={mode:'refinement',setup:createFinalSetup(chart,{...input,stats:{...stats,stamina:40}}),
+  records:new Map(Object.entries(data.skills)),baselineIds:chart.nativeIds,nativeIds:chart.nativeIds,sampling:{full:144},dt:.08};
+ const pool=createPlanWorkerPool({signal:new AbortController().signal,
+  createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ const score=(count,ids,stopOnHpFailure=false)=>pool.run({...settings,count,plans:ids,stopOnHpFailure},()=>{});
+ try{
+  assert.equal((await score(9,plans)).prefixHits,0);
+  const middle=await score(36,[...plans].reverse());
+  assert.equal(middle.prefixHits,18);
+  const rejected=await score(144,plans,true);
+  for(const row of rejected.scores.values())assert.equal(row.hpRejected,true);
+  const full=await score(144,[...plans].reverse());
+  assert.equal(full.prefixHits,72);
+  const fresh=evaluateRefinements(createRefinementEvaluator(settings),
+   {...settings,count:144,skills:Object.values(data.skills),plans},()=>{});
+  assert.deepEqual(full.scores,fresh.scores);
+  assert.ok([...full.scores.values()].every(row=>row.sampling.count===144&&row.scenarios.every(s=>'performance' in s)));
+ }finally{pool.close();}
+});
+
+test('a failed later refinement batch discards both lanes without leaking a previous score',async()=>{
+ const lanes=[],batch={mode:'refinement',setup:{},plans:[['a'],['b']],records:new Map([['a',{id:'a'}],['b',{id:'b'}]]),baselineIds:[]};
+ const pool=createPlanWorkerPool({signal:new AbortController().signal,createWorker(){
+  const worker={postMessage(message){this.packet=message;},terminate(){this.terminated=true;}};
+  lanes.push(worker);return worker;
+ }});
+ const send=()=>pool.run(batch,()=>{});
+ const finish=lane=>lane.onmessage({data:{type:'result',scores:new Map([['measured',true]]),drawHits:0}});
+ try{
+  const first=send();
+  for(const lane of lanes){assert.ok(lane.packet.setup);finish(lane);}
+  assert.equal((await first).scores.size,1);
+  const second=send();
+  assert.equal(lanes.length,2);
+  for(const lane of lanes){assert.equal(lane.packet.setup,undefined);assert.deepEqual(lane.packet.skills,[]);}
+  finish(lanes[0]);lanes[1].onmessageerror();
+  assert.equal(await second,null);assert.equal(await send(),null);
+  assert.ok(lanes.every(lane=>lane.terminated));
+ }finally{pool.close();}
 });

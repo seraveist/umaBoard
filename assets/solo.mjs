@@ -1,8 +1,9 @@
 import {planSpurt,SPURT_POLICY} from './spurt-planning.mjs';
 import {buildPhysics,phaseAt} from './physics.mjs';
-import {sampleBranches,branchReady,slopeAt,compare} from './activation.mjs';
+import {sampleBranches,branchReady,slopeAt,compare,activationCount} from './activation.mjs';
 import {effectValue,effectDuration} from './cm-effect-policy.mjs';
 import {advanceRankHistory,advanceFrontBlock} from './race-sampling.mjs';
+import {ENCOUNTER_FIELDS} from './race-scenarios.mjs';
 import {activationFrame} from './race-frame.mjs';
 
 // Paired single-runner trajectories. CM uses the explicit HP-adaptive policy;
@@ -116,47 +117,79 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
  const wakeRules=new WeakMap();
  const wakeRule=branch=>{
   if(wakeRules.has(branch))return wakeRules.get(branch);
-  let earliest=branch.at;
+  let earliest=branch.at,needsFullSpurt=false;
   for(const atom of branch.dynamic){
    const full=atom.field==='run_at_full_speed_random';
    if(!full&&atom.field!=='is_lastspurt'&&atom.field!=='lastspurt')continue;
    if(!compare(atom.field==='lastspurt'?3:0,atom.operator,atom.value)){
+    needsFullSpurt||=full;
     earliest=full&&(!fullSpurt||!physics.fullSpurtEligible)?Infinity:Math.max(earliest,2*d/3);
    }
   }
   const rankChange=context.coherentRanks&&context.rankTimeline?.length&&branch.external?.some(atom=>
    (atom.field==='change_order_onetime'||atom.field==='is_overtake')&&!context.encounterWindows?.[atom.field]&&
    !Object.hasOwn(context.conditions||{},atom.field)&&!compare(0,atom.operator,atom.value));
-  const rule={earliest,rankChange,startEnd:branch.frameStartWindows?branch.frameStartWindows.reduce((end,w)=>Math.max(end,w[1]),-Infinity):Infinity};
+  // These fields read a distance interval's value, or zero outside it.
+  // Elapsed front-block time reads live state and is handled by branchReady.
+  const encounters=[];
+  for(const atom of branch.external||[]){
+   const windows=context.encounterWindows?.[atom.field];
+   if(ENCOUNTER_FIELDS.has(atom.field)&&windows&&!compare(0,atom.operator,atom.value)){
+    encounters.push(windows.filter(window=>compare(window.value,atom.operator,atom.value)));
+   }
+  }
+  const rule={earliest,needsFullSpurt,rankChange,encounters,startEnd:branch.frameStartWindows?branch.frameStartWindows.reduce((end,w)=>Math.max(end,w[1]),-Infinity):Infinity};
   wakeRules.set(branch,rule);return rule;
  };
  const nextWindow=inv=>{
   const branches=inv.preMet?inv.condition:inv.precondition;
-  if(inv.wakeBranches===branches&&state.prevX<inv.wakeUntil)return inv.wakeAt;
+  if(inv.wakeBranches===branches&&inv.wakeSpurtStart===state.fullSpurtStart&&state.prevX<inv.wakeUntil)return inv.wakeAt;
   let next=Infinity,until=Infinity;
   for(const branch of branches){
    const rule=wakeRule(branch);
    let earliest=rule.earliest,end=rule.startEnd;
+   if(rule.needsFullSpurt&&state.fullSpurtStart!==null)earliest=Math.max(earliest,state.fullSpurtStart+(d-state.fullSpurtStart)*(branch.fullSpurtQ??.5));
    if(rule.rankChange){
     const change=context.rankTimeline.find(point=>point.distance>state.prevX)?.distance??Infinity;
     earliest=Math.max(earliest,change);end=Math.min(end,change);
    }
+   // Keep spatial trigger windows intact: the two endpoints of a frame may
+   // straddle a trigger and a separate encounter boundary.
+   let encounterEnd=Infinity;
+   for(const windows of rule.encounters){
+    const window=windows.find(candidate=>candidate.end>state.prevX);
+    if(!window){earliest=Infinity;break;}
+    earliest=Math.max(earliest,window.start);
+    encounterEnd=Math.min(encounterEnd,window.end);
+   }
+   if(earliest===Infinity)continue;
    for(const [lo,hi] of branch.windows){
     const expires=Math.min(hi,end),at=Math.max(lo,earliest);
     if(state.prevX>=expires)continue;
-    if(at<next){next=at;until=expires;}
-    else if(at===next)until=Math.max(until,expires);
+    if(at<next){next=at;until=Math.min(expires,encounterEnd);}
+    else if(at===next)until=Math.min(until,expires,encounterEnd);
    }
   }
-  inv.wakeBranches=branches;inv.wakeUntil=until;inv.wakeAt=next;return next;
+  inv.wakeBranches=branches;inv.wakeSpurtStart=state.fullSpurtStart;inv.wakeUntil=until;inv.wakeAt=next;return next;
  };
+ // Once every alternative is blocked by a counter, only another skill
+ // activation can unblock it. Use the current precondition until it latches.
+ function blockedOnCount(inv){
+  const branches=inv.preMet?inv.condition:inv.precondition;
+  if(inv.countBranches!==branches){
+   inv.countBranches=branches;
+   const gates=branches.map(b=>b.dynamic.filter(a=>activationCount(a.field,state)!==undefined));
+   inv.countGates=gates.length&&gates.every(group=>group.length)?gates:null;
+  }
+  return inv.countGates?.every(group=>group.some(a=>!compare(activationCount(a.field,state),a.operator,a.value)));
+ }
  const schedule=(inv,x)=>{
   if(!Number.isFinite(x))return;
   let lo=0,hi=sleepers.length;while(lo<hi){const mid=(lo+hi)>>>1;if(sleepers[mid].x<=x)lo=mid+1;else hi=mid;}
   sleepers.splice(lo,0,{inv,x});
  };
  pending.forEach((inv,index)=>{inv.order=index;inv.cooldownKey=keyFor(inv);if(!inv.done&&!inv.passive){inv.preMet=inv.precondition.some(b=>branchReady(b,state,inv.id));if(scheduleConditions)schedule(inv,nextWindow(inv));else awake.push(inv);}});
- // Snapshot once per frame so skill ID order cannot satisfy a trigger in the same tick.
+ // Previous-frame activation flags are separate from the live skill counters.
  const slopeBoundaries=[...new Set(setup.course.slopes.flatMap(s=>[s.start,s.start+s.length]))].sort((a,b)=>a-b);
  const courseScale=Math.pow(d/1000,1.5);
  const flatAccel=[],hillAccel=[];
@@ -164,7 +197,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   flatAccel.push(physics.acceleration(phase,false));hillAccel.push(physics.acceleration(phase,true));
  }
  let slope=slopeAt(setup.course,0),slopeIndex=0;
- let previousEvents=0,previousHeals=0;
+ let previousEvents=0,previousHeals=0,allWaitingAt=-1;
  for(let frame=0;state.x<d&&frame<100000;frame++){
   const t=frame*dt;state.t=t;state.phase=phaseAt(state.x,d);
   const eventStart=events.length;
@@ -189,21 +222,28 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   }
   while(sleepers.length&&sleepers[0].x<=state.x+1e-6){awake.push(sleepers.shift().inv);added=true;}
   if(added)awake.sort((a,b)=>a.order-b.order);
-  for(let index=0;index<awake.length;){
-   const i=awake[index];
-   if(i.done){awake.splice(index,1);continue;}
-   const until=cooldowns.get(i.cooldownKey);
-   if(until!==undefined&&(!i.cooldownSeconds||t<=until+1e-8)){
-    if(!scheduleConditions){index++;continue;}
-    awake.splice(index,1);
-    if(i.cooldownSeconds){cooling.push(i);nextCooldown=Math.min(nextCooldown,until+1e-8);}
-    continue;
+  if(added||allWaitingAt!==events.length){
+   let waiting=0;
+   for(let index=0;index<awake.length;){
+    const i=awake[index];
+    if(i.done){awake.splice(index,1);continue;}
+    const until=cooldowns.get(i.cooldownKey);
+    if(until!==undefined&&(!i.cooldownSeconds||t<=until+1e-8)){
+     if(!scheduleConditions){index++;continue;}
+     awake.splice(index,1);
+     if(i.cooldownSeconds){cooling.push(i);nextCooldown=Math.min(nextCooldown,until+1e-8);}
+     continue;
+    }
+    if(i.waitEvents===events.length){waiting++;index++;continue;}
+    if(!i.preMet)i.preMet=i.precondition.some(b=>branchReady(b,state,i.id));
+    const wake=scheduleConditions?nextWindow(i):0;
+    if(scheduleConditions&&(!Number.isFinite(wake)||wake>state.x+1e-6)){awake.splice(index,1);schedule(i,wake);continue;}
+    if(i.preMet&&i.condition.some(b=>branchReady(b,state,i.id)))fire(i);
+    else if(scheduleConditions&&blockedOnCount(i)){i.waitEvents=events.length;waiting++;}
+    if(i.done)awake.splice(index,1);else index++;
    }
-   if(!i.preMet)i.preMet=i.precondition.some(b=>branchReady(b,state,i.id));
-   const wake=scheduleConditions?nextWindow(i):0;
-   if(scheduleConditions&&(!Number.isFinite(wake)||wake>state.x+1e-6)){awake.splice(index,1);schedule(i,wake);continue;}
-   if(i.preMet&&i.condition.some(b=>branchReady(b,state,i.id)))fire(i);
-   if(i.done)awake.splice(index,1);else index++;
+   // An earlier ID gets another chance next frame if a later one just fired.
+   allWaitingAt=waiting===awake.length&&events.length===eventStart?events.length:-1;
   }
   // Re-sum in original activation order only when the active list changes.
   if(effectsChanged){
@@ -255,7 +295,7 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   // Public umasim approximation: independent extra acceleration; its ceiling is
   // unknown in the source. This mode is explicit and versioned by the CM chart.
   const fullAcceleration=.068*baseAcceleration/courseScale+fullSpurtBonus;
-  const nextFull=fullSpurtStarted&&(!adaptive||state.hp>0)?fullSpurtSpeed+Math.max(0,fullAcceleration)*dt:0;
+  let nextFull=fullSpurtStarted&&(!adaptive||state.hp>0)?fullSpurtSpeed+Math.max(0,fullAcceleration)*dt:0;
   if(diagnostics){
    const observed={t,x:state.x,phase:state.phase,baseVelocity:velocity,target,baseTarget,targetBonus,currentOffset,fullSpurtSpeed,
     baseAcceleration,skillAcceleration:accelerationBonus,legAcceleration:leg,slope,hp:state.hp,
@@ -267,7 +307,8 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   if(nextFull>fullSpurtSpeed)for(const effect of fullSpurtEffects)accelerationUseSeconds[effect.id]=(accelerationUseSeconds[effect.id]||0)+dt;
   const speed=t<delay?0:Math.max(0,(velocity+next)/2+currentOffset+(fullSpurtSpeed+nextFull)/2),step=speed*dt;
   const fraction=step>0?Math.min(1,(d-state.x)/step):1;
-  state.hp-=physics.consumption(speed,state.phase)*dt*fraction;
+  const hpPerFrame=physics.consumption(speed,state.phase)*dt;
+  state.hp-=hpPerFrame*fraction;
   if(state.hp<0){
    peakHpDebt=Math.max(peakHpDebt,-state.hp);
    if(depletion===null)depletion=state.x+step*fraction;
@@ -275,6 +316,39 @@ export function simulateSolo(setup,compiledSkills,q=.5,{dt=.1,failHeals=false,br
   state.prevX=state.x;state.x=Math.min(d,state.x+step);
   if(comparisonTime===null)positions.push(state.x);
   else if(frame===comparisonFrame||(state.x>=d&&frame<comparisonFrame))positions.push(state.prevX,state.x);
+  // Between events the base velocity can settle at its target, even during
+  // a spurt. Advance the same discrete HP and position updates. Return to
+  // the scheduler for boundaries, HP depletion and the interpolated finish.
+  if(scheduleConditions&&!keepTrace&&!diagnostics&&(!awake.length||allWaitingAt===events.length)&&!timeFrontBlock&&
+     (!rankBands.size||state.rankHistory)&&!startDash&&t>=delay&&velocity===next&&next===target&&step>0){
+   const phaseEnd=state.phase===0?d/6:state.phase===1?2*d/3:state.phase===2?5*d/6:d;
+   const spurtStart=adaptive&&state.phase>=2&&!state.lastSpurtActive?spurtPlan.start:Infinity;
+   const end=Math.min(phaseEnd,spurtStart,slopeBoundaries[slopeIndex]??Infinity);
+   const wake=sleepers[0]?.x??Infinity,firstFrame=frame;
+   if(nextFull===fullSpurtSpeed){
+    while(frame+1<100000&&state.x<end&&state.x+1e-6<wake&&state.hp>hpPerFrame&&
+          state.x+step<d&&(frame+1)*dt+1e-8<nextExpiry&&(frame+1)*dt<=nextCooldown){
+     frame++;
+     state.prevX=state.x;state.x+=step;state.hp-=hpPerFrame;
+     if(comparisonTime===null)positions.push(state.x);
+     else if(frame===comparisonFrame)positions.push(state.prevX,state.x);
+    }
+   }else if(nextFull>fullSpurtSpeed&&!fullSpurtEffects.length){
+    const increment=Math.max(0,fullAcceleration)*dt;
+    while(frame+1<100000&&state.x<end&&state.x+1e-6<wake&&
+          (frame+1)*dt+1e-8<nextExpiry&&(frame+1)*dt<=nextCooldown){
+     const following=nextFull+increment;
+     const speed=Math.max(0,(velocity+next)/2+currentOffset+(nextFull+following)/2);
+     const move=speed*dt,hpCost=physics.consumption(speed,state.phase)*dt;
+     if(state.hp<=hpCost||state.x+move>=d)break;
+     frame++;nextFull=following;
+     state.prevX=state.x;state.x+=move;state.hp-=hpCost;
+     if(comparisonTime===null)positions.push(state.x);
+     else if(frame===comparisonFrame)positions.push(state.prevX,state.x);
+    }
+   }
+   if(frame>firstFrame){previousEvents=events.length;previousHeals=state.healCount;}
+  }
   velocity=next;fullSpurtSpeed=nextFull;
   if(state.x>=d){
    return {status:'ok',distance:d,dt,positions,...(comparisonTime===null?{}:{comparisonTime,firstFrame:Math.min(frame,comparisonFrame)}),finishTime:t+dt*fraction,entry,reach,

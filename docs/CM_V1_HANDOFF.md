@@ -1,8 +1,8 @@
 # 최적화 알고리즘 v1 — 다른 작업 공간으로 인계
 
-[main 출시 기준과 다음 탐색 시간 단축 작업](CM_MAIN_RELEASE.md)
+[main 출시 기준](CM_MAIN_RELEASE.md) · [v1.6.8 엔진과 PDM·탐색 풀 검토](CM_V1_6_8_ENGINE_REVIEW.md)
 
-작성일: **2026-11-19 Asia/Seoul**
+작성일: **2026-11-23 Asia/Seoul**
 
 이 문서는 현재 대화나 로컬 캐시 없이 다른 work·체크아웃·worktree에서 작업을 재개하기 위한 인계서다.
 현재 구현·한계·우선순위는 [현황과 보완 방향](CM_V1_STATUS_AND_ROADMAP.md)을 함께 읽는다.
@@ -14,12 +14,12 @@
 | --- | --- |
 | 저장소 | [seraveist/umaBoard](https://github.com/seraveist/umaBoard) |
 | 원격 주소 | `https://github.com/seraveist/umaBoard.git` |
-| 기준 브랜치 | `main` |
+| 기준 브랜치 | `perf/cm-encounter-scheduling` |
 | 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
-| 실제 재개 위치 | 이 인계 문서를 포함한 `origin/main` 최신 커밋 |
-| 현재 모델 | v1.6.7, 마신표v15·목표 가속v5·최종 추천v19·단독 비교v8 |
-| 계산35모듈 SHA256 | `7ffa2b356b161db0b4842aa7b8042ef93ca545d8fc37c4823171508e0e9a9deb` |
+| 실제 재개 위치 | 이 인계 문서를 포함한 `origin/perf/cm-encounter-scheduling` 최신 커밋 |
+| 현재 모델 | v1.6.12, 마신표v16·목표 가속v5·최종 추천v20·단독 비교v8 |
+| 계산41모듈 SHA256 | `5b38cabecc8385ff5904afdd307da374fe7eeb647f65828bde587ab3b17b0666` |
 | 출시 기준 데이터 | `59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
@@ -38,7 +38,7 @@
 사용할 상위 폴더에서 실행한다. 대상 폴더는 아직 사용하지 않는 이름으로 정한다.
 
 ```powershell
-git clone --branch main https://github.com/seraveist/umaBoard.git umaBoard-next
+git clone --branch perf/cm-encounter-scheduling https://github.com/seraveist/umaBoard.git umaBoard-next
 if ($LASTEXITCODE -ne 0) { throw 'clone 실패: 대상 폴더와 원격을 확인하세요.' }
 Set-Location -LiteralPath .\umaBoard-next -ErrorAction Stop
 git status --short
@@ -65,10 +65,10 @@ git remote get-url origin
 git fetch origin
 if ($LASTEXITCODE -ne 0) { throw '원격 기준을 가져오지 못했습니다.' }
 git worktree list
-git worktree add -b review/cm-v1-next ..\umaBoard-next origin/main
+git worktree add -b review/cm-v1-next ..\umaBoard-next origin/perf/cm-encounter-scheduling
 if ($LASTEXITCODE -ne 0) { throw 'worktree 생성 실패: 새 브랜치와 폴더 이름을 확인하세요.' }
 Set-Location -LiteralPath ..\umaBoard-next -ErrorAction Stop
-git merge-base --is-ancestor origin/main HEAD
+git merge-base --is-ancestor origin/perf/cm-encounter-scheduling HEAD
 if ($LASTEXITCODE -ne 0) { throw '기준 브랜치를 포함한 작업 사본인지 확인하세요.' }
 git log -3 --oneline
 git cat-file -e 'baa9d98^{commit}'
@@ -107,7 +107,7 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 node scripts/check_cm_algorithm_v1.mjs
 ```
 
-변경 전 기준에서 `status:passed`, 공개v1·개정6, 계산35모듈과 위 계산 해시를 확인한다.
+변경 전 기준에서 `status:passed`, 공개v1·개정6, 계산41모듈과 위 계산 해시를 확인한다.
 변경 전부터 실패하면 브랜치·데이터·파일 상태를 먼저 조사한다.
 정당한 코드 수정 뒤에는 고정 검사 실패가 예상될 수 있다. 이 경우 기존 릴리스 파일의 해시만 덮어써 통과시키지 않고,
 새 개정·모델·고정 파일을 만들며 현재 기준을 이전 증거로 연결한다.
@@ -204,11 +204,11 @@ python -m http.server 8000 --directory .cache/pages
 아래는 후속 검증·보완을 실제로 시작할 때 사용할 요청문이다.
 
 ```text
-seraveist/umaBoard의 origin/main 최신 상태에서 이어서 작업해줘.
+seraveist/umaBoard의 origin/perf/cm-encounter-scheduling 최신 상태에서 이어서 작업해줘.
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 v1.6.7, 마신표v15·목표 가속v5·최종 추천v19이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
+현재 계산 기준은 v1.6.12, 마신표v16·목표 가속v5·최종 추천v20이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
 개정6의 순위·경합·인기 판정은 고정 전개의 짝비교로 검증했다.
 

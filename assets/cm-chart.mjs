@@ -20,7 +20,9 @@ import {scenarioSelectionAllowed} from './acquisition-rules.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 import {intersectWindows} from './condition-windows.mjs';
 
-export const CM_MODEL_VERSION='cm-first-chart-v15';
+import {middleCountRequirement,isMiddleProvider} from './cm-middle-conditions.mjs';
+
+export const CM_MODEL_VERSION='cm-first-chart-v16';
 export const CM_SAMPLES=144;
 export const CM_DT=.01;
 const native=skill=>['unique','unique_low_star','unique_upgraded'].includes(skill?.rarity);
@@ -288,17 +290,46 @@ export function prepareChart(data,profiles,display,input,{samples=CM_SAMPLES,dt=
  // still derived from observed event IDs in evaluate().
  const evaluator=new RaceEvaluator(setup,compiled,referenceIds,nativeIds,createFinalBranchSampler(),{compactComparisons:true,sampleCacheLimit:0});
  evaluator.beginSeedComparisons();
+ const preparedEvaluators=new Map();
+ let providers;
+ const compatible=ids=>ids.every((id,index)=>ids.slice(0,index).every(other=>rules.compatible(id,other)))&&
+  scenarioSelectionAllowed(data,ids,setup.scenarioId)&&new Set(ids.filter(id=>data.skills[id].inherited).map(id=>setup.inheritanceOrigins[id]??id)).size<=6&&constraints.allowed(ids);
+ function prepareMiddleComparison(row){
+  const count=middleCountRequirement(compiled.get(row.id));
+  if(!count||referenceIds.includes(row.id))return;
+  const existing=referenceIds.filter(id=>isMiddleProvider(compiled.get(id),setup.course.distance));
+  if(existing.length>=count)return;
+  providers??=rows.filter(r=>r.rarity==='white'&&!r.inherited&&isMiddleProvider(compiled.get(r.id),setup.course.distance)).sort((a,b)=>a.id.localeCompare(b.id));
+  const helpers=[...existing],basis=[...referenceIds];
+  for(const provider of providers){
+   const id=provider.id;
+   if(id===row.id||basis.includes(id))continue;
+   const trial=activeSkillIds([...basis,id],setup.possessionGraph);
+   const withSkill=activeSkillIds([...trial,row.id],setup.possessionGraph);
+   if(trial.length!==basis.length+1||!withSkill.includes(row.id)||!withSkill.includes(id)||
+      !helpers.every(helper=>withSkill.includes(helper))||!compatible(trial)||!compatible(withSkill))continue;
+   helpers.push(id);basis.push(id);
+   if(helpers.length===count)break;
+  }
+  if(helpers.length!==count)return;
+  const key=basis.join(',');
+  if(!preparedEvaluators.has(key))preparedEvaluators.set(key,new RaceEvaluator(setup,compiled,basis,nativeIds,createFinalBranchSampler(),{compactComparisons:true,sampleCacheLimit:0}));
+  const ids=activeSkillIds([...basis,row.id],setup.possessionGraph);
+  const score=preparedEvaluators.get(key).evaluate(ids,samples,dt,{chartSkillId:row.id});
+  return {condition:'activate_count_middle',count,helperIds:helpers,helperNames:helpers.map(id=>data.skills[id].name_jp),
+   gain:score.gain,samples,activations:score.scenarios.reduce((n,s)=>n+s.activations,0)};
+ }
  return {setup,rows,strategyGoals:goals,nativeIds,referenceIds,comparisonBasis,modelVersion:CM_MODEL_VERSION,samples,dt,
   excluded:[...compiled.values()].filter(s=>!native(s.skill)&&s.status==='unsupported').map(s=>({id:s.id,status:s.status,reasons:s.reasons})),
   evaluate(row){
    if(compiled.get(row.id).status==='unsupported')return {...row,gain:null,timeGain:null,hpGain:null,samples:0};
    const ids=activeSkillIds([...referenceIds,row.id],setup.possessionGraph);
-   if(ids.some((id,index)=>ids.slice(0,index).some(other=>!rules.compatible(id,other)))||!scenarioSelectionAllowed(data,ids,setup.scenarioId)||new Set(ids.filter(id=>data.skills[id].inherited).map(id=>setup.inheritanceOrigins[id]??id)).size>6||!constraints.allowed(ids))return {...row,gain:null,timeGain:null,hpGain:null,samples:0,comparisonBasis,calculationState:'incompatible-reference',calculationNotes:[...row.calculationNotes,'비교 기준과 획득·진화·계승 제한 충돌']};
+   if(!compatible(ids))return {...row,gain:null,timeGain:null,hpGain:null,samples:0,comparisonBasis,calculationState:'incompatible-reference',calculationNotes:[...row.calculationNotes,'비교 기준과 획득·진화·계승 제한 충돌']};
    // Even fixed triggers can change the HP-based spurt decision. Use the same
    // race samples for every row instead of presuming a deterministic outcome.
    const count=samples;
    const stats=evaluator.evaluate(ids,count,dt,{chartSkillId:row.id});
-   return {...row,gain:stats.gain,robustGain:stats.robustGain,feasible:stats.feasible,hpSuccessRate:stats.hpSuccessRate,hpShortfall:stats.hpShortfall,performance:stats.performance,scenarioSensitivity:stats.scenarioSensitivity,popularityResults:stats.popularityResults,objectivePolicy:RACE_OBJECTIVE,comparisonBasis,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
+   return {...row,preparedComparison:prepareMiddleComparison(row),gain:stats.gain,robustGain:stats.robustGain,feasible:stats.feasible,hpSuccessRate:stats.hpSuccessRate,hpShortfall:stats.hpShortfall,performance:stats.performance,scenarioSensitivity:stats.scenarioSensitivity,popularityResults:stats.popularityResults,objectivePolicy:RACE_OBJECTIVE,comparisonBasis,scenarios:stats.scenarios,scenarioCoverage:stats.scenarioCoverage,usefulAccelerationRate:stats.usefulAccelerationRates[row.id],timeGain:stats.timeGain,hpGain:stats.hpGain,samples:count,sampling:stats.sampling,activationRate:stats.activationRates[row.id]};
   }};
 }
 
@@ -308,7 +339,7 @@ export async function generateChart(data,profiles,display,input,{onProgress=()=>
  const task=prepareChart(data,profiles,display,input,options),setupKey=JSON.stringify({model:CM_MODEL_VERSION,setup:task.setup,samples:task.samples,dt:task.dt});
  const evaluate=row=>{
   const key=setupKey+'|'+row.id;
-  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{gain:value.gain,robustGain:value.robustGain,feasible:value.feasible,hpSuccessRate:value.hpSuccessRate,hpShortfall:value.hpShortfall,performance:value.performance,scenarioSensitivity:value.scenarioSensitivity,popularityResults:value.popularityResults,objectivePolicy:value.objectivePolicy,comparisonBasis:value.comparisonBasis,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate,calculationState:value.calculationState,calculationNotes:value.calculationNotes});}
+  if(!cache.has(key)){const value=task.evaluate(row);cache.set(key,{preparedComparison:value.preparedComparison,gain:value.gain,robustGain:value.robustGain,feasible:value.feasible,hpSuccessRate:value.hpSuccessRate,hpShortfall:value.hpShortfall,performance:value.performance,scenarioSensitivity:value.scenarioSensitivity,popularityResults:value.popularityResults,objectivePolicy:value.objectivePolicy,comparisonBasis:value.comparisonBasis,scenarios:value.scenarios,scenarioCoverage:value.scenarioCoverage,usefulAccelerationRate:value.usefulAccelerationRate,timeGain:value.timeGain,hpGain:value.hpGain,samples:value.samples,sampling:value.sampling,activationRate:value.activationRate,calculationState:value.calculationState,calculationNotes:value.calculationNotes});}
   return {...row,...cache.get(key)};
  };
  const inherited=task.rows.filter(row=>row.inherited),scored=[];

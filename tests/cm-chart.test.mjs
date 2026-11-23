@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createChartSetup,prepareChart,generateChart,compileChartSkill,buildChartCandidates,sortChartRows} from '../assets/cm-chart.mjs';
+import {middleCountRequirement} from '../assets/cm-middle-conditions.mjs';
 import {compileSkill} from '../assets/activation.mjs';
 import {simulateSolo} from '../assets/solo.mjs';
 import {lengthsBetween} from '../assets/physics.mjs';
@@ -231,4 +232,27 @@ test('course diagram retains Nakayama2500 boundaries, unknown initial section an
  assert.equal(segments[0].kind,'unknown');assert.deepEqual(segments.filter(s=>s.kind==='corner').map(s=>s.label),['3코너','4코너','1코너','2코너','3코너','최종 코너']);
  assert.ok(segments.some(s=>s.start===2190&&s.label==='최종 직선'));assert.match(courseSvg(c),/>1666<\/text>/);
  assert.deepEqual(elevationProfile({distance:1000,slopes:[{start:100,length:200,slope:100}]}),[[0,0],[100,0],[300,2],[1000,2]]);
+});
+
+test('a prepared middle-count row equals an explicit paired reference and preserves the Lucky Seven lottery',()=>{
+ const config={outfitId:'101301',scenarioId:'15',courseId:'10808',style:2,supportIds:['30275','30311','30300','30322','30289','30323']};
+ const options={samples:18,dt:.05};
+ const task=prepareChart(actual,actualProfiles,display,config,options);
+ const row=(t,id)=>t.evaluate(t.rows.find(r=>r.id===id));
+ const base=row(task,'201612'),prepared=base.preparedComparison;
+ assert.equal(base.gain,0);assert.ok(prepared.gain>0);assert.equal(prepared.count,3);
+ assert.equal(new Set(prepared.helperIds).size,3);assert.ok(prepared.activations>0);
+ const explicit=prepareChart(actual,actualProfiles,display,{...config,comparisonSkillIds:prepared.helperIds},options);
+ assert.equal(prepared.gain,row(explicit,'201612').gain);
+ assert.equal(row(explicit,'201612').preparedComparison,undefined);
+ assert.equal(row(task,'201562').preparedComparison,undefined);
+});
+
+test('prepared comparisons require the same middle threshold on every alternative',()=>{
+ const gate=(value,operator='>=')=>({field:'activate_count_middle',value,operator});
+ const count=(...branches)=>middleCountRequirement({invocations:[{condition:branches.map(dynamic=>({dynamic}))}]});
+ assert.equal(count([gate(1),gate(3)],[gate(3)]),3);
+ assert.equal(count([gate(3)],[]),0);
+ assert.equal(count([gate(2)],[gate(3)]),0);
+ assert.equal(count([gate(3,'==')]),0);
 });

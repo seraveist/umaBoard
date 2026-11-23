@@ -159,6 +159,10 @@ async function main() {
     assert.ok(plan.acquisitionValidation.feasible && plan.scenarioCoverage.complete);
     if (!small && manifest.active_version===launch.active_version) {
       assert.ok(metrics.firstCache.seedDrawHits>0);
+      if(await page.evaluate(()=>navigator.hardwareConcurrency>=2)){
+        assert.equal(metrics.firstCache.seedWorkers?.count,2);
+        assert.ok(metrics.firstCache.seedWorkers.plans>=32);
+      }
       assert.equal(plan.hpSuccesses,144);assert.equal(plan.performance.risk.withinLimit,true);
       const matchesPrevious=plan.budget.used===6984&&Math.abs(plan.gain-34.8926350616523)<1e-9;
       // Spending more SP than the release witness needs a gain outside the
