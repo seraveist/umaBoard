@@ -48,6 +48,8 @@ export function chartScenarioSummary(row){
  }
  if(activeWeight)parts.push(`발동 표본 평균 ${signed(activeGain/activeWeight)}마신`);
  if(inactiveWeight)parts.push(`미발동 표본 평균 ${signed(inactiveGain/inactiveWeight)}마신`);
+ const prepared=row.preparedComparison;
+ if(prepared)parts.push(`중반 발동원 ${prepared.count}개 편성 평균 ${signed(prepared.gain)}마신 (${prepared.activations}/${prepared.samples}회 발동) · ${prepared.helperNames.join(' · ')}`);
  const popularity=popularityText(row.popularityResults);if(popularity)parts.push(popularity);
  return parts.join(' · ');
 }

@@ -3,6 +3,8 @@
 This is the authoritative contract for `main` and the redesigned
 root page. Older MODEL_CONTRACT/PROJECT_PLAN documents describe `legacy.html`.
 
+On the v1.6.9 branch, eligible middle-count skills also expose an optional `preparedComparison`. Both paired runs include the same compatible middle providers, and the sample must satisfy all activation gates. The original `gain` keeps its declared reference. The example exposes the provider IDs, sample count and observed activations. [Measured example](CM_MAIN_RELEASE.md#v169-기능-브랜치-검증)
+
 The post-training extension is defined in [CM_POST_TRAINING.md](CM_POST_TRAINING.md).
 It consumes this chart's checklist and full inheritance options and adds actual stats/remaining-SP
 recommendation. Presentation separates purchases from evolution, while one search compares their final effects together.

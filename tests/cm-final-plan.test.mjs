@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan,FinalRaceSession} from '../assets/cm-final-plan.mjs';
+import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
 
 const course={id:'c',selectable:true,distance:2200,distance_type:3,surface:1,turn:1,track_id:'10008',course_set_status:[],corners:[],straights:[{start:0,end:2200}],slopes:[]};
@@ -298,4 +299,33 @@ test('publishing the early purchase list leaves headless decisions and search co
  }
  assert.deepEqual(updates[1].summary.purchases,shown.purchases.map(({id,cost})=>({id,cost})));
  assert.equal(updates[1].summary.gain,shown.gain);
+});
+
+test('only an SP-only edit near a safe full-search anchor uses the adjustment path',async()=>{
+ const {data,chart}=fixture(),record={other:'0',white:'0'};
+ chart.modelVersion=CM_MODEL_VERSION;
+ data.purchase_stages.other.base_cost=100;data.purchase_stages.white.base_cost=4;
+ data.skills.other.invocations[0].effects[0].value_raw=7000;
+ for(const r of chart.rows)r.gain=r.id==='other'?2:1;
+ const session=new FinalRaceSession(),options={...quick,exactPlanLimit:0,diagnostics:false,session};
+ const settings={...input,stats:{...input.stats,stamina:3000}};
+ async function run(budget,ids,states=record,changes={}){
+  return recommendFinalPlan(data,chart,states,{...settings,spBudget:budget,previousPlanIds:ids,...changes},options);
+ }
+ let cancelled=false;
+ const stopped=await recommendFinalPlan(data,chart,record,{...settings,spBudget:100},{
+  ...options,diagnostics:true,cancelled:()=>cancelled,onPurchaseList:stage=>{if(stage==='confirmed')cancelled=true;}
+ });
+ assert.equal(stopped,null);
+ assert.equal((await run(104,[])).search.method,'budget-adjustment');
+ const anchor=await run(100,[]);assert.notEqual(anchor.search.method,'budget-adjustment');
+ assert.ok(anchor.activeIds.includes('other'));
+ const up=await run(104,anchor.activeIds);
+ assert.equal(up.search.method,'budget-adjustment');assert.ok(up.activeIds.includes('white'));
+ assert.equal(up.hpSuccesses,up.sampling.count);assert.equal(up.budget.used,104);assert.equal(up.search.globalOptimal,false);
+ const next=await run(106,up.activeIds);assert.notEqual(next.search.method,'budget-adjustment');
+ const edited=await run(107,next.activeIds,{...record,white:'2'});
+ assert.notEqual(edited.search.method,'budget-adjustment');
+ const newStats=await run(108,edited.activeIds,{...record,white:'2'},{stats:{...settings.stats,stamina:100}});
+ assert.notEqual(newStats.search.method,'budget-adjustment');
 });

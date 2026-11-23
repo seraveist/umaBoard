@@ -50,7 +50,12 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   if(first&&onResult()!==false)$('#purchase-progress-title').focus({preventScroll:true});
  };
  const clearPurchases=()=>{purchasePanel.hidden=true;$('#final-empty').hidden=!$('#final-result').hidden;};
- const stale=(discardWorker=busy)=>{stop(discardWorker);clearPurchases();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
+ const stopRecommendation=(discardWorker)=>{
+  if(discardWorker===undefined&&busy&&!purchasePanel.hidden&&purchasePanel.dataset.stage==='confirmed'){
+   worker?.postMessage({type:'cancel'});stop(false);
+  }else stop(discardWorker);
+ };
+ const stale=discardWorker=>{stopRecommendation(discardWorker);clearPurchases();$('#final-export').disabled=true;if(result){$('#final-result').classList.add('is-stale');$('#final-result-state').textContent='재추천 필요';$('#final-submit').textContent='다시 추천';}message();};
  const error=(text,input)=>{inputs.open=true;$('#final-error').textContent=text;if(input){input.setAttribute('aria-invalid','true');input.focus();}};
  const clearError=()=>{$('#final-error').textContent='';for(const input of form.querySelectorAll('[aria-invalid]'))input.removeAttribute('aria-invalid');};
  const save=()=>{inputSummary();if(scope&&!write(scope,{values:values(),previousPlanIds}))message('저장 실패 · 결과를 내려받아 주세요.');};
@@ -86,7 +91,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   $('#final-scenario-count').textContent=`${plan.scenarioEvolutionCount} / 2`;
   $('#final-active-count').textContent=`${plan.finalSkills.length}개`;
   $('#final-active-list').replaceChildren(...plan.finalSkills.map(row=>skillItem(row,({native:'본체 고유기',owned:'기존 습득',evolution:'진화 적용',purchase:'추가 구매'})[row.origin])));
-  $('#final-search-note').textContent=plan.search.allAffordablePlansMeasured?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
+  $('#final-search-note').textContent=plan.search.method==='budget-adjustment'?`기존 구매안의 SP 변경 후보 ${plan.search.fullChecks}개를 정밀 비교했습니다.`:plan.search.allAffordablePlansMeasured?'기록한 후보를 현재 표본 조건에서 전수 비교했습니다.':'평균 기여와 부진 구간 성능을 비교한 범위 내 추천입니다.';
   const compression=plan.search.approximation;
   if(compression.savedSp>0)$('#final-search-note').textContent+=` 같은 HP·위험 기준에서 최고 평균 대비 ${compression.knownMeanLoss.toFixed(3)}마신 차이로 ${compression.savedSp} SP 절약했습니다.`;
   const alternatives=$('#final-scenario-alternatives'),cases=plan.scenarioAlternatives??[];
@@ -126,7 +131,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   worker.onmessage=({data:reply})=>{
    if(reply.requestId!==requestId)return;
    if(reply.type==='purchases'){showPurchases(reply.stage,reply.summary);return;}
-   if(reply.type==='progress'){$('#final-progress-label').textContent=reply.progress.stage==='marginals'?'확정 조합의 스킬별 기여도 계산 중':reply.progress.stage==='candidates'?'실제 스탯으로 후보 비교 중':reply.progress.stage==='search'?'보유 SP에 맞는 조합 탐색 중':'추천 조합 정밀 비교 중';$('#final-progress-bar').max=Math.max(1,reply.progress.total);$('#final-progress-bar').value=reply.progress.completed;}
+   if(reply.type==='progress'){$('#final-progress-label').textContent=reply.progress.stage==='marginals'?'확정 조합의 스킬별 기여도 계산 중':reply.progress.stage==='candidates'?'실제 스탯으로 후보 비교 중':reply.progress.stage==='adjustment'?'변경된 SP로 구매 후보 비교 중':reply.progress.stage==='search'?'보유 SP에 맞는 조합 탐색 중':'추천 조합 정밀 비교 중';$('#final-progress-bar').max=Math.max(1,reply.progress.total);$('#final-progress-bar').value=reply.progress.completed;}
    if(reply.type==='result'){result=reply.result;previousPlanIds=result.activeIds;stop(false);render(result);message();save();}
    if(reply.type==='error'){stop();clearPurchases();error(reply.message);message();if(reply.code==='ACQUISITION_CONFLICT')onRecordError(reply.details?.conflict?.skillIds||[],reply.message);}
   };
@@ -135,7 +140,7 @@ export function createFinalPlanner({data,display,manifest,skillDetails,read,writ
   worker.postMessage({type:'recommend',requestId:job,payload:{states,input}});
  });
  $('#final-cancel').addEventListener('click',()=>{
-  stop();message('추천 중지');
+  stopRecommendation();message('추천 중지');
   if(!purchasePanel.hidden){
    const summary=$('#purchase-progress-summary'),parts=summary.textContent.split(' · ');
    parts[0]=purchasePanel.dataset.stage==='confirmed'?'구매 조합 확정 · 기여도 계산 중지':'정밀 비교 중지 · 예비 구매 목록';
