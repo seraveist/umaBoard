@@ -174,6 +174,18 @@ export function sampleBranches(branches,q,pre=false){
   return {...b,windows:intersectWindows(b.windows,[window]),at,fullSpurtQ:q};
  });
 }
+export function activationCount(field,state){
+ switch(field){
+  case 'activate_count_all':return state.counts.reduce((a,b)=>a+b,0);
+  case 'activate_count_start':return state.counts[0];
+  case 'activate_count_middle':return state.counts[1];
+  case 'activate_count_end_after':return state.counts[2]+state.counts[3];
+  case 'activate_count_later_half':return state.laterCount;
+  case 'activate_count_heal':return state.healCount;
+  case 'activate_count_param_skill':return state.passiveCount;
+ }
+}
+
 export function branchReady(branch,state,skillId){
  const previous=frameStartPosition(state);
  if(state.x+1e-6<branch.at||!windowCrossed(branch.windows,previous,state.x))return false;
@@ -197,16 +209,10 @@ export function branchReady(branch,state,skillId){
    case 'is_used_skill_id':value=state.used.has(String(a.value))?a.value:0;break;
    case 'is_used_skill_id_with_detail_one':value=state.used.has(String(a.value))?a.value:0;break;
    case 'is_exist_skill_id':value=state.selected.has(String(a.value))?a.value:0;break;
-   case 'activate_count_all':value=state.counts.reduce((a,b)=>a+b,0);break;
-   case 'activate_count_start':value=state.counts[0];break;
-   case 'activate_count_middle':value=state.counts[1];break;
-   case 'activate_count_end_after':value=state.counts[2]+state.counts[3];break;
-   case 'activate_count_later_half':value=state.laterCount;break;
-   case 'activate_count_heal':value=state.healCount;break;
-   case 'activate_count_param_skill':value=state.passiveCount;break;
    case 'is_badstart':value=Number((state.startDelay??.1)>=.08);break;
    case 'is_goodstart':value=Number((state.startDelay??.1)<=.05);break;
    case 'temptation_count':case 'is_temptation':value=externalConditionValue(a,state)??0;break;
+   default:value=activationCount(a.field,state);
   }
   return compare(value,a.operator,a.value);
  });

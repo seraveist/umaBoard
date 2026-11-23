@@ -26,6 +26,10 @@ self.onmessage=async({data:message})=>{
    onPurchaseList:(stage,summary)=>{if(current===job)self.postMessage({type:'purchases',requestId,stage,summary});},
    cancelled:()=>current!==job,onProgress:progress=>{if(current===job)self.postMessage({type:'progress',requestId,progress});}});
   onPhase(null);
+  if(timings.seedConstruction!==undefined){
+   timings.singleSkillEvaluation=timings.precisionSeeds;
+   timings.precisionSeeds+=timings.seedConstruction;
+  }
   if(current===job&&result)self.postMessage({type:'result',requestId,result,timings,cache:session.metrics});
  }catch(error){if(current===job)self.postMessage({type:'error',requestId,message:error.message,code:error.code??null,details:error.details??null});}
  finally{refinements?.close();}

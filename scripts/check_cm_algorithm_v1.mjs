@@ -6,7 +6,7 @@ import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {FINAL_MODEL_VERSION} from '../assets/cm-final-plan.mjs';
 import {MODEL_VERSION} from '../assets/physics.mjs';
 const root=new URL('../',import.meta.url),read=p=>fs.readFileSync(new URL(p,root),'utf8').replace(/\r\n/g,'\n'),json=p=>JSON.parse(read(p)),hash=t=>createHash('sha256').update(t).digest('hex');
-const release=json('docs/validation/cm-optimization-v1-6-11-release-20261123.json'),models={chart:CM_MODEL_VERSION,final:FINAL_MODEL_VERSION,solo:MODEL_VERSION};
+const release=json('docs/validation/cm-optimization-v1-6-12-release-20261123.json'),models={chart:CM_MODEL_VERSION,final:FINAL_MODEL_VERSION,solo:MODEL_VERSION};
 assert.deepEqual(CM_ALGORITHM,{id:release.id,version:release.version,revision:release.revision,patch:release.patch,name:release.name,models:release.models});assert.deepEqual(models,release.models);
 assert.equal(hash(read(release.parentRelease.path)),release.parentRelease.textSha256,'Original release changed.');
 const parent=json(release.parentRelease.path);

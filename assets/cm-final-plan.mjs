@@ -569,6 +569,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   workerBatch=null;
   const gain=[...preciseSingles].sort(gainOrder),efficiency=[...preciseSingles].sort((a,b)=>(b.gain-baseline.gain)/Math.max(1,b.cost-baseline.cost)-(a.gain-baseline.gain)/Math.max(1,a.cost-baseline.cost)||gainOrder(a,b));
   exchangeAdditions=[...new Set([...efficiency,...gain].map(row=>row.id))];
+  onPhase('seedConstruction');
   const constructive=await greedySeeds([efficiency,gain],gainTolerance?pilotScore:finalScore,'stabilization');if(!constructive)return null;
   precisionSeedCandidates=preciseSingles.length;precisionSeedCount=constructive.length;
   protectedFinalIds=constructive.map(row=>row.ids);

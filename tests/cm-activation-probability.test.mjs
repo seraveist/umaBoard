@@ -260,3 +260,43 @@ test('constant-speed scheduling preserves every position and compact finish prob
   assert.deepEqual(simulateSolo(input,skills,.5,options),simulateSolo(input,skills,.5,{...options,scheduleConditions:false}));
  }
 });
+
+test('count waiters preserve same-frame ID order, independent OR triggers and latched preconditions',()=>{
+ const gate=atom('activate_count_heal',1);
+ const list=[
+  skill('a-earlier','target_speed',100,[[gate]]),
+  skill('m-source','heal',200,[[atom('distance_rate',60)]]),
+  skill('z-later','target_speed',100,[[gate]]),
+  skill('b-alternative','target_speed',100,[[gate],[atom('distance_rate',45)]]),
+  skill('c-pre','acceleration',200,[[atom('distance_rate',80)]])
+ ];
+ list[4].invocations[0].precondition=[[gate]];
+ const skills=list.map(s=>compileChartSkill(s,setup)),options={dt:.01,keepTrace:false};
+ const result=simulateSolo(setup,skills,.5,options);
+ assert.deepEqual(result,simulateSolo(setup,skills,.5,{...options,scheduleConditions:false}));
+ const when=id=>result.events.find(e=>e.id===id).t,source=when('m-source');
+ assert.equal(when('z-later'),source);
+ assert.equal(Math.round((when('a-earlier')-source)/options.dt),1);
+ assert.ok(when('b-alternative')<source&&when('c-pre')>source);
+});
+
+test('a sampled full-spurt trigger preserves positions, HP and finish probes across a slope and a late skill',()=>{
+ const distance=2400,s={...setup,course:{...course,distance,distance_type:3,straights:[{start:0,end:distance}],
+  slopes:[{start:2070,length:80,slope:10000}]},spurtPolicy:SPURT_POLICY};
+ const raw=[skill('spurt','full_spurt_acceleration',1000,[[atom('run_at_full_speed_random',1,'==')]]),
+  skill('late','heal',1200,[[atom('remain_distance',140,'<=')]])];
+ for(const stamina of [400,3000]){
+  const input={...s,stats:{...s.stats,speed:2200,stamina}},compiled=raw.map(skill=>compileChartSkill(skill,input));
+  const options={dt:.01,keepTrace:false,fullSpurt:true,branchSampler:branchSampler(input,[],3)};
+  const oracle=simulateSolo(input,compiled,.5,{...options,scheduleConditions:false});
+  assert.equal(oracle.maxSpurtAtEntry,stamina===3000);assert.equal(event(oracle,'late').length,1);
+  if(stamina===3000)assert.equal(event(oracle,'spurt').length,1);
+  assert.deepEqual(simulateSolo(input,compiled,.5,options),oracle);
+  const probe={...options,comparisonTime:oracle.finishTime-.019};
+  assert.deepEqual(simulateSolo(input,compiled,.5,probe),simulateSolo(input,compiled,.5,{...probe,scheduleConditions:false}));
+ }
+ const marginal={...s,stats:{...s.stats,speed:2200,stamina:900}},options={dt:.01,keepTrace:false,fullSpurt:true};
+ const exhausted=simulateSolo(marginal,[],.5,{...options,scheduleConditions:false});
+ assert.ok(exhausted.maxSpurtAtEntry&&exhausted.minHpDepletion>2000&&exhausted.hpRemaining<0);
+ assert.deepEqual(simulateSolo(marginal,[],.5,options),exhausted);
+});

@@ -18,8 +18,8 @@
 | 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/perf/cm-encounter-scheduling` 최신 커밋 |
-| 현재 모델 | v1.6.11, 마신표v16·목표 가속v5·최종 추천v20·단독 비교v8 |
-| 계산41모듈 SHA256 | `3a304c4f1475544e31853b78a3f333c2525158d0c608b0e96f1f0abb1d176d78` |
+| 현재 모델 | v1.6.12, 마신표v16·목표 가속v5·최종 추천v20·단독 비교v8 |
+| 계산41모듈 SHA256 | `5b38cabecc8385ff5904afdd307da374fe7eeb647f65828bde587ab3b17b0666` |
 | 출시 기준 데이터 | `59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
@@ -208,7 +208,7 @@ seraveist/umaBoard의 origin/perf/cm-encounter-scheduling 최신 상태에서 �
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 v1.6.11, 마신표v16·목표 가속v5·최종 추천v20이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
+현재 계산 기준은 v1.6.12, 마신표v16·목표 가속v5·최종 추천v20이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
 개정6의 순위·경합·인기 판정은 고정 전개의 짝비교로 검증했다.
 

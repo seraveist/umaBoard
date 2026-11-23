@@ -1,0 +1,185 @@
+{
+  "algorithm": "v1.6.12",
+  "baseCommit": "9626384181893e465018a81d8c57b16b020098e0",
+  "input": {
+    "source": "scripts/check_cm_browser.cjs, full launch fixture",
+    "courseId": "10808",
+    "outfitId": "101301",
+    "style": 2,
+    "recorded": 213,
+    "candidates": 210,
+    "budget": 7000,
+    "otherStats": {
+      "speed": 2200,
+      "power": 1800,
+      "guts": 1700,
+      "wisdom": 1800
+    },
+    "sampleCount": 144,
+    "dt": 0.01,
+    "scenarios": 9
+  },
+  "dataVersion": "59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a",
+  "savedInputSha256": "887ebef1695ff9b652262e8a3435052f80029613b459fe6c6b7f6454e11e10bb",
+  "runtime": "Node.js 24.22.3",
+  "previousEvidence": "docs/validation/cm-v1-6-11-refinement-20261123.json",
+  "protocol": "One cold recommendation per released version and stamina. Production final worker and two child module workers via Node worker_threads, with diagnostics enabled. The v1.6.11 checkout had one extra phase timer before the two greedy rankings to separate construction from individual skill scoring. Both versions replayed the same chart and recorded hints. Some processes ran concurrently. Inclusive wall times exclude chart preparation and browser rendering.",
+  "comparison": "Compared the two complete plan JSON digests after removing only search.sampleReuse, and matched the published v1.6.11 digests. These cover purchases and stages, priorities, HP, risk, scenario alternatives, per-skill marginal values and search decisions. Checked activeIds, mean gain, cost and risk against the archived reference. Four targeted real-data chart rows were separately recomputed from prepareChart and compared field by field.",
+  "chartRows": [
+    {
+      "id": "201612",
+      "name": "尻尾の滝登り",
+      "gain": 0,
+      "activations": 0,
+      "prepared": {
+        "condition": "activate_count_middle",
+        "count": 3,
+        "helperIds": [
+          "200352",
+          "201132",
+          "201352"
+        ],
+        "helperNames": [
+          "コーナー回復○",
+          "イナズマステップ",
+          "栄養補給"
+        ],
+        "gain": 1.2348331659977536,
+        "samples": 144,
+        "activations": 115
+      },
+      "sha256": "728a5448f54a33dfd480f4979c48fe240a12fec157fb6f9772df9aa5a7a95d6e"
+    },
+    {
+      "id": "204222",
+      "name": "もう一踏ん張り",
+      "gain": 0.27798586648135093,
+      "activations": 138,
+      "sha256": "dd924fa0c0d1f52244a6dcf2a72027c91e59f72650f8a8f68379d7d6c367a3a4"
+    },
+    {
+      "id": "204262",
+      "name": "星の煌き",
+      "gain": 0.5169953454227526,
+      "activations": 135,
+      "sha256": "7d475e2e1960602e684abe0c37053bad586a2d6c296f07d24a4f072a1211c6a1"
+    },
+    {
+      "id": "210131",
+      "name": "レースの真髄・賢",
+      "gain": 0,
+      "activations": 0,
+      "sha256": "09f44efad32a9aa0f793dde4132234fa36d7188db575f206741366fe11457bb5"
+    }
+  ],
+  "results": [
+    {
+      "stamina": 1250,
+      "usedSP": 6984,
+      "meanGain": 28.55724129379955,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "fullyEvaluatedPlans": 194,
+      "seedResolutions": {
+        "36": 11,
+        "72": 175,
+        "144": 24
+      },
+      "planSha256WithoutSampleCacheCounters": "9f4619243da832ae28de0dd356431479f1bee0411f19bcde94a8a45f4ad913ba",
+      "v1.6.11": {
+        "previewSeconds": 17.34867621,
+        "confirmedSeconds": 176.06533121799998,
+        "diagnosticsCompleteSeconds": 254.09593258299998,
+        "phaseMilliseconds": {
+          "prepare": 251.17829099999994,
+          "coarseSearch": 16811.472700000002,
+          "precisionSeeds": 49094.895076999994,
+          "finalists": 39457.59392300001,
+          "refinement": 70154.187226,
+          "diagnostics": 78002.06069799999,
+          "singleSkillEvaluation": 17148.434423000002,
+          "seedConstruction": 31946.460653999995
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      },
+      "v1.6.12": {
+        "previewSeconds": 19.653870342999998,
+        "confirmedSeconds": 121.493242154,
+        "diagnosticsCompleteSeconds": 149.82030853600003,
+        "phaseMilliseconds": {
+          "prepare": 424.80440499999986,
+          "coarseSearch": 18540.332225,
+          "precisionSeeds": 37745.948143999994,
+          "seedConstruction": 25240.984808999998,
+          "finalists": 28461.335661999998,
+          "refinement": 35622.88498100001,
+          "diagnostics": 28307.778592999995,
+          "singleSkillEvaluation": 12504.963335
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      }
+    },
+    {
+      "stamina": 1850,
+      "usedSP": 6984,
+      "meanGain": 34.8926350616523,
+      "hpSuccesses": 144,
+      "withinRiskLimit": true,
+      "fullyEvaluatedPlans": 110,
+      "seedResolutions": {
+        "36": 11,
+        "72": 170,
+        "144": 29
+      },
+      "planSha256WithoutSampleCacheCounters": "c1623f2accc756687ac71176bbe1ebd0a5a6032ad5ef7ed01e6cf78f1ca3aba4",
+      "v1.6.11": {
+        "previewSeconds": 17.161044403,
+        "confirmedSeconds": 117.46735144,
+        "diagnosticsCompleteSeconds": 153.883287661,
+        "phaseMilliseconds": {
+          "prepare": 242.63011100000006,
+          "coarseSearch": 16634.612547,
+          "precisionSeeds": 43660.759605,
+          "finalists": 41271.90403299999,
+          "refinement": 15365.87116200001,
+          "diagnostics": 36388.860769000006,
+          "singleSkillEvaluation": 18131.343644999997,
+          "seedConstruction": 25529.415960000006
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      },
+      "v1.6.12": {
+        "previewSeconds": 19.607686917000002,
+        "confirmedSeconds": 92.85787885200001,
+        "diagnosticsCompleteSeconds": 121.02804403200001,
+        "phaseMilliseconds": {
+          "prepare": 518.304093,
+          "coarseSearch": 18540.380502,
+          "precisionSeeds": 32627.761830999996,
+          "seedConstruction": 19671.867071,
+          "finalists": 28319.240147999997,
+          "refinement": 12298.107346000004,
+          "diagnostics": 28146.183770999996,
+          "singleSkillEvaluation": 12955.894759999996
+        },
+        "seedWorkers": {
+          "count": 2,
+          "plans": 210,
+          "fallback": false
+        }
+      }
+    }
+  ]
+}
