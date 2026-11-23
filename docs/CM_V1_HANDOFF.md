@@ -18,8 +18,8 @@
 | 개정4 계산 구현 커밋 | `34d0579` — 0.1마신 압축 개정4 |
 | 이 인계 문서 추가 전 커밋 | `ba654ac` — 현황·보완 방향 정리 |
 | 실제 재개 위치 | 이 인계 문서를 포함한 `origin/perf/cm-encounter-scheduling` 최신 커밋 |
-| 현재 모델 | v1.6.9, 마신표v16·목표 가속v5·최종 추천v20·단독 비교v8 |
-| 계산37모듈 SHA256 | `43cb52efd5fb7108b25d2d5e705083fb37c9cb6eb3862cbe35e32eb81b101bfa` |
+| 현재 모델 | v1.6.10, 마신표v16·목표 가속v5·최종 추천v20·단독 비교v8 |
+| 계산41모듈 SHA256 | `34e60938c3c79cd5f0547623d90f15bf56c7034633f5dd2e2eaad1cf9ab30b89` |
 | 출시 기준 데이터 | `59fd2b3c2fd17d42d715692281615e0d78dbbf01fb51917d984bfbb56fc5a85a` |
 
 기존 로컬 작업 경로는 `C:/Users/JOON/Documents/Codex/2026-11-17/new-chat-2/work/umaBoard-review`다.
@@ -107,7 +107,7 @@ if ($LASTEXITCODE -ne 0) { throw '독립 비교에 필요한 Git 이력이 없�
 node scripts/check_cm_algorithm_v1.mjs
 ```
 
-변경 전 기준에서 `status:passed`, 공개v1·개정6, 계산37모듈과 위 계산 해시를 확인한다.
+변경 전 기준에서 `status:passed`, 공개v1·개정6, 계산41모듈과 위 계산 해시를 확인한다.
 변경 전부터 실패하면 브랜치·데이터·파일 상태를 먼저 조사한다.
 정당한 코드 수정 뒤에는 고정 검사 실패가 예상될 수 있다. 이 경우 기존 릴리스 파일의 해시만 덮어써 통과시키지 않고,
 새 개정·모델·고정 파일을 만들며 현재 기준을 이전 증거로 연결한다.
@@ -208,7 +208,7 @@ seraveist/umaBoard의 origin/perf/cm-encounter-scheduling 최신 상태에서 �
 docs/CM_V1_HANDOFF.md와 docs/CM_V1_STATUS_AND_ROADMAP.md를 먼저 읽고,
 현재 작업 위치·Git 상태·브랜치·적용 지침·모델·데이터를 확인해줘.
 
-현재 계산 기준은 v1.6.9, 마신표v16·목표 가속v5·최종 추천v20이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
+현재 계산 기준은 v1.6.10, 마신표v16·목표 가속v5·최종 추천v20이다. [최종 평가와 재현 방법](CM_V1_6_FINAL_REVIEW.md)을 따른다.
 0.1마신은 현재 평가 표본의 선택 허용 범위이며 모든 추첨의 오차 보증은 아니다.
 개정6의 순위·경합·인기 판정은 고정 전개의 짝비교로 검증했다.
 

@@ -19,6 +19,7 @@ import {ENCOUNTER_POLICY,contextDomains,scenarioCount} from './race-scenarios.mj
 import {normalizeRiskPolicy,compareRacePlans,RACE_OBJECTIVE} from './race-objective.mjs';
 import {createAcquisitionConstraints,assertAcquisitionFeasible} from './acquisition-constraints.mjs';
 
+import {scoreSeed} from './cm-seed-evaluation.mjs';
 import {adjustBudget} from './cm-budget-adjustment.mjs';
 
 export const FINAL_MODEL_VERSION='cm-post-training-v20';
@@ -103,12 +104,12 @@ export class FinalRaceSession{
    return value;
   };
   this.metrics=metrics;
-  return {score:(id,calculate)=>measure(scores,3072,'scoreHits',id,calculate),
+  return {hasScore:id=>scores.has(id),score:(id,calculate)=>measure(scores,3072,'scoreHits',id,calculate),
    diagnostic:(id,calculate)=>measure(diagnostics,128,'diagnosticHits',id,calculate)};
  }
 }
 
-export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},onPurchaseList=null,session=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
+export async function recommendFinalPlan(data,chart,acquisition,input,{onProgress=()=>{},cancelled=()=>false,onPhase=()=>{},onPurchaseList=null,session=null,runSeeds=null,evaluationLimit=1400,width=6,maxCandidates=240,exactPlanLimit=512,gainTolerance=.1,searchSamples=9,searchDt=.05,samples=CM_SAMPLES,dt=CM_DT,diagnostics=true}={}){
  onPhase('prepare');
  const setup=createFinalSetup(chart,input),hierarchy=buildAcquisitionHierarchy(data);
  setup.externalDomains=contextDomains(data);
@@ -194,12 +195,13 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  const signature=createPlanSignature(compiled,lower,setup.course.distance,{scope:gainTolerance?'complete-plan-profile':'identity'}),fullScores=new Map(),scoreCache=new Map();
  const measurements=session?.begin(data,chart,setup,baselineIds);
  const evaluator=new RaceEvaluator(setup,compiled,baselineIds,chart.nativeIds,createFinalBranchSampler(),{compactComparisons:true});let evaluations=0,hpPrunedPlans=0,coarseEvaluations=0,precisionEvaluations=0,pilotEvaluations=0,middleEvaluations=0;
+ let workerSeeds=null;
  const evaluate=(ids,count,step,stopOnHpFailure=false,phase='precision')=>{
   ids=normalize(ids);if(!retained(ids)||!legal(ids))return null;
   const cost=price(ids);if(cost===null||cost>setup.spBudget)return null;
   const cacheKey=`${idKey(ids)}|${count}|${step}`;if(scoreCache.has(cacheKey))return scoreCache.get(cacheKey);
   const scenarioPriorities=count===samples&&step===dt;
-  const calculate=()=>evaluator.evaluate(ids,count,step,{stopOnHpFailure,scenarioPriorities});
+  const calculate=()=>workerSeeds?.scores.get(cacheKey)??evaluator.evaluate(ids,count,step,{stopOnHpFailure,scenarioPriorities});
   const result=measurements?measurements.score(cacheKey+'|'+scenarioPriorities,calculate):calculate();
   evaluations++;
   if(phase==='coarse')coarseEvaluations++;else if(count===samples&&step===dt)precisionEvaluations++;else if(phase==='pilot')pilotEvaluations++;else middleEvaluations++;
@@ -490,27 +492,43 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
  }
  onPhase('precisionSeeds');
  if(method!=='exhaustive')evaluator.beginSeedComparisons();
- const seedResolutions={};
- const seedScore=ids=>{
-  let value=gainTolerance?pilotScore(ids):finalScore(ids);
-  // Split-prefix disagreement spends more samples on unstable singleton
-  // rankings. It is a work-allocation rule, not a confidence certificate.
-  if(gainTolerance&&value?.sampling.halfDifference>gainTolerance&&middleSamples>pilotSamples)value=evaluate(ids,middleSamples,dt,false,'middle');
-  if(gainTolerance&&value?.sampling.halfDifference>gainTolerance)value=finalScore(ids);
-  if(value)seedResolutions[value.sampling.count]=(seedResolutions[value.sampling.count]||0)+1;
-  return value;
- };
+ const seedResolutions={},seedSampling={pilot:pilotSamples,middle:middleSamples,full:samples,tolerance:gainTolerance};
+ let workerDrawHits=0;
  if(method!=='exhaustive'){
   // A coarse shortlist can miss an effective timing or promote redundant
   // effects. Rebuild complete proposals from ALL recorded candidates using
   // stable fine-step prefixes, extending unstable rankings before construction.
   // Complete finalists still use the declared full matrix and objective.
+  // Small and warm searches avoid worker startup and data transfer.
+  const minWorkerPlans=32;
+  if(runSeeds&&candidates.length>=minWorkerPlans){
+   const uncached=new Map();
+   for(const row of candidates){
+    const ids=normalize([...required,row.id]),key=ids.join(','),cost=price(ids);
+    const pilotKey=key+'|'+pilotSamples+'|'+dt;
+    if(cost!==null&&cost<=setup.spBudget&&retained(ids)&&legal(ids)&&
+       !scoreCache.has(pilotKey)&&!measurements?.hasScore(pilotKey+'|'+(pilotSamples===samples)))uncached.set(key,ids);
+   }
+   if(uncached.size>=minWorkerPlans){
+    workerSeeds=await runSeeds({plans:[...uncached.values()],records,setup,baselineIds,nativeIds:chart.nativeIds,sampling:seedSampling,dt},
+     (completed,total)=>onProgress({stage:'screening',completed,total}));
+    if(cancelled())return null;
+    workerDrawHits=workerSeeds?.drawHits??0;
+    if(requestMetrics)requestMetrics.seedWorkers={count:workerSeeds?2:0,plans:workerSeeds?uncached.size:0,fallback:!workerSeeds};
+   }
+  }
   const preciseSingles=[];
   for(let i=0;i<candidates.length;i++){
    if(cancelled())return null;
-   const row=candidates[i],value=seedScore([...required,row.id]);if(value)preciseSingles.push({...value,id:row.id});
-   if(i%5===4||i===candidates.length-1){onProgress({stage:'screening',completed:i+1,total:candidates.length});await pause();}
+   const row=candidates[i],ids=[...required,row.id];
+   const value=scoreSeed(seedSampling,count=>count===samples?finalScore(ids):count===pilotSamples?pilotScore(ids):evaluate(ids,count,dt,false,'middle'));
+   if(value){
+    seedResolutions[value.sampling.count]=(seedResolutions[value.sampling.count]||0)+1;
+    preciseSingles.push({...value,id:row.id});
+   }
+   if(i%5===4||i===candidates.length-1){if(!workerSeeds)onProgress({stage:'screening',completed:i+1,total:candidates.length});await pause();}
   }
+  workerSeeds=null;
   const gain=[...preciseSingles].sort(gainOrder),efficiency=[...preciseSingles].sort((a,b)=>(b.gain-baseline.gain)/Math.max(1,b.cost-baseline.cost)-(a.gain-baseline.gain)/Math.max(1,a.cost-baseline.cost)||gainOrder(a,b));
   exchangeAdditions=[...new Set([...efficiency,...gain].map(row=>row.id))];
   const constructive=await greedySeeds([efficiency,gain],gainTolerance?pilotScore:finalScore,'stabilization');if(!constructive)return null;
@@ -519,7 +537,7 @@ export async function recommendFinalPlan(data,chart,acquisition,input,{onProgres
   finalists=[...new Map([...finalists,...constructive].map(row=>[idKey(row.ids),row])).values()];
  }
  const seedDrawHits=evaluator.endSeedComparisons();
- if(session)session.metrics.seedDrawHits=seedDrawHits;
+ if(requestMetrics)requestMetrics.seedDrawHits=seedDrawHits+workerDrawHits;
  // Compound proposals share a separate coarse-work allowance across ALL
  // closure passes; full-sample whole-plan scoring is only used for finalists.
  const initialCoarseEvaluations=coarseEvaluations,exchangeWorkLimit=gainTolerance?Math.min(evaluationLimit,512):evaluationLimit;quickLimit=initialCoarseEvaluations+exchangeWorkLimit;

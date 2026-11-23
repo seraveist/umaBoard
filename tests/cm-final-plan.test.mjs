@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createFinalSetup,RecordedPurchaseModel,recommendFinalPlan,FinalRaceSession} from '../assets/cm-final-plan.mjs';
+import {runSeedWorkers} from '../assets/cm-seed-pool.mjs';
+import {WebModuleWorker} from './helpers/web-module-worker.mjs';
 import {CM_MODEL_VERSION} from '../assets/cm-chart.mjs';
 import {DISCOUNT_TRAITS,resolveDiscountTrait} from '../assets/cm-discounts.mjs';
 
@@ -328,4 +330,79 @@ test('only an SP-only edit near a safe full-search anchor uses the adjustment pa
  assert.notEqual(edited.search.method,'budget-adjustment');
  const newStats=await run(108,edited.activeIds,{...record,white:'2'},{stats:{...settings.stats,stamina:100}});
  assert.notEqual(newStats.search.method,'budget-adjustment');
+});
+
+
+function parallelFixture(){
+ const {data,chart}=fixture(),record={};
+ for(let i=0;i<34;i++){
+  const id='extra'+i,row=skill(id,600+i*60);
+  data.skills[id]=row;chart.rows.push({...row,name:id});
+  data.purchase_stages[id]={status:'verified',base_cost:100};
+  record[id]='0';
+ }
+ return {data,chart,record};
+}
+
+test('parallel seed measurements preserve the complete recommendation and warm searches skip workers',async()=>{
+ const {data,chart,record}=parallelFixture();
+ const options={samples:18,dt:.05,searchSamples:9,searchDt:.1,exactPlanLimit:0,evaluationLimit:50,diagnostics:false};
+ const budget={...input,spBudget:115},session=new FinalRaceSession(),signal=new AbortController().signal;
+ const serial=await recommendFinalPlan(data,chart,record,budget,options);
+ let batches=0;
+ const runSeeds=(batch,onProgress)=>{
+  batches++;
+  return runSeedWorkers(batch,{signal,onProgress,createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))});
+ };
+ const parallel=await recommendFinalPlan(data,chart,record,budget,{...options,runSeeds,session});
+ assert.deepEqual(session.metrics.seedWorkers,{count:2,plans:34,fallback:false});
+ const warm=await recommendFinalPlan(data,chart,record,budget,{...options,runSeeds,session});
+ assert.equal(batches,1);
+ const fallbackSession=new FinalRaceSession();
+ const fallback=await recommendFinalPlan(data,chart,record,budget,{...options,session:fallbackSession,runSeeds:(batch,onProgress)=>
+  runSeedWorkers(batch,{onProgress,signal,createWorker(){throw new Error('unavailable');}})});
+ assert.deepEqual(fallbackSession.metrics.seedWorkers,{count:0,plans:0,fallback:true});
+ for(const plan of [serial,parallel,warm,fallback])delete plan.search.sampleReuse;
+ assert.deepEqual(parallel,serial);assert.deepEqual(warm,serial);assert.deepEqual(fallback,serial);
+});
+
+test('aborting a batch or failing to start its second worker disposes all started workers',async()=>{
+ const batch={plans:[['a'],['b']],records:new Map(),baselineIds:[]};
+ for(const abort of [true,false]){
+  const controller=new AbortController();let started=0,terminated=0;
+  const work=runSeedWorkers(batch,{signal:controller.signal,onProgress(){},createWorker(){
+   if(!abort&&started===1)throw new Error('second worker unavailable');
+   started++;
+   return {postMessage(){},terminate(){terminated++;}};
+  }});
+  if(abort)controller.abort();
+  assert.equal(await work,null);assert.equal(started,abort?2:1);assert.equal(terminated,started);
+ }
+});
+
+
+test('a worker message error discards a completed sibling batch and terminates both workers',async()=>{
+ const workers=[];
+ const batch={plans:[['a'],['b']],records:new Map(),baselineIds:[]};
+ const done=runSeedWorkers(batch,{signal:new AbortController().signal,onProgress(){},createWorker(){
+  const worker={postMessage(){},terminate(){this.terminated=true;}};
+  workers.push(worker);return worker;
+ }});
+ workers[0].onmessage({data:{type:'result',scores:new Map(),drawHits:0}});
+ workers[1].onmessageerror();
+ assert.equal(await done,null);
+ assert.ok(workers.every(worker=>worker.terminated&&worker.onmessage===null));
+});
+
+
+test('cancelling during real parallel screening stops the request before purchase confirmation',async()=>{
+ const {data,chart,record}=parallelFixture(),controller=new AbortController(),stages=[];
+ const result=await recommendFinalPlan(data,chart,record,{...input,spBudget:115},{
+  ...quick,exactPlanLimit:0,evaluationLimit:50,diagnostics:false,cancelled:()=>controller.signal.aborted,
+  onPurchaseList:stage=>stages.push(stage),
+  runSeeds:batch=>runSeedWorkers(batch,{signal:controller.signal,onProgress:()=>controller.abort(),
+   createWorker:()=>new WebModuleWorker(new URL('../assets/cm-seed-worker.mjs',import.meta.url))})
+ });
+ assert.ok(controller.signal.aborted);
+ assert.equal(result,null);assert.deepEqual(stages,['preview']);
 });

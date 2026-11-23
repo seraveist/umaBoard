@@ -1,11 +1,15 @@
 import {recommendFinalPlan,FinalRaceSession} from './cm-final-plan.mjs';
-let data,chart,session,job=0;
+import {runSeedWorkers} from './cm-seed-pool.mjs';
+let data,chart,session,job=0,controller;
 self.onmessage=async({data:message})=>{
  const {type,requestId,payload}=message;
+ if(!['load','cancel','recommend'].includes(type))return;
+ controller?.abort();
  if(type==='load'){job++;({data,chart}=payload);session=new FinalRaceSession();return;}
  if(type==='cancel'){job++;return;}
- if(type!=='recommend')return;
  const current=++job;
+ controller=new AbortController();
+ const {signal}=controller;
  try{
   const timings={};let phase,started;
   const onPhase=next=>{
@@ -13,7 +17,9 @@ self.onmessage=async({data:message})=>{
    if(phase)timings[phase]=(timings[phase]||0)+(now-started);
    phase=next;started=now;
   };
-  const result=await recommendFinalPlan(data,chart,payload.states,payload.input,{session,onPhase,
+  const runSeeds=typeof Worker==='function'&&globalThis.navigator?.hardwareConcurrency>=2?
+   (batch,onProgress)=>runSeedWorkers(batch,{signal,onProgress}):null;
+  const result=await recommendFinalPlan(data,chart,payload.states,payload.input,{session,onPhase,runSeeds,
    onPurchaseList:(stage,summary)=>{if(current===job)self.postMessage({type:'purchases',requestId,stage,summary});},
    cancelled:()=>current!==job,onProgress:progress=>{if(current===job)self.postMessage({type:'progress',requestId,progress});}});
   onPhase(null);
